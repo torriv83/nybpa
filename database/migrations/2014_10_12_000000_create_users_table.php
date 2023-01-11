@@ -19,6 +19,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('phone')->nullable();
+            $table->string('adresse')->nullable();
+            $table->integer('postnummer')->nullable();
+            $table->string('poststed')->nullable();
+            $table->integer('assistentnummer')->unique()->nullable();
+            $table->date('ansatt_dato')->nullable();
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
