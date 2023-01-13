@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use Closure;
 use Carbon\Carbon;
 use Filament\Forms;
 use App\Models\User;
@@ -59,37 +60,38 @@ class CalendarWidget extends FullCalendarWidget
     {
 
         // You can use $fetchInfo to filter events by date.
-            $schedules = Timesheet::query()
-                ->where([
-                    ['fra_dato', '>=', $fetchInfo['start']],
-                    ['til_dato', '<', $fetchInfo['end']],
-                ])
-                ->get();
+        $schedules = Timesheet::query()
+            ->where([
+                ['fra_dato', '>=', $fetchInfo['start']],
+                ['til_dato', '<', $fetchInfo['end']],
+            ])
+            ->get();
 
-            $data = $schedules->map(function ($item, $key){
+        $data = $schedules->map(function ($item, $key){
 
-            $farge = $item->unavailable ? '#ff0000' : '';
-            // $display = $item->unavailable ? 'background' : '';
+        $farge = $item->unavailable ? '#ff0000' : '';
+        // $display = $item->unavailable ? 'background' : '';
+        $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
 
-            return [
-                    'id' => $item->id, 
-                    'title' => $item->user->name, 
-                    'start' => $item->fra_dato, 
-                    'end' => $item->til_dato,
-                    'allDay' => $item->allDay,
-                    'description' => $item->description,
-                    'heleDagen' => $item->allDay,
-                    'assistentID' => $item->user_id,
-                    'unavailable' => $item->unavailable,
-                    'backgroundColor' => $farge,
-                    'borderColor' => $farge,
-                    // 'display' => $display,
-                ];
-            });
+        return [
+                'id' => $item->id, 
+                'title' => $item->user->name, 
+                'start' => $item->fra_dato, 
+                'end' => $item->til_dato,
+                'allDay' => $item->allDay,
+                'description' => $item->description,
+                'heleDagen' => $item->allDay,
+                'assistentID' => $item->user_id,
+                'unavailable' => $item->unavailable,
+                'backgroundColor' => $farge,
+                'borderColor' => $farge,
+                // 'display' => $display,
+            ];
+        });
 
-            // $data = $data['eventBorderColor'][] = '#000000';
+        // $data = $data['eventBorderColor'][] = '#000000';
 
-            return $data->toArray();
+        return $data->toArray();
     }
 
     protected static function getCreateEventFormSchema(): array
@@ -154,6 +156,13 @@ class CalendarWidget extends FullCalendarWidget
                 ->required(),
             DateTimePicker::make('end')
                 ->label('Slutter')
+                ->afterStateHydrated(function (Closure $set, $state, $get) {
+                        $allDay = $get('extendedProps.heleDagen');
+                        
+                        if($allDay){
+                            $set('end', Carbon::parse($state)->subDay());
+                        }
+                    })
                 ->displayFormat('d.m.Y H:i')
                 ->minutesStep(15),
             RichEditor::make('extendedProps.description')
@@ -225,7 +234,7 @@ class CalendarWidget extends FullCalendarWidget
     {
         parent::onEventClick($event);
 
-        debug($event);
+        // debug($event);
         // your code
     }
 
@@ -235,9 +244,11 @@ class CalendarWidget extends FullCalendarWidget
     public function onEventDrop($newEvent, $oldEvent, $relatedEvents): void
     {
         // debug($newEvent);
+        $slutter = $newEvent['extendedProps']['heleDagen'] ? Carbon::parse($newEvent['end'])->subDay() : $newEvent['end'];
+
         $tid = Timesheet::find($newEvent['id']);
         $tid->fra_dato = $newEvent['start'];
-        $tid->til_dato = $newEvent['end'];
+        $tid->til_dato = $slutter;
         $tid->description = $newEvent['extendedProps']['description'];
         $tid->user_id = $newEvent['extendedProps']['assistentID'];
         // $tid->unavailable = $newEvent['unavailable'];
@@ -254,10 +265,12 @@ class CalendarWidget extends FullCalendarWidget
      */
     public function onEventResize($event, $oldEvent, $relatedEvents): void
     {
-        debug($event);
+        // debug($event);
+        $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];
+
         $tid = Timesheet::find($event['id']);
         $tid->fra_dato = $event['start'];
-        $tid->til_dato = $event['end'];
+        $tid->til_dato = $slutter;
         $tid->description = $event['extendedProps']['description'];
         $tid->user_id = $event['extendedProps']['assistentID'];
         // $tid->unavailable = $event['unavailable'];

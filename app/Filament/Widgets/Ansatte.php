@@ -7,6 +7,7 @@ use App\Models\User;
 use Filament\Tables;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -25,7 +26,7 @@ class Ansatte extends BaseWidget
     
     protected function getTableQuery(): Builder
     {
-        return User::query()->permission('Assistent');
+        return User::query()->role(['Fast ansatt', 'Tilkalling']);
     }
 
     protected function getTableColumns(): array
@@ -33,11 +34,16 @@ class Ansatte extends BaseWidget
         return [
             Tables\Columns\TextColumn::make('name')
                 ->label('Navn'),
+            Tables\Columns\BadgeColumn::make('roles.name')
+                ->label('Stilling')
+                ->colors([
+                    'success',
+                    'primary' => 'Tilkalling',
+                ]),
             Tables\Columns\TextColumn::make('email')
                 ->label('E-post'),
-            Tables\Columns\TextColumn::make('roles.name')
-                ->label('Stilling'),
-            Tables\Columns\TextColumn::make('tlf')
+            Tables\Columns\TextColumn::make('phone')
+                ->label('Telefon')
                 ->default('12345678'),
         ];
     }

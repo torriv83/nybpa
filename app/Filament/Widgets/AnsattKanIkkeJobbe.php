@@ -33,10 +33,14 @@ class AnsattKanIkkeJobbe extends BaseWidget
 
     protected function getTableColumns(): array
     {
+
         return [
             Tables\Columns\TextColumn::make('user.name')
                 ->label('Hvem')
                 ->tooltip(fn (Model $record): string => \strip_tags("{$record->description}")),
+            Tables\Columns\TextColumn::make('fra_dato')
+                ->date('d.m.Y')    
+                ->label('Dato'),
             Tables\Columns\TextColumn::make('fra_dato')
                 ->getStateUsing(function(Model $record) {
                     if($record->allDay == 1){

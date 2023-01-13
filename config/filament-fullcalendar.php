@@ -41,5 +41,5 @@ return [
 
     'slotLabelInterval' => ['hours' => 1],
 
-    'aspectRatio' => 2.5,
+    'aspectRatio' => 1.5,
 ];

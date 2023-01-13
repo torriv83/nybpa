@@ -20,6 +20,11 @@ class NesteArbeidstider extends BaseWidget
     protected static ?int $sort = 5;
     protected array|string|int $columnSpan = 6;
 
+    protected function getTableEmptyStateHeading(): ?string
+    {
+        return 'Ingen planlagte tider enda';
+    }
+
     public function getTableRecordKey(Model $record): string
     {
         return uniqid();

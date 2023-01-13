@@ -38,6 +38,12 @@ class User extends Authenticatable implements FilamentUser
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'adresse',
+        'postnummer',
+        'poststed',
+        'assistentnummer',
+        'ansatt_dato',
         'password',
         'email_verified_at',
     ];
@@ -61,10 +67,10 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($pass)
-    {
-        $this->attributes['password'] = Hash::make($pass);
-    }
+    // public function setPasswordAttribute($pass)
+    // {
+    //     $this->attributes['password'] = Hash::make($pass);
+    // }
 
         /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

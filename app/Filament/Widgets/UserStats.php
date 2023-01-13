@@ -21,18 +21,34 @@ class UserStats extends BaseWidget
     {
 
         $tider = Timesheet::whereBetween(
-                                'fra_dato', [
-                                    Carbon::parse('first day of January')
-                                    ->format('Y-m-d H:i:s'), Carbon::now()
-                                    ->endOfYear()
-                                ]
-                            )->where('unavailable', '!=', '1');
+                    'fra_dato', [
+                        Carbon::parse('first day of January')
+                        ->format('Y-m-d H:i:s'), Carbon::now()
+                    ]
+                )->where('unavailable', '!=', '1');
+
+        // Timer i uka igjen
+        $hoursLeftPerWeek = '';
+        $ukerIgjen = Carbon::parse(now())->floatDiffInWeeks(now()->endOfYear());
+        $hoursLeft = intdiv(21900-$tider->sum('totalt'), 60);
+        $hoursPerWeekLeft = $hoursLeft/$ukerIgjen;
+        $hoursLeftPerWeek = $this->minutesToTime($hoursPerWeekLeft*60);
 
         return [
-            Card::make('Antall Assistenter', Users::permission('Assistent')->count())->color('success'),
-            Card::make('Timer brukt i år', sprintf('%02d',intdiv($tider->sum('totalt'), 60)) .':'. ( sprintf('%02d',$tider->sum('totalt') % 60))),
-            Card::make('Timer igjen', sprintf('%02d',intdiv(21900-$tider->sum('totalt'), 60)) .':'. ( sprintf('%02d',(21900-$tider->sum('totalt')) % 60)))
-                ->description('x timer i uka igjen')
+            Card::make('Antall Assistenter', Users::permission('Assistent')->count()),
+            Card::make('Timer brukt i år', $this->minutesToTime($tider->sum('totalt'))),
+            Card::make('Timer igjen', $this->minutesToTime(21900-$tider->sum('totalt')))
+                ->description($hoursLeftPerWeek . ' timer i uka igjen')
         ];
+    }
+
+    private function minutesToTime($minutes){
+        $hours   = floor($minutes / 60);
+        $minutes = ($minutes % 60);
+        $format  = '%02d:%02d';
+
+        $done = sprintf($format, $hours, $minutes);
+
+        return $done;
     }
 }

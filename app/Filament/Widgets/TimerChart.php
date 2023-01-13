@@ -31,7 +31,7 @@ class TimerChart extends BarChartWidget
         
         /* Forrige år */
         $tid = Timesheet::whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
-            // ->onlyTrashed()
+            ->where('unavailable', '!=', 1)
             ->orderByRaw('fra_dato ASC')
             ->get()
             ->groupBy(function ($val) {
@@ -53,6 +53,7 @@ class TimerChart extends BarChartWidget
         
         /* Dette året */
         $thisYear = Timesheet::whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
+            ->where('unavailable', '!=', 1)
             ->orderByRaw('fra_dato ASC')
             ->get()
             ->groupBy(function ($val) {
@@ -74,6 +75,7 @@ class TimerChart extends BarChartWidget
 
         /* Gjenstår */
         $sum = 0;
+        
         foreach ($thisYear as $key => $value) {
         
             for ($i = 0; $i < count($value); $i++) {
@@ -81,9 +83,15 @@ class TimerChart extends BarChartWidget
             }
             // $thisYearLeft[$key] = 100 - $sum;
             $thisYearLeft[$key] = 100 - round($sum / 21900 * 100, 1);
+            $prosentIgjen = 100 - round($sum / 21900 * 100, 1);
         }
-        // debug($thisYearLeft);
+        //  debug($prosentIgjen);
         
+        if($prosentIgjen){
+            $prosentIgjen = $prosentIgjen;
+        }else{
+            $prosentIgjen = 'Ingen data';
+        }
         
         /* Datasets Chartjs */
         return [
@@ -99,9 +107,9 @@ class TimerChart extends BarChartWidget
                     'backgroundColor' => '#3758FE',
                 ],
                 [
-                    'label' => 'Gjenstår: '. $thisYearLeft[$key].'%',
-                    // 'data' => $thisYearLeft,
-                    // 'backgroundColor' => '#006400',
+                    'label' => 'Gjenstår: '. $prosentIgjen.'%',
+                    'data' => $thisYearLeft,
+                    'backgroundColor' => '#006400',
                 ],
             ],
         

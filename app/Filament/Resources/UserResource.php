@@ -2,16 +2,23 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Card;
+use Illuminate\Support\Facades\Hash;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\DateTimePicker;
+use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class UserResource extends Resource
@@ -23,20 +30,62 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
+        // Section::make('Heading')
+        //     ->description('Description')
+        //     ->schema([
+        //         // ...
+        //     ])
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                Section::make('Standard data')
+                    ->description('')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Navn')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label('E-post')
+                            ->email()
+                            ->required()
+                            ->maxLength(255),
+                        DateTimePicker::make('email_verified_at')
+                            ->label('E-post verifisert'),
+                        TextInput::make('password')
+                            ->same('passwordConfirmation')
+                            ->password()
+                            ->maxLength(255)
+                            ->required(fn ($component, $get, $livewire, $model, $record, $set, $state) => $record === null)
+                            ->label('Passord'),
+                        TextInput::make('passwordConfirmation')
+                            ->password()
+                            ->dehydrated(false)
+                            ->maxLength(255)
+                            ->label('Bekreft Passord'),
+                        Select::make('roles')
+                            ->required()
+                            ->multiple()
+                            ->relationship('roles', 'name')
+                            ->preload(config('filament-authentication.preload_roles'))
+                            ->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
+                    ])->columns(3),
+
+                Section::make('Personlig data')
+                    ->description('')
+                    ->schema([
+                        TextInput::make('phone')
+                            ->label('Telefon')
+                            ->maxLength(8),
+                        TextInput::make('adresse')
+                            ->maxLength(255),
+                        TextInput::make('postnummer')
+                            ->maxLength(4),
+                        TextInput::make('poststed')
+                            ->maxLength(255),
+                        TextInput::make('assistentnummer')
+                            ->maxLength(255),
+                        DatePicker::make('ansatt_dato')
+                    ])->columns(3),
             ]);
     }
 
@@ -44,12 +93,20 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\BooleanColumn::make('email_verified_at')->label('Verified'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->label('Navn'),
+                Tables\Columns\TextColumn::make('email')
+                    ->label('E-post'),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Telefon'),
+                Tables\Columns\BooleanColumn::make('email_verified_at')
+                    ->label('Verified'),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Opprettet')
                     ->dateTime('d.m.Y H:i:s')->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Sist oppdatert')
                     ->dateTime('d.m.Y H:i:s')->sortable(),
             ])
             ->filters([
@@ -60,6 +117,8 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -78,6 +137,7 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
+            'view' => Pages\ViewUser::route('/{record}'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }

@@ -136,9 +136,13 @@ class TimesheetResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('totalt')
                     ->getStateUsing(function(Model $record) {
-                        $minutes=$record->totalt; 
-                        $hours = sprintf('%02d',intdiv($minutes, 60)) .':'. ( sprintf('%02d',$minutes % 60));
-                        return $hours;
+                        if($record->allDay){
+                            return '-';
+                        }else{
+                            $minutes=$record->totalt; 
+                            $hours = sprintf('%02d',intdiv($minutes, 60)) .':'. ( sprintf('%02d',$minutes % 60));
+                            return $hours;
+                        }
                     })
                     ->sortable(),
                 Tables\Columns\IconColumn::make('unavailable')
@@ -149,19 +153,21 @@ class TimesheetResource extends Resource
                     ->falseIcon('heroicon-o-x-circle'),
                 Tables\Columns\IconColumn::make('allDay')
                     ->label('Hele dagen?')
+                    ->sortable()
                     ->boolean()
                     ->trueIcon('heroicon-o-badge-check')
                     ->falseIcon('heroicon-o-x-circle'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Arkivert?')
+                    ->sortable()
                     ->date('d.m.Y'),
-            ])
+            ])->defaultSort('fra_dato', 'desc')
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\Filter::make('Tilgjengelig')
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('unavailable')),
+                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '0')),
                 Tables\Filters\Filter::make('Ikke tilgjengelig')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('unavailable')),
+                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '1')),
                 Tables\Filters\SelectFilter::make('assistent')
                     ->relationship('user', 'name', fn (Builder $query) => $query->permission('Assistent')),
                 Tables\Filters\Filter::make('måned')
