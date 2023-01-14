@@ -22,6 +22,9 @@ class Profile extends PagesProfile
             'name' => $this->getFormModel()->name,
             'email' => $this->getFormModel()->email,
             'phone' => $this->getFormModel()->phone,
+            'adresse' => $this->getFormModel()->adresse,
+            'postnummer' => $this->getFormModel()->postnummer,
+            'poststed' => $this->getFormModel()->poststed,
         ]);
     }
 
@@ -32,6 +35,10 @@ class Profile extends PagesProfile
         $state = array_filter([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
+            'adresse' => $data['adresse'],
+            'postnummer' => $data['postnummer'],
+            'poststed' => $data['poststed'],
             'password' => $data['new_password'] ? Hash::make($data['new_password']) : null,
         ]);
 
@@ -71,6 +78,13 @@ class Profile extends PagesProfile
                     Textinput::make('phone')
                         ->label('Telefon')
                         ->required(),
+                    TextInput::make('adresse'),
+                    TextInput::make('postnummer'),
+                    TextInput::make('poststed'),
+                    TextInput::make('assistentnummer')->disabled(),
+                    TextInput::make('ansatt_dato')->disabled(),
+
+
                 ]),
             Section::make('Oppdater Passord')
                 ->columns(2)
