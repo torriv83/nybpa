@@ -96,20 +96,17 @@ class Profile extends PagesProfile
                         ->currentPassword()
                         ->autocomplete('off')
                         ->columnSpan(1),
-                    Grid::make()
-                        ->schema([
-                            TextInput::make('new_password')
-                                ->label('New Password')
-                                ->rules(['confirmed', Password::defaults()])
-                                ->autocomplete('new-password'),
-                            TextInput::make('new_password_confirmation')
-                                ->label('Confirm Password')
-                                ->password()
-                                ->rules([
-                                    'required_with:new_password',
-                                ])
-                                ->autocomplete('new-password'),
-                        ]),
+                    TextInput::make('new_password')
+                        ->label('New Password')
+                        ->rules(['confirmed', Password::defaults()])
+                        ->autocomplete('new-password'),
+                    TextInput::make('new_password_confirmation')
+                        ->label('Confirm Password')
+                        ->password()
+                        ->rules([
+                            'required_with:new_password',
+                        ])
+                        ->autocomplete('new-password'),
                 ]),
         ];
     }

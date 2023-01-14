@@ -74,17 +74,17 @@ class CalendarWidget extends FullCalendarWidget
         $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
 
         return [
-                'id' => $item->id, 
-                'title' => $item->user->name, 
-                'start' => $item->fra_dato, 
-                'end' => $item->til_dato,
-                'allDay' => $item->allDay,
-                'description' => $item->description,
-                'heleDagen' => $item->allDay,
-                'assistentID' => $item->user_id,
-                'unavailable' => $item->unavailable,
+                'id'              => $item->id,
+                'title'           => $item->user->name,
+                'start'           => $item->fra_dato,
+                'end'             => $item->til_dato,
+                'allDay'          => $item->allDay,
+                'description'     => $item->description,
+                'heleDagen'       => $item->allDay,
+                'assistentID'     => $item->user_id,
+                'unavailable'     => $item->unavailable,
                 'backgroundColor' => $farge,
-                'borderColor' => $farge,
+                'borderColor'     => $farge,
                 // 'display' => $display,
             ];
         });
@@ -188,13 +188,13 @@ class CalendarWidget extends FullCalendarWidget
         
         // Create the event with the provided $data.
         $tider = Timesheet::create([
-            'fra_dato' => $data['start'],
-            'til_dato' => $data['end'],
-            'user_id' => $data['user_id'],
+            'fra_dato'    => $data['start'],
+            'til_dato'    => $data['end'],
+            'user_id'     => $data['user_id'],
             'unavailable' => $data['unavailable'],
-            'allDay' => $data['allDay'],
+            'allDay'      => $data['allDay'],
             'description' => $data['description'],
-            'totalt' => Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']),
+            'totalt'      => Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']),
         ]);
         
         $this->refreshEvents();
@@ -204,14 +204,14 @@ class CalendarWidget extends FullCalendarWidget
     public function editEvent(array $data): void
     {
         
-        $tid = Timesheet::find($data['id']);
-        $tid->fra_dato = $data['start'];
-        $tid->til_dato = $data['end'];
+        $tid              = Timesheet::find($data['id']);
+        $tid->fra_dato    = $data['start'];
+        $tid->til_dato    = $data['end'];
         $tid->description = $data['extendedProps']['description'];
-        $tid->user_id = $data['extendedProps']['assistentID'];
+        $tid->user_id     = $data['extendedProps']['assistentID'];
         // $tid->unavailable = $data['unavailable'];
-        $tid->allDay = $data['extendedProps']['heleDagen'];
-        $tid->totalt = Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']);
+        $tid->allDay      = $data['extendedProps']['heleDagen'];
+        $tid->totalt      = Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']);
 
         if($tid->save()){
             $this->refreshEvents();
@@ -246,14 +246,14 @@ class CalendarWidget extends FullCalendarWidget
         // debug($newEvent);
         $slutter = $newEvent['extendedProps']['heleDagen'] ? Carbon::parse($newEvent['end'])->subDay() : $newEvent['end'];
 
-        $tid = Timesheet::find($newEvent['id']);
-        $tid->fra_dato = $newEvent['start'];
-        $tid->til_dato = $slutter;
+        $tid              = Timesheet::find($newEvent['id']);
+        $tid->fra_dato    = $newEvent['start'];
+        $tid->til_dato    = $slutter;
         $tid->description = $newEvent['extendedProps']['description'];
-        $tid->user_id = $newEvent['extendedProps']['assistentID'];
+        $tid->user_id     = $newEvent['extendedProps']['assistentID'];
         // $tid->unavailable = $newEvent['unavailable'];
-        $tid->allDay = $newEvent['extendedProps']['heleDagen'];
-        $tid->totalt = Carbon::parse($newEvent['start'])->diffInMinutes($newEvent['end']);
+        $tid->allDay      = $newEvent['extendedProps']['heleDagen'];
+        $tid->totalt      = Carbon::parse($newEvent['start'])->diffInMinutes($newEvent['end']);
 
         if($tid->save()){
             $this->refreshEvents();
@@ -268,14 +268,14 @@ class CalendarWidget extends FullCalendarWidget
         // debug($event);
         $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];
 
-        $tid = Timesheet::find($event['id']);
-        $tid->fra_dato = $event['start'];
-        $tid->til_dato = $slutter;
+        $tid              = Timesheet::find($event['id']);
+        $tid->fra_dato    = $event['start'];
+        $tid->til_dato    = $slutter;
         $tid->description = $event['extendedProps']['description'];
-        $tid->user_id = $event['extendedProps']['assistentID'];
+        $tid->user_id     = $event['extendedProps']['assistentID'];
         // $tid->unavailable = $event['unavailable'];
-        $tid->allDay = $event['extendedProps']['heleDagen'];
-        $tid->totalt = Carbon::parse($event['start'])->diffInMinutes($event['end']);
+        $tid->allDay      = $event['extendedProps']['heleDagen'];
+        $tid->totalt      = Carbon::parse($event['start'])->diffInMinutes($event['end']);
 
         if($tid->save()){
             $this->refreshEvents();
