@@ -221,10 +221,10 @@ class TimesheetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTimesheets::route('/'),
+            'index'  => Pages\ListTimesheets::route('/'),
             'create' => Pages\CreateTimesheet::route('/create'),
-            // 'view' => Pages\ViewTimesheet::route('/{record}'),
-            'edit' => Pages\EditTimesheet::route('/{record}/edit'),
+            // 'view'   => Pages\ViewTimesheet::route('/{record}'),
+            'edit'   => Pages\EditTimesheet::route('/{record}/edit'),
         ];
     }    
 }

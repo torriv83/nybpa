@@ -19,12 +19,12 @@ class Profile extends PagesProfile
     public function mount(): void
     {
         $this->form->fill([
-            'name' => $this->getFormModel()->name,
-            'email' => $this->getFormModel()->email,
-            'phone' => $this->getFormModel()->phone,
-            'adresse' => $this->getFormModel()->adresse,
+            'name'       => $this->getFormModel()->name,
+            'email'      => $this->getFormModel()->email,
+            'phone'      => $this->getFormModel()->phone,
+            'adresse'    => $this->getFormModel()->adresse,
             'postnummer' => $this->getFormModel()->postnummer,
-            'poststed' => $this->getFormModel()->poststed,
+            'poststed'   => $this->getFormModel()->poststed,
         ]);
     }
 
@@ -33,13 +33,13 @@ class Profile extends PagesProfile
         $data = $this->form->getState();
 
         $state = array_filter([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'adresse' => $data['adresse'],
+            'name'       => $data['name'],
+            'email'      => $data['email'],
+            'phone'      => $data['phone'],
+            'adresse'    => $data['adresse'],
             'postnummer' => $data['postnummer'],
-            'poststed' => $data['poststed'],
-            'password' => $data['new_password'] ? Hash::make($data['new_password']) : null,
+            'poststed'   => $data['poststed'],
+            'password'   => $data['new_password'] ? Hash::make($data['new_password']) : null,
         ]);
 
         $this->getFormModel()->update($state);

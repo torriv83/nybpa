@@ -15,13 +15,17 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class KategoriResource extends Resource
 {
-    protected static ?string $model = Kategori::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup = 'Medisinsk';
-    protected static ?string $modelLabel = 'Kategori';
+    protected static ?string $model            = Kategori::class;
+    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationGroup  = 'Medisinsk';
+    protected static ?string $modelLabel       = 'Kategori';
     protected static ?string $pluralModelLabel = 'Kategorier';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort      = 2;
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -69,10 +73,10 @@ class KategoriResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListKategoris::route('/'),
+            'index'  => Pages\ListKategoris::route('/'),
             'create' => Pages\CreateKategori::route('/create'),
-            'view' => Pages\ViewKategori::route('/{record}'),
-            'edit' => Pages\EditKategori::route('/{record}/edit'),
+            'view'   => Pages\ViewKategori::route('/{record}'),
+            'edit'   => Pages\EditKategori::route('/{record}/edit'),
         ];
     }    
     

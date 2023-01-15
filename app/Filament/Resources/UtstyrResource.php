@@ -21,14 +21,17 @@ use App\Filament\Resources\UtstyrResource\RelationManagers;
 
 class UtstyrResource extends Resource
 {
-    protected static ?string $model = Utstyr::class;
-    
-    protected static ?string $navigationGroup = 'Medisinsk';
-    protected static ?string $modelLabel = 'Utstyr';
+    protected static ?string $model            = Utstyr::class;
+    protected static ?string $navigationGroup  = 'Medisinsk';
+    protected static ?string $modelLabel       = 'Utstyr';
     protected static ?string $pluralModelLabel = 'Utstyr';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort      = 1;
+    protected static ?string $navigationIcon   = 'heroicon-o-collection';
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {
@@ -83,10 +86,10 @@ class UtstyrResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUtstyrs::route('/'),
+            'index'  => Pages\ListUtstyrs::route('/'),
             'create' => Pages\CreateUtstyr::route('/create'),
-            'view' => Pages\ViewUtstyr::route('/{record}'),
-            'edit' => Pages\EditUtstyr::route('/{record}/edit'),
+            'view'   => Pages\ViewUtstyr::route('/{record}'),
+            'edit'   => Pages\EditUtstyr::route('/{record}/edit'),
         ];
     }    
     
