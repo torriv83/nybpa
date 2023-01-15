@@ -10,4 +10,9 @@ class Dashboard extends BasePage
     {
         return 12;
     }
+    
+    protected function getHeading(): string
+    {
+        return "BPA Dashboard";
+    }
 }

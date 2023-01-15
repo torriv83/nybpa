@@ -21,14 +21,10 @@ use App\Filament\Resources\TimesheetResource\RelationManagers;
 class TimesheetResource extends Resource
 {
     
-    protected static ?string $model = Timesheet::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
-
-    protected static ?string $navigationGroup = 'Tider';
-
-    protected static ?string $modelLabel = 'Timeliste';
-
+    protected static ?string $model            = Timesheet::class;
+    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationGroup  = 'Tider';
+    protected static ?string $modelLabel       = 'Timeliste';
     protected static ?string $pluralModelLabel = 'Timelister';
 
     protected function getDefaultTableSortColumn(): ?string

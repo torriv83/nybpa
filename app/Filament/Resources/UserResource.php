@@ -12,8 +12,10 @@ use Filament\Forms\Components\Card;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\UserResource\Pages;
@@ -109,6 +111,9 @@ class UserResource extends Resource
                     ->label('Telefon'),
                 Tables\Columns\BooleanColumn::make('email_verified_at')
                     ->label('Verified'),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Slettet')
+                    ->datetime('d.m.Y H:i:s'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Opprettet')
                     ->dateTime('d.m.Y H:i:s')->sortable(),
@@ -117,18 +122,25 @@ class UserResource extends Resource
                     ->dateTime('d.m.Y H:i:s')->sortable(),
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\Filter::make('verified')
                     ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
                 Tables\Filters\Filter::make('unverified')
                     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
+                    Tables\Actions\RestoreAction::make()->label('Angre sletting'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
             ]);
     }
     
