@@ -11,6 +11,7 @@ use App\Models\Timesheet;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Section;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,7 +21,7 @@ use App\Filament\Resources\TimesheetResource\RelationManagers;
 
 class TimesheetResource extends Resource
 {
-    
+
     protected static ?string $model            = Timesheet::class;
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
     protected static ?string $navigationGroup  = 'Tider';
@@ -46,7 +47,9 @@ class TimesheetResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('user_id')
                             ->label('Hvem')
-                            ->options(User::all()->filter(function($value, $key){ return $value->name != 'Tor J. Rivera';})->pluck('name', 'id'))
+                            ->options(User::all()->filter(function ($value, $key) {
+                                return $value->id != Auth::User()->id;
+                            })->pluck('name', 'id'))
                             ->required()
                             ->columnSpan(2),
                         Forms\Components\Checkbox::make('unavailable')
@@ -61,15 +64,15 @@ class TimesheetResource extends Resource
                             ->displayFormat('d.m.Y H:i')
                             ->required(),
                         Forms\Components\DateTimePicker::make('til_dato')
-                            ->displayFormat('d.m.Y H:i')    
+                            ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->reactive()
                             ->afterStateUpdated(function (Closure $set, $state, $get) {
                                 $fra = $get('fra_dato');
                                 $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
 
-                                $minutes=Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state); 
-                                $hours = sprintf('%02d',intdiv($minutes, 60)) .':'. ( sprintf('%02d',$minutes % 60));
+                                $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
+                                $hours = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                                 $set('Tid', $hours);
                             }),
                         Forms\Components\RichEditor::make('description')
@@ -87,10 +90,10 @@ class TimesheetResource extends Resource
                             ->maxLength(191),
                         Forms\Components\TextInput::make('Tid')
                             ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, $get) {
-                                if($get('fra_dato')){
+                                if ($get('fra_dato')) {
                                     $fra = Carbon::createFromFormat('Y-m-d H:i:s', $get('fra_dato'))->diffInMinutes($get('til_dato'));
-                                    $minutes = $fra; 
-                                    $hours = sprintf('%02d',intdiv($minutes, 60)) .':'. ( sprintf('%02d',$minutes % 60));
+                                    $minutes = $fra;
+                                    $hours = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                                     $component->state($hours);
                                 }
                             })
@@ -118,12 +121,12 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('Beskrivelse')
                     ->limit(20)
-                    ->getStateUsing(function(Model $record) {
+                    ->getStateUsing(function (Model $record) {
                         return \strip_tags($record->description);
                     })
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
-                
+
                         if (strlen($state) <= $column->getLimit()) {
                             return null;
                         }
@@ -131,12 +134,12 @@ class TimesheetResource extends Resource
                         return $state;
                     }),
                 Tables\Columns\TextColumn::make('totalt')
-                    ->getStateUsing(function(Model $record) {
-                        if($record->allDay){
+                    ->getStateUsing(function (Model $record) {
+                        if ($record->allDay) {
                             return '-';
-                        }else{
-                            $minutes=$record->totalt; 
-                            $hours = sprintf('%02d',intdiv($minutes, 60)) .':'. ( sprintf('%02d',$minutes % 60));
+                        } else {
+                            $minutes = $record->totalt;
+                            $hours = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                             return $hours;
                         }
                     })
@@ -181,7 +184,7 @@ class TimesheetResource extends Resource
                                 $data['til_dato'],
                                 fn (Builder $query, $date): Builder => $query->whereDate('fra_dato', '<=', $date),
                             );
-                    }) 
+                    })
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -198,7 +201,7 @@ class TimesheetResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
@@ -213,7 +216,7 @@ class TimesheetResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -222,5 +225,5 @@ class TimesheetResource extends Resource
             // 'view'   => Pages\ViewTimesheet::route('/{record}'),
             'edit'   => Pages\EditTimesheet::route('/{record}/edit'),
         ];
-    }    
+    }
 }

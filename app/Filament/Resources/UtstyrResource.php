@@ -45,7 +45,7 @@ class UtstyrResource extends Resource
                     ->relationship('kategori', 'kategori'),
             ]);
     }
-    
+
     public static function table(Table $table): Table
     {
         return $table
@@ -61,7 +61,7 @@ class UtstyrResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('kategori')
-                    ->relationship('kategori', 'kategori'),                    
+                    ->relationship('kategori', 'kategori'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -73,16 +73,17 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data): void {
-                        debug($data);
+                        $data;
                     })
                     ->form([
                         Forms\Components\TextInput::make('navn')
                             ->label('Navn'),
-                        Forms\Components\TextInput::make('antall'),
+                        Forms\Components\TextInput::make('antall')
+                            ->numeric(),
                     ])
             ]);
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -91,8 +92,8 @@ class UtstyrResource extends Resource
             'view'   => Pages\ViewUtstyr::route('/{record}'),
             'edit'   => Pages\EditUtstyr::route('/{record}/edit'),
         ];
-    }    
-    
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

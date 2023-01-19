@@ -45,7 +45,7 @@ class Profile extends PagesProfile
         $this->getFormModel()->update($state);
 
         if ($data['new_password']) {
-            // @phpstan-ignore-next-line
+
             Filament::auth()->login($this->getFormModel(), (bool) $this->getFormModel()->getRememberToken());
         }
 
