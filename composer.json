@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "doctrine/dbal": "^3.5",
         "filament/filament": "^2.16",
+        "filament/spatie-laravel-settings-plugin": "^2.16",
         "guzzlehttp/guzzle": "^7.2",
         "hammerstone/fast-paginate": "^0.1.11",
         "laravel/framework": "^9.19",

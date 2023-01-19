@@ -6,6 +6,7 @@ use DateTime;
 use Carbon\Carbon;
 use App\Models\Utstyr;
 use App\Models\Timesheet;
+use App\Settings\BpaTimer;
 use App\Models\User as Users;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Auth\User;
@@ -38,12 +39,13 @@ class UserStats extends BaseWidget
         /* Timer i uka igjen */
         $hoursLeftPerWeek = '';
         $ukerIgjen        = Carbon::parse(now())->floatDiffInWeeks(now()->endOfYear());
+        $totalt_timer_innvilget = (app(BpaTimer::class)->timer * 52) * 60;
         // $hoursLeft        = intdiv(21900 - $tider->sum('totalt'), 60);
         // $hoursPerWeekLeft = $hoursLeft / $ukerIgjen;
         // $hoursLeftPerWeek = $this->minutesToTime($hoursPerWeekLeft * 60);
 
         /* Test */
-        $total_minutes = 365 * 60; // convert total hours to minutes
+        $total_minutes = $totalt_timer_innvilget; // convert total hours to minutes
         $hours_used_minutes = $tider->sum('totalt'); // convert hours used to minutes
         $hours_per_week = 24 * 7;
         $hours_left_per_week = (($total_minutes - $hours_used_minutes) / 60 - ($hours_per_week * $ukerIgjen)) / $ukerIgjen;

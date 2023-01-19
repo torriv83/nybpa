@@ -25,10 +25,10 @@ class AnsattKanIkkeJobbe extends BaseWidget
     {
         return uniqid();
     }
-    
+
     protected function getTableQuery(): Builder
     {
-        return Timesheet::query()->where('unavailable', '=', 1);   
+        return Timesheet::query()->where('unavailable', '=', 1)->where('til_dato', '>', Carbon::now());
     }
 
     protected function getTableColumns(): array
@@ -39,23 +39,23 @@ class AnsattKanIkkeJobbe extends BaseWidget
                 ->label('Hvem')
                 ->tooltip(fn (Model $record): string => \strip_tags("{$record->description}")),
             Tables\Columns\TextColumn::make('fra_dato')
-                ->date('d.m.Y')    
+                ->date('d.m.Y')
                 ->label('Dato'),
             Tables\Columns\TextColumn::make('fra_dato')
-                ->getStateUsing(function(Model $record) {
-                    if($record->allDay == 1){
+                ->getStateUsing(function (Model $record) {
+                    if ($record->allDay == 1) {
                         return Carbon::parse($record->fra_dato)->format('d.m.Y');
-                    }else{
+                    } else {
                         return Carbon::parse($record->fra_dato)->format('d.m.Y, H:i');
                     }
                 })
                 ->label('Fra')
                 ->tooltip(fn (Model $record): string => \strip_tags("{$record->description}")),
             Tables\Columns\TextColumn::make('til_dato')
-                ->getStateUsing(function(Model $record) {
-                    if($record->allDay == 1){
+                ->getStateUsing(function (Model $record) {
+                    if ($record->allDay == 1) {
                         return Carbon::parse($record->til_dato)->format('d.m.Y');
-                    }else{
+                    } else {
                         return Carbon::parse($record->til_dato)->format('d.m.Y, H:i');
                     }
                 })
