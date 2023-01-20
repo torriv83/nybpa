@@ -83,6 +83,7 @@ class UserResource extends Resource
                     ->description('')
                     ->schema([
                         TextInput::make('phone')
+                            ->tel()
                             ->label('Telefon')
                             ->maxLength(8),
                         TextInput::make('adresse')
@@ -109,7 +110,8 @@ class UserResource extends Resource
                     ->label('E-post'),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon'),
-                Tables\Columns\BooleanColumn::make('email_verified_at')
+                Tables\Columns\IconColumn::make('email_verified_at')
+                    ->boolean()
                     ->label('Verified'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Slettet')
