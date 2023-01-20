@@ -42,3 +42,4 @@ Homestead.json
 .history
 .ionide
 .vscode/launch.json
+.idea/*
