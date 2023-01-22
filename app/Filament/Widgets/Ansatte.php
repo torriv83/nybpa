@@ -23,10 +23,10 @@ class Ansatte extends BaseWidget
     {
         return uniqid();
     }
-    
+
     protected function getTableQuery(): Builder
     {
-        return User::query()->role(['Fast ansatt', 'Tilkalling']);
+        return User::query()->with('timesheet')->role(['Fast ansatt', 'Tilkalling']);
     }
 
     protected function getTableColumns(): array
@@ -45,6 +45,15 @@ class Ansatte extends BaseWidget
             Tables\Columns\TextColumn::make('phone')
                 ->label('Telefon')
                 ->default('12345678'),
+            Tables\Columns\TextColumn::make('Jobbet i år')
+                ->getStateUsing(function (Model $record) {
+                    $minutes = $record->timesheet()
+                        ->whereBetween('fra_dato', [Carbon::now()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
+                        ->where('unavailable', '!=', 1)->sum('totalt');
+                    $hours = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                    return $hours;
+                })
+                ->default('0'),
         ];
     }
 }
