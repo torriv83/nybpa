@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Economy;
-use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
@@ -13,13 +12,18 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EconomyResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EconomyResource\RelationManagers;
+use App\Filament\Resources\EconomyResource\Widgets\YnabOverview;
+use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
 use App\Filament\Resources\EconomyResource\Widgets\EconomyHistory;
 
 class EconomyResource extends Resource
 {
-    protected static ?string $model = Economy::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $model            = Economy::class;
+    protected static ?string $navigationGroup  = 'Økonomi';
+    protected static ?string $modelLabel       = 'Økonomi';
+    protected static ?string $pluralModelLabel = 'Økonomi';
+    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?int $navigationSort      = 2;
 
     public static function form(Form $form): Form
     {
@@ -71,6 +75,7 @@ class EconomyResource extends Resource
     {
         return [
             StatsOverview::class,
+            YnabOverview::class,
         ];
     }
 }

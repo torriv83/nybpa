@@ -14,6 +14,7 @@ class StatsOverview extends BaseWidget
 {
     // protected static string $view = 'filament.resources.economy-resource.widgets.stats-overview';
     protected static ?string $pollingInterval = null;
+
     protected function getCards(): array
     {
 

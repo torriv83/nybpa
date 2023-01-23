@@ -11,10 +11,6 @@ use App\Notifications\UserUnavailable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
-
-/**
- * @method thisYear()
- */
 class Economy extends Model
 {
     use Notifiable;

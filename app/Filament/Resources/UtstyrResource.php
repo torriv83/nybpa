@@ -73,7 +73,7 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data): void {
-                        $data;
+                        $records;
                     })
                     ->form([
                         Forms\Components\TextInput::make('navn')
