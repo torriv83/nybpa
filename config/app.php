@@ -16,7 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'ynab' => env('YNAB_TOKEN', false),
     /*
     |--------------------------------------------------------------------------
     | Application Environment
