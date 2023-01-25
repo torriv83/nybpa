@@ -29,18 +29,13 @@ class TimerChart extends BarChartWidget
 
     protected function getData(): array
     {
+        $t = new Timesheet();
 
         /* Forrige år */
-        $tid = Timesheet::whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
-            ->where('unavailable', '!=', 1)
-            ->orderByRaw('fra_dato ASC')
-            ->get()
-            ->groupBy(function ($val) {
-                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-            });
-
+        $tid = $t->timeUsedLastYear();
         $tider = [];
         $sum = 0;
+
         foreach ($tid as $key => $value) {
             // $tider[$key] = $value->sum('totalt');
 
@@ -53,14 +48,7 @@ class TimerChart extends BarChartWidget
 
 
         /* Dette året */
-        $thisYear = Timesheet::whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
-            ->where('unavailable', '!=', 1)
-            ->orderByRaw('fra_dato ASC')
-            ->get()
-            ->groupBy(function ($val) {
-
-                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-            });
+        $thisYear = $t->timeUsedThisYear();
 
         $thisYearTimes = [];
         $sum = 0;

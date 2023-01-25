@@ -12,7 +12,7 @@ class BrukteTimerChart extends LineChartWidget
     protected static ?string $pollingInterval = null;
     protected static ?int $sort = 2;
     protected array|string|int $columnSpan = 4;
-    
+
     protected function getData(): array
     {
         /* Dette året */
@@ -23,7 +23,7 @@ class BrukteTimerChart extends LineChartWidget
             ->groupBy(function ($val) {
                 return Carbon::parse($val->fra_dato)->isoFormat('MMM');
             });
-        
+
         $thisYearTimes = [];
         $sum = 0;
         foreach ($thisYear as $key => $value) {
@@ -31,7 +31,7 @@ class BrukteTimerChart extends LineChartWidget
             for ($i = 0; $i < count($value); $i++) {
                 $sum += $value[$i]->totalt;
             }
-            $thisYearTimes[$key] = sprintf('%02d',intdiv($value->sum('totalt'), 60)) .'.'. ( sprintf('%02d',$value->sum('totalt') % 60));//$value->sum('totalt');
+            $thisYearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)) . '.' . (sprintf('%02d', $value->sum('totalt') % 60)); //$value->sum('totalt');
             // $thisYearTimes[$key] = round($sum / 21900 * 100, 1);
         }
 
@@ -43,7 +43,7 @@ class BrukteTimerChart extends LineChartWidget
             ->groupBy(function ($val) {
                 return Carbon::parse($val->fra_dato)->isoFormat('MMM');
             });
-        
+
         $lastYearTimes = [];
         $sum = 0;
 
@@ -52,7 +52,7 @@ class BrukteTimerChart extends LineChartWidget
             for ($i = 0; $i < count($value); $i++) {
                 $sum += $value[$i]->totalt;
             }
-            $lastYearTimes[$key] = sprintf('%02d',intdiv($value->sum('totalt'), 60)) .'.'. ( sprintf('%02d',$value->sum('totalt') % 60));//$value->sum('totalt');
+            $lastYearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)) . '.' . (sprintf('%02d', $value->sum('totalt') % 60)); //$value->sum('totalt');
 
         }
 

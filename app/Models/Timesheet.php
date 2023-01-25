@@ -11,10 +11,6 @@ use App\Notifications\UserUnavailable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
-
-/**
- * @method thisYear()
- */
 class Timesheet extends Model
 {
     use Notifiable;
@@ -33,7 +29,7 @@ class Timesheet extends Model
     ];
 
     protected $attributes = [
-        'unavailable' => '0', 
+        'unavailable' => '0',
         'allDay' => '0',
     ];
 
@@ -288,54 +284,33 @@ class Timesheet extends Model
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function timerBruktStat()
+    public function timeUsedThisYear()
     {
 
-        return Cache::remember('timerBruktStat', now()->addDay(), function () {
+        // return Cache::remember('timerBruktStat', now()->addDay(), function () {
+        return $this->whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
+            ->where('unavailable', '!=', 1)
+            ->orderByRaw('fra_dato ASC')
+            ->get()
+            ->groupBy(function ($val) {
 
-            return $this->whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
-                ->orderByRaw('fra_dato ASC')
-                ->get()
-                ->groupBy(function ($val) {
-
-                    return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-                });
-        });
+                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
+            });
     }
 
-    public function timerBruktStatForrigeAar()
+    public function timeUsedLastYear()
     {
 
-        return Cache::remember('timerBruktStatForrigeAar', now()->addDay(), function () {
+        // return Cache::remember('timerBruktStatForrigeAar', now()->addDay(), function () {
 
-            return $this->whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
-                ->onlyTrashed()
-                ->orderByRaw('fra_dato ASC')
-                ->get()
-                ->groupBy(function ($val) {
+        return $this->whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
+            ->orderByRaw('fra_dato ASC')
+            ->get()
+            ->groupBy(function ($val) {
 
-                    return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-                });
-        });
-    }
-
-    /**
-     * @return mixed
-     */
-    public function timerIUka()
-    {
-
-        return Cache::remember('timerIUken', now()->addDay(), function () {
-
-            //Henter ut timer i uka som er jobbet fra 1. januar og frem ut denne uken. Gruppert på ukenummer.
-            return $this->thisYear()->where('fra_dato', '<=', Carbon::now()->endOfWeek()->format('Y-m-d H:i:s'))
-                ->where('fra_dato', '>', date('Y-m-d', strtotime("1 January")))
-                ->get()
-                ->groupBy(function ($date) {
-
-                    return Carbon::parse($date->fra_dato)->format('W');
-                });
-        });
+                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
+            });
+        // });
     }
 
     /**
@@ -349,7 +324,7 @@ class Timesheet extends Model
     {
 
         //Sjekker om det allerede er registrert tid i samme tidsrom
-        if($unavailable == 0){
+        if ($unavailable == 0) {
             if ($id != '') {
                 return $this->withoutGlobalScope('unavailable')->where('fra_dato', '<=', Carbon::parse($end)->format('Y-m-d H:i:s'))
                     ->where('til_dato', '>=', Carbon::parse($start)->format('Y-m-d H:i:s'))
@@ -359,7 +334,7 @@ class Timesheet extends Model
                 return $this->where('fra_dato', '<=', Carbon::parse($end)->format('Y-m-d H:i:s'))
                     ->where('til_dato', '>=', Carbon::parse($start)->format('Y-m-d H:i:s'))->exists();
             }
-        }else{
+        } else {
             if ($id != '') {
                 return $this->withoutGlobalScope('unavailable')->where('fra_dato', '<=', Carbon::parse($end)->format('Y-m-d H:i:s'))
                     ->where('til_dato', '>=', Carbon::parse($start)->format('Y-m-d H:i:s'))
@@ -371,6 +346,5 @@ class Timesheet extends Model
                     ->where('til_dato', '>=', Carbon::parse($start)->format('Y-m-d H:i:s'))->exists();
             }
         }
-
     }
 }

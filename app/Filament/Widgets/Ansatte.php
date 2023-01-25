@@ -26,7 +26,7 @@ class Ansatte extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return User::query()->with('timesheet')->role(['Fast ansatt', 'Tilkalling']);
+        return User::query()->with('timesheet')->assistenter();
     }
 
     protected function getTableColumns(): array

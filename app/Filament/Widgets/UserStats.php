@@ -75,7 +75,7 @@ class UserStats extends BaseWidget
 
         /* Card Widgets */
         return [
-            Card::make('Antall Assistenter', Users::permission('Assistent')->count()),
+            Card::make('Antall Assistenter', Users::assistenter()->count()),
             Card::make('Timer brukt i år', $this->minutesToTime($tider->sum('totalt')))
                 ->chart($thisYearTimes)
                 ->color('success'),

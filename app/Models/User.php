@@ -74,11 +74,16 @@ class User extends Authenticatable implements FilamentUser
     //     $this->attributes['password'] = Hash::make($pass);
     // }
 
-        /**
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function timesheet()
     {
         return $this->hasMany(Timesheet::class);
+    }
+
+    public function scopeAssistenter($query)
+    {
+        return $query->role(['Fast ansatt', 'Tilkalling']);
     }
 }
