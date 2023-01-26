@@ -9,18 +9,19 @@ use App\Models\User;
 use Filament\Tables;
 use App\Models\Timesheet;
 use Filament\Resources\Form;
-use Filament\Forms\Components\Hidden;
 use Filament\Resources\Table;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Support\Facades\Auth;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Checkbox;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\TimesheetResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -211,7 +212,7 @@ class TimesheetResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
 
                 Tables\Filters\Filter::make('Tilgjengelig')
-                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '0')),
+                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '0'))->default(),
 
                 Tables\Filters\Filter::make('Ikke tilgjengelig')
                     ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '1')),
@@ -227,12 +228,12 @@ class TimesheetResource extends Resource
                 Tables\Filters\Filter::make('Denne måneden')
                     ->query(fn (Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
-                        ->where('til_dato', '>=', Carbon::now()->startOfMonth())),
+                        ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
 
                 Tables\Filters\Filter::make('måned')
                     ->form([
-                        Forms\Components\DatePicker::make('fra_dato'),
-                        Forms\Components\DatePicker::make('til_dato'),
+                        DatePicker::make('fra_dato'),
+                        DatePicker::make('til_dato'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

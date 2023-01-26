@@ -31,6 +31,7 @@ class UserResource extends Resource
     protected static ?string $modelLabel       = 'Bruker';
     protected static ?string $pluralModelLabel = 'Brukere';
     protected static ?int $navigationSort      = 1;
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static function getNavigationBadge(): ?string
     {

@@ -29,6 +29,11 @@ class Ansatte extends BaseWidget
         return User::query()->with('timesheet')->assistenter();
     }
 
+    protected function getTableRecordUrlUsing(): Closure
+    {
+        return fn (Model $record): string => route('filament.resources.users.view', ['record' => $record]);
+    }
+
     protected function getTableColumns(): array
     {
         return [

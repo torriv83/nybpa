@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\ReplicateAction;
@@ -27,6 +28,16 @@ class UtstyrResource extends Resource
     protected static ?string $pluralModelLabel = 'Utstyr';
     protected static ?int $navigationSort      = 1;
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['hva', 'navn', 'artikkelnummer', 'kategori.kategori'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->navn;
+    }
 
     protected static function getNavigationBadge(): ?string
     {
