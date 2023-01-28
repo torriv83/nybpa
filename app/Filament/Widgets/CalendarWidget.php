@@ -270,9 +270,6 @@ class CalendarWidget extends FullCalendarWidget
     public function onEventClick($event): void
     {
         parent::onEventClick($event);
-
-        // debug($event);
-        // your code
     }
 
     /**
@@ -288,7 +285,6 @@ class CalendarWidget extends FullCalendarWidget
         $tid->til_dato    = $slutter;
         $tid->description = $newEvent['extendedProps']['description'];
         $tid->user_id     = $newEvent['extendedProps']['assistentID'];
-        // $tid->unavailable = $newEvent['unavailable'];
         $tid->allDay      = $newEvent['extendedProps']['heleDagen'];
         $tid->totalt      = Carbon::parse($newEvent['start'])->diffInMinutes($newEvent['end']);
 

@@ -80,7 +80,7 @@ class UserStats extends BaseWidget
                 ->chart($thisYearTimes)
                 ->color('success'),
             Card::make('Timer igjen', $this->minutesToTime(21900 - $tider->sum('totalt')))
-                ->description($hoursLeftPerWeek . ' i uka igjen'),
+                ->description('I gjennomsnitt ' . $hoursLeftPerWeek . ' i uka igjen'),
             Card::make('Antall utstyr på lista', Utstyr::all()->count()),
         ];
     }

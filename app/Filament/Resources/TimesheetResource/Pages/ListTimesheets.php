@@ -24,4 +24,11 @@ class ListTimesheets extends ListRecords
     {
         return $query->fastPaginate($this->getTableRecordsPerPage());
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TimesheetResource\Widgets\HoursUsedEachMonth::class,
+        ];
+    }
 }

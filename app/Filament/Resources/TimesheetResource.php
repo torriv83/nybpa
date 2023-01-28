@@ -10,8 +10,8 @@ use Filament\Tables;
 use App\Models\Timesheet;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
+use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\DatePicker;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -19,6 +19,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Checkbox;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DateTimePicker;
@@ -190,19 +191,22 @@ class TimesheetResource extends Resource
                     ->sortable()
                     ->boolean()
                     ->trueIcon('heroicon-o-badge-check')
-                    ->falseIcon('heroicon-o-x-circle'),
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->toggleable(),
 
                 Tables\Columns\IconColumn::make('allDay')
                     ->label('Hele dagen?')
                     ->sortable()
                     ->boolean()
                     ->trueIcon('heroicon-o-badge-check')
-                    ->falseIcon('heroicon-o-x-circle'),
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Arkivert?')
                     ->sortable()
-                    ->date('d.m.Y'),
+                    ->date('d.m.Y')
+                    ->toggleable(),
 
             ])->defaultSort('fra_dato', 'desc')
 
@@ -297,6 +301,13 @@ class TimesheetResource extends Resource
             'create' => Pages\CreateTimesheet::route('/create'),
             // 'view'   => Pages\ViewTimesheet::route('/{record}'),
             'edit'   => Pages\EditTimesheet::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            HoursUsedEachMonth::class,
         ];
     }
 }

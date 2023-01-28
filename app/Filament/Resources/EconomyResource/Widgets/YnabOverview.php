@@ -32,15 +32,6 @@ class YnabOverview extends BaseWidget
     {
         return 'desc';
     }
-    // protected function getTableEmptyStateHeading(): ?string
-    // {
-    //     return 'Ingen planlagte tider enda';
-    // }
-
-    // public function getTableRecordKey(Model $record): string
-    // {
-    //     return uniqid();
-    // }
 
     protected function getTableQuery(): Builder
     {
@@ -56,6 +47,7 @@ class YnabOverview extends BaseWidget
                 ->date('F, Y')
                 ->sortable()
                 ->alignLeft(),
+
             Tables\Columns\TextColumn::make('income')
                 ->getStateUsing(function (Model $record) {
                     return $record->income / 1000;
@@ -65,6 +57,7 @@ class YnabOverview extends BaseWidget
                 ->label('Inntekter')
                 ->sortable()
                 ->alignLeft(),
+
             Tables\Columns\TextColumn::make('activity')
                 ->getStateUsing(function (Model $record) {
                     return $record->activity / 1000;
@@ -74,6 +67,7 @@ class YnabOverview extends BaseWidget
                 ->label('Utgifter')
                 ->sortable()
                 ->alignLeft(),
+
             Tables\Columns\TextColumn::make('budgeted')
                 ->getStateUsing(function (Model $record) {
                     return $record->budgeted / 1000;
@@ -82,6 +76,7 @@ class YnabOverview extends BaseWidget
                 ->label('Budgetert')
                 ->sortable()
                 ->alignLeft(),
+
             Tables\Columns\TextColumn::make('Balanse')
                 ->getStateUsing(function (Model $record) {
                     return ($record->income + $record->activity)  / 1000;
@@ -89,6 +84,7 @@ class YnabOverview extends BaseWidget
                 ->money('nok', true)
                 ->sortable()
                 ->alignLeft(),
+
         ];
     }
 }
