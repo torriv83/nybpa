@@ -137,7 +137,7 @@ return [
 
     'widgets' => [
         'namespace' => '', //'App\\Filament\\Widgetss',
-        'path' => '',//app_path('Filament/Widgetss'),
+        'path' => '', //app_path('Filament/Widgetss'),
         'register' => [
             App\Filament\Widgets\BrukteTimerChart::class,
             App\Filament\Widgets\TimerChart::class,
@@ -174,7 +174,7 @@ return [
     |
     */
 
-    'dark_mode' => false,
+    'dark_mode' => true,
 
     /*
     |--------------------------------------------------------------------------

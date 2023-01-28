@@ -14,7 +14,7 @@ class TimerChart extends BarChartWidget
     protected static ?string $heading = 'Brukte timer av totalen (%)';
     protected static ?string $pollingInterval = null;
     protected static ?int $sort = 2;
-    protected array|string|int $columnSpan = 4;
+    protected array|string|int $columnSpan = 6;
 
     // protected static ?array $options = [
     //     'plugins' => [
@@ -88,17 +88,24 @@ class TimerChart extends BarChartWidget
                 [
                     'label' => Carbon::now()->subYear()->format('Y'),
                     'data' => $tider,
-                    'backgroundColor' => '#CCCCCC',
+                    'backgroundColor' => 'rgba(201, 203, 207, 0.2)',
+                    'borderColor' => 'rgb(201, 203, 207)',
+                    'borderWidth' => 1,
                 ],
                 [
                     'label' => Carbon::now()->format('Y'),
                     'data' => $thisYearTimes,
-                    'backgroundColor' => '#3758FE',
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
+                    'borderColor' => 'rgb(54, 162, 235)',
+                    'borderWidth' => 1,
                 ],
                 [
+                    'type' => 'line',
                     'label' => 'Gjenstår: ' . $prosentIgjen . '%',
                     'data' => $thisYearLeft,
-                    'backgroundColor' => '#006400',
+                    'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'borderWidth' => 1
                 ],
             ],
 

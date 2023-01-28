@@ -18,7 +18,7 @@ class TimerIUka extends BaseWidget
     protected static ?string $pollingInterval = null;
     protected static ?string $heading         = 'Timer i uka';
     protected static ?int $sort               = 3;
-    protected array|string|int $columnSpan    = 4;
+    protected array|string|int $columnSpan    = 6;
 
     protected function getTableRecordsPerPageSelectOptions(): array
     {

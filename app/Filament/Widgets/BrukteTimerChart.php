@@ -11,7 +11,7 @@ class BrukteTimerChart extends LineChartWidget
     protected static ?string $heading = 'Timer brukt hver måned';
     protected static ?string $pollingInterval = null;
     protected static ?int $sort = 2;
-    protected array|string|int $columnSpan = 4;
+    protected array|string|int $columnSpan = 6;
 
     protected function getData(): array
     {
@@ -59,14 +59,17 @@ class BrukteTimerChart extends LineChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => Carbon::now()->subYear()->format('Y'),
-                    'data' => $lastYearTimes,
-                    'backgroundColor' => '#cccccc',
-                ],
-                [
                     'label' => Carbon::now()->format('Y'),
                     'data' => $thisYearTimes,
-                    'backgroundColor' => '#3758FE',
+                    'fill' => 'origin',
+                    'backgroundColor' => 'rgba(255,153,0,0.6)',
+                ],
+                [
+                    'label' => Carbon::now()->subYear()->format('Y'),
+                    'data' => $lastYearTimes,
+                    'tension' => 0.4,
+                    'fill' => 'origin',
+                    'backgroundColor' => 'rgba(153,255,51,0.3)',
                 ],
             ],
         ];

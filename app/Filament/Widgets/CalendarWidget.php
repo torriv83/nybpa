@@ -60,7 +60,7 @@ class CalendarWidget extends FullCalendarWidget
 
         $data = $schedules->map(function ($item, $key) {
 
-            $farge = $item->unavailable ? '#ff0000' : '';
+            $farge = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
 
             return [
