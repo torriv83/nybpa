@@ -12,10 +12,32 @@ return [
     'locale' => config('app.locale'),
 
     'headerToolbar' => [
-        'left' => 'prev,next today',
+        'left' => 'prevYear,nextYear,prev,next,today',
         'center' => 'title',
-        'right' => 'dayGridMonth,timeGridWeek,timeGridDay',
+        'right' => 'dayGridMonth,timeGridWeek,timeGridDay,listWeek,timeGridFourDay',
     ],
+    'views' => [
+        'timeGridFourDay' => [
+            'type' => 'timeGrid',
+            'duration' => ['days' => 4],
+            'buttonText' => '4 day'
+        ]
+    ],
+
+    'buttonText' => [
+        'prev' => "Forrige",
+        'next' => "Neste",
+        'today' => 'Idag',
+        'month' => 'Måned',
+        'week' => 'Uke',
+        'day' => 'Dag',
+        'prevYear' => 'Forrige år',
+        'nextYear' => 'Neste år',
+        'listMonth' => 'Agenda',
+        'listWeek' => 'Uke Liste',
+    ],
+
+    // 'contentHeight' => 'auto',
 
     'navLinks' => true,
 
@@ -39,7 +61,15 @@ return [
 
     'slotDuration' => '00:15:00',
 
-    'slotLabelInterval' => ['hours' => 1],
+    // 'googleCalendarApiKey' => 'AIzaSyBo-Vvbll0RbhGtA8wPqW8Tdxloy0GbUxA',
 
-    'aspectRatio' => 1.5,
+    // 'slotLabelInterval' => ['hours' => 1],
+    'slotLabelFormat' => [
+        'hour' => 'numeric',
+        'minute' => '2-digit',
+        'omitZeroMinute' => false,
+        'meridiem' => 'short'
+    ],
+
+    'aspectRatio' => 2,
 ];

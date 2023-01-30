@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
+use Illuminate\Foundation\Vite;
 use Filament\Navigation\UserMenuItem;
 use Filament\Navigation\NavigationItem;
 use Illuminate\Support\ServiceProvider;
@@ -43,5 +44,10 @@ class AppServiceProvider extends ServiceProvider
                     ->icon('heroicon-s-cog'),
             ]);
         });
+
+        Filament::registerStyles([
+            // asset('build/assets/custom.css'),
+            app(Vite::class)('resources/css/custom.scss')
+        ]);
     }
 }

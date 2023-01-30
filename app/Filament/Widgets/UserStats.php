@@ -50,7 +50,7 @@ class UserStats extends BaseWidget
         $hours_per_week      = 24 * 7;
         $hours_left_per_week = (($total_minutes - $hours_used_minutes) / 60 - ($hours_per_week * $ukerIgjen)) / $ukerIgjen;
 
-        $hoursLeftPerWeek = date("H:i", mktime(0, $hours_left_per_week * 60));
+        $hoursLeftPerWeek = date("H:i:s", mktime(0, $hours_left_per_week * 60));
 
         /* Chart timer brukt dette året */
         $thisYear = Timesheet::whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
@@ -82,11 +82,13 @@ class UserStats extends BaseWidget
 
         /* Card Widgets */
         return [
-            Card::make('Antall Assistenter', Users::assistenter()->count()),
+            Card::make('Antall Assistenter', Users::assistenter()->count())
+                ->url(route('filament.resources.users.index')),
 
             Card::make('Timer brukt i år', $this->minutesToTime($tider->sum('totalt')))
                 ->chart($thisYearTimes)
                 ->color('success')
+                ->url(route('filament.resources.timesheets.index', 'tableFilters[måned][fra_dato]=2023-01-01&tableFilters[måned][til_dato]=2023-12-31'))
                 ->description($this->minutesToTime($usedThisMonth) . ' brukt av ' . $totalHoursToUseThisMonth . ' denne måneden.'),
 
             Card::make('Timer igjen', $this->minutesToTime($total_minutes - $tider->sum('totalt')))
