@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Contracts\View\View;
 
 class YnabOverview extends BaseWidget
 {
@@ -36,6 +37,17 @@ class YnabOverview extends BaseWidget
     protected function getTableQuery(): Builder
     {
         return ynab::query();
+    }
+
+    protected function getTableContentFooter(): ?View
+    {
+        $q = ynab::query()->get();
+
+        $income = $q->sum('income');
+        $activity = $q->sum('activity');
+        $budgeted = $q->sum('budgeted');
+
+        return view('economy.table.table-footer', ['income' => $income, 'activity' => $activity, 'budgeted' => $budgeted]);
     }
 
     protected function getTableColumns(): array
@@ -84,7 +96,6 @@ class YnabOverview extends BaseWidget
                 ->money('nok', true)
                 ->sortable()
                 ->alignLeft(),
-
         ];
     }
 }

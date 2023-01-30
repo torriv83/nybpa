@@ -4,6 +4,10 @@
     border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
 }
 
+.fc-theme-standard .fc-list {
+    border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+}
+
 .fc-scrollgrid {
     border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
 }
@@ -18,4 +22,22 @@
 
 .fc-list-table .fc-list-event:hover td {
     background-color: rgb(17, 24, 39) !important;
+}
+
+.fc-day-today {
+    background: rgba(0, 0, 0, 0.352) !important;
+    border: none !important;
+
+}
+
+.fc-daygrid-dot-event .fc-event-title {
+    font-weight: 500 !important;
+    letter-spacing: 0.8px !important;
+}
+
+//Tabeller
+table>tfoot>tr {
+    background-color: rgb(31 41 55) !important;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
 }

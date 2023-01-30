@@ -1,11 +1,11 @@
 {
   "resources/css/custom.scss": {
-    "file": "assets/custom-ca70b086.css",
+    "file": "assets/custom-c105a9dc.css",
     "src": "resources/css/custom.scss",
     "isEntry": true
   },
   "resources/css/app.css": {
-    "file": "assets/app-c5232f1e.css",
+    "file": "assets/app-86ed618c.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },

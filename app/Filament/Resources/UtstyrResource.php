@@ -83,14 +83,17 @@ class UtstyrResource extends Resource
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
                 BulkAction::make('bestillValgteProdukter')
+                    ->mountUsing(fn (Forms\ComponentContainer $form, Utstyr $record) => $form->fill([
+                        'navn' => $record->navn,
+                    ]))
                     ->action(function (Collection $records, array $data): void {
                         $records;
                     })
                     ->form([
                         Forms\Components\TextInput::make('navn')
-                            ->label('Navn'),
-                        Forms\Components\TextInput::make('antall')
-                            ->numeric(),
+                            ->label('navn'),
+                        // Forms\Components\TextInput::make('antall')
+                        //     ->numeric(),
                     ])
             ]);
     }
