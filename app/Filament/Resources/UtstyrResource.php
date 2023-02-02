@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
+use Illuminate\Support\Facades\Route;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +27,7 @@ class UtstyrResource extends Resource
     protected static ?string $navigationGroup  = 'Medisinsk';
     protected static ?string $modelLabel       = 'Utstyr';
     protected static ?string $pluralModelLabel = 'Utstyr';
-    protected static ?int $navigationSort      = 1;
+    protected static ?int $navigationSort      = 4;
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
 
     public static function getGloballySearchableAttributes(): array
@@ -83,18 +84,9 @@ class UtstyrResource extends Resource
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
                 BulkAction::make('bestillValgteProdukter')
-                    ->mountUsing(fn (Forms\ComponentContainer $form, Utstyr $record) => $form->fill([
-                        'navn' => $record->navn,
-                    ]))
-                    ->action(function (Collection $records, array $data): void {
-                        $records;
+                    ->action(function (Collection $records, array $data) {
+                        //
                     })
-                    ->form([
-                        Forms\Components\TextInput::make('navn')
-                            ->label('navn'),
-                        // Forms\Components\TextInput::make('antall')
-                        //     ->numeric(),
-                    ])
             ]);
     }
 

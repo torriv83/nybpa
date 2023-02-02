@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
                     ->icon('heroicon-o-external-link')
                     ->activeIcon('heroicon-s-presentation-chart-line')
                     ->group('Eksterne linker')
-                    ->sort(3),
+                    ->sort(7),
             ]);
 
             Filament::registerUserMenuItems([

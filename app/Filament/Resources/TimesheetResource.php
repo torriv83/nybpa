@@ -37,6 +37,7 @@ class TimesheetResource extends Resource
     protected static ?string $navigationGroup  = 'Tider';
     protected static ?string $modelLabel       = 'Timeliste';
     protected static ?string $pluralModelLabel = 'Timelister';
+    protected static ?int $navigationSort      = 1;
 
     protected function getDefaultTableSortColumn(): ?string
     {

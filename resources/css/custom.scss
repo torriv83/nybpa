@@ -1,11 +1,15 @@
 // For Kalender
-.fc-theme-standard td,
-.fc-theme-standard th {
-    border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
-}
+.fc-theme-standard {
 
-.fc-theme-standard .fc-list {
-    border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+    td,
+    tr,
+    th {
+        border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+    }
+
+    .fc-list {
+        border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+    }
 }
 
 .fc-scrollgrid {
