@@ -2,20 +2,27 @@
 
 namespace App\Filament\Resources;
 
+use Closure;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Utstyr;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\Mail;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Route;
+use Filament\Forms\Components\Repeater;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use App\Mail\BestillUtstyr as Bestilling;
+use Filament\Tables\Columns\SelectColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\ReplicateAction;
+use Filament\Tables\Columns\TextInputColumn;
 use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\UtstyrResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -62,6 +69,7 @@ class UtstyrResource extends Resource
     {
         return $table
             ->columns([
+                TextInputColumn::make('antall')->type('number')->extraAttributes(['style' => 'width:60px']),
                 TextColumn::make('hva')->sortable(),
                 TextColumn::make('navn')->sortable(),
                 TextColumn::make('kategori.kategori')->sortable(),
@@ -76,8 +84,13 @@ class UtstyrResource extends Resource
                     ->relationship('kategori', 'kategori'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make()->label('Se'),
+                    Tables\Actions\EditAction::make()->label('Endre'),
+                    Tables\Actions\DeleteAction::make()->label('Slett'),
+                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
+                    Tables\Actions\RestoreAction::make()->label('Angre sletting'),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -85,8 +98,17 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data) {
-                        //
+                        Mail::to('test@test.com')->send(new Bestilling($records, $data));
                     })
+                    ->form([
+                        Forms\Components\Textarea::make('info')
+                            ->label('Annen informasjon'),
+                    ])
+                    ->requiresConfirmation()
+                    ->modalHeading('Bestill utstyr')
+                    ->modalSubheading('Sikker på at du har valgt alt du trenger?')
+                    ->modalButton('ja, bestill utstyr!')
+                    ->deselectRecordsAfterCompletion()
             ]);
     }
 
