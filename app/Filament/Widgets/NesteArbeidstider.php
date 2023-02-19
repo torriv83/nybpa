@@ -32,7 +32,12 @@ class NesteArbeidstider extends BaseWidget
 
     protected function getDefaultTableSortDirection(): ?string
     {
-        return 'desc';
+        return 'asc';
+    }
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'fra_dato';
     }
 
     protected function getTableQuery(): Builder
