@@ -3,11 +3,11 @@
 
 
     Får du bestilt dette:
-    <ol>
+    <ul>
         @foreach($utstyr as $u)
         <li>{{$u->navn}}, Art.nr: {{$u->artikkelnummer}}, {{$u->antall}} stk. </li>
         @endforeach
-    </ol>
+    </ul>
 
     <br>
 

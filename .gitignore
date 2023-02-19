@@ -43,3 +43,5 @@ Homestead.json
 .ionide
 .vscode/launch.json
 .idea/*
+.env
+config/livewire.php
