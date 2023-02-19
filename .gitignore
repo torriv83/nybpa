@@ -45,3 +45,4 @@ Homestead.json
 .idea/*
 .env
 config/livewire.php
+.env
