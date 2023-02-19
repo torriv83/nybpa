@@ -9,9 +9,12 @@
         @endforeach
     </ul>
 
+    @if (!empty($data['info']))
     <br>
 
     {{ $data['info'] }}<br><br>
+    @endif
+
 
     Mvh <br>
     Tor J. Rivera
