@@ -29,7 +29,12 @@ class NesteArbeidstider extends BaseWidget
     {
         return uniqid();
     }
-    
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
+    }
+
     protected function getTableQuery(): Builder
     {
         return Timesheet::query()->where('fra_dato', '>=', now())->where('user_id', '!=', 1)->where('unavailable', '=', 0);
