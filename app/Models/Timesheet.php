@@ -17,7 +17,7 @@ class Timesheet extends Model
     use SoftDeletes;
 
     public $timestamps = true;
-    // protected $dates      = ['fra_dato', 'til_dato'];
+    protected $dates      = ['fra_dato', 'til_dato'];
     protected $fillable   = [
         'fra_dato',
         'til_dato',
@@ -108,7 +108,7 @@ class Timesheet extends Model
 
         $results = $this->when($id, function ($query) use ($id) {
             return $query->where('user_id', $id);
-        })->orderBy('fra_dato', $orderby);
+        }); //->orderBy('fra_dato', $orderby);
 
         return $results;
     }

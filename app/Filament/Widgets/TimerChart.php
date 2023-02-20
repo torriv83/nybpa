@@ -101,7 +101,7 @@ class TimerChart extends BarChartWidget
                 ],
                 [
                     'type' => 'line',
-                    'label' => 'Gjenstår: ' . $prosentIgjen . '%',
+                    'label' => 'Gjenstår',
                     'data' => $thisYearLeft,
                     'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
                     'borderColor' => 'rgb(255, 99, 132)',
