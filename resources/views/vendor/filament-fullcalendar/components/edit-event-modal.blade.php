@@ -30,7 +30,9 @@
             <x-filament::button color="secondary" x-on:click="isOpen = false">
                 {{ $this->getEditEventModalCloseButtonLabel() }}
             </x-filament::button>
-            <x-filament::button x-on:click="Livewire.emit('deleteEvent')" color="danger">
+            <x-filament::button
+                onclick="confirm('Sikker på at du vil slette denne?') || event.stopImmediatePropagation()"
+                x-on:click="Livewire.emit('deleteEvent')" color="danger">
                 Slett
             </x-filament::button>
             @endif
