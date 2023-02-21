@@ -62,9 +62,9 @@ class WishlistResource extends Resource
                 TextColumn::make('antall'),
                 BadgeColumn::make('status')
                     ->colors([
-                        'warning' => 'begynt å spare',
-                        'success' => 'kjøpt',
-                        'danger' => 'venter',
+                        'warning' => 'Begynt å spare',
+                        'success' => 'Kjøpt',
+                        'danger' => 'Venter',
                     ]),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
 
