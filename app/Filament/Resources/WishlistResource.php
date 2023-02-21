@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\BadgeColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\WishlistResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -42,9 +43,9 @@ class WishlistResource extends Resource
                 TextInput::make('antall')->type('number'),
                 Select::make('status')
                     ->options([
-                        'venter' => 'Venter',
-                        'begynt å spare' => 'Begynt å spare',
-                        'kjøpt' => 'Kjøpt',
+                        'Venter' => 'Venter',
+                        'Begynt å spare' => 'Begynt å spare',
+                        'Kjøpt' => 'Kjøpt',
                     ])
             ]);
     }
@@ -59,7 +60,12 @@ class WishlistResource extends Resource
                     ->url(fn ($record) => $record->url, true),
                 TextColumn::make('koster')->money('nok', true)->sortable(),
                 TextColumn::make('antall'),
-                TextColumn::make('status'),
+                BadgeColumn::make('status')
+                    ->colors([
+                        'warning' => 'begynt å spare',
+                        'success' => 'kjøpt',
+                        'danger' => 'venter',
+                    ]),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
 
                     return $record->koster * $record->antall;
