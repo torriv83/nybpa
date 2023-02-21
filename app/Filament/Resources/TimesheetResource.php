@@ -270,7 +270,7 @@ class TimesheetResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
-            ])->deferLoading();
+            ]);
     }
 
     public static function getRelations(): array
