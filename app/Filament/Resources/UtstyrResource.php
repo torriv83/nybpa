@@ -98,7 +98,7 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data) {
-                        Mail::to('torrivera83@gmail.com')->send(new Bestilling($records, $data));
+                        Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
                     })
                     ->form([
                         Forms\Components\Textarea::make('info')
