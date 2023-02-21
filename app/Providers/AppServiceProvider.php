@@ -37,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
                     ->sort(7),
             ]);
 
+            Filament::registerNavigationGroups([
+                'Tider',
+                'Medisinsk',
+                'Økonomi',
+                'Authentication',
+            ]);
+
             Filament::registerUserMenuItems([
                 UserMenuItem::make()
                     ->label('Settings')

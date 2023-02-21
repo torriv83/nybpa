@@ -34,7 +34,7 @@ class UtstyrResource extends Resource
     protected static ?string $navigationGroup  = 'Medisinsk';
     protected static ?string $modelLabel       = 'Utstyr';
     protected static ?string $pluralModelLabel = 'Utstyr';
-    protected static ?int $navigationSort      = 4;
+    protected static ?int $navigationSort      = 1;
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
 
     public static function getGloballySearchableAttributes(): array

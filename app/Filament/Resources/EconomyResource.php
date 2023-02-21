@@ -23,7 +23,6 @@ class EconomyResource extends Resource
     protected static ?string $modelLabel       = 'Økonomi';
     protected static ?string $pluralModelLabel = 'Økonomi';
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
-    protected static ?int $navigationSort      = 5;
 
     public static function form(Form $form): Form
     {
