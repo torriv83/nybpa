@@ -22,7 +22,7 @@ class WishlistResource extends Resource
     protected static ?string $model = Wishlist::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup  = 'Ønskeliste';
+    protected static ?string $navigationGroup  = 'Diverse';
     protected static ?string $recordTitleAttribute = 'hva';
     protected static ?string $modelLabel       = 'Ønskeliste';
     protected static ?string $pluralModelLabel = 'Ønskelister';

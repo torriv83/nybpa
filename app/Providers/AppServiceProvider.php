@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
             Filament::registerNavigationGroups([
                 'Tider',
                 'Medisinsk',
-                'Økonomi',
+                'Diverse',
                 'Authentication',
             ]);
 

@@ -19,7 +19,7 @@ use App\Filament\Resources\EconomyResource\Widgets\EconomyHistory;
 class EconomyResource extends Resource
 {
     protected static ?string $model            = Economy::class;
-    protected static ?string $navigationGroup  = 'Økonomi';
+    protected static ?string $navigationGroup  = 'Diverse';
     protected static ?string $modelLabel       = 'Økonomi';
     protected static ?string $pluralModelLabel = 'Økonomi';
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
