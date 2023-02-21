@@ -152,11 +152,13 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('fra_dato')
                     ->dateTime('d.m.Y H:i')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('til_dato')
                     ->dateTime('d.m.Y H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('description')
                     ->label('Beskrivelse')
@@ -172,7 +174,8 @@ class TimesheetResource extends Resource
                         }
 
                         return $state;
-                    }),
+                    })
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('totalt')
                     ->getStateUsing(function (Model $record) {
@@ -184,7 +187,8 @@ class TimesheetResource extends Resource
                             return $hours;
                         }
                     })
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 Tables\Columns\IconColumn::make('unavailable')
                     ->label('Borte')
@@ -266,7 +270,7 @@ class TimesheetResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
-            ]);
+            ])->deferLoading();
     }
 
     public static function getRelations(): array
