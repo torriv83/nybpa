@@ -18,7 +18,6 @@ class UserStats extends BaseWidget
 {
     protected static ?string $pollingInterval = '600s';
     protected static ?int $sort = 1;
-    protected array|string|int $columnSpan = 12;
 
     protected function getColumns(): int
     {
