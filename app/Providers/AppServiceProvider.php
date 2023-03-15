@@ -42,11 +42,12 @@ class AppServiceProvider extends ServiceProvider
                 'Medisinsk',
                 'Diverse',
                 'Authentication',
+                'Landslaget'
             ]);
 
             Filament::registerUserMenuItems([
                 UserMenuItem::make()
-                    ->label('Settings')
+                    ->label('Innstillinger')
                     ->url(route('filament.pages.b-p-a'))
                     ->icon('heroicon-s-cog'),
             ]);
