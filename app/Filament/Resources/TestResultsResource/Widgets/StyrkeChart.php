@@ -16,36 +16,27 @@ class StyrkeChart extends LineChartWidget
         $styrketest = Tests::where('navn', '=', 'Styrketest')->get();
         $resultat = TestResults::where('testsID', '=', $styrketest['0']->id)->orderBy('dato', 'asc')->get();
 
-        $test = array();
-        $label = array();
+        $tester = array();
         foreach ($resultat as $r => $v) {
-
             foreach ($v->resultat as $k => $res) {
-
                 foreach ($res as $name => $result) {
 
-                    // $data['label'] = $name;
-                    //Prøv å søk i variabelen $test istedenfor, etter at den er pushet
-                    if (array_search($name, $label)) {
-                        // dd(array_search($name, $label));
-                        array_push($test[array_search($name, $label)]['data'], [$v->dato->format('d.m.y H:i') => $result]);
+                    if (array_search($name, array_column($tester, 'label'))) {
+                        $tester[array_search($name, array_column($tester, 'label'))]['data'][$v->dato->format('d.m.y H:i')] = $result;
                     } else {
-                        $data['label'] = $name;
-                        $data['data'] = [$v->dato->format('d.m.y H:i') => $result];
-                        $data['backgroundColor'] = 'rgb(' . rand(0, 255) . ', ' . rand(0, 255) . ', ' . rand(0, 255) . ')';
+                        $tester[] = array(
+                            'label' => $name,
+                            'data' => array($v->dato->format('d.m.y H:i') => $result),
+                            'backgroundColor' => 'rgb(' . rand(0, 255) . ', ' . rand(0, 255) . ', ' . rand(0, 255) . ')'
+                        );
                     }
-                    array_push($test, $data);
-
-                    $label[] = $name;
                 }
             }
-
-            $date[$r] = $v->dato->format('d.m.y H:i');
         }
-        dd($test);
+        dd($tester); //DumpAndDie
 
         return [
-            'datasets' => $test,
+            'datasets' => $tester,
         ];
     }
 }

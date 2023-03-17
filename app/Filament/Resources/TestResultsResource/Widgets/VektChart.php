@@ -5,7 +5,6 @@ namespace App\Filament\Resources\TestResultsResource\Widgets;
 use Filament\Widgets\LineChartWidget;
 use App\Models\TestResults;
 use App\Models\Tests;
-use NunoMaduro\Collision\Adapters\Phpunit\TestResult;
 
 class VektChart extends LineChartWidget
 {
@@ -39,6 +38,8 @@ class VektChart extends LineChartWidget
     protected function getData(): array
     {
 
+        $value = [];
+        $date = [];
         $vekt = Tests::where('navn', '=', 'Vekt')->get();
         $resultat = TestResults::where('testsID', '=', $vekt['0']->id)->orderBy('dato', 'asc')->get();
 
