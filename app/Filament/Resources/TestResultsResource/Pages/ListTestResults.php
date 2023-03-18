@@ -22,6 +22,7 @@ class ListTestResults extends ListRecords
         return [
             TestResultsResource\Widgets\VektChart::class,
             TestResultsResource\Widgets\StyrkeChart::class,
+            TestResultsResource\Widgets\RheitChart::class,
         ];
     }
 }
