@@ -43,19 +43,24 @@ class VektChart extends LineChartWidget
         $vekt = Tests::where('navn', '=', 'Vekt')->get();
         $resultat = TestResults::where('testsID', '=', $vekt['0']->id)->orderBy('dato', 'asc')->get();
 
-        foreach ($resultat as $r => $v) {
-            $value[$r] = $v->resultat[0]['Vekt'];
-            $date[$r] = $v->dato->format('d.m.y H:i');
-        }
+        if ($resultat) {
 
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Vekt',
-                    'data' => $value,
+            foreach ($resultat as $r => $v) {
+                $value[$r] = $v->resultat[0]['Vekt'];
+                $date[$r] = $v->dato->format('d.m.y H:i');
+            }
+
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Vekt',
+                        'data' => $value,
+                    ],
                 ],
-            ],
-            'labels' => $date,
-        ];
+                'labels' => $date,
+            ];
+        } else {
+            return 'Ingen vekt registrert enda.';
+        }
     }
 }
