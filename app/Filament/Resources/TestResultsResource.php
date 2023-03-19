@@ -41,10 +41,15 @@ class TestResultsResource extends Resource
                         $schema = [];
                         $test = $get('testsID') == 0 ? 1 : $get('testsID');
                         $data = tests::where('id', '=', $test)->get();
-                        // dd($data[0]['ovelser']);
                         foreach ($data[0]['ovelser'] as $o) {
-                            $schema[] = TextInput::make($o['navn'])
-                                ->required();
+                            if ($o['type'] == 'tid' || $o['type'] == 'kg') {
+                                $schema[] = TextInput::make($o['navn'])
+                                    ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
+                                    ->required();
+                            } else {
+                                $schema[] = TextInput::make($o['navn'])
+                                    ->required();
+                            }
                         }
 
                         return $schema;
