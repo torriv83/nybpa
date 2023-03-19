@@ -89,9 +89,17 @@ class YnabOverview extends BaseWidget
                 ->sortable()
                 ->alignLeft(),
 
-            Tables\Columns\TextColumn::make('Balanse')
+            Tables\Columns\TextColumn::make('inntektutgift')
                 ->getStateUsing(function (Model $record) {
                     return ($record->income + $record->activity)  / 1000;
+                })
+                ->money('nok', true)
+                ->sortable()
+                ->alignLeft()->label('Inntekt - Utgift'),
+
+            Tables\Columns\TextColumn::make('Balanse')
+                ->getStateUsing(function (Model $record) {
+                    return ($record->income - $record->budgeted)  / 1000;
                 })
                 ->money('nok', true)
                 ->sortable()
