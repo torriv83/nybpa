@@ -13,8 +13,6 @@ class TestResults extends Model
     use Notifiable;
     use SoftDeletes;
 
-    protected $dates      = ['dato'];
-
     protected $fillable   = [
         'dato',
         'resultat',
@@ -23,6 +21,7 @@ class TestResults extends Model
 
     protected $casts = [
         'resultat' => 'array',
+        'dato' => 'datetime',
     ];
 
     public function tests()

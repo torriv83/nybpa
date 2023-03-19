@@ -17,7 +17,11 @@ class Timesheet extends Model
     use SoftDeletes;
 
     public $timestamps = true;
-    protected $dates      = ['fra_dato', 'til_dato'];
+    protected $casts = [
+        'resultat' => 'array',
+        'fra_dato' => 'datetime',
+        'til_dato' => 'datetime',
+    ];
     protected $fillable   = [
         'fra_dato',
         'til_dato',

@@ -49,7 +49,7 @@ class CreateTestResults extends CreateRecord
                                 foreach ($data[0]['ovelser'] as $o) {
                                     if ($o['type'] == 'tid' || $o['type'] == 'kg') {
                                         $schema[] = TextInput::make($o['navn'])
-                                            ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
+                                            // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
                                             ->required();
                                     } else {
                                         $schema[] = TextInput::make($o['navn'])
