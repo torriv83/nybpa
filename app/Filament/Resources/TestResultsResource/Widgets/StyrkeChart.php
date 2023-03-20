@@ -11,6 +11,15 @@ class StyrkeChart extends LineChartWidget
     protected static ?string $heading = 'Styrke tester';
     protected static ?string $pollingInterval = null;
 
+    protected static ?array $options = [
+            'plugins' => [
+                    'tooltip' => [
+                            'mode' => 'index',
+                'intersect' => false
+            ],
+        ]
+    ];
+
     protected function getData(): array
     {
         //Hente ut data fra DB
@@ -31,6 +40,7 @@ class StyrkeChart extends LineChartWidget
             $finalResults = array();
             foreach (array_merge_recursive(...$resultater) as $name => $res) {
                 $randColor = 'rgb(' . rand(0, 255) . ', ' . rand(0, 255) . ', ' . rand(0, 255) . ')';
+                $res = count($dato) > 1 ? $res : [$res];
                 $finalResults[] = array(
                     'label' => $name,
                     'data' => $res,
