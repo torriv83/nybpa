@@ -5,14 +5,17 @@
     Får du bestilt dette:
     <ul>
         @foreach($utstyr as $u)
-        <li>{{$u->navn}}, Art.nr: {{$u->artikkelnummer}}, {{$u->antall}} stk. </li>
+            <li>{{$u->navn}}, @if($u->artikkelnummer != 0 || is_null($u->artikkelnummer))
+                            Art.nr: {{$u->artikkelnummer}},
+                @endif  {{$u->antall}} stk.
+            </li>
         @endforeach
     </ul>
 
     @if (!empty($data['info']))
-    <br>
+        <br>
 
-    {{ $data['info'] }}<br><br>
+        {{ $data['info'] }}<br><br>
     @endif
 
 

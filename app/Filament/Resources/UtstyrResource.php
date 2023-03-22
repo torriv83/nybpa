@@ -90,18 +90,20 @@ class UtstyrResource extends Resource
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
                 Tables\Actions\BulkAction::make('bestillValgteProdukter')
-                    ->action(function (Collection $records, array $data) {
-                        Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
-                    })
-                    ->form([
-                        Forms\Components\Textarea::make('info')
-                            ->label('Annen informasjon'),
-                    ])
-                    ->requiresConfirmation()
-                    ->modalHeading('Bestill utstyr')
-                    ->modalSubheading('Sikker på at du har valgt alt du trenger?')
-                    ->modalButton('ja, bestill utstyr!')
-                    ->deselectRecordsAfterCompletion()
+                                         ->action(function (Collection $records, array $data) {
+
+                                             Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
+                                         })
+                                         ->form([
+                                             Forms\Components\Textarea::make('info')
+                                                                      ->label('Annen informasjon'),
+                                         ])
+                                         ->requiresConfirmation()
+                                         ->modalHeading('Bestill utstyr')
+                                         ->modalSubheading('Sikker på at du har valgt alt du trenger?')
+                                         ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
+                                         ->modalButton('ja, bestill utstyr!')
+                                         ->deselectRecordsAfterCompletion()->modalWidth('lg')
             ]);
     }
 
