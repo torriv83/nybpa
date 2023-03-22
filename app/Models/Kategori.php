@@ -2,16 +2,10 @@
 
 namespace App\Models;
 
-use Cache;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
-use App\Notifications\UserUnavailable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Notifications\DatabaseNotification;
-
 
 /**
  * @method thisYear()

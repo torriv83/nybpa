@@ -44,14 +44,17 @@ class RheitChart extends LineChartWidget
     protected function getData() : array
     {
 
-        //Hente ut data fra DB
-        $rheit    = Tests::where('navn', '=', 'Rheit')->get();
-        $resultat = TestResults::where('testsID', '=', $rheit['0']->id)->orderBy('dato')->get();
-
         //Define variables
         $dato       = [];
         $resultater = [];
         $drop       = [];
+        $resultat   = [];
+
+        //Hente ut data fra DB
+        $rheit = Tests::where('navn', '=', 'Rheit')->get();
+        if (count($rheit) > 0) {
+            $resultat = TestResults::where('testsID', '=', $rheit['0']->id)->orderBy('dato')->get();
+        }
 
         if (count($resultat) > 0) {
 
