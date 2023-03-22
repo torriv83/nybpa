@@ -19,6 +19,8 @@ class TestsResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup  = 'Landslag';
+    protected static ?string $modelLabel       = 'Test';
+    protected static ?string $pluralModelLabel = 'Tester';
 
     public static function form(Form $form): Form
     {

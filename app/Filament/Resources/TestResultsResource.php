@@ -3,105 +3,131 @@
 namespace App\Filament\Resources;
 
 use Closure;
-use Filament\Forms;
-use Filament\Tables;
+//use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+//use Filament\Tables;
 use App\Models\Tests;
 use App\Models\TestResults;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ForceDeleteBulkAction;
+use Filament\Tables\Actions\RestoreBulkAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TestResultsResource\Pages;
-use App\Filament\Resources\TestResultsResource\RelationManagers;
+
+//use App\Filament\Resources\TestResultsResource\RelationManagers;
 
 class TestResultsResource extends Resource
 {
+
     protected static ?string $model = TestResults::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup  = 'Landslag';
+    protected static ?string $navigationIcon  = 'heroicon-o-collection';
+    protected static ?string $navigationGroup = 'Landslag';
 
-    public static function form(Form $form): Form
+    protected static ?string $modelLabel       = 'Test resultat';
+    protected static ?string $pluralModelLabel = 'Test resultater';
+
+    public static function form(Form $form) : Form
     {
+
         return $form
             ->schema([
-                Forms\Components\DateTimePicker::make('dato')
-                    ->required(),
-                Forms\Components\Select::make('testsID')
-                    ->label('Hvilken test')
-                    ->options(function () {
-                        return tests::all()->pluck('navn', 'id');
-                    }),
+                DateTimePicker::make('dato')
+                              ->required(),
+                Select::make('testsID')
+                      ->label('Hvilken test')
+                      ->options(function () {
 
-                Forms\Components\Repeater::make('resultat')
-                    ->label('Resultater')
-                    ->schema(function (Closure $get): array {
-                        $schema = [];
-                        $test = $get('testsID') == 0 ? 1 : $get('testsID');
-                        $data = tests::where('id', '=', $test)->get();
-                        foreach ($data[0]['ovelser'] as $o) {
-                            if ($o['type'] == 'tid' || $o['type'] == 'kg') {
-                                $schema[] = TextInput::make($o['navn'])
-                                    // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
-                                    ->required();
-                            } else {
-                                $schema[] = TextInput::make($o['navn'])
-                                    ->required();
+                          return tests::all()->pluck('navn', 'id');
+                      }),
+
+                Repeater::make('resultat')
+                        ->label('Resultater')
+                        ->schema(function (Closure $get) : array {
+
+                            $schema = [];
+                            $test   = $get('testsID') == 0 ? 1 : $get('testsID');
+                            $data   = tests::where('id', '=', $test)->get();
+
+                            foreach ($data[0]['ovelser'] as $o) {
+                                if ($o['type'] == 'tid' || $o['type'] == 'kg') {
+                                    $schema[] = TextInput::make($o['navn'])
+                                        // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
+                                                         ->required();
+                                } else {
+                                    $schema[] = TextInput::make($o['navn'])
+                                                         ->required();
+                                }
                             }
-                        }
 
-                        return $schema;
-                    })
-                    ->columns(3)
+                            return $schema;
+                        })
+                        ->columns(3)
             ]);
     }
 
-    public static function table(Table $table): Table
+    /**
+     * @throws \Exception
+     */
+    public static function table(Table $table) : Table
     {
+
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('dato')
-                    ->dateTime('d.m.Y H:i')->sortable(),
-                Tables\Columns\TextColumn::make('tests.navn')->label('Test'),
+                TextColumn::make('dato')
+                          ->dateTime('d.m.Y H:i')->sortable(),
+                TextColumn::make('tests.navn')->label('Test'),
             ])
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+                DeleteBulkAction::make(),
+                ForceDeleteBulkAction::make(),
+                RestoreBulkAction::make(),
             ]);
     }
 
-    public static function getRelations(): array
+    public static function getRelations() : array
     {
+
         return [
             //
         ];
     }
 
-    public static function getPages(): array
+    public static function getPages() : array
     {
+
         return [
-            'index' => Pages\ListTestResults::route('/'),
+            'index'  => Pages\ListTestResults::route('/'),
             'create' => Pages\CreateTestResults::route('/create'),
-            'edit' => Pages\EditTestResults::route('/{record}/edit'),
+            'edit'   => Pages\EditTestResults::route('/{record}/edit'),
             // 'view' => Pages\ViewTestResults::route('/{record}'),
         ];
     }
 
-    public static function getEloquentQuery(): Builder
+    public static function getEloquentQuery() : Builder
     {
+
         return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+                     ->withoutGlobalScopes([
+                         SoftDeletingScope::class,
+                     ]);
     }
 }

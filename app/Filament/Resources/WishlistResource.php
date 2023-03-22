@@ -79,7 +79,7 @@ class WishlistResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])->reorderable('prioritet')->defaultSort('prioritet');;
+            ])->reorderable('prioritet')->defaultSort('prioritet');
     }
 
     public static function getRelations(): array

@@ -21,7 +21,7 @@ class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
 
     public function getTableRecordKey(Model $record): string
     {
-        return uniqid();
+        return $record;
     }
 
     protected function isTablePaginationEnabled(): bool

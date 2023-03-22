@@ -2,12 +2,12 @@
 
 namespace App\Filament\Widgets;
 
-use DateTimeZone;
+//use DateTimeZone;
 use Carbon\Carbon;
 use App\Models\Timesheet;
 use App\Settings\BpaTimer;
 use Filament\Widgets\BarChartWidget;
-use Barryvdh\Debugbar\Facades\Debugbar;
+//use Barryvdh\Debugbar\Facades\Debugbar;
 
 class TimerChart extends BarChartWidget
 {
@@ -29,65 +29,26 @@ class TimerChart extends BarChartWidget
 
     protected function getData(): array
     {
-        $t = new Timesheet();
+        $timeSheet = new Timesheet();
 
         /* Forrige år */
-        $tid = $t->timeUsedLastYear();
-        $tider = [];
-        $sum = 0;
-
-        foreach ($tid as $key => $value) {
-            // $tider[$key] = $value->sum('totalt');
-
-            for ($i = 0; $i < count($value); $i++) {
-                $sum += $value[$i]->totalt;
-            }
-
-            $tider[$key] = round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
-        }
-
+        $tid = $timeSheet->timeUsedLastYear();
+        $lastYearTimes = $this->usedTime($tid);
 
         /* Dette året */
-        $thisYear = $t->timeUsedThisYear();
-
-        $thisYearTimes = [];
-        $sum = 0;
-        foreach ($thisYear as $key => $value) {
-
-            for ($i = 0; $i < count($value); $i++) {
-                $sum += $value[$i]->totalt;
-            }
-            // $thisYearTimes[$key] = $value->sum('totalt');
-            $thisYearTimes[$key] = round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
-        }
-
+        $thisYear = $timeSheet->timeUsedThisYear();
+        $thisYearTimes = $this->usedTime($thisYear);
 
         /* Gjenstår */
-        $sum = 0;
+        $thisYearLeft = $this->usedTime($thisYear, true);
 
-        foreach ($thisYear as $key => $value) {
-
-            for ($i = 0; $i < count($value); $i++) {
-                $sum += $value[$i]->totalt;
-            }
-            // $thisYearLeft[$key] = 100 - $sum;
-            $thisYearLeft[$key] = 100 - round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
-            $prosentIgjen = 100 - round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
-        }
-        //  debug($prosentIgjen);
-
-        if ($prosentIgjen) {
-            $prosentIgjen = $prosentIgjen;
-        } else {
-            $prosentIgjen = 'Ingen data';
-        }
 
         /* Datasets Chartjs */
         return [
             'datasets' => [
                 [
                     'label' => Carbon::now()->subYear()->format('Y'),
-                    'data' => $tider,
+                    'data' => $lastYearTimes,
                     'backgroundColor' => 'rgba(201, 203, 207, 0.2)',
                     'borderColor' => 'rgb(201, 203, 207)',
                     'borderWidth' => 1,
@@ -110,5 +71,33 @@ class TimerChart extends BarChartWidget
             ],
 
         ];
+    }
+
+    /**
+     * @param $times
+     * @param  bool  $prosent
+     *
+     * @return array
+     */
+    public function usedTime($times, bool $prosent = false) : array
+    {
+        $sum = 0;
+        $tider = [];
+        foreach ($times as $key => $value) {
+            $number = count($value);
+
+            for ($i = 0; $i < $number; $i++) {
+                $sum += $value[$i]->totalt;
+            }
+
+            if($prosent == 1){
+                $tider[$key] = 100 - round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
+            }else{
+                $tider[$key] = round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
+            }
+
+        }
+
+        return $tider;
     }
 }

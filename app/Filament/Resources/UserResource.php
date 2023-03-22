@@ -2,26 +2,26 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
+//use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Card;
-use Illuminate\Support\Facades\Hash;
+//use Filament\Forms\Components\Card;
+//use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
-use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
-use Filament\Tables\Columns\ToggleColumn;
+//use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\UserResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\UserResource\RelationManagers;
-use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
+//use Illuminate\Database\Eloquent\SoftDeletingScope;
+//use App\Filament\Resources\UserResource\RelationManagers;
+//use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class UserResource extends Resource
 {
@@ -64,7 +64,7 @@ class UserResource extends Resource
                             ->same('passwordConfirmation')
                             ->password()
                             ->maxLength(255)
-                            ->required(fn ($component, $get, $livewire, $model, $record, $set, $state) => $record === null)
+                            ->required(fn ($record) => $record === null)
                             ->label('Passord'),
                         TextInput::make('passwordConfirmation')
                             ->password()

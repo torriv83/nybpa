@@ -8,7 +8,8 @@ use App\Models\Tests;
 
 class VektChart extends LineChartWidget
 {
-    protected static ?string $heading = 'Vekt';
+
+    protected static ?string $heading         = 'Vekt';
     protected static ?string $pollingInterval = null;
 
     protected static ?array $options = [
@@ -17,57 +18,57 @@ class VektChart extends LineChartWidget
                 'display' => false,
             ],
         ],
-        'scales' => [
+        'scales'  => [
             'x' => [
                 'display' => true,
-                'title' => [
+                'title'   => [
                     'display' => true,
-                    'text' => 'Dato'
+                    'text'    => 'Dato'
                 ]
             ],
             'y' => [
                 'display' => true,
-                'title' => [
+                'title'   => [
                     'display' => true,
-                    'text' => 'Kg'
+                    'text'    => 'Kg'
                 ]
             ]
         ]
     ];
 
-    protected function getData(): array
+    protected function getData() : array
     {
 
-        $value = [];
-        $date = [];
-        $vekt = Tests::where('navn', '=', 'Vekt')->get();
-        $resultat = TestResults::where('testsID', '=', $vekt['0']->id)->orderBy('dato', 'asc')->get();
+        $value    = [];
+        $date     = [];
+        $vekt     = Tests::where('navn', '=', 'Vekt')->get();
+        $resultat = TestResults::where('testsID', '=', $vekt['0']->id)->orderBy('dato')->get();
 
         if (count($resultat) > 0) {
 
             foreach ($resultat as $r => $v) {
                 $value[$r] = $v->resultat[0]['Vekt'];
-                $date[$r] = $v->dato->format('d.m.y H:i');
+                $date[$r]  = $v->dato->format('d.m.y H:i');
             }
 
             return [
                 'datasets' => [
                     [
                         'label' => 'Vekt',
-                        'data' => $value,
+                        'data'  => $value,
                     ],
                 ],
-                'labels' => $date,
+                'labels'   => $date,
             ];
         } else {
             return [
                 'datasets' => [
                     [
                         'label' => 'Vekt',
-                        'data' => [],
+                        'data'  => [],
                     ],
                 ],
-                'labels' => [],
+                'labels'   => [],
             ];
         }
     }

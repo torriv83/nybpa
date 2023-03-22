@@ -11,11 +11,14 @@ use App\Notifications\UserUnavailable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
+/**
+ * @mixin IdeHelperTimesheet
+ */
 class Timesheet extends Model
 {
     use Notifiable;
     use SoftDeletes;
-
+//TODO gå igjennom denne for å se hvilke funksjoner du ikke trenger lenger
     public $timestamps = true;
     protected $casts = [
         'resultat' => 'array',
@@ -110,11 +113,11 @@ class Timesheet extends Model
     public function getTimesheet($id = '', $orderby = 'desc')
     {
 
-        $results = $this->when($id, function ($query) use ($id) {
-            return $query->where('user_id', $id);
-        }); //->orderBy('fra_dato', $orderby);
+        //->orderBy('fra_dato', $orderby);
 
-        return $results;
+        return $this->when($id, function ($query) use ($id) {
+            return $query->where('user_id', $id);
+        });
     }
 
     /**
@@ -202,7 +205,7 @@ class Timesheet extends Model
 
         $start     = $dt->parse($this->jobbFra());
         $slutt     = $dt->parse($this->jobbTil());
-        $utenTimer = (int) $start->diffInHours($slutt);
+        $utenTimer = $start->diffInHours($slutt);
 
         return $start->diffInHours($slutt) . ':' . $start->addHours($utenTimer)->diff($slutt)->format('%I');
     }
@@ -274,11 +277,10 @@ class Timesheet extends Model
     public function scopeTimelisteForrigeMaaned($query)
     {
 
+        $month = Carbon::now()->subMonth()->format('m');
         if ((new Carbon(now()))->format('m') == '01') {
-            $month = Carbon::now()->subMonth()->format('m');
             $year  = Carbon::now()->subYear()->format('Y');
         } else {
-            $month = Carbon::now()->subMonth()->format('m');
             $year  = Carbon::now()->format('Y');
         }
 
@@ -296,10 +298,7 @@ class Timesheet extends Model
             ->where('unavailable', '!=', 1)
             ->orderByRaw('fra_dato ASC')
             ->get()
-            ->groupBy(function ($val) {
-
-                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-            });
+            ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
     }
 
     public function timeUsedLastYear()
@@ -310,10 +309,7 @@ class Timesheet extends Model
         return $this->whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
             ->orderByRaw('fra_dato ASC')
             ->get()
-            ->groupBy(function ($val) {
-
-                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-            });
+            ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
         // });
     }
 

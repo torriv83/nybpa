@@ -14,6 +14,7 @@ use Illuminate\Notifications\DatabaseNotification;
 
 /**
  * @method thisYear()
+ * @mixin IdeHelperUtstyr
  */
 class Utstyr extends Model
 {

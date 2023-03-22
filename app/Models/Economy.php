@@ -11,6 +11,9 @@ use App\Notifications\UserUnavailable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\DatabaseNotification;
 
+/**
+ * @mixin IdeHelperEconomy
+ */
 class Economy extends Model
 {
     use Notifiable;

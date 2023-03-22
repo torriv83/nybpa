@@ -14,6 +14,6 @@ class Dashboard extends BasePage
 
     protected function getHeading(): string
     {
-        return "BPA Dashboard";
+        return 'BPA Dashboard';
     }
 }

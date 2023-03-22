@@ -4,20 +4,14 @@ namespace App\Filament\Resources\TestResultsResource\Pages;
 
 use Closure;
 use App\Models\Tests;
-use App\Models\TestResults;
-use Filament\Pages\Actions;
-use Illuminate\Support\Str;
-use Forms\Components\Select;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\TestResultsResource;
-use NunoMaduro\Collision\Adapters\Phpunit\TestResult;
 
 class CreateTestResults extends CreateRecord
 {
@@ -31,11 +25,11 @@ class CreateTestResults extends CreateRecord
                 ->label('Hvilken test?')
                 ->description('Velg hvilken test du skal loggføre')
                 ->schema([
-                    \Filament\Forms\Components\Select::make('testsID')
+                    Select::make('testsID')
                         ->options(function () {
                             return tests::all()->pluck('navn', 'id');
                         })->label('Test')->reactive(),
-                    \Filament\Forms\Components\DateTimePicker::make('dato'),
+                    DateTimePicker::make('dato'),
                 ]),
 
             Step::make('Resultater')
