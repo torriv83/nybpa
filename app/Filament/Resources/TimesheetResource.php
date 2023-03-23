@@ -2,16 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use Closure;
-use Carbon\Carbon;
-
-use App\Models\User;
-use App\Models\Timesheet;
-use Exception;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
+use App\Filament\Resources\TimesheetResource\Pages;
 use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
+use App\Models\Timesheet;
+use App\Models\User;
+use Carbon\Carbon;
+use Closure;
+use Exception;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Form;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -26,19 +34,10 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
-use Illuminate\Support\Facades\Auth;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Checkbox;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\DateTimePicker;
-use App\Filament\Resources\TimesheetResource\Pages;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use function strip_tags;
 
 class TimesheetResource extends Resource
@@ -48,7 +47,7 @@ class TimesheetResource extends Resource
      * Innstillinger
      */
     protected static ?string $model            = Timesheet::class;
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationIcon   = 'heroicon-o-clock';
     protected static ?string $navigationGroup  = 'Tider';
     protected static ?string $modelLabel       = 'Timeliste';
     protected static ?string $pluralModelLabel = 'Timelister';

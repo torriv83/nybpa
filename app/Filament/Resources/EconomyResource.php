@@ -2,39 +2,39 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Economy;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EconomyResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EconomyResource\RelationManagers;
-use App\Filament\Resources\EconomyResource\Widgets\YnabOverview;
-use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
 use App\Filament\Resources\EconomyResource\Widgets\EconomyHistory;
+use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
+use App\Filament\Resources\EconomyResource\Widgets\YnabOverview;
+use App\Models\Economy;
+use Filament\Forms;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
 
 class EconomyResource extends Resource
 {
+
     protected static ?string $model            = Economy::class;
     protected static ?string $navigationGroup  = 'Diverse';
     protected static ?string $modelLabel       = 'Økonomi';
     protected static ?string $pluralModelLabel = 'Økonomi';
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationIcon   = 'heroicon-o-currency-dollar';
 
-    public static function form(Form $form): Form
+    public static function form(Form $form) : Form
     {
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('before_tax')
-                    ->required(),
+                                          ->required(),
                 Forms\Components\TextInput::make('after_tax')
-                    ->required(),
+                                          ->required(),
                 Forms\Components\TextInput::make('tax_table')
-                    ->required()
-                    ->maxLength(255),
+                                          ->required()
+                                          ->maxLength(255),
                 Forms\Components\TextInput::make('grunnstonad'),
             ]);
     }
