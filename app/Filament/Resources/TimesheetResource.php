@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use App\Filament\Resources\TimesheetResource\Pages;
 use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use App\Models\Timesheet;
@@ -296,7 +295,6 @@ class TimesheetResource extends Resource
                 DeleteBulkAction::make(),
                 ForceDeleteBulkAction::make(),
                 RestoreBulkAction::make(),
-                FilamentExportBulkAction::make('export'),
             ]);
     }
 
