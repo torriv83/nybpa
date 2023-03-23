@@ -296,7 +296,7 @@ class TimesheetResource extends Resource
                 DeleteBulkAction::make(),
                 ForceDeleteBulkAction::make(),
                 RestoreBulkAction::make(),
-                FilamentExportBulkAction::make('export'),
+                FilamentExportBulkAction::make(),
             ]);
     }
 
