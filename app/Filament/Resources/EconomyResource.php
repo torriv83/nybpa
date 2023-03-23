@@ -1,10 +1,11 @@
 <?php
+/** @noinspection PhpFullyQualifiedNameUsageInspection */
+
+/** @noinspection PhpUnused */
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EconomyResource\Pages;
-use App\Filament\Resources\EconomyResource\RelationManagers;
-use App\Filament\Resources\EconomyResource\Widgets\EconomyHistory;
 use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
 use App\Filament\Resources\EconomyResource\Widgets\YnabOverview;
 use App\Models\Economy;
@@ -39,17 +40,21 @@ class EconomyResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    /**
+     * @throws \Exception
+     */
+    public static function table(Table $table) : Table
     {
+
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('before_tax')->label('Før skatt')->money('nok', true),
                 Tables\Columns\TextColumn::make('after_tax')->label('Etter skatt')->money('nok', true),
                 Tables\Columns\TextColumn::make('tax_table')->label('Skattetabell'),
                 Tables\Columns\TextColumn::make('grunnstonad')->money('nok', true)
-                    ->label('Grunnstønad'),
+                                         ->label('Grunnstønad'),
                 Tables\Columns\TextColumn::make('updated_at')->label('Oppdatert')
-                    ->dateTime('d.m.Y'),
+                                         ->dateTime('d.m.Y'),
             ])
             ->filters([
                 //
