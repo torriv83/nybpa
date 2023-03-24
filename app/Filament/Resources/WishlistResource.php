@@ -2,39 +2,39 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\WishlistResource\Pages;
+use App\Filament\Resources\WishlistResource\RelationManagers;
 use App\Models\Wishlist;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\BadgeColumn;
-use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\WishlistResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\WishlistResource\RelationManagers;
 
 class WishlistResource extends Resource
 {
+
     protected static ?string $model = Wishlist::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup  = 'Diverse';
+    protected static ?string $navigationIcon       = 'heroicon-o-clipboard-list';
+    protected static ?string $navigationGroup      = 'Diverse';
     protected static ?string $recordTitleAttribute = 'hva';
-    protected static ?string $modelLabel       = 'Ønskeliste';
-    protected static ?string $pluralModelLabel = 'Ønskelister';
+    protected static ?string $modelLabel           = 'Ønskeliste';
+    protected static ?string $pluralModelLabel     = 'Ønskelister';
 
-    protected function getTableReorderColumn(): ?string
+    protected function getTableReorderColumn() : ?string
     {
+
         return 'prioritet';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Form $form) : Form
     {
+
         return $form
             ->schema([
                 TextInput::make('hva'),
@@ -42,7 +42,7 @@ class WishlistResource extends Resource
                 TextInput::make('url'),
                 TextInput::make('antall')->type('number'),
                 Select::make('status')
-                    ->options([
+                      ->options([
                         'Venter' => 'Venter',
                         'Begynt å spare' => 'Begynt å spare',
                         'Kjøpt' => 'Kjøpt',

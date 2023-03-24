@@ -1,44 +1,25 @@
 <?php
+/** @noinspection PhpUnused */
 
 namespace App\Filament\Resources;
 
-use Closure;
-use Carbon\Carbon;
-
-use App\Models\User;
-use App\Models\Timesheet;
-use Exception;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
-use Filament\Resources\Resource;
-use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ForceDeleteAction;
-use Filament\Tables\Actions\ForceDeleteBulkAction;
-use Filament\Tables\Actions\RestoreAction;
-use Filament\Tables\Actions\RestoreBulkAction;
-use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TrashedFilter;
-use Illuminate\Support\Facades\Auth;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Checkbox;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\RichEditor;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\TimesheetResource\Pages;
+use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
+use App\Models\Timesheet;
+use App\Models\User;
+use Carbon\Carbon;
+use Closure;
+use Exception;
+use Filament\Forms;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
+
 use function strip_tags;
 
 class TimesheetResource extends Resource
@@ -48,14 +29,13 @@ class TimesheetResource extends Resource
      * Innstillinger
      */
     protected static ?string $model            = Timesheet::class;
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationIcon   = 'heroicon-o-clock';
     protected static ?string $navigationGroup  = 'Tider';
     protected static ?string $modelLabel       = 'Timeliste';
     protected static ?string $pluralModelLabel = 'Timelister';
 
     protected function getDefaultTableSortColumn() : ?string
     {
-
         return 'fra_dato';
     }
 
@@ -79,77 +59,77 @@ class TimesheetResource extends Resource
             ->schema([
 
                 //Seksjon
-                Section::make('Assistent')
-                       ->description('Velg assistent og om han/hun er tilgjengelig eller ikke, og om det gjelder hele dagen.')
-                       ->schema([
+                Forms\Components\Section::make('Assistent')
+                                        ->description('Velg assistent og om han/hun er tilgjengelig eller ikke, og om det gjelder hele dagen.')
+                                        ->schema([
 
-                           Select::make('user_id')
-                                 ->label('Hvem')
-                                 ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name', 'id'))
-                                 ->required()
-                                 ->columnSpan(2),
+                                            Forms\Components\Select::make('user_id')
+                                                                   ->label('Hvem')
+                                                                   ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name', 'id'))
+                                                                   ->required()
+                                                                   ->columnSpan(2),
 
-                           Checkbox::make('unavailable')
-                                   ->label('Ikke Tilgjengelig?'),
+                                            Forms\Components\Checkbox::make('unavailable')
+                                                                     ->label('Ikke Tilgjengelig?'),
 
-                           Checkbox::make('allDay')
-                                   ->label('Hele dagen?'),
+                                            Forms\Components\Checkbox::make('allDay')
+                                                                     ->label('Hele dagen?'),
 
-                       ])->columns(),
+                                        ])->columns(),
 
                 //Seksjon
-                Section::make('Tid')
-                       ->description('Velg fra og til')
-                       ->schema([
+                Forms\Components\Section::make('Tid')
+                                        ->description('Velg fra og til')
+                                        ->schema([
 
-                           DateTimePicker::make('fra_dato')
-                                         ->displayFormat('d.m.Y H:i')
-                                         ->required(),
+                                            Forms\Components\DateTimePicker::make('fra_dato')
+                                                                           ->displayFormat('d.m.Y H:i')
+                                                                           ->required(),
 
-                           DateTimePicker::make('til_dato')
-                                         ->displayFormat('d.m.Y H:i')
-                                         ->required()
-                                         ->reactive()
-                                         ->afterStateUpdated(function (Closure $set, $state, $get) {
+                                            Forms\Components\DateTimePicker::make('til_dato')
+                                                                           ->displayFormat('d.m.Y H:i')
+                                                                           ->required()
+                                                                           ->reactive()
+                                                                           ->afterStateUpdated(function (Closure $set, $state, $get) {
 
-                                             $fra = $get('fra_dato');
-                                             $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
+                                                                               $fra = $get('fra_dato');
+                                                                               $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
 
-                                             $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
-                                             $hours   = sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
-                                             $set('Tid', $hours);
-                                         }),
+                                                                               $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
+                                                                               $hours   = sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                                                                               $set('Tid', $hours);
+                                                                           }),
 
-                           RichEditor::make('description')
-                                     ->label('Beskrivelse')
-                                     ->disableToolbarButtons([
-                                         'attachFiles',
-                                         'blockquote',
-                                         'codeBlock',
-                                         'h2',
-                                         'h3',
-                                         'link',
-                                         'redo',
-                                         'strike',
-                                     ])
-                                     ->maxLength(191),
+                                            Forms\Components\RichEditor::make('description')
+                                                                       ->label('Beskrivelse')
+                                                                       ->disableToolbarButtons([
+                                                                           'attachFiles',
+                                                                           'blockquote',
+                                                                           'codeBlock',
+                                                                           'h2',
+                                                                           'h3',
+                                                                           'link',
+                                                                           'redo',
+                                                                           'strike',
+                                                                       ])
+                                                                       ->maxLength(191),
 
-                           TextInput::make('Tid')
-                                    ->afterStateHydrated(function (TextInput $component, $state, $get) {
+                                            Forms\Components\TextInput::make('Tid')
+                                                                      ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, $get) {
 
-                                        if ($get('fra_dato')) {
-                                            $fra     = Carbon::createFromFormat('Y-m-d H:i:s', $get('fra_dato'))->diffInMinutes($get('til_dato'));
-                                            $minutes = $fra;
-                                            $hours   = sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
-                                            $component->state($hours);
-                                        }
-                                    })
-                                    ->label('Total tid')
-                                    ->disabled(),
+                                                                          if ($get('fra_dato')) {
+                                                                              $fra     = Carbon::createFromFormat('Y-m-d H:i:s', $get('fra_dato'))->diffInMinutes($get('til_dato'));
+                                                                              $minutes = $fra;
+                                                                              $hours   = sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                                                                              $component->state($hours);
+                                                                          }
+                                                                      })
+                                                                      ->label('Total tid')
+                                                                      ->disabled(),
 
-                           Hidden::make('totalt'),
+                                            Forms\Components\Hidden::make('totalt'),
 
-                       ])->columns(),
+                                        ])->columns(),
             ]);
     }
 
@@ -167,135 +147,132 @@ class TimesheetResource extends Resource
         return $table
             ->columns([
 
-                TextColumn::make('user.name')
-                          ->label('Assistent')
-                          ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')
+                                         ->label('Assistent')
+                                         ->searchable(),
 
-                TextColumn::make('fra_dato')
-                          ->dateTime('d.m.Y H:i')
-                          ->sortable()
-                          ->searchable()
-                          ->toggleable(),
+                Tables\Columns\TextColumn::make('fra_dato')
+                                         ->dateTime('d.m.Y H:i')
+                                         ->sortable()
+                                         ->searchable()
+                                         ->toggleable(),
 
-                TextColumn::make('til_dato')
-                          ->dateTime('d.m.Y H:i')
-                          ->sortable()
-                          ->toggleable(),
+                Tables\Columns\TextColumn::make('til_dato')
+                                         ->dateTime('d.m.Y H:i')
+                                         ->sortable()
+                                         ->toggleable(),
 
-                TextColumn::make('description')
-                          ->label('Beskrivelse')
-                          ->limit(20)
-                          ->getStateUsing(function (Model $record) {
+                Tables\Columns\TextColumn::make('description')
+                                         ->label('Beskrivelse')
+                                         ->limit(20)
+                                         ->getStateUsing(fn(Model $record) => strip_tags($record->description))
+                                         ->tooltip(function (Tables\Columns\TextColumn $column) : ?string {
 
-                              return strip_tags($record->description);
-                          })
-                          ->tooltip(function (TextColumn $column) : ?string {
+                                             $state = $column->getState();
 
-                              $state = $column->getState();
+                                             if (strlen($state) <= $column->getLimit()) {
+                                                 return null;
+                                             }
 
-                              if (strlen($state) <= $column->getLimit()) {
-                                  return null;
-                              }
+                                             return $state;
+                                         })
+                                         ->toggleable(),
 
-                              return $state;
-                          })
-                          ->toggleable(),
+                Tables\Columns\TextColumn::make('totalt')
+                                         ->getStateUsing(function (Model $record) {
 
-                TextColumn::make('totalt')
-                          ->getStateUsing(function (Model $record) {
+                                             if ($record->allDay) {
+                                                 return '-';
+                                             } else {
+                                                 $minutes = $record->totalt;
 
-                              if ($record->allDay) {
-                                  return '-';
-                              } else {
-                                  $minutes = $record->totalt;
+                                                 return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                                             }
+                                         })
+                                         ->sortable()
+                                         ->toggleable(),
 
-                                  return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
-                              }
-                          })
-                          ->sortable()
-                          ->toggleable(),
+                Tables\Columns\IconColumn::make('unavailable')
+                                         ->label('Borte')
+                                         ->sortable()
+                                         ->boolean()
+                                         ->trueIcon('heroicon-o-badge-check')
+                                         ->falseIcon('heroicon-o-x-circle')
+                                         ->toggleable(),
 
-                IconColumn::make('unavailable')
-                          ->label('Borte')
-                          ->sortable()
-                          ->boolean()
-                          ->trueIcon('heroicon-o-badge-check')
-                          ->falseIcon('heroicon-o-x-circle')
-                          ->toggleable(),
+                Tables\Columns\IconColumn::make('allDay')
+                                         ->label('Hele dagen?')
+                                         ->sortable()
+                                         ->boolean()
+                                         ->trueIcon('heroicon-o-badge-check')
+                                         ->falseIcon('heroicon-o-x-circle')
+                                         ->toggleable(),
 
-                IconColumn::make('allDay')
-                          ->label('Hele dagen?')
-                          ->sortable()
-                          ->boolean()
-                          ->trueIcon('heroicon-o-badge-check')
-                          ->falseIcon('heroicon-o-x-circle')
-                          ->toggleable(),
-
-                TextColumn::make('deleted_at')
-                          ->label('Arkivert?')
-                          ->sortable()
-                          ->date('d.m.Y')
-                          ->toggleable(),
+                Tables\Columns\TextColumn::make('deleted_at')
+                                         ->label('Arkivert?')
+                                         ->sortable()
+                                         ->date('d.m.Y')
+                                         ->toggleable(),
 
             ])->defaultSort('fra_dato', 'desc')
 
             //Filtre
             ->filters([
 
-                TrashedFilter::make(),
+                Tables\Filters\TrashedFilter::make(),
 
-                Filter::make('Tilgjengelig')
-                      ->query(fn(Builder $query) : Builder => $query->where('unavailable', '=', '0'))->default(),
+                Tables\Filters\Filter::make('Tilgjengelig')
+                                     ->query(fn(Builder $query) : Builder => $query->where('unavailable', '=', '0'))->default(),
 
-                Filter::make('Ikke tilgjengelig')
-                      ->query(fn(Builder $query) : Builder => $query->where('unavailable', '=', '1')),
+                Tables\Filters\Filter::make('Ikke tilgjengelig')
+                                     ->query(fn(Builder $query) : Builder => $query->where('unavailable', '=', '1')),
 
-                SelectFilter::make('assistent')
-                            ->relationship('user', 'name', fn(Builder $query) => $query->permission('Assistent')),
+                Tables\Filters\SelectFilter::make('assistent')
+                                           ->relationship('user', 'name', fn(Builder $query) => $query->permission('Assistent')),
 
-                Filter::make('Forrige måned')
-                      ->query(fn(Builder $query) : Builder => $query
-                          ->where('fra_dato', '<=', Carbon::now()->subMonth()->endOfMonth())
-                          ->where('til_dato', '>=', Carbon::now()->subMonth()->startOfMonth())),
+                Tables\Filters\Filter::make('Forrige måned')
+                                     ->query(fn(Builder $query) : Builder => $query
+                                         ->where('fra_dato', '<=', Carbon::now()->subMonth()->endOfMonth())
+                                         ->where('til_dato', '>=', Carbon::now()->subMonth()->startOfMonth())),
 
-                Filter::make('Denne måneden')
-                      ->query(fn(Builder $query) : Builder => $query
-                          ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
-                          ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
+                Tables\Filters\Filter::make('Denne måneden')
+                                     ->query(fn(Builder $query) : Builder => $query
+                                         ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
+                                         ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
 
-                Filter::make('måned')
-                      ->form([
-                          DatePicker::make('fra_dato'),
-                          DatePicker::make('til_dato'),
-                      ])
-                      ->query(function (Builder $query, array $data) : Builder {
+                Tables\Filters\Filter::make('måned')
+                                     ->form([
+                                         Forms\Components\DatePicker::make('fra_dato'),
+                                         Forms\Components\DatePicker::make('til_dato'),
+                                     ])
+                                     ->query(function (Builder $query, array $data) : Builder {
 
-                          return $query
-                              ->when(
-                                  $data['fra_dato'],
-                                  fn(Builder $query, $date) : Builder => $query->whereDate('til_dato', '>=', $date),
-                              )
-                              ->when(
-                                  $data['til_dato'],
-                                  fn(Builder $query, $date) : Builder => $query->whereDate('fra_dato', '<=', $date),
-                              );
-                      })
+                                         return $query
+                                             ->when(
+                                                 $data['fra_dato'],
+                                                 fn(Builder $query, $date) : Builder => $query->whereDate('til_dato', '>=', $date),
+                                             )
+                                             ->when(
+                                                 $data['til_dato'],
+                                                 fn(Builder $query, $date) : Builder => $query->whereDate('fra_dato', '<=', $date),
+                                             );
+                                     })
             ])
 
             //Actions
             ->actions([
-                ActionGroup::make([
-                    ViewAction::make()->label('Se'),
-                    EditAction::make()->label('Endre'),
-                    DeleteAction::make()->label('Slett'),
-                    ForceDeleteAction::make()->label('Tving sletting'),
-                    RestoreAction::make()->label('Angre sletting'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make()->label('Se'),
+                    Tables\Actions\EditAction::make()->label('Endre'),
+                    Tables\Actions\DeleteAction::make()->label('Slett'),
+                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
+                    Tables\Actions\RestoreAction::make()->label('Angre sletting'),
                 ]),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
-                ForceDeleteBulkAction::make(),
-                RestoreBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
             ]);
     }
 
@@ -316,9 +293,9 @@ class TimesheetResource extends Resource
     {
 
         return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                         SoftDeletingScope::class,
-                     ]);
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 
     /**
