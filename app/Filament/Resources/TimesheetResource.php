@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
-use alperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 
 class TimesheetResource extends Resource
 {
@@ -269,7 +268,6 @@ class TimesheetResource extends Resource
                 ]),
             ])
             ->bulkActions([
-                FilamentExportBulkAction::make('export')->defaultPageOrientation('landscape'),
                 Tables\Actions\DeleteBulkAction::make(),
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
