@@ -11,7 +11,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 
@@ -60,12 +60,11 @@ class WishlistResource extends Resource
                     ->url(fn ($record) => $record->url, true),
                 TextColumn::make('koster')->money('nok', true)->sortable(),
                 TextColumn::make('antall'),
-                BadgeColumn::make('status')
-                    ->colors([
-                        'warning' => 'Begynt å spare',
-                        'success' => 'Kjøpt',
-                        'danger' => 'Venter',
-                    ]),
+                SelectColumn::make('status')->options([
+                    'Begynt å spare' => 'Begynt å spare',
+                    'Kjøpt' => 'Kjøpt',
+                    'Venter' => 'Venter'
+                ])->disablePlaceholderSelection(),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
 
                     return $record->koster * $record->antall;

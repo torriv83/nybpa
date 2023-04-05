@@ -18,7 +18,7 @@ class EditTestResults extends EditRecord
     {
 
         return [
-            Actions\DeleteAction::make()->label('test'),
+            Actions\DeleteAction::make()->label('Slett'),
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];
