@@ -5,9 +5,6 @@ namespace App\Filament\Resources\TimesheetResource\Pages;
 use App\Filament\Resources\TimesheetResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Builder;
 
 class ListTimesheets extends ListRecords
 {
@@ -18,11 +15,6 @@ class ListTimesheets extends ListRecords
         return [
             Actions\CreateAction::make()->label('Ny oppføring'),
         ];
-    }
-
-    protected function paginateTableQuery(Builder $query): Paginator
-    {
-        return $query->fastPaginate($this->getTableRecordsPerPage());
     }
 
     protected function getHeaderWidgets(): array

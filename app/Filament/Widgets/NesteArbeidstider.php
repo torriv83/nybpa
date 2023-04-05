@@ -25,9 +25,14 @@ class NesteArbeidstider extends BaseWidget
         return 'Ingen planlagte tider enda';
     }
 
+    /**
+     * @param  Model  $record
+     *
+     * @return string
+     */
     public function getTableRecordKey(Model $record): string
     {
-        return uniqid();
+        return $record;
     }
 
     protected function getDefaultTableSortDirection(): ?string

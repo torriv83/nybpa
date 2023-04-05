@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
@@ -13,6 +14,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Lab404\Impersonate\Models\Impersonate;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @mixin IdeHelperUser
+ */
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -26,7 +30,7 @@ class User extends Authenticatable implements FilamentUser
     /**
      * @return bool
      */
-    public function canImpersonate()
+    public function canImpersonate() : bool
     {
         // For example
         return User::can('Impersonate');
@@ -75,9 +79,9 @@ class User extends Authenticatable implements FilamentUser
     // }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function timesheet()
+    public function timesheet() : HasMany
     {
         return $this->hasMany(Timesheet::class);
     }

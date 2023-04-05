@@ -37,9 +37,17 @@ class AppServiceProvider extends ServiceProvider
                     ->sort(7),
             ]);
 
+            Filament::registerNavigationGroups([
+                'Tider',
+                'Medisinsk',
+                'Diverse',
+                'Authentication',
+                'Landslaget'
+            ]);
+
             Filament::registerUserMenuItems([
                 UserMenuItem::make()
-                    ->label('Settings')
+                    ->label('Innstillinger')
                     ->url(route('filament.pages.b-p-a'))
                     ->icon('heroicon-s-cog'),
             ]);

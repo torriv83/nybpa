@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use Closure;
 use Carbon\Carbon;
-use Filament\Forms;
 use App\Models\User;
 use App\Models\Timesheet;
 use Filament\Forms\Components\Grid;
@@ -12,7 +11,6 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Checkbox;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Session;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\DateTimePicker;
@@ -58,7 +56,7 @@ class CalendarWidget extends FullCalendarWidget
 
         $schedules = Timesheet::query()->get();
 
-        $data = $schedules->map(function ($item, $key) {
+        $data = $schedules->map(function ($item) {
 
             $farge = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
@@ -136,11 +134,9 @@ class CalendarWidget extends FullCalendarWidget
         return [
             Select::make('user_id')
                 ->label('Assistent')
-                ->options(User::all()->filter(function ($value, $key) {
-                    return $value->name != 'Tor J. Rivera';
-                })->pluck('name', 'id'))
+                ->options(User::all()->filter(fn($value) => $value->name != 'Tor J. Rivera')->pluck('name', 'id'))
                 ->required(),
-            Grid::make(2)
+            Grid::make()
                 ->schema([
                     Checkbox::make('allDay')
                         ->label('Hele dagen?'),
@@ -175,13 +171,10 @@ class CalendarWidget extends FullCalendarWidget
     protected static function getEditEventFormSchema(): array
     {
         return [
-            // Select::make('title')
-            //     ->label('Assistent')
-            //     ->options(User::all()->filter(function($value, $key){ return $value->name != 'Tor J. Rivera';})->pluck('name', 'id'))
-            //     ->required(),
+
             TextInput::make('title')
                 ->disabled(),
-            Grid::make(2)
+            Grid::make()
                 ->schema([
                     Checkbox::make('extendedProps.heleDagen')
                         ->label('Hele dagen?'),
@@ -243,6 +236,7 @@ class CalendarWidget extends FullCalendarWidget
     {
 
         $tid              = Timesheet::find($data['id']);
+
         $tid->fra_dato    = $data['start'];
         $tid->til_dato    = $data['end'];
         $tid->description = $data['extendedProps']['description'];
@@ -275,30 +269,27 @@ class CalendarWidget extends FullCalendarWidget
     /**
      * Triggered when dragging stops and the event has moved to a different day/time.
      */
-    public function onEventDrop($newEvent, $oldEvent, $relatedEvents): void
+    public function onEventDrop($newEvent): void
     {
-        // debug($newEvent);
-        $slutter = $newEvent['extendedProps']['heleDagen'] ? Carbon::parse($newEvent['end'])->subDay() : $newEvent['end'];
-
-        $tid              = Timesheet::find($newEvent['id']);
-        $tid->fra_dato    = $newEvent['start'];
-        $tid->til_dato    = $slutter;
-        $tid->description = $newEvent['extendedProps']['description'];
-        $tid->user_id     = $newEvent['extendedProps']['assistentID'];
-        $tid->allDay      = $newEvent['extendedProps']['heleDagen'];
-        $tid->totalt      = Carbon::parse($newEvent['start'])->diffInMinutes($newEvent['end']);
-
-        if ($tid->save()) {
-            $this->refreshEvents();
-        }
+        $this->eventUpdate($newEvent);
     }
 
     /**
      * Triggered when event's resize stops.
      */
-    public function onEventResize($event, $oldEvent, $relatedEvents): void
+    public function onEventResize($event): void
     {
-        // debug($event);
+        $this->eventUpdate($event);
+    }
+
+    /**
+     * @param $event
+     *
+     * @return void
+     */
+    public function eventUpdate($event) : void
+    {
+
         $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];
 
         $tid              = Timesheet::find($event['id']);
@@ -306,7 +297,6 @@ class CalendarWidget extends FullCalendarWidget
         $tid->til_dato    = $slutter;
         $tid->description = $event['extendedProps']['description'];
         $tid->user_id     = $event['extendedProps']['assistentID'];
-        // $tid->unavailable = $event['unavailable'];
         $tid->allDay      = $event['extendedProps']['heleDagen'];
         $tid->totalt      = Carbon::parse($event['start'])->diffInMinutes($event['end']);
 

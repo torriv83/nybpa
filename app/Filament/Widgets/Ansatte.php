@@ -1,16 +1,14 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 
 namespace App\Filament\Widgets;
 
-use Closure;
 use App\Models\User;
+use Closure;
 use Filament\Tables;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Ansatte extends BaseWidget
 {
@@ -21,7 +19,7 @@ class Ansatte extends BaseWidget
 
     public function getTableRecordKey(Model $record): string
     {
-        return uniqid();
+        return $record;
     }
 
     protected function getTableQuery(): Builder
@@ -48,7 +46,7 @@ class Ansatte extends BaseWidget
             Tables\Columns\TextColumn::make('email')
                 ->label('E-post')
                 ->limit(10)
-                ->tooltip(fn (Model $record): string => "{$record->email}"),
+                ->tooltip(fn (Model $record): string => "$record->email"),
             Tables\Columns\TextColumn::make('phone')
                 ->label('Telefon')
                 ->default('12345678'),
@@ -67,9 +65,7 @@ class Ansatte extends BaseWidget
                         )
                         ->where('unavailable', '!=', 1)->sum('totalt');
 
-                    $hours = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
-
-                    return $hours;
+                    return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
                 })
                 ->default('0'),
         ];

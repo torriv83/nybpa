@@ -5,7 +5,7 @@ namespace App\Filament\Pages;
 use Filament\Pages\Page;
 use App\Filament\Widgets\CalendarWidget;
 
-class kalender extends Page
+class Kalender extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
     protected static ?string $title = 'Kalender';

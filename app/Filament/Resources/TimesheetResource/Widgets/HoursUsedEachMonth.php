@@ -21,7 +21,7 @@ class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
 
     public function getTableRecordKey(Model $record): string
     {
-        return uniqid();
+        return $record;
     }
 
     protected function isTablePaginationEnabled(): bool
@@ -63,23 +63,4 @@ class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
         ];
     }
 
-    // protected function getViewData(): array
-    // {
-
-
-    //     $data = Timesheet::thisYear()->where('unavailable', '!=', 1)->get()->groupBy(DB::raw('MONTH(fra_dato)'));
-
-    //     foreach ($data as $u => $v) {
-
-    //         foreach ($v as $t) {
-    //             $tot[$u][] = $t->totalt;
-    //         }
-    //         $totmnd[] =  array_sum($tot[$u]) / 60;
-    //     }
-    //     // debug($totmnd);
-
-    //     return [
-    //         'data' => $totmnd,
-    //     ];
-    // }
 }

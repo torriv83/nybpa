@@ -2,15 +2,15 @@
 
 namespace App\Filament\Widgets;
 
-use DateTime;
+//use DateTime;
 use Carbon\Carbon;
 use App\Models\Utstyr;
 use App\Models\Timesheet;
 use App\Settings\BpaTimer;
 use App\Models\User as Users;
-use Spatie\Permission\Models\Role;
-use Illuminate\Foundation\Auth\User;
-use Spatie\Permission\Models\Permission;
+//use Spatie\Permission\Models\Role;
+//use Illuminate\Foundation\Auth\User;
+//use Spatie\Permission\Models\Permission;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
@@ -18,7 +18,6 @@ class UserStats extends BaseWidget
 {
     protected static ?string $pollingInterval = '600s';
     protected static ?int $sort = 1;
-    protected array|string|int $columnSpan = 12;
 
     protected function getColumns(): int
     {
@@ -37,47 +36,41 @@ class UserStats extends BaseWidget
         )->where('unavailable', '!=', '1');
 
         /* Timer i uka igjen */
-        $hoursLeftPerWeek       = '';
         $ukerIgjen              = Carbon::parse(now())->floatDiffInWeeks(now()->endOfYear());
-        $totalt_timer_innvilget = (app(BpaTimer::class)->timer * 52) * 60;
-        // $hoursLeft        = intdiv(21900 - $tider->sum('totalt'), 60);
-        // $hoursPerWeekLeft = $hoursLeft / $ukerIgjen;
-        // $hoursLeftPerWeek = $this->minutesToTime($hoursPerWeekLeft * 60);
+        $totaltTimerInnvilget = (app(BpaTimer::class)->timer * 52) * 60;
 
-        /* Test */
-        $total_minutes       = $totalt_timer_innvilget; // convert total hours to minutes
-        $hours_used_minutes  = $tider->sum('totalt'); // convert hours used to minutes
-        $hours_per_week      = 24 * 7;
-        $hours_left_per_week = (($total_minutes - $hours_used_minutes) / 60 - ($hours_per_week * $ukerIgjen)) / $ukerIgjen;
+        // Kalkulasjoner
+        $totalMinutes       = $totaltTimerInnvilget; // convert total hours to minutes
+        $hoursUsedMinutes  = $tider->sum('totalt'); // convert hours used to minutes
+        $hoursPerWeek      = 24 * 7;
+        $leftPerWeek = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $ukerIgjen)) / $ukerIgjen;
 
-        $hoursLeftPerWeek = date("H:i:s", mktime(0, $hours_left_per_week * 60));
+        $avgPerWeek = date('H:i:s', mktime(0, $leftPerWeek * 60));
 
         /* Chart timer brukt dette året */
         $thisYear = Timesheet::whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
             ->where('unavailable', '!=', 1)
             ->orderByRaw('fra_dato ASC')
             ->get()
-            ->groupBy(function ($val) {
-
-                return Carbon::parse($val->fra_dato)->isoFormat('MMM');
-            });
+            ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
 
         $thisYearTimes = [];
         $sum = 0;
         foreach ($thisYear as $key => $value) {
 
-            for ($i = 0; $i < count($value); $i++) {
+            $number = count($value);
+            for ($i = 0; $i < $number; $i++) {
                 $sum += $value[$i]->totalt;
             }
 
-            $thisYearTimes[$key] = round($sum / 21900 * 100, 1);
+            $thisYearTimes[$key] = round($sum / app(BpaTimer::class)->timer * 100, 1);
         }
 
         /**
          * Timer brukt denne mnd av totalt denne mnd
          */
 
-        $totalHoursToUseThisMonth = (app(BpaTimer::class)->timer / 7) * Carbon::now()->daysInMonth;
+        $hoursToUseThisMonth = (app(BpaTimer::class)->timer / 7) * Carbon::now()->daysInMonth;
         $usedThisMonth = Timesheet::thisMonth()->thisYear()->where('unavailable', '=', '0')->sum('totalt');
 
         /* Card Widgets */
@@ -89,24 +82,22 @@ class UserStats extends BaseWidget
                 ->chart($thisYearTimes)
                 ->color('success')
                 ->url(route('filament.resources.timesheets.index', 'tableFilters[måned][fra_dato]=2023-01-01&tableFilters[måned][til_dato]=2023-12-31'))
-                ->description($this->minutesToTime($usedThisMonth) . ' brukt av ' . $totalHoursToUseThisMonth . ' denne måneden.'),
+                ->description($this->minutesToTime($usedThisMonth) . ' brukt av ' . $hoursToUseThisMonth . ' denne måneden.'),
 
-            Card::make('Timer igjen', $this->minutesToTime($total_minutes - $tider->sum('totalt')))
-                ->description('I gjennomsnitt ' . $hoursLeftPerWeek . ' i uka igjen')
+            Card::make('Timer igjen', $this->minutesToTime($totalMinutes - $tider->sum('totalt')))
+                ->description('I gjennomsnitt ' . $avgPerWeek . ' i uka igjen')
                 ->color('success'),
 
             Card::make('Antall utstyr på lista', Utstyr::all()->count()),
         ];
     }
 
-    private function minutesToTime($minutes)
+    private function minutesToTime($minutes) : string
     {
         $hours   = $minutes / 60;
         $minutes = ($minutes % 60);
         $format  = '%02d:%02d';
 
-        $done = sprintf($format, $hours, $minutes);
-
-        return $done;
+        return sprintf($format, $hours, $minutes);
     }
 }

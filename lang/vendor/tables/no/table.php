@@ -64,11 +64,11 @@ return [
     'buttons' => [
 
         'disable_reordering' => [
-            'label' => 'Finish reordering records',
+            'label' => 'Ferdig med å sortere poster',
         ],
 
         'enable_reordering' => [
-            'label' => 'Reorder records',
+            'label' => 'Sorter postene',
         ],
 
         'filter' => [
@@ -120,19 +120,19 @@ return [
 
         'trashed' => [
 
-            'label' => 'Deleted records',
+            'label' => 'Slettede poster',
 
-            'only_trashed' => 'Only deleted records',
+            'only_trashed' => 'Bare slettede poster',
 
-            'with_trashed' => 'With deleted records',
+            'with_trashed' => 'Med slettede poster',
 
-            'without_trashed' => 'Without deleted records',
+            'without_trashed' => 'Uten slettede poster',
 
         ],
 
     ],
 
-    'reorder_indicator' => 'Drag and drop the records into order.',
+    'reorder_indicator' => 'Dra og slipp postene i den ordenen du vil.',
 
     'selection_indicator' => [
 
@@ -162,7 +162,7 @@ return [
 
             'direction' => [
 
-                'label' => 'Sort direction',
+                'label' => 'Sorterings retning',
 
                 'options' => [
                     'asc' => 'Stigende',

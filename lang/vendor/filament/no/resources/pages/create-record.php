@@ -15,7 +15,7 @@ return [
             ],
 
             'create' => [
-                'label' => 'Ny',
+                'label' => 'Lagre',
             ],
 
             'create_another' => [

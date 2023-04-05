@@ -23,7 +23,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
 
     public function getTableRecordKey(Model $record): string
     {
-        return uniqid();
+        return $record;
     }
 
     protected function getTableQuery(): Builder
@@ -37,7 +37,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
         return [
             Tables\Columns\TextColumn::make('user.name')
                 ->label('Hvem')
-                ->tooltip(fn (Model $record): string => \strip_tags("{$record->description}")),
+                ->tooltip(fn (Model $record): string => \strip_tags("$record->description")),
             Tables\Columns\TextColumn::make('fra_dato')
                 ->date('d.m.Y')
                 ->label('Dato'),
@@ -50,7 +50,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
                     }
                 })
                 ->label('Fra')
-                ->tooltip(fn (Model $record): string => \strip_tags("{$record->description}")),
+                ->tooltip(fn (Model $record): string => \strip_tags("$record->description")),
             Tables\Columns\TextColumn::make('til_dato')
                 ->getStateUsing(function (Model $record) {
                     if ($record->allDay == 1) {
@@ -59,7 +59,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
                         return Carbon::parse($record->til_dato)->format('d.m.Y, H:i');
                     }
                 })
-                ->tooltip(fn (Model $record): string => \strip_tags("{$record->description}"))
+                ->tooltip(fn (Model $record): string => \strip_tags("$record->description"))
                 ->label('Til'),
             IconColumn::make('allDay')
                 ->label('Hele dagen?')

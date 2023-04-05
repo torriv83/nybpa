@@ -2,14 +2,14 @@
 
 namespace App\Filament\Widgets;
 
-use Closure;
-use Filament\Tables;
+//use Closure;
+//use Filament\Tables;
 use App\Models\Timesheet;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Contracts\Pagination\Paginator;
+//use Illuminate\Contracts\Pagination\Paginator;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Filament\Tables\Columns\TextColumn;
 
@@ -27,7 +27,7 @@ class TimerIUka extends BaseWidget
 
     public function getTableRecordKey(Model $record): string
     {
-        return uniqid();
+        return $record;
     }
 
     protected function getDefaultTableSortColumn(): ?string

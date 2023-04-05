@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\EconomyResource\Widgets;
 
 use Closure;
-use permission;
+//use permission;
 use Filament\Tables;
 use App\Models\ynab;
 use Illuminate\Support\Carbon;
@@ -21,7 +21,7 @@ class YnabOverview extends BaseWidget
 
     protected function getTableRecordsPerPageSelectOptions(): array
     {
-        return [17];
+        return [12];
     }
 
     protected function getDefaultTableSortColumn(): ?string
@@ -41,11 +41,11 @@ class YnabOverview extends BaseWidget
 
     protected function getTableContentFooter(): ?View
     {
-        $q = ynab::query()->get();
+        $query = ynab::query()->get();
 
-        $income = $q->sum('income');
-        $activity = $q->sum('activity');
-        $budgeted = $q->sum('budgeted');
+        $income = $query->sum('income');
+        $activity = $query->sum('activity');
+        $budgeted = $query->sum('budgeted');
 
         return view('economy.table.table-footer', ['income' => $income, 'activity' => $activity, 'budgeted' => $budgeted]);
     }
@@ -89,9 +89,17 @@ class YnabOverview extends BaseWidget
                 ->sortable()
                 ->alignLeft(),
 
-            Tables\Columns\TextColumn::make('Balanse')
+            Tables\Columns\TextColumn::make('inntektutgift')
                 ->getStateUsing(function (Model $record) {
                     return ($record->income + $record->activity)  / 1000;
+                })
+                ->money('nok', true)
+                ->sortable()
+                ->alignLeft()->label('Inntekt - Utgift'),
+
+            Tables\Columns\TextColumn::make('Balanse')
+                ->getStateUsing(function (Model $record) {
+                    return ($record->income - $record->budgeted)  / 1000;
                 })
                 ->money('nok', true)
                 ->sortable()

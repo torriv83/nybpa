@@ -8,12 +8,15 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Sushi\Sushi;
 
-class ynab extends Model
+/**
+ * @mixin IdeHelperynab
+ */
+class Ynab extends Model
 {
     use Sushi;
     use HasFactory;
 
-    public function getRows()
+    public function getRows() : array
     {
         //API
         // $products = Http::get('https://dummyjson.com/products')->json();
@@ -22,7 +25,7 @@ class ynab extends Model
         $products = Http::withToken($token)->get($ynab . 'months')->json();
 
         //filtering some attributes
-        $products = Arr::map($products['data']['months'], function ($item) {
+        return Arr::map($products['data']['months'], function ($item) {
             return Arr::only(
                 $item,
                 [
@@ -33,7 +36,5 @@ class ynab extends Model
                 ]
             );
         });
-
-        return $products;
     }
 }

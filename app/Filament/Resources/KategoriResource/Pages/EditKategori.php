@@ -10,6 +10,9 @@ class EditKategori extends EditRecord
 {
     protected static string $resource = KategoriResource::class;
 
+    /**
+     * @throws \Exception
+     */
     protected function getActions(): array
     {
         return [
