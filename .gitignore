@@ -46,3 +46,10 @@ Homestead.json
 .env
 config/livewire.php
 .env
+/_ide_helper.php
+/.phpstorm.meta.php
+/_ide_helper_models.php
+/.phpstorm.meta.php
+/_ide_helper_models.php
+/.phpstorm.meta.php
+/_ide_helper.php
