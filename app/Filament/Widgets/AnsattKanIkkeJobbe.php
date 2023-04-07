@@ -2,17 +2,15 @@
 
 namespace App\Filament\Widgets;
 
-use Closure;
-use permission;
-use App\Models\User;
-use Filament\Tables;
 use App\Models\Timesheet;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
+use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use permission;
+use function strip_tags;
 
 class AnsattKanIkkeJobbe extends BaseWidget
 {
@@ -37,7 +35,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
         return [
             Tables\Columns\TextColumn::make('user.name')
                 ->label('Hvem')
-                ->tooltip(fn (Model $record): string => \strip_tags("$record->description")),
+                ->tooltip(fn (Model $record): string => strip_tags("$record->description")),
             Tables\Columns\TextColumn::make('fra_dato')
                 ->date('d.m.Y')
                 ->label('Dato'),
@@ -50,7 +48,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
                     }
                 })
                 ->label('Fra')
-                ->tooltip(fn (Model $record): string => \strip_tags("$record->description")),
+                ->tooltip(fn (Model $record): string => strip_tags("$record->description")),
             Tables\Columns\TextColumn::make('til_dato')
                 ->getStateUsing(function (Model $record) {
                     if ($record->allDay == 1) {
@@ -59,7 +57,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
                         return Carbon::parse($record->til_dato)->format('d.m.Y, H:i');
                     }
                 })
-                ->tooltip(fn (Model $record): string => \strip_tags("$record->description"))
+                ->tooltip(fn (Model $record): string => strip_tags("$record->description"))
                 ->label('Til'),
             IconColumn::make('allDay')
                 ->label('Hele dagen?')

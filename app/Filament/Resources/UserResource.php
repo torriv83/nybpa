@@ -2,48 +2,32 @@
 
 namespace App\Filament\Resources;
 
-//use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use Filament\Resources\Form;
-use Filament\Resources\Table;
-use Filament\Resources\Resource;
-//use Filament\Forms\Components\Card;
-//use Illuminate\Support\Facades\Hash;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Section;
-//use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\DatePicker;
-//use Filament\Tables\Columns\ToggleColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\UserResource\Pages;
-//use Illuminate\Database\Eloquent\SoftDeletingScope;
-//use App\Filament\Resources\UserResource\RelationManagers;
-//use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
+use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\User;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Form;
+use Filament\Resources\Resource;
+use Filament\Resources\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
-    protected static ?string $model            = User::class;
-    protected static ?string $navigationGroup  = 'Authentication';
-    protected static ?string $navigationIcon   = 'heroicon-o-users';
-    protected static ?string $modelLabel       = 'Bruker';
-    protected static ?string $pluralModelLabel = 'Brukere';
+    protected static ?string $model                = User::class;
+    protected static ?string $navigationGroup      = 'Authentication';
+    protected static ?string $navigationIcon       = 'heroicon-o-users';
+    protected static ?string $modelLabel           = 'Bruker';
+    protected static ?string $pluralModelLabel     = 'Brukere';
     protected static ?string $recordTitleAttribute = 'name';
-
-    protected static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
-    }
 
     public static function form(Form $form): Form
     {
-        // Section::make('Heading')
-        //     ->description('Description')
-        //     ->schema([
-        //         // ...
-        //     ])
+
         return $form
             ->schema([
                 Section::make('Standard data')
@@ -64,7 +48,7 @@ class UserResource extends Resource
                             ->same('passwordConfirmation')
                             ->password()
                             ->maxLength(255)
-                            ->required(fn ($record) => $record === null)
+                            ->required(fn($record) => $record === null)
                             ->label('Passord'),
                         TextInput::make('passwordConfirmation')
                             ->password()
@@ -126,9 +110,9 @@ class UserResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\Filter::make('verified')
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
                 Tables\Filters\Filter::make('unverified')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -156,10 +140,15 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
+            'index'  => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'view'   => Pages\ViewUser::route('/{record}'),
+            'edit'   => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
     }
 }

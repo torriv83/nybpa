@@ -23,7 +23,7 @@ class UtstyrResource extends Resource
     protected static ?string $navigationGroup  = 'Medisinsk';
     protected static ?string $modelLabel       = 'Utstyr';
     protected static ?string $pluralModelLabel = 'Utstyr';
-    protected static ?int $navigationSort      = 1;
+    protected static ?int    $navigationSort   = 1;
     protected static ?string $navigationIcon   = 'heroicon-o-collection';
 
     public static function getGloballySearchableAttributes(): array
@@ -36,28 +36,10 @@ class UtstyrResource extends Resource
         return $record->navn;
     }
 
-    protected static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('hva'),
-                Forms\Components\TextInput::make('navn'),
-                Forms\Components\TextInput::make('artikkelnummer'),
-                Forms\Components\TextInput::make('link'),
-                Forms\Components\Select::make('kategori')
-                                       ->relationship('kategori', 'kategori'),
-            ]);
-    }
-
     /**
      * @throws \Exception
      */
-    public static function table(Table $table) : Table
+    public static function table(Table $table): Table
     {
 
         return $table
@@ -68,8 +50,8 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('kategori.kategori')->sortable(),
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
-                                         ->formatStateUsing(fn() => 'Se her')
-                                         ->url(fn($record) => $record->link, true),
+                    ->formatStateUsing(fn() => 'Se her')
+                    ->url(fn($record) => $record->link, true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -90,20 +72,33 @@ class UtstyrResource extends Resource
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
                 Tables\Actions\BulkAction::make('bestillValgteProdukter')
-                                         ->action(function (Collection $records, array $data) {
+                    ->action(function (Collection $records, array $data) {
 
-                                             Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
-                                         })
-                                         ->form([
-                                             Forms\Components\Textarea::make('info')
-                                                                      ->label('Annen informasjon'),
-                                         ])
-                                         ->requiresConfirmation()
-                                         ->modalHeading('Bestill utstyr')
-                                         ->modalSubheading('Sikker på at du har valgt alt du trenger?')
-                                         ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
-                                         ->modalButton('ja, bestill utstyr!')
-                                         ->deselectRecordsAfterCompletion()->modalWidth('lg')
+                        Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
+                    })
+                    ->form([
+                        Forms\Components\Textarea::make('info')
+                            ->label('Annen informasjon'),
+                    ])
+                    ->requiresConfirmation()
+                    ->modalHeading('Bestill utstyr')
+                    ->modalSubheading('Sikker på at du har valgt alt du trenger?')
+                    ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
+                    ->modalButton('ja, bestill utstyr!')
+                    ->deselectRecordsAfterCompletion()->modalWidth('lg')
+            ]);
+    }
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('hva'),
+                Forms\Components\TextInput::make('navn'),
+                Forms\Components\TextInput::make('artikkelnummer'),
+                Forms\Components\TextInput::make('link'),
+                Forms\Components\Select::make('kategori')
+                    ->relationship('kategori', 'kategori'),
             ]);
     }
 
@@ -123,5 +118,10 @@ class UtstyrResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

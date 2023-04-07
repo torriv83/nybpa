@@ -12,10 +12,10 @@ use Illuminate\Support\Carbon;
 
 class Ansatte extends BaseWidget
 {
-    protected static ?string $pollingInterval = null;
-    protected static ?string $heading = 'Ansatte';
-    protected static ?int $sort = 7;
-    protected array|string|int $columnSpan = 6;
+    protected static ?string   $pollingInterval = null;
+    protected static ?string   $heading         = 'Ansatte';
+    protected static ?int      $sort            = 7;
+    protected array|string|int $columnSpan      = 6;
 
     public function getTableRecordKey(Model $record): string
     {
@@ -29,7 +29,7 @@ class Ansatte extends BaseWidget
 
     protected function getTableRecordUrlUsing(): Closure
     {
-        return fn (Model $record): string => route('filament.resources.users.view', ['record' => $record]);
+        return fn(Model $record): string => route('filament.resources.users.view', ['record' => $record]);
     }
 
     protected function getTableColumns(): array
@@ -46,7 +46,7 @@ class Ansatte extends BaseWidget
             Tables\Columns\TextColumn::make('email')
                 ->label('E-post')
                 ->limit(10)
-                ->tooltip(fn (Model $record): string => "$record->email"),
+                ->tooltip(fn(Model $record): string => "$record->email"),
             Tables\Columns\TextColumn::make('phone')
                 ->label('Telefon')
                 ->default('12345678'),
@@ -65,7 +65,7 @@ class Ansatte extends BaseWidget
                         )
                         ->where('unavailable', '!=', 1)->sum('totalt');
 
-                    return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                    return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                 })
                 ->default('0'),
         ];
