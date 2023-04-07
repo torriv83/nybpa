@@ -9,6 +9,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class Ansatte extends BaseWidget
 {
@@ -52,18 +53,20 @@ class Ansatte extends BaseWidget
                 ->default('12345678'),
             Tables\Columns\TextColumn::make('Jobbet i år')
                 ->getStateUsing(function (Model $record) {
-                    $minutes = $record->timesheet()
-                        ->whereBetween(
-                            'fra_dato',
-                            [
-                                Carbon::now()
-                                    ->startOfYear()
-                                    ->format('Y-m-d H:i:s'),
-                                Carbon::now()
-                                    ->endOfYear()
-                            ]
-                        )
-                        ->where('unavailable', '!=', 1)->sum('totalt');
+                    $minutes = Cache::remember('WorkedThisYear' . $record->id, now()->addDay(), function () use ($record) {
+                        return $record->timesheet()
+                            ->whereBetween(
+                                'fra_dato',
+                                [
+                                    Carbon::now()
+                                        ->startOfYear()
+                                        ->format('Y-m-d H:i:s'),
+                                    Carbon::now()
+                                        ->endOfYear()
+                                ]
+                            )
+                            ->where('unavailable', '!=', 1)->sum('totalt');
+                    });
 
                     return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                 })

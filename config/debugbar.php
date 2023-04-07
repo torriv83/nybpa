@@ -15,7 +15,7 @@ return [
      */
 
     'enabled' => env('DEBUGBAR_ENABLED', false),
-    'except' => [
+    'except'  => [
         'telescope*',
         'horizon*',
     ],
@@ -56,7 +56,7 @@ return [
     |
     */
 
-    'editor' => env('DEBUGBAR_EDITOR', 'vscode'),
+    'editor' => env('DEBUGBAR_EDITOR', 'phpstorm'),
 
     /*
     |--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return [
     */
 
     'remote_sites_path' => env('DEBUGBAR_REMOTE_SITES_PATH', ''),
-    'local_sites_path' => env('DEBUGBAR_LOCAL_SITES_PATH', ''),
+    'local_sites_path'  => env('DEBUGBAR_LOCAL_SITES_PATH', ''),
 
     /*
      |--------------------------------------------------------------------------
@@ -114,7 +114,7 @@ return [
      | X-Requested-With with the value XMLHttpRequest (most JS libraries send this), or have application/json as a Accept header.
      */
 
-    'capture_ajax' => true,
+    'capture_ajax'    => true,
     'add_ajax_timing' => false,
 
     /*
@@ -126,7 +126,7 @@ return [
      | in the Messages tab.
      |
      */
-    'error_handler' => false,
+    'error_handler'   => false,
 
     /*
      |--------------------------------------------------------------------------
@@ -137,7 +137,7 @@ return [
      | Extension, without the server-side code. It uses Debugbar collectors instead.
      |
      */
-    'clockwork' => false,
+    'clockwork'       => false,
 
     /*
      |--------------------------------------------------------------------------
@@ -169,7 +169,7 @@ return [
         'logs'            => false, // Add the latest log messages
         'files'           => false, // Show the included files
         'config'          => false, // Display config settings
-        'cache'           => false, // Display cache events
+        'cache'           => true, // Display cache events
         'models'          => true,  // Display models
         'livewire'        => true,  // Display Livewire (when available)
     ],
@@ -184,33 +184,33 @@ return [
      */
 
     'options' => [
-        'auth' => [
+        'auth'  => [
             'show_name' => true,   // Also show the users name/email in the debugbar
         ],
-        'db' => [
-            'with_params'       => true,   // Render SQL with the parameters substituted
-            'backtrace'         => true,   // Use a backtrace to find the origin of the query in your files.
+        'db'    => [
+            'with_params'             => true,   // Render SQL with the parameters substituted
+            'backtrace'               => true,   // Use a backtrace to find the origin of the query in your files.
             'backtrace_exclude_paths' => [],   // Paths to exclude from backtrace. (in addition to defaults)
-            'timeline'          => false,  // Add the queries to the timeline
-            'duration_background'  => true,   // Show shaded background on each query relative to how long it took to execute.
-            'explain' => [                 // Show EXPLAIN output on queries
+            'timeline'                => false,  // Add the queries to the timeline
+            'duration_background'     => true,   // Show shaded background on each query relative to how long it took to execute.
+            'explain'                 => [                 // Show EXPLAIN output on queries
                 'enabled' => false,
-                'types' => ['SELECT'],     // Deprecated setting, is always only SELECT
+                'types'   => ['SELECT'],     // Deprecated setting, is always only SELECT
             ],
-            'hints'             => false,    // Show hints for common mistakes
-            'show_copy'         => false,    // Show copy button next to the query
+            'hints'                   => false,    // Show hints for common mistakes
+            'show_copy'               => false,    // Show copy button next to the query
         ],
-        'mail' => [
+        'mail'  => [
             'full_log' => false,
         ],
         'views' => [
             'timeline' => false,  // Add the views to the timeline (Experimental)
-            'data' => false,    //Note: Can slow down the application, because the data can be quite large..
+            'data'     => false,    //Note: Can slow down the application, because the data can be quite large..
         ],
         'route' => [
             'label' => true,  // show complete route on bar
         ],
-        'logs' => [
+        'logs'  => [
             'file' => null,
         ],
         'cache' => [
@@ -229,7 +229,7 @@ return [
      |
      */
 
-    'inject' => true,
+    'inject'                => true,
 
     /*
      |--------------------------------------------------------------------------
@@ -241,7 +241,7 @@ return [
      | from trying to overcome bugs like this: http://trac.nginx.org/nginx/ticket/97
      |
      */
-    'route_prefix' => '_debugbar',
+    'route_prefix'          => '_debugbar',
 
     /*
      |--------------------------------------------------------------------------
@@ -251,7 +251,7 @@ return [
      | By default DebugBar route served from the same domain that request served.
      | To override default domain, specify it as a non-empty value.
      */
-    'route_domain' => null,
+    'route_domain'          => null,
 
     /*
      |--------------------------------------------------------------------------
@@ -261,7 +261,7 @@ return [
      | Switches between light and dark theme. If set to auto it will respect system preferences
      | Possible values: auto, light, dark
      */
-    'theme' => env('DEBUGBAR_THEME', 'auto'),
+    'theme'                 => env('DEBUGBAR_THEME', 'auto'),
 
     /*
      |--------------------------------------------------------------------------

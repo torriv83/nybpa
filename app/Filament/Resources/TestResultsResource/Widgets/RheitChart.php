@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\TestResultsResource\Widgets;
 
-use App\Models\Tests;
 use App\Models\TestResults;
+use App\Models\Tests;
 use Filament\Widgets\LineChartWidget;
+use Illuminate\Support\Facades\Cache;
 
 class RheitChart extends LineChartWidget
 {
@@ -41,7 +42,7 @@ class RheitChart extends LineChartWidget
         ]
     ];
 
-    protected function getData() : array
+    protected function getData(): array
     {
 
         //Define variables
@@ -51,9 +52,14 @@ class RheitChart extends LineChartWidget
         $resultat   = [];
 
         //Hente ut data fra DB
-        $rheit = Tests::where('navn', '=', 'Rheit')->get();
+        $rheit = Cache::remember('rheitTest', now()->addDay(), function () {
+            return Tests::where('navn', '=', 'Rheit')->get();
+        });
+
         if (count($rheit) > 0) {
-            $resultat = TestResults::where('testsID', '=', $rheit['0']->id)->orderBy('dato')->get();
+            $resultat = Cache::remember('rheitResultat', now()->addDay(), function () use ($rheit) {
+                return TestResults::where('testsID', '=', $rheit['0']->id)->orderBy('dato')->get();
+            });
         }
 
         if (count($resultat) > 0) {
@@ -63,7 +69,7 @@ class RheitChart extends LineChartWidget
                 $dato[] = $v->dato->format('d.m.y H:i');
 
                 foreach ($v->resultat[0] as $name => $result) {
-                    $resultater[] = ['Runde: '.$name => $result];
+                    $resultater[] = ['Runde: ' . $name => $result];
                     $drop[]       = $result;
                 }
 
@@ -76,7 +82,7 @@ class RheitChart extends LineChartWidget
             $finalResults = [];
 
             foreach (array_merge_recursive(...$resultater) as $name => $res) {
-                $randColor      = 'rgb('.rand(0, 255).', '.rand(0, 255).', '.rand(0, 255).')';
+                $randColor      = 'rgb(' . rand(0, 255) . ', ' . rand(0, 255) . ', ' . rand(0, 255) . ')';
                 $res            = count($dato) > 1 ? $res : [$res];
                 $type           = 'line';
                 $finalResults[] = [

@@ -2,9 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use Carbon\Carbon;
 use App\Models\Timesheet;
+use Carbon\Carbon;
 use Filament\Widgets\LineChartWidget;
+use Illuminate\Support\Facades\Cache;
 
 class BrukteTimerChart extends LineChartWidget
 {
@@ -14,23 +15,22 @@ class BrukteTimerChart extends LineChartWidget
     protected static ?int      $sort            = 2;
     protected array|string|int $columnSpan      = 6;
 
-    protected function getData() : array
+    protected function getData(): array
     {
 
-        /* Dette året */
-        $thisYear = Timesheet::whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
-                             ->where('unavailable', '!=', 1)
-                             ->orderByRaw('fra_dato ASC')
-                             ->get()
-                             ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+        $timesheet = new Timesheet();
+        $thisYear  = $timesheet->TimeUsedThisYear();
 
         $thisYearTimes = $this->yearTimes($thisYear);
 
         /* Forrige år */
-        $lastYear = Timesheet::whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
-                             ->orderByRaw('fra_dato ASC')
-                             ->get()
-                             ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+        $lastYear = Cache::remember('lastYear', now()->addDay(), function () {
+            return Timesheet::whereBetween('fra_dato',
+                [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
+                ->orderByRaw('fra_dato ASC')
+                ->get()
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+        });
 
         $lastYearTimes = $this->yearTimes($lastYear);
 
@@ -53,14 +53,14 @@ class BrukteTimerChart extends LineChartWidget
         ];
     }
 
-    public function yearTimes($times) : array
+    public function yearTimes($times): array
     {
 
         $yearTimes = [];
 
         foreach ($times as $key => $value) {
 
-            $yearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)).'.'.(sprintf('%02d', $value->sum('totalt') % 60));
+            $yearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)) . '.' . (sprintf('%02d', $value->sum('totalt') % 60));
 
         }
 

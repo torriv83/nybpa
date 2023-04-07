@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 class UserResource extends Resource
 {
@@ -149,6 +150,8 @@ class UserResource extends Resource
 
     protected static function getNavigationBadge(): ?string
     {
-        return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
+        return Cache::remember('UserNavigationBadge', now()->addMonth(), function () {
+            return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
+        });
     }
 }

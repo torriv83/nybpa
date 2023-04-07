@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\TestResultsResource\Widgets;
 
-use App\Models\Tests;
 use App\Models\TestResults;
+use App\Models\Tests;
 use Filament\Widgets\LineChartWidget;
+use Illuminate\Support\Facades\Cache;
 
 class StyrkeChart extends LineChartWidget
 {
@@ -21,12 +22,16 @@ class StyrkeChart extends LineChartWidget
         ]
     ];
 
-    protected function getData() : array
+    protected function getData(): array
     {
 
         //Hente ut data fra DB
-        $styrketest = Tests::where('navn', '=', 'Styrketest')->get();
-        $resultat   = TestResults::where('testsID', '=', $styrketest['0']->id)->orderBy('dato')->get();
+        $styrketest = Cache::remember('styrkeChart', now()->addDay(), function () {
+            return Tests::where('navn', '=', 'Styrketest')->get();
+        });
+        $resultat   = Cache::remember('styrkeResultat', now()->addDay(), function () use ($styrketest) {
+            return TestResults::where('testsID', '=', $styrketest['0']->id)->orderBy('dato')->get();
+        });
 
         //Define variables
         $dato       = [];
@@ -45,7 +50,7 @@ class StyrkeChart extends LineChartWidget
             //Sett sammen arrayene i formatet som trengs for chart.js
             $finalResults = [];
             foreach (array_merge_recursive(...$resultater) as $name => $res) {
-                $randColor      = 'rgb('.rand(0, 255).', '.rand(0, 255).', '.rand(0, 255).')';
+                $randColor      = 'rgb(' . rand(0, 255) . ', ' . rand(0, 255) . ', ' . rand(0, 255) . ')';
                 $res            = count($dato) > 1 ? $res : [$res];
                 $finalResults[] = [
                     'label'           => $name,

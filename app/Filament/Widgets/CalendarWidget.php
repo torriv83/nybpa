@@ -2,18 +2,19 @@
 
 namespace App\Filament\Widgets;
 
-use Closure;
-use Carbon\Carbon;
-use App\Models\User;
 use App\Models\Timesheet;
+use App\Models\User;
+use Carbon\Carbon;
+use Closure;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Checkbox;
-use Illuminate\Database\Eloquent\Model;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class CalendarWidget extends FullCalendarWidget
@@ -47,18 +48,20 @@ class CalendarWidget extends FullCalendarWidget
     }
 
     protected $listeners = [
-        'deleteEvent' => 'deleteEvent',
+        'deleteEvent'           => 'deleteEvent',
         'refreshEventsCalendar' => 'refreshEventsCalendar',
     ];
 
     public function getViewData(): array
     {
 
-        $schedules = Timesheet::query()->get();
+        $schedules = Cache::remember('schedules', now()->addDay(), function () {
+            return Timesheet::query()->with('user')->get();
+        });
 
         $data = $schedules->map(function ($item) {
 
-            $farge = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
+            $farge          = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
 
             return [
@@ -79,7 +82,7 @@ class CalendarWidget extends FullCalendarWidget
         return $data->toArray();
     }
 
-    public function deleteEvent()
+    public function deleteEvent(): void
     {
         $this->event->delete();
 
@@ -235,7 +238,7 @@ class CalendarWidget extends FullCalendarWidget
     public function editEvent(array $data): void
     {
 
-        $tid              = Timesheet::find($data['id']);
+        $tid = Timesheet::find($data['id']);
 
         $tid->fra_dato    = $data['start'];
         $tid->til_dato    = $data['end'];
@@ -287,7 +290,7 @@ class CalendarWidget extends FullCalendarWidget
      *
      * @return void
      */
-    public function eventUpdate($event) : void
+    public function eventUpdate($event): void
     {
 
         $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];

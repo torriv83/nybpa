@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\KategoriResource\Pages;
 use App\Filament\Resources\KategoriResource\RelationManagers;
 use App\Models\Kategori;
-use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -14,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Cache;
 
 class KategoriResource extends Resource
 {
@@ -25,38 +25,40 @@ class KategoriResource extends Resource
     protected static ?string $pluralModelLabel = 'Kategorier';
     protected static ?int    $navigationSort   = 2;
 
-    protected static function getNavigationBadge() : ?string
+    protected static function getNavigationBadge(): ?string
     {
 
-        return static::getModel()::count();
+        return Cache::remember('CategoryNavigationBadge', now()->addMonth(), function () {
+            return static::getModel()::count();
+        });
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Form $form): Form
     {
 
         return $form
             ->schema([
                 TextInput::make('kategori')
-                         ->required()
-                         ->maxLength(191),
+                    ->required()
+                    ->maxLength(191),
             ]);
     }
 
     /**
      * @throws \Exception
      */
-    public static function table(Table $table) : Table
+    public static function table(Table $table): Table
     {
 
         return $table
             ->columns([
                 TextColumn::make('kategori'),
                 TextColumn::make('deleted_at')
-                          ->dateTime(),
+                    ->dateTime(),
                 TextColumn::make('created_at')
-                          ->dateTime(),
+                    ->dateTime(),
                 TextColumn::make('updated_at')
-                          ->dateTime(),
+                    ->dateTime(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -72,7 +74,7 @@ class KategoriResource extends Resource
             ]);
     }
 
-    public static function getRelations() : array
+    public static function getRelations(): array
     {
 
         return [
@@ -80,7 +82,7 @@ class KategoriResource extends Resource
         ];
     }
 
-    public static function getPages() : array
+    public static function getPages(): array
     {
 
         return [
@@ -91,12 +93,12 @@ class KategoriResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery() : Builder
+    public static function getEloquentQuery(): Builder
     {
 
         return parent::getEloquentQuery()
-                     ->withoutGlobalScopes([
-                         SoftDeletingScope::class,
-                     ]);
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
