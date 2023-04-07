@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TestResultsResource\Widgets;
 use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\LineChartWidget;
+use Illuminate\Support\Facades\Cache;
 
 class VektChart extends LineChartWidget
 {
@@ -36,13 +37,15 @@ class VektChart extends LineChartWidget
         ]
     ];
 
-    protected function getData() : array
+    protected function getData(): array
     {
 
         $value    = [];
         $date     = [];
-        $vekt     = Tests::where('navn', '=', 'Vekt')->get();
-        $resultat = TestResults::where('testsID', '=', $vekt['0']->id)->orderBy('dato')->get();
+        $vekt     = Cache::remember('vektChart', now()->addDay(), fn() => Tests::where('navn', '=', 'Vekt')->get());
+        $resultat = Cache::remember('vektResultat', now()->addDay(), function () use ($vekt) {
+            return TestResults::where('testsID', '=', $vekt['0']->id)->orderBy('dato')->get();
+        });
 
         if (count($resultat) > 0) {
 
