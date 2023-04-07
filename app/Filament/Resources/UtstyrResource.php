@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class UtstyrResource extends Resource
@@ -122,6 +123,8 @@ class UtstyrResource extends Resource
 
     protected static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return Cache::remember('UtstyrNavigationBadge', now()->addMonth(), function () {
+            return static::getModel()::count();
+        });
     }
 }

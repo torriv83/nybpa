@@ -50,14 +50,23 @@ class TimesheetResource extends Resource
                     ->label('Assistent')
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('dato')
+                    ->label('Dato')
+                    ->getStateUsing(fn(Model $record) => Carbon::parse($record->fra_dato)->format('d.m.Y'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('fra_dato')
-                    ->dateTime('d.m.Y H:i')
+                    ->label('Fra')
+                    ->dateTime('H:i')
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('til_dato')
-                    ->dateTime('d.m.Y H:i')
+                    ->label('Til')
+                    ->dateTime('H:i')
                     ->sortable()
                     ->toggleable(),
 
@@ -161,7 +170,7 @@ class TimesheetResource extends Resource
             //Actions
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->label('Se'),
+                    Tables\Actions\ViewAction::make()->label('Se')->slideOver(),
                     Tables\Actions\EditAction::make()->label('Endre'),
                     Tables\Actions\DeleteAction::make()->label('Slett'),
                     Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),

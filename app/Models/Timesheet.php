@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * @mixin IdeHelperTimesheet
@@ -43,7 +44,7 @@ class Timesheet extends Model
     /**
      * @return BelongsTo
      */
-    public function user() : BelongsTo
+    public function user(): BelongsTo
     {
 
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);
@@ -75,7 +76,7 @@ class Timesheet extends Model
      * @param $query
      * @method thisMonth()
      */
-    public function scopethisMonth($query)
+    public function scopethisMonth($query): void
     {
 
         $query->whereMonth('til_dato', '=', date('m'));
@@ -84,30 +85,33 @@ class Timesheet extends Model
     /**
      * @return Collection
      */
-    public function timeUsedThisYear() : Collection
+    public function timeUsedThisYear(): Collection
     {
 
-        // return Cache::remember('timerBruktStat', now()->addDay(), function () {
-        return $this->whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
-                    ->where('unavailable', '!=', 1)
-                    ->orderByRaw('fra_dato ASC')
-                    ->get()
-                    ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+        return Cache::remember('timeUsedThisYear', now()->addDay(), function () {
+            return $this->whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
+                ->where('unavailable', '!=', 1)
+                ->orderByRaw('fra_dato ASC')
+                ->get()
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+        });
+
     }
 
     /**
      * @return Collection
      */
-    public function timeUsedLastYear() : Collection
+    public function timeUsedLastYear(): Collection
     {
 
-        // return Cache::remember('timerBruktStatForrigeAar', now()->addDay(), function () {
+        return Cache::remember('timeUsedLastYear', now()->addDay(), function () {
 
-        return $this->whereBetween('fra_dato', [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
-                    ->orderByRaw('fra_dato ASC')
-                    ->get()
-                    ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
-        // });
+            return $this->whereBetween('fra_dato',
+                [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
+                ->orderByRaw('fra_dato ASC')
+                ->get()
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+        });
     }
 
 }
