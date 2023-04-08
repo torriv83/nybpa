@@ -87,6 +87,7 @@ class CalendarWidget extends FullCalendarWidget
         $this->event->delete();
 
         $this->dispatchBrowserEvent('close-modal', ['id' => 'fullcalendar--edit-event-modal']);
+        Cache::forget('schedules');
         $this->refreshEvents();
     }
 
@@ -231,7 +232,7 @@ class CalendarWidget extends FullCalendarWidget
             'description' => $data['description'],
             'totalt'      => Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']),
         ]);
-
+        Cache::forget('schedules');
         $this->refreshEvents();
     }
 
@@ -249,6 +250,7 @@ class CalendarWidget extends FullCalendarWidget
         $tid->totalt      = Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']);
 
         if ($tid->save()) {
+            Cache::forget('schedules');
             $this->refreshEvents();
         }
     }
@@ -304,6 +306,7 @@ class CalendarWidget extends FullCalendarWidget
         $tid->totalt      = Carbon::parse($event['start'])->diffInMinutes($event['end']);
 
         if ($tid->save()) {
+            Cache::forget('schedules');
             $this->refreshEvents();
         }
     }
