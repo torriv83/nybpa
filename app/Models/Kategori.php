@@ -15,12 +15,12 @@ class Kategori extends Model
 {
     use Notifiable;
     use SoftDeletes;
-    
+
     protected $table = 'kategori';
 
     public $timestamps = true;
 
-    protected $fillable   = [
+    protected $fillable = [
         'kategori',
     ];
 
@@ -34,7 +34,7 @@ class Kategori extends Model
     /**
      * @return HasMany
      */
-    public function utstyr()
+    public function utstyr(): HasMany
     {
         return $this->hasMany(Utstyr::class);
     }
