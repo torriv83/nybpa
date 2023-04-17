@@ -25,8 +25,7 @@ class BrukteTimerChart extends LineChartWidget
 
         /* Forrige år */
         $lastYear = Cache::remember('lastYear', now()->addDay(), function () {
-            return Timesheet::whereBetween('fra_dato',
-                [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
+            return Timesheet::lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
                 ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));

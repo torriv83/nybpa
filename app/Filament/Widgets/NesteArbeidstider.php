@@ -2,23 +2,19 @@
 
 namespace App\Filament\Widgets;
 
-use Closure;
-use permission;
-use App\Models\User;
-use Filament\Tables;
 use App\Models\Timesheet;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use permission;
 
 class NesteArbeidstider extends BaseWidget
 {
-    protected static ?string $pollingInterval = null;
-    protected static ?string $heading = 'De neste arbeidstidene';
-    protected static ?int $sort = 5;
-    protected array|string|int $columnSpan = 6;
+    protected static ?string   $pollingInterval = null;
+    protected static ?string   $heading         = 'De neste arbeidstidene';
+    protected static ?int      $sort            = 5;
+    protected array|string|int $columnSpan      = 6;
 
     protected function getTableEmptyStateHeading(): ?string
     {
@@ -26,7 +22,7 @@ class NesteArbeidstider extends BaseWidget
     }
 
     /**
-     * @param  Model  $record
+     * @param Model $record
      *
      * @return string
      */
@@ -47,7 +43,7 @@ class NesteArbeidstider extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Timesheet::query()->where('fra_dato', '>=', now())->where('user_id', '!=', 1)->where('unavailable', '=', 0);
+        return Timesheet::query()->inFuture('fra_dato')->where('user_id', '!=', 1)->where('unavailable', '=', 0);
     }
 
     protected function getTableColumns(): array

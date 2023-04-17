@@ -26,14 +26,7 @@ class UserStats extends BaseWidget
     {
         $timesheet = new Timesheet();
 
-        $tider = $timesheet->whereBetween(
-            'fra_dato',
-            [
-                Carbon::parse('first day of January')
-                    ->format('Y-m-d H:i:s'),
-                Carbon::now()
-            ]
-        )->where('unavailable', '!=', '1');
+        $tider = $timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1');
 
         /* Timer i uka igjen */
         $ukerIgjen            = Carbon::parse(now())->floatDiffInWeeks(now()->endOfYear());
@@ -72,7 +65,7 @@ class UserStats extends BaseWidget
 
         $hoursToUseThisMonth = (app(BpaTimer::class)->timer / 7) * Carbon::now()->daysInMonth;
         $usedThisMonth       = Cache::remember('usedThisMonth', now()->addDay(), function () use ($timesheet) {
-            return $timesheet->thisMonth()->thisYear()->where('unavailable', '=', '0')->sum('totalt');
+            return $timesheet->monthToDate('fra_dato')->where('unavailable', '=', '0')->sum('totalt');
         });
 
         /* Card Widgets */

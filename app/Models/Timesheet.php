@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\FilterableByDates;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,7 @@ class Timesheet extends Model
 
     use Notifiable;
     use SoftDeletes;
+    use FilterableByDates;
 
     public $timestamps = true;
 
@@ -89,7 +91,7 @@ class Timesheet extends Model
     {
 
         return Cache::remember('timeUsedThisYear', now()->addDay(), function () {
-            return $this->whereBetween('fra_dato', [Carbon::parse('first day of January')->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()])
+            return $this->yearToDate()
                 ->where('unavailable', '!=', 1)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
@@ -106,8 +108,7 @@ class Timesheet extends Model
 
         return Cache::remember('timeUsedLastYear', now()->addDay(), function () {
 
-            return $this->whereBetween('fra_dato',
-                [Carbon::now()->subYear()->startOfYear()->format('Y-m-d H:i:s'), Carbon::now()->subYear()->endOfYear()])
+            return $this->lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
                 ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
