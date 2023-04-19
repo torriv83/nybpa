@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -19,7 +20,7 @@ class Utstyr extends Model
 
     public $timestamps = true;
     // protected $dates      = ['fra_dato', 'til_dato'];
-    protected $fillable   = [
+    protected $fillable = [
         'hva',
         'navn',
         'artikkelnummer',
@@ -38,9 +39,9 @@ class Utstyr extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function kategori()
+    public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'kategoriID');
     }
