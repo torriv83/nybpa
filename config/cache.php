@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Str;
 
-if (!class_exists('Memcached')) {
+if (!class_exists('Memcached') && config('app.env') == 'local') {
     include("memcached.php");
 }
 
