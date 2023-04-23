@@ -22,6 +22,6 @@ class ViewUkeplan extends Page
 
     protected function getViewData(): array
     {
-        return ['test' => $this->record];
+        return ['okter' => $this->record];
     }
 }

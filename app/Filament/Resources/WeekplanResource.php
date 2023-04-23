@@ -95,7 +95,7 @@ class WeekplanResource extends Resource
                     ->label('Opprettet'),
                 TextColumn::make('updated_at')
                     ->dateTime('d.m.y H:i:s')
-                    ->label('Sist oppdatert')
+                    ->label('Sist oppdatert'),
             ]);
     }
 
