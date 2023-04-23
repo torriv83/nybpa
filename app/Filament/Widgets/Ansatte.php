@@ -8,7 +8,6 @@ use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class Ansatte extends BaseWidget
@@ -55,21 +54,13 @@ class Ansatte extends BaseWidget
                 ->getStateUsing(function (Model $record) {
                     $minutes = Cache::remember('WorkedThisYear' . $record->id, now()->addDay(), function () use ($record) {
                         return $record->timesheet()
-                            ->whereBetween(
-                                'fra_dato',
-                                [
-                                    Carbon::now()
-                                        ->startOfYear()
-                                        ->format('Y-m-d H:i:s'),
-                                    Carbon::now()
-                                        ->endOfYear()
-                                ]
-                            )
+                            ->yearToDate('fra_dato')
                             ->where('unavailable', '!=', 1)->sum('totalt');
                     });
 
                     return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                 })
+                ->label('Jobbet i år')
                 ->default('0'),
         ];
     }
