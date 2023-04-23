@@ -65,19 +65,19 @@ class WeekplanResource extends Resource
                                         Select::make('day')->options(Day::all()->pluck('name', 'name'))->label('Dag'),
                                         Repeater::make('exercises')->label('Treninger')
                                             ->schema([
-                                                Grid::make(4)
+                                                Grid::make(2)
                                                     ->schema([
                                                         Select::make('exercise')->options(Exercise::all()->pluck('name', 'name'))->label('Øvelse'),
-                                                        TimePicker::make('from')->withoutSeconds()->label('Fra'),
-                                                        TimePicker::make('to')->withoutSeconds()->label('Til'),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
                                                         ])->label('Hvor tung?'),
+                                                        TimePicker::make('from')->withoutSeconds()->label('Fra'),
+                                                        TimePicker::make('to')->withoutSeconds()->label('Til'),
                                                     ])
                                             ])->createItemButtonLabel('Legg til øvelse')
-                                    ])->createItemButtonLabel('Legg til dag')->collapsible()
+                                    ])->createItemButtonLabel('Legg til dag')->collapsible()->maxItems(7)->grid(3)
                             ])
                     ]),
             ]);
