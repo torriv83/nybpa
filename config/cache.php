@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Str;
 
-if (!class_exists('Memcached') && config('app.env') == 'local') {
-    include("memcached.php");
-}
 
 return [
 
@@ -19,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('CACHE_DRIVER', 'memcached'),
+    'default' => env('CACHE_DRIVER', 'file'),
 
     /*
     |--------------------------------------------------------------------------
