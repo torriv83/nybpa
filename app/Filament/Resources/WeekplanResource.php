@@ -26,11 +26,14 @@ use Filament\Tables\Columns\TextColumn;
 
 class WeekplanResource extends Resource
 {
-    protected static ?string $model = Weekplan::class;
-
-    protected static ?string $slug = 'weekplans';
-
+    protected static ?string $model                = Weekplan::class;
+    protected static ?string $slug                 = 'weekplans';
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationGroup  = 'Landslag';
+    protected static ?string $modelLabel       = 'Ukeplan';
+    protected static ?string $pluralModelLabel = 'Ukeplaner';
 
     public static function form(Form $form): Form
     {
@@ -62,11 +65,16 @@ class WeekplanResource extends Resource
                                         Select::make('day')->options(Day::all()->pluck('name', 'name'))->label('Dag'),
                                         Repeater::make('exercises')->label('Treninger')
                                             ->schema([
-                                                Grid::make(3)
+                                                Grid::make(4)
                                                     ->schema([
                                                         Select::make('exercise')->options(Exercise::all()->pluck('name', 'name'))->label('Øvelse'),
-                                                        TimePicker::make('time_from')->withoutSeconds()->label('Fra'),
-                                                        TimePicker::make('time_to')->withoutSeconds()->label('Til'),
+                                                        TimePicker::make('from')->withoutSeconds()->label('Fra'),
+                                                        TimePicker::make('to')->withoutSeconds()->label('Til'),
+                                                        Select::make('intensity')->options([
+                                                            'green'    => 'Lett',
+                                                            'darkcyan' => 'Vedlikehold',
+                                                            'crimson'  => 'Tung',
+                                                        ])->label('Hvor tung?'),
                                                     ])
                                             ])->createItemButtonLabel('Legg til øvelse')
                                     ])->createItemButtonLabel('Legg til dag')->collapsible()
@@ -82,6 +90,12 @@ class WeekplanResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('created_at')
+                    ->dateTime('d.m.y H:i:s')
+                    ->label('Opprettet'),
+                TextColumn::make('updated_at')
+                    ->dateTime('d.m.y H:i:s')
+                    ->label('Sist oppdatert')
             ]);
     }
 
@@ -91,6 +105,7 @@ class WeekplanResource extends Resource
             'index'  => Pages\ListWeekplans::route('/'),
             'create' => Pages\CreateWeekplan::route('/create'),
             'edit'   => Pages\EditWeekplan::route('/{record}/edit'),
+            'view'   => Pages\ViewUkeplan::route('/{record}'),
         ];
     }
 

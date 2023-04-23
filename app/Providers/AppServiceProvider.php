@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Filament\Facades\Filament;
-use Illuminate\Foundation\Vite;
-use Filament\Navigation\UserMenuItem;
 use Filament\Navigation\NavigationItem;
+use Filament\Navigation\UserMenuItem;
+use Illuminate\Foundation\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,8 +41,9 @@ class AppServiceProvider extends ServiceProvider
                 'Tider',
                 'Medisinsk',
                 'Diverse',
+                'Landslag',
                 'Authentication',
-                'Landslaget'
+
             ]);
 
             Filament::registerUserMenuItems([

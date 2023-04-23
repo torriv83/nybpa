@@ -19,11 +19,13 @@ use Filament\Tables\Columns\TextColumn;
 
 class ExerciseResource extends Resource
 {
-    protected static ?string $model = Exercise::class;
-
-    protected static ?string $slug = 'exercises';
-
+    protected static ?string $model                = Exercise::class;
+    protected static ?string $slug                 = 'exercises';
     protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $navigationIcon       = 'heroicon-o-collection';
+    protected static ?string $navigationGroup      = 'Landslag';
+    protected static ?string $modelLabel           = 'Øvelse';
+    protected static ?string $pluralModelLabel     = 'Øvelser';
 
     public static function form(Form $form): Form
     {

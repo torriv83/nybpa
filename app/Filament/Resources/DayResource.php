@@ -19,11 +19,13 @@ use Filament\Tables\Columns\TextColumn;
 
 class DayResource extends Resource
 {
-    protected static ?string $model = Day::class;
-
-    protected static ?string $slug = 'days';
-
+    protected static ?string $model                = Day::class;
+    protected static ?string $slug                 = 'days';
     protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $navigationIcon       = 'heroicon-o-collection';
+    protected static ?string $navigationGroup      = 'Landslag';
+    protected static ?string $modelLabel           = 'Dag';
+    protected static ?string $pluralModelLabel     = 'Dager';
 
     public static function form(Form $form): Form
     {
