@@ -17,8 +17,14 @@
                         <br>
                         {{$data['from']}} - {{$data['to']}}
                     </td>
-                    @if($loop->count < $antall)
-                        <td class="border px-6 py-4 ">&nbsp;</td>
+                    @if($loop->count < $antall && $loop->last)
+
+                        @php $remaining = $antall - $loop->count; @endphp
+
+                        @for($i = 1; $i <= $remaining; $i++)
+                            <td class="border px-6 py-4 ">&nbsp;</td>
+                        @endfor
+
                     @endif
 
                     @if($loop->count > $antall)
