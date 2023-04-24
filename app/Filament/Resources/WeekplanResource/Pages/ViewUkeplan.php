@@ -9,8 +9,7 @@ use Filament\Resources\Pages\Page;
 class ViewUkeplan extends Page
 {
     protected static string $resource = WeekplanResource::class;
-
-    protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
+    protected static string $view     = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
 
     public $record;
@@ -23,5 +22,12 @@ class ViewUkeplan extends Page
     protected function getViewData(): array
     {
         return ['okter' => $this->record];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            WeekplanResource\Widgets\StatsOverview::class,
+        ];
     }
 }

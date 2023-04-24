@@ -1,8 +1,4 @@
-<x-filament::page>
-    <h2>
-        {{$okter['name']}}
-    </h2>
-
+<x-filament::page :widget-data="['record' => $record]">
     <table style="border-collapse: separate; border-spacing: 5px 1rem;">
         @php $antall = 1; @endphp
         @foreach($okter['data'] as $d => $e)
@@ -13,7 +9,7 @@
 
                 @foreach($e['exercises'] as $data)
                     <td class="border px-6 py-4 " style="background-color: {{$data['intensity']}}">
-                        {{$data['exercise']}}
+                        <span class="font-bold"> {{$data['exercise']}}</span>
                         <br>
                         {{$data['from']}} - {{$data['to']}}
                     </td>
@@ -22,7 +18,7 @@
                         @php $remaining = $antall - $loop->count; @endphp
 
                         @for($i = 1; $i <= $remaining; $i++)
-                            <td class="border px-6 py-4 ">&nbsp;</td>
+                            <td class="border px-6 py-4">&nbsp;</td>
                         @endfor
 
                     @endif
