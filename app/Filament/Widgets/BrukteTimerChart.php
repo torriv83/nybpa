@@ -19,8 +19,9 @@ class BrukteTimerChart extends LineChartWidget
     {
 
         $timesheet = new Timesheet();
-        $thisYear  = $timesheet->TimeUsedThisYear();
 
+        /* Dette året */
+        $thisYear      = $timesheet->TimeUsedThisYear();
         $thisYearTimes = $this->yearTimes($thisYear);
 
         /* Forrige år */

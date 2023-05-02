@@ -89,6 +89,7 @@ class CalendarWidget extends FullCalendarWidget
         $this->dispatchBrowserEvent('close-modal', ['id' => 'fullcalendar--edit-event-modal']);
         Cache::forget('schedules');
         Cache::forget('usedThisMonth');
+        Cache::forget('timeUsedThisYear');
         $this->refreshEvents();
     }
 
@@ -235,6 +236,7 @@ class CalendarWidget extends FullCalendarWidget
         ]);
         Cache::forget('schedules');
         Cache::forget('usedThisMonth');
+        Cache::forget('timeUsedThisYear');
         $this->refreshEvents();
     }
 
@@ -254,6 +256,7 @@ class CalendarWidget extends FullCalendarWidget
         if ($tid->save()) {
             Cache::forget('schedules');
             Cache::forget('usedThisMonth');
+            Cache::forget('timeUsedThisYear');
             $this->refreshEvents();
         }
     }
@@ -311,6 +314,7 @@ class CalendarWidget extends FullCalendarWidget
         if ($tid->save()) {
             Cache::forget('schedules');
             Cache::forget('usedThisMonth');
+            Cache::forget('timeUsedThisYear');
             $this->refreshEvents();
         }
     }
