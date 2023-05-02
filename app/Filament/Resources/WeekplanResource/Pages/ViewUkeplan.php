@@ -8,9 +8,9 @@ use Filament\Resources\Pages\Page;
 
 class ViewUkeplan extends Page
 {
-    protected static string $resource = WeekplanResource::class;
-    protected static string $view     = 'filament.resources.weekplan-resource.pages.view-ukeplan';
-
+    protected static string  $resource = WeekplanResource::class;
+    protected static string  $view     = 'filament.resources.weekplan-resource.pages.view-ukeplan';
+    protected static ?string $title    = 'Ukeplan';
 
     public $record;
 
@@ -30,4 +30,5 @@ class ViewUkeplan extends Page
             WeekplanResource\Widgets\StatsOverview::class,
         ];
     }
+
 }

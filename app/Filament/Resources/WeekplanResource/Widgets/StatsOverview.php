@@ -9,7 +9,6 @@ use Filament\Widgets\StatsOverviewWidget\Card;
 
 class StatsOverview extends BaseWidget
 {
-    // protected static string $view = 'filament.resources.economy-resource.widgets.stats-overview';
     protected static ?string $pollingInterval = null;
 
     public $record;

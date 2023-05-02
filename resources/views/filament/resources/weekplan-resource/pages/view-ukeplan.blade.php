@@ -1,4 +1,5 @@
 <x-filament::page :widget-data="['record' => $record]">
+    <h1>{{$okter['name']}}</h1>
     <table style="border-collapse: separate; border-spacing: 5px 1rem;">
         @php $antall = 1; @endphp
         @foreach($okter['data'] as $d => $e)
