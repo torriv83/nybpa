@@ -24,18 +24,18 @@ class EconomyResource extends Resource
     protected static ?string $pluralModelLabel = 'Økonomi';
     protected static ?string $navigationIcon   = 'heroicon-o-currency-dollar';
 
-    public static function form(Form $form) : Form
+    public static function form(Form $form): Form
     {
 
         return $form
             ->schema([
                 Forms\Components\TextInput::make('before_tax')
-                                          ->required(),
+                    ->required(),
                 Forms\Components\TextInput::make('after_tax')
-                                          ->required(),
+                    ->required(),
                 Forms\Components\TextInput::make('tax_table')
-                                          ->required()
-                                          ->maxLength(255),
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('grunnstonad'),
             ]);
     }
@@ -43,7 +43,7 @@ class EconomyResource extends Resource
     /**
      * @throws \Exception
      */
-    public static function table(Table $table) : Table
+    public static function table(Table $table): Table
     {
 
         return $table
@@ -52,9 +52,9 @@ class EconomyResource extends Resource
                 Tables\Columns\TextColumn::make('after_tax')->label('Etter skatt')->money('nok', true),
                 Tables\Columns\TextColumn::make('tax_table')->label('Skattetabell'),
                 Tables\Columns\TextColumn::make('grunnstonad')->money('nok', true)
-                                         ->label('Grunnstønad'),
+                    ->label('Grunnstønad'),
                 Tables\Columns\TextColumn::make('updated_at')->label('Oppdatert')
-                                         ->dateTime('d.m.Y'),
+                    ->dateTime('d.m.Y'),
             ])
             ->filters([
                 //

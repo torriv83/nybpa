@@ -2,22 +2,22 @@
 
 namespace App\Filament\Resources\EconomyResource\Widgets;
 
-use Closure;
-//use permission;
-use Filament\Tables;
 use App\Models\ynab;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
+use Filament\Forms;
+use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+//use permission;
 
 class YnabOverview extends BaseWidget
 {
-    protected static ?string $pollingInterval = null;
-    protected int | string | array $columnSpan = 'full';
-    protected static ?string $heading = 'Tall fra YNAB';
+    protected static ?string   $pollingInterval = null;
+    protected static ?string   $heading         = 'Tall fra YNAB';
+    protected int|string|array $columnSpan      = 'full';
 
     protected function getTableRecordsPerPageSelectOptions(): array
     {
@@ -43,7 +43,7 @@ class YnabOverview extends BaseWidget
     {
         $query = ynab::query()->get();
 
-        $income = $query->sum('income');
+        $income   = $query->sum('income');
         $activity = $query->sum('activity');
         $budgeted = $query->sum('budgeted');
 
@@ -56,7 +56,12 @@ class YnabOverview extends BaseWidget
         return [
             Tables\Columns\TextColumn::make('month')
                 ->label('Måned')
-                ->date('F, Y')
+                ->formatStateUsing(function ($column): ?string {
+
+                    Carbon::setlocale(config('app.locale'));
+
+                    return ucfirst(Carbon::parse($column->getState())->translatedFormat('F, Y'));
+                })
                 ->sortable()
                 ->alignLeft(),
 
@@ -64,7 +69,6 @@ class YnabOverview extends BaseWidget
                 ->getStateUsing(function (Model $record) {
                     return $record->income / 1000;
                 })
-                ->color('success')
                 ->money('nok', true)
                 ->label('Inntekter')
                 ->sortable()
@@ -74,7 +78,6 @@ class YnabOverview extends BaseWidget
                 ->getStateUsing(function (Model $record) {
                     return $record->activity / 1000;
                 })
-                ->color('danger')
                 ->money('nok', true)
                 ->label('Utgifter')
                 ->sortable()
@@ -91,19 +94,64 @@ class YnabOverview extends BaseWidget
 
             Tables\Columns\TextColumn::make('inntektutgift')
                 ->getStateUsing(function (Model $record) {
-                    return ($record->income + $record->activity)  / 1000;
+                    return ($record->income + $record->activity) / 1000;
                 })
                 ->money('nok', true)
                 ->sortable()
+                ->color(function ($record) {
+                    if (($record->income + $record->activity) / 1000 < 0) {
+                        return 'danger';
+                    } else {
+                        return 'success';
+                    }
+                })
                 ->alignLeft()->label('Inntekt - Utgift'),
 
             Tables\Columns\TextColumn::make('Balanse')
                 ->getStateUsing(function (Model $record) {
-                    return ($record->income - $record->budgeted)  / 1000;
+                    return ($record->income - $record->budgeted) / 1000;
                 })
                 ->money('nok', true)
                 ->sortable()
+                ->color(function ($record) {
+                    if (($record->income + $record->activity) / 1000 < 0) {
+                        return 'danger';
+                    } else {
+                        return 'success';
+                    }
+                })
                 ->alignLeft(),
+        ];
+    }
+
+    protected function getTableFilters(): array
+    {
+        return [
+            Tables\Filters\Filter::make('month')
+                ->form([
+                    Forms\Components\DatePicker::make('fra'),
+                    Forms\Components\DatePicker::make('til')->default(now()),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['fra'],
+                            fn(Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
+                        )
+                        ->when(
+                            $data['til'],
+                            fn(Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
+                        );
+                }),
+            Tables\Filters\Filter::make('last3months')->label('Siste 3 måneder')
+                ->query(fn(Builder $query): Builder => $query
+                    ->where('month', '>=', Carbon::now()->subMonths(3))),
+            Tables\Filters\Filter::make('last6months')->label('Siste 6 måneder')
+                ->query(fn(Builder $query): Builder => $query
+                    ->where('month', '>=', Carbon::now()->subMonths(6))),
+            Tables\Filters\Filter::make('lastyear')->label('Siste år')
+                ->query(fn(Builder $query): Builder => $query
+                    ->where('month', '>=', Carbon::now()->subMonths(12)))->default(),
         ];
     }
 }
