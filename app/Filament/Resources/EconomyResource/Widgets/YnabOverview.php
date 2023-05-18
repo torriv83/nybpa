@@ -43,11 +43,21 @@ class YnabOverview extends BaseWidget
     {
         $query = ynab::query()->get();
 
-        $income   = $query->sum('income');
-        $activity = $query->sum('activity');
-        $budgeted = $query->sum('budgeted');
+        $income      = $query->sum('income');
+        $activity    = $query->sum('activity');
+        $budgeted    = $query->sum('budgeted');
+        $avgincome   = $query->avg('income');
+        $avgactivity = $query->avg('activity');
+        $avgbudgeted = $query->avg('budgeted');
 
-        return view('economy.table.table-footer', ['income' => $income, 'activity' => $activity, 'budgeted' => $budgeted]);
+        return view('economy.table.table-footer', [
+            'income'      => $income,
+            'activity'    => $activity,
+            'budgeted'    => $budgeted,
+            'avgincome'   => $avgincome,
+            'avgbudgeted' => $avgbudgeted,
+            'avgactivity' => $avgactivity,
+        ]);
     }
 
     protected function getTableColumns(): array
