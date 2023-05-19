@@ -53,19 +53,12 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('dato')
                     ->label('Dato')
                     ->formatStateUsing(function ($record) {
-                        if ($record('unavailable') == 1) {
+                        if ($record->unavailable == 1) {
                             return Carbon::parse($record->fra_dato)->format('d.m.Y') . ' - ' . Carbon::parse($record->til_dato)->format('d.m.Y');
                         } else {
                             return Carbon::parse($record->fra_dato)->format('d.m.Y');
                         }
                     })
-                    /*->getStateUsing(function (Model $record, $get) {
-                        if ($get('unavailable') == 1) {
-                            return Carbon::parse($record->fra_dato)->format('d.m.Y') . ' - ' . Carbon::parse($record->til_dato)->format('d.m.Y');
-                        } else {
-                            return Carbon::parse($record->fra_dato)->format('d.m.Y');
-                        }
-                    })*/
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
