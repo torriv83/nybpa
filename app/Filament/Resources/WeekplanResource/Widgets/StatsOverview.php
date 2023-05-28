@@ -15,23 +15,39 @@ class StatsOverview extends BaseWidget
 
     protected function getCards(): array
     {
-
-        $test  = Weekplan::find($this->record);
-        $okter = 0;
-        $timer = 0;
+        $test       = Weekplan::find($this->record);
+        $statistics = [
+            'okter'       => 0,
+            'timer'       => 0,
+            'intensities' => [
+                'crimson'  => 0,
+                'darkcyan' => 0,
+                'other'    => 0,
+            ],
+        ];
 
         foreach ($test[0]['data'] as $t) {
             foreach ($t['exercises'] as $o) {
-                $okter++;
-                $timer += Carbon::parse($o['to'])->diffInSeconds($o['from']);
+                $statistics['okter']++;
+                $statistics['timer'] += Carbon::parse($o['to'])->diffInSeconds($o['from']);
 
+                if ($o['intensity'] == 'crimson') {
+                    $statistics['intensities']['crimson']++;
+                } elseif ($o['intensity'] == 'darkcyan') {
+                    $statistics['intensities']['darkcyan']++;
+                } else {
+                    $statistics['intensities']['other']++;
+                }
             }
         }
 
         return [
-            Card::make('Antall økter', $okter),
-            Card::make('Antall timer', date('H:i', mktime(0, 0, $timer))),
+            Card::make('Antall økter', $statistics['okter']),
+            Card::make('Antall timer', date('H:i', mktime(0, 0, $statistics['timer']))),
+            Card::make('Antall U, V, R økter',
+                'U: ' . $statistics['intensities']['crimson'] . ', V: ' . $statistics['intensities']['darkcyan'] . ', R: ' . $statistics['intensities']['other']),
         ];
     }
+
 
 }
