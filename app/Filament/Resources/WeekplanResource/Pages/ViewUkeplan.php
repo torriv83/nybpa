@@ -21,7 +21,11 @@ class ViewUkeplan extends Page
 
     protected function getViewData(): array
     {
-        return ['okter' => $this->record];
+
+        // Create a new Laravel collection from the array
+        $collection = collect($this->record['data']);
+
+        return ['okter' => $collection];
     }
 
     protected function getHeaderWidgets(): array

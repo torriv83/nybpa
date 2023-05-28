@@ -1,36 +1,53 @@
 <x-filament::page :widget-data="['record' => $record]">
-    <h1>{{$okter['name']}}</h1>
-    <table style="border-collapse: separate; border-spacing: 5px 1rem;">
-        @php $antall = 1; @endphp
-        @foreach($okter['data'] as $d => $e)
+    {{--    <h1>{{$okter['name']}}</h1>--}}
+
+    <table class="min-w-full bg-gray-800 text-white border border-collapse dark:border-gray-700">
+        <thead>
+        <tr>
+            @foreach($okter as $item)
+                <th class="py-2 px-4 border-b border-r dark:border-gray-600">{{ $item['day'] }}</th>
+            @endforeach
+        </tr>
+        </thead>
+        <tbody>
+        @for ($i = 0; $i < count($okter[0]['exercises']); $i++)
             <tr>
-                <th class="bg-gray-500 border text-left px-6 py-4">
-                    {{$e['day']}}
-                </th>
+                @foreach($okter as $item)
+                    @if (isset($item['exercises'][$i]))
+                        @php
+                            $intensity = $item['exercises'][$i]['intensity'];
 
-                @foreach($e['exercises'] as $data)
-                    <td class="border px-6 py-4 " style="background-color: {{$data['intensity']}}">
-                        <span class="font-bold"> {{$data['exercise']}}</span>
-                        <br>
-                        {{$data['from']}} - {{$data['to']}}
-                    </td>
-                    @if($loop->count < $antall && $loop->last)
+                            switch ($intensity) {
+                                case 'crimson':
+                                    $bgColorStyle = 'background-color: #DC2626';
+                                    break;
+                                case 'darkcyan':
+                                    $bgColorStyle = 'background-color: #008B8B';
+                                    break;
+                                case 'green':
+                                    $bgColorStyle = 'background-color: green';
+                                    break;
+                                // Add more cases for other intensities/colors if needed
+                                default:
+                                    $bgColorStyle = '';
+                            }
 
-                        @php $remaining = $antall - $loop->count; @endphp
+                            $from = $item['exercises'][$i]['from'];
+                            $to = $item['exercises'][$i]['to'];
+                            $timeFormat = "{$from} - {$to}";
+                        @endphp
 
-                        @for($i = 1; $i <= $remaining; $i++)
-                            <td class="border px-6 py-4">&nbsp;</td>
-                        @endfor
-
-                    @endif
-
-                    @if($loop->count > $antall)
-                        @php $antall = $loop->count @endphp
+                        <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500" style="{{ $bgColorStyle }}">
+                            <div class="mb-1">{{ $timeFormat }}</div>
+                            <div>{{ $item['exercises'][$i]['exercise'] }}</div>
+                        </td>
+                    @else
+                        <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500">&nbsp;</td>
                     @endif
                 @endforeach
             </tr>
-
-        @endforeach
+        @endfor
+        </tbody>
     </table>
 
 </x-filament::page>
