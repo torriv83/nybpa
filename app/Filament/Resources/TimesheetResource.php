@@ -79,7 +79,7 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('Beskrivelse')
                     ->limit(20)
-                    ->getStateUsing(fn(Model $record) => strip_tags($record->description))
+                    ->getStateUsing(fn(Model $record) => !is_null($record->description) ? strip_tags($record->description) : '')
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
 
                         $state = $column->getState();

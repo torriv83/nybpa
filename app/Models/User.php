@@ -3,16 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Filament\Models\Contracts\FilamentUser;
-use Spatie\Permission\Traits\HasRoles;
-use Lab404\Impersonate\Models\Impersonate;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @mixin IdeHelperUser
@@ -30,7 +29,7 @@ class User extends Authenticatable implements FilamentUser
     /**
      * @return bool
      */
-    public function canImpersonate() : bool
+    public function canImpersonate(): bool
     {
         // For example
         return User::can('Impersonate');
@@ -81,13 +80,17 @@ class User extends Authenticatable implements FilamentUser
     /**
      * @return HasMany
      */
-    public function timesheet() : HasMany
+    public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);
     }
 
     public function scopeAssistenter($query)
     {
-        return $query->role(['Fast ansatt', 'Tilkalling']);
+        if (Role::where('name', 'tilkalling')->exists()) {
+            return $query->role(['Fast ansatt', 'Tilkalling']);
+        }
+
+        return null;
     }
 }

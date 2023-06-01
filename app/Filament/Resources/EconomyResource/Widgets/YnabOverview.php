@@ -124,7 +124,7 @@ class YnabOverview extends BaseWidget
                 ->money('nok', true)
                 ->sortable()
                 ->color(function ($record) {
-                    if (($record->income + $record->activity) / 1000 < 0) {
+                    if (($record->income - $record->budgeted) / 1000 < 0) {
                         return 'danger';
                     } else {
                         return 'success';

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * @mixin IdeHelperTests
@@ -21,7 +21,7 @@ class Tests extends Model
 
     public $timestamps = true;
 
-    protected $fillable   = [
+    protected $fillable = [
         'navn',
         'ovelser',
     ];
@@ -32,6 +32,6 @@ class Tests extends Model
 
     public function testResults(): HasMany
     {
-        return $this->hasMany(TestResults::class);
+        return $this->hasMany(TestResults::class, 'testsID');
     }
 }

@@ -2,79 +2,115 @@
 
 namespace App\Filament\Resources\TestResultsResource\Widgets;
 
-use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\LineChartWidget;
 use Illuminate\Support\Facades\Cache;
 
 class StyrkeChart extends LineChartWidget
 {
-
     protected static ?string $heading         = 'Styrke tester';
     protected static ?string $pollingInterval = null;
 
-    protected static ?array $options = [
-        'plugins' => [
-            'tooltip' => [
-                'mode'      => 'index',
-                'intersect' => false
-            ],
-        ]
-    ];
+    protected static ?array $options = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        self::$options = $this->getChartOptions();
+    }
 
     protected function getData(): array
     {
+        $styrketest = $this->fetchData();
 
-        //Hente ut data fra DB
-        $styrketest = Cache::remember('styrkeChart', now()->addDay(), function () {
-            return Tests::where('navn', '=', 'Styrketest')->get();
-        });
-        $resultat   = Cache::remember('styrkeResultat', now()->addDay(), function () use ($styrketest) {
-            return TestResults::where('testsID', '=', $styrketest['0']->id)->orderBy('dato')->get();
-        });
+        if (!$styrketest || $styrketest->testResults->isEmpty()) {
+            return $this->getDefaultChartData();
+        }
 
-        //Define variables
-        $dato       = [];
+        $transformedData = $this->transformData($styrketest->testResults);
+        $resultater      = $transformedData['resultater'];
+        $dato            = $transformedData['dato'];
+
+        return $this->formatChartData($resultater, $dato);
+    }
+
+    protected function fetchData()
+    {
+        return Cache::remember('styrkeChart', now()->addDay(), function () {
+            return Tests::with('testResults')->where('navn', '=', 'Styrketest')->first();
+        });
+    }
+
+    protected function transformData($results): array
+    {
         $resultater = [];
+        $dato       = [];
 
-        if (count($resultat) > 0) {
+        foreach ($results as $v) {
+            $dato[] = $v->dato->format('d.m.y H:i');
 
-            //Bygg opp arrayer med dato og resultater
-            foreach ($resultat as $v) {
-                $dato[] = $v->dato->format('d.m.y H:i');
-                foreach ($v->resultat[0] as $name => $result) {
-                    $resultater[] = [$name => $result];
-                }
+            foreach ($v->resultat[0] as $name => $result) {
+                $resultater[$name][] = $result;
             }
+        }
 
-            //Sett sammen arrayene i formatet som trengs for chart.js
-            $finalResults = [];
-            foreach (array_merge_recursive(...$resultater) as $name => $res) {
-                $randColor      = 'rgb(' . rand(0, 255) . ', ' . rand(0, 255) . ', ' . rand(0, 255) . ')';
-                $res            = count($dato) > 1 ? $res : [$res];
-                $finalResults[] = [
-                    'label'           => $name,
-                    'data'            => $res,
-                    'backgroundColor' => $randColor,
-                    'borderColor'     => $randColor,
-                ];
-            }
+        return [
+            'resultater' => $resultater,
+            'dato'       => $dato,
+        ];
+    }
 
-            //Voila!
-            return [
-                'datasets' => $finalResults,
-                'labels'   => $dato,
-            ];
-        } else {
-            return [
-                'datasets' => [
-                    [
-                        'label' => 'Styrke',
-                        'data'  => [],
-                    ],
-                ],
-                'labels'   => [],
+    protected function formatChartData(array $resultater, array $dato): array
+    {
+        $finalResults = [];
+        $randColors   = generateRandomColors(count($resultater));
+
+        foreach ($resultater as $name => $res) {
+            $randColor = array_shift($randColors);
+            $res       = count($dato) > 1 ? $res : [$res];
+
+            $finalResults[] = [
+                'type'            => 'line',
+                'label'           => $name,
+                'data'            => $res,
+                'backgroundColor' => $randColor,
+                'borderColor'     => $randColor,
+                'borderWidth'     => 1,
             ];
         }
+
+        return [
+            'datasets' => $finalResults,
+            'labels'   => $dato,
+        ];
     }
+
+    protected function getDefaultChartData(): array
+    {
+        return [
+            'datasets' => [
+                [
+                    'label' => 'Styrke',
+                    'data'  => [],
+                ],
+            ],
+            'labels'   => [],
+        ];
+    }
+
+    private function getChartOptions(): array
+    {
+        return [
+            'plugins' => [
+                'tooltip' => [
+                    'mode'      => 'index',
+                    'intersect' => false
+                ],
+            ],
+            // Additional options
+            // ...
+        ];
+    }
+
 }

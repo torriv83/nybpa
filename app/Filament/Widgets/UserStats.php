@@ -29,7 +29,7 @@ class UserStats extends BaseWidget
         $tider = $timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1');
 
         /* Timer i uka igjen */
-        $ukerIgjen            = Carbon::parse(now())->floatDiffInWeeks(now()->endOfYear());
+        $weeksLeft            = Carbon::parse(now())->floatDiffInWeeks(now()->endOfYear());
         $totaltTimerInnvilget = (app(BpaTimer::class)->timer * 52) * 60;
 
         // Kalkulasjoner
@@ -40,9 +40,9 @@ class UserStats extends BaseWidget
 
         // convert hours used to minutes
         $hoursPerWeek = 24 * 7;
-        $leftPerWeek  = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $ukerIgjen)) / $ukerIgjen;
+        $leftPerWeek  = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $weeksLeft)) / $weeksLeft;
 
-        $avgPerWeek = date('H:i:s', mktime(0, $leftPerWeek * 60));
+        $avgPerWeek = $this->calculateAvgPerWeek($leftPerWeek);
 
         /* Chart timer brukt dette året */
         $thisYear = $timesheet->TimeUsedThisYear();
@@ -94,6 +94,15 @@ class UserStats extends BaseWidget
                 return Utstyr::all()->count();
             })),
         ];
+    }
+
+    private function calculateAvgPerWeek($leftPerWeek): string
+    {
+        $hours   = floor($leftPerWeek);
+        $minutes = floor(($leftPerWeek - $hours) * 60);
+        $seconds = round((($leftPerWeek - $hours) * 60 - $minutes) * 60);
+
+        return date('H:i:s', mktime($hours, $minutes, $seconds, 0, 0, 0));
     }
 
     private function minutesToTime($minutes): string
