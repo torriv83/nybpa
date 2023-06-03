@@ -28,11 +28,10 @@ class RheitChart extends LineChartWidget
             return $this->getDefaultChartData();
         }
 
-        $transformedData = $this->transformData($rheit->testResults);
-        $resultater      = $transformedData['resultater'];
-        $dato            = $transformedData['dato'];
-
-        return $this->formatChartData($resultater, $dato);
+        return $this->formatChartData(
+            $this->transformData($rheit->testResults)['resultater'],
+            $this->transformData($rheit->testResults)['dato']
+        );
     }
 
     protected function fetchData()
