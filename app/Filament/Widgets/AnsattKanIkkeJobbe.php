@@ -17,7 +17,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
     protected static ?string   $pollingInterval = null;
     protected static ?string   $heading         = 'Ansatte kan ikke jobbe';
     protected static ?int      $sort            = 6;
-    protected array|string|int $columnSpan      = 6;
+    protected array|string|int $columnSpan      = 3;
 
     public function getTableRecordKey(Model $record): string
     {

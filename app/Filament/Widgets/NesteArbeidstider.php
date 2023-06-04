@@ -14,7 +14,7 @@ class NesteArbeidstider extends BaseWidget
     protected static ?string   $pollingInterval = null;
     protected static ?string   $heading         = 'De neste arbeidstidene';
     protected static ?int      $sort            = 5;
-    protected array|string|int $columnSpan      = 6;
+    protected array|string|int $columnSpan      = 3;
 
     protected function getTableEmptyStateHeading(): ?string
     {

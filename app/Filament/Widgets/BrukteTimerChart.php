@@ -12,8 +12,8 @@ class BrukteTimerChart extends LineChartWidget
 
     protected static ?string   $heading         = 'Timer brukt hver måned';
     protected static ?string   $pollingInterval = null;
-    protected static ?int      $sort            = 2;
-    protected array|string|int $columnSpan      = 6;
+    protected static ?int      $sort            = 1;
+    protected int|string|array $columnSpan      = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
 
     protected function getData(): array
     {

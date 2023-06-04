@@ -11,7 +11,18 @@ class UserStats extends BaseWidget
 
     private UserStatsService $userStatsService;
 
-    protected static ?string $pollingInterval = null;
+    protected static ?string   $pollingInterval = null;
+    protected int|string|array $columnSpan      = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-6';
+
+//        [
+//        'xs' => 6,
+//        'sm' => 3,
+//        'md' => 6,
+//        'xl' => 6,
+//    ];
+
+//        'xs:grid-cols-12 sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12';
+
 
     public function __construct()
     {
