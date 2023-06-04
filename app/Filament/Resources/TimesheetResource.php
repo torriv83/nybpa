@@ -48,6 +48,13 @@ class TimesheetResource extends Resource
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Assistent')
+                    ->color(function ($record) {
+                        if ($record->unavailable == 1) {
+                            return 'danger';
+                        } else {
+                            return 'success';
+                        }
+                    })
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('dato')

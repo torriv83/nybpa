@@ -2,22 +2,22 @@
 
 namespace App\Filament\Resources\TimesheetResource\Widgets;
 
+use App\Models\Timesheet;
 use Carbon\Carbon;
 use Filament\Tables;
-use App\Models\Timesheet;
 use Filament\Widgets\Widget;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
 {
 
     use Tables\Concerns\InteractsWithTable;
 
-    protected static string $view = 'filament.resources.timesheet-resource.widgets.hours-used-each-month';
-    protected static ?string $pollingInterval = null;
-    protected int | string | array $columnSpan = 'full';
+    protected static string    $view            = 'filament.resources.timesheet-resource.widgets.hours-used-each-month';
+    protected static ?string   $pollingInterval = null;
+    protected int|string|array $columnSpan      = 'full';
 
     public function getTableRecordKey(Model $record): string
     {
@@ -26,7 +26,12 @@ class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
 
     protected function isTablePaginationEnabled(): bool
     {
-        return false;
+        return true;
+    }
+
+    protected function getTableRecordsPerPageSelectOptions(): array
+    {
+        return [1, 3, 6, 9, 12];
     }
 
     protected function getTableContentGrid(): ?array
@@ -43,8 +48,11 @@ class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
             ->groupBy(DB::raw("DATE(DATE_FORMAT(fra_dato, '%Y-%m-01'))"))
             ->whereBetween(
                 'fra_dato',
-                [Carbon::parse('first day of January')
-                    ->format('Y-m-d H:i:s'), Carbon::now()->endOfYear()]
+                [
+                    Carbon::parse('first day of January')
+                        ->format('Y-m-d H:i:s'),
+                    Carbon::now()->endOfYear()
+                ]
             )
             ->where('unavailable', '!=', 1);
     }
