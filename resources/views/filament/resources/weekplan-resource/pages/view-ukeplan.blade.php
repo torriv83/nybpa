@@ -1,7 +1,7 @@
 <x-filament::page :widget-data="['record' => $record]">
 
     <div class="overflow-y-auto overflow-x-auto">
-        <table class="w-full min-w-full bg-gray-800 text-white border border-collapse dark:border-gray-700">
+        <table class="w-full min-w-full dark:bg-gray-800 text-white border border-collapse dark:border-gray-700">
             <thead>
             <tr>
                 <th class="py-2 px-4 border-b border-r dark:border-gray-700">Tid</th>
