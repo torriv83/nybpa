@@ -4,6 +4,7 @@ namespace App\Filament\Resources\WeekplanResource\Widgets;
 
 use App\Models\Weekplan;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 
@@ -15,39 +16,40 @@ class StatsOverview extends BaseWidget
 
     protected function getCards(): array
     {
-        $test       = Weekplan::find($this->record);
+
+        $weekplans = Weekplan::find($this->record);
+
+        if (!$weekplans) {
+            // Handle the situation when the record is not found
+            return [];
+        }
+
         $statistics = [
             'okter'       => 0,
             'timer'       => 0,
             'intensities' => [
                 'crimson'  => 0,
                 'darkcyan' => 0,
-                'other'    => 0,
+                'green'    => 0,
             ],
         ];
 
-        foreach ($test[0]['data'] as $t) {
-            foreach ($t['exercises'] as $o) {
+        foreach ($weekplans[0]['data'] as $weekplan) {
+            foreach ($weekplan['exercises'] as $exercise) {
                 $statistics['okter']++;
-                $statistics['timer'] += Carbon::parse($o['to'])->diffInSeconds($o['from']);
+                $statistics['timer'] += Carbon::parse($exercise['to'])->diffInSeconds($exercise['from']);
 
-                if ($o['intensity'] == 'crimson') {
-                    $statistics['intensities']['crimson']++;
-                } elseif ($o['intensity'] == 'darkcyan') {
-                    $statistics['intensities']['darkcyan']++;
-                } else {
-                    $statistics['intensities']['other']++;
-                }
+                $statistics['intensities'][$exercise['intensity']]++;
+
             }
         }
 
         return [
             Card::make('Antall økter', $statistics['okter']),
-            Card::make('Antall timer', date('H:i', mktime(0, 0, $statistics['timer']))),
+            Card::make('Antall timer', CarbonInterval::seconds($statistics['timer'])->cascade()->forHumans()),
             Card::make('Antall U, V, R økter',
-                'U: ' . $statistics['intensities']['crimson'] . ', V: ' . $statistics['intensities']['darkcyan'] . ', R: ' . $statistics['intensities']['other']),
+                'U: ' . $statistics['intensities']['crimson'] . ', V: ' . $statistics['intensities']['darkcyan'] . ', R: ' . $statistics['intensities']['green']),
         ];
     }
-
 
 }

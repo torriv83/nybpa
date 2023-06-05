@@ -24,9 +24,9 @@ class ListWishlists extends ListRecords
         $query = Wishlist::query()->get();
 
         $total     = $query->sum(fn($data) => $data->koster * $data->antall);
-        $totalCost = $query->sum('koster');
-        $totalItem = $query->sum('antall');
+        $totalCost = $query->pluck('koster')->sum();
+        $totalItem = $query->pluck('antall')->sum();
 
-        return view('wishlist.table-footer', ['totalItem' => $totalItem, 'totalCost' => $totalCost, 'total' => $total]);
+        return view('wishlist.table-footer', compact('totalItem', 'totalCost', 'total'));
     }
 }

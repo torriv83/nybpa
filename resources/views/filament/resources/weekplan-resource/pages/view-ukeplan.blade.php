@@ -12,56 +12,26 @@
             </tr>
             </thead>
             <tbody>
-            @php
-                $startTime = 11; // Start time in hours (24-hour format)
-                $endTime = 20; // End time in hours (24-hour format)
-                $interval = 60; // Interval in minutes
-            @endphp
+            @foreach($data as $row)
+                <tr>
+                    {{--Display time with x-minute interval--}}
+                    <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500">
+                        {{ $row['time'] }}
+                    </td>
 
-            @for ($time = $startTime; $time <= $endTime; $time++)
-                @for ($minute = 0; $minute < 60; $minute += $interval)
-                    <tr>
-                        <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500">
-                            {{ sprintf('%02d', $time) }}:{{ sprintf('%02d', $minute) }}
-                        </td>
-                        {{-- Display time with 30-minute interval --}}
-                        @foreach($okter as $index => $item)
-                            @php
-                                $exercises = collect($item['exercises'])->filter(function ($exercise) use ($time, $minute, $interval) {
-                                    $from = strtotime($exercise['from']);
-                                    $to = strtotime($exercise['to']);
-
-                                    $fromHour = date('H', $from);
-                                    $fromMinute = date('i', $from);
-                                    $toHour = date('H', $to);
-                                    $toMinute = date('i', $to);
-
-                                    // Calculate the number of time slots based on the from and to times
-                                    $fromTime = ($fromHour * 60) + $fromMinute;
-                                    $toTime = ($toHour * 60) + $toMinute;
-                                    $intervalSlots = max(($toTime - $fromTime) / $interval, 1); // Ensure minimum 1 slot
-
-                                    $currentTime = ($time * 60) + $minute;
-
-                                    return $currentTime >= $fromTime && $currentTime < ($fromTime + $intervalSlots * $interval);
-                                });
-                            @endphp
-
-                            @if ($exercises->isEmpty())
-                                <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500">&nbsp;</td>
-                            @else
-                                @foreach($exercises as $exercise)
-                                    <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500"
-                                        style="{{ getIntensityColorClass($exercise['intensity']) }}">
-                                        <div class="mb-1">{{ formatTime($exercise['from'], $exercise['to'], 'H:i') }}</div>
-                                        <div>{{ $exercise['exercise'] }}</div>
-                                    </td>
-                                @endforeach
-                            @endif
-                        @endforeach
-                    </tr>
-                @endfor
-            @endfor
+                    @foreach($row['exercises'] as $exercise)
+                        @if (!isset($exercise['intensity']))
+                            <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500">&nbsp;</td>
+                        @else
+                            <td class="py-2 px-4 border-b dark:border-gray-600 border-r border-gray-500"
+                                style="{{ getIntensityColorClass($exercise['intensity']) }}">
+                                <div class="mb-1">{{ $exercise['from'] }}</div>
+                                <div>{{ $exercise['exercise'] }}</div>
+                            </td>
+                        @endif
+                    @endforeach
+                </tr>
+            @endforeach
             </tbody>
         </table>
     </div>
