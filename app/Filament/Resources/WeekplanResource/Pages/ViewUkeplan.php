@@ -20,12 +20,74 @@ class ViewUkeplan extends Page
         $this->record = Weekplan::find($record);
     }
 
+    public function getCollect(): \Illuminate\Support\Collection
+    {
+        return collect($this->record['data']);
+    }
+
     protected function getViewData(): array
     {
 
-        // Create a new Laravel collection from the array
-        $collection = collect($this->record['data']);
-        return ['okter' => $collection];
+        $okter = $this->getCollect();
+        $data  = $this->getExercises();
+
+        return compact('okter', 'data');
+    }
+
+    public function getExercises(): array
+    {
+
+        $startTime = 9; // Start time in hours (24-hour format)
+        $endTime   = 21; // End time in hours (24-hour format)
+        $interval  = 60; // Interval in minutes
+
+        $data = [];
+
+        for ($time = $startTime; $time <= $endTime; $time++) {
+            for ($minute = 0; $minute < 60; $minute += $interval) {
+                $row = [
+                    'time'      => sprintf('%02d', $time) . ':' . sprintf('%02d', $minute),
+                    'exercises' => [],
+                ];
+
+                foreach ($this->getCollect() as $index => $item) {
+                    $exercises = collect($item['exercises'])->filter(function ($exercise) use ($time, $minute, $interval) {
+                        $from = strtotime($exercise['from']);
+                        $to   = strtotime($exercise['to']);
+
+                        $fromHour   = date('H', $from);
+                        $fromMinute = date('i', $from);
+                        $toHour     = date('H', $to);
+                        $toMinute   = date('i', $to);
+
+                        // Calculate the number of time slots based on the from and to times
+                        $fromTime      = ($fromHour * 60) + $fromMinute;
+                        $toTime        = ($toHour * 60) + $toMinute;
+                        $intervalSlots = max(($toTime - $fromTime) / $interval, 1); // Ensure minimum 1 slot
+
+                        $currentTime = ($time * 60) + $minute;
+
+                        return $currentTime >= $fromTime && $currentTime < ($fromTime + $intervalSlots * $interval);
+                    });
+
+                    if ($exercises->isNotEmpty()) {
+                        foreach ($exercises as $exercise) {
+                            $row['exercises'][] = [
+                                'from'      => formatTime($exercise['from'], $exercise['to']),
+                                'intensity' => $exercise['intensity'],
+                                'exercise'  => $exercise['exercise'],
+                            ];
+                        }
+                    } else {
+                        $row['exercises'][] = [];
+                    }
+                }
+
+                $data[] = $row;
+            }
+        }
+
+        return $data;
     }
 
     protected function getTitle(): string
