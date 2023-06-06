@@ -182,6 +182,9 @@ class UserStatsService
      */
     private function getHoursUsedInMinutes(): mixed
     {
-        return $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1')->sum('totalt');
+        return \Cache::remember('hoursUsedInMinutes', now()->addDay(), function () {
+            return $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1')->sum('totalt');
+        });
+
     }
 }
