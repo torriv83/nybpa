@@ -20,7 +20,7 @@ class ViewUkeplan extends Page
         $this->record = Weekplan::find($record);
     }
 
-    public function getCollect(): \Illuminate\Support\Collection
+    public function getDayData(): \Illuminate\Support\Collection
     {
         return collect($this->record['data']);
     }
@@ -28,7 +28,7 @@ class ViewUkeplan extends Page
     protected function getViewData(): array
     {
 
-        $okter = $this->getCollect();
+        $okter = $this->getDayData();
         $data  = $this->getExercises();
 
         return compact('okter', 'data');
@@ -50,7 +50,8 @@ class ViewUkeplan extends Page
                     'exercises' => [],
                 ];
 
-                foreach ($this->getCollect() as $index => $item) {
+                $i = 0;
+                foreach ($this->getDayData() as $index => $item) {
                     $exercises = collect($item['exercises'])->filter(function ($exercise) use ($time, $minute, $interval) {
                         $from = strtotime($exercise['from']);
                         $to   = strtotime($exercise['to']);
@@ -64,16 +65,18 @@ class ViewUkeplan extends Page
                         $fromTime      = ($fromHour * 60) + $fromMinute;
                         $toTime        = ($toHour * 60) + $toMinute;
                         $intervalSlots = max(($toTime - $fromTime) / $interval, 1); // Ensure minimum 1 slot
-
-                        $currentTime = ($time * 60) + $minute;
+                        $currentTime   = ($time * 60) + $minute;
 
                         return $currentTime >= $fromTime && $currentTime < ($fromTime + $intervalSlots * $interval);
                     });
 
+
                     if ($exercises->isNotEmpty()) {
                         foreach ($exercises as $exercise) {
                             $row['exercises'][] = [
-                                'from'      => formatTime($exercise['from'], $exercise['to']),
+                                'day'       => $item['day'],
+                                'id'        => $i,
+                                'time'      => formatTime($exercise['from'], $exercise['to']),
                                 'intensity' => $exercise['intensity'],
                                 'exercise'  => $exercise['exercise'],
                             ];
@@ -81,6 +84,7 @@ class ViewUkeplan extends Page
                     } else {
                         $row['exercises'][] = [];
                     }
+                    $i++;
                 }
 
                 $data[] = $row;
