@@ -17,34 +17,50 @@
             </tr>
             </thead>
             <tbody>
+            @php
+                $exists = [];
+            @endphp
+
             @foreach($data as $row)
-                @if(!$loop->last)
-                    @php $borderB = 'border-b'; @endphp
-                @else
-                    @php $borderB = ''; @endphp
-                @endif
+
                 <tr>
                     {{--Display time with x-minute interval--}}
-                    <td class="py-2 px-4 {{$borderB}} dark:border-gray-600 border-r border-gray-500">
+                    <td class="py-2 px-4 border-t dark:border-gray-600 border-r border-gray-500">
                         {{ $row['time'] }}
                     </td>
 
                     @foreach($row['exercises'] as $exercise)
-                        @if(!$loop->last)
-                            @php $borderR = 'border-r'; @endphp
-                        @else
-                            @php $borderR = ''; @endphp
-                        @endif
+                        
+                        @php $borderR = !$loop->last ? 'border-r' : ''; @endphp
+
                         @if (!isset($exercise['intensity']))
-                            <td class="py-2 px-4 {{$borderB}} dark:border-gray-600 {{$borderR}} border-gray-500">&nbsp;</td>
+                            <td class="py-2 px-4 border-t dark:border-gray-600 {{$borderR}} border-gray-500">&nbsp;</td>
                         @else
-                            <td class="py-2 px-4 {{$borderB}} dark:border-gray-600 {{$borderR}} border-gray-500"
-                                style="{{ getIntensityColorClass($exercise['intensity']) }}">
-                                <div class="mb-1">{{ $exercise['from'] }}</div>
-                                <div>{{ $exercise['exercise'] }}</div>
-                            </td>
+                            @php
+                                $exerciseExists = collect($exists)->contains(function ($value) use ($exercise) {
+                                    return $value['day'] === $exercise['day'] && $value['id'] === $exercise['id'] && $value['exercise'] === $exercise['exercise'];
+                                });
+                            @endphp
+
+                            @if($exerciseExists)
+                                <td class="py-2 px-4 dark:border-gray-600 {{$borderR}} border-gray-500"
+                                    style="{{ getIntensityColorClass($exercise['intensity']) }}">
+                                    &nbsp;
+                                </td>
+                            @else
+                                <td class="py-2 px-4 border-t dark:border-gray-600 {{$borderR}} border-gray-500"
+                                    style="{{ getIntensityColorClass($exercise['intensity']) }}">
+                                    <div class="mb-1">{{ $exercise['time'] }}</div>
+                                    <div>{{ $exercise['exercise'] }}</div>
+                                </td>
+                            @endif
+
+                            @php
+                                $exists[] = array('day' => $exercise['day'], 'id' => $exercise['id'], 'exercise' => $exercise['exercise']);
+                            @endphp
                         @endif
                     @endforeach
+
                 </tr>
             @endforeach
             </tbody>

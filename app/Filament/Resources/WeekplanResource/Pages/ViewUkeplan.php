@@ -6,6 +6,7 @@ use App\Filament\Resources\WeekplanResource;
 use App\Models\Weekplan;
 use Carbon\Carbon;
 use Filament\Resources\Pages\Page;
+use Illuminate\Support\Collection;
 
 class ViewUkeplan extends Page
 {
@@ -20,7 +21,7 @@ class ViewUkeplan extends Page
         $this->record = Weekplan::find($record);
     }
 
-    public function getCollect(): \Illuminate\Support\Collection
+    public function getDayData(): Collection
     {
         return collect($this->record['data']);
     }
@@ -28,7 +29,7 @@ class ViewUkeplan extends Page
     protected function getViewData(): array
     {
 
-        $okter = $this->getCollect();
+        $okter = $this->getDayData();
         $data  = $this->getExercises();
 
         return compact('okter', 'data');
@@ -37,11 +38,29 @@ class ViewUkeplan extends Page
     public function getExercises(): array
     {
 
-        $startTime = 9; // Start time in hours (24-hour format)
-        $endTime   = 21; // End time in hours (24-hour format)
-        $interval  = 60; // Interval in minutes
-
         $data = [];
+
+        $exerciseData = $this->getDayData();
+        $earliestTime = PHP_INT_MAX;
+        $latestTime   = 0;
+
+        // Find the earliest and latest exercise times
+        foreach ($exerciseData as $item) {
+            foreach ($item['exercises'] as $exercise) {
+                $from = strtotime($exercise['from']);
+                $to   = strtotime($exercise['to']);
+
+                $fromTime = date('H', $from) * 60 + date('i', $from);
+                $toTime   = date('H', $to) * 60 + date('i', $to);
+
+                $earliestTime = min($earliestTime, $fromTime);
+                $latestTime   = max($latestTime, $toTime);
+            }
+        }
+
+        $startTime = floor($earliestTime / 60); // Start time in hours (24-hour format)
+        $endTime   = ceil($latestTime / 60); // End time in hours (24-hour format)
+        $interval  = 60; // Interval in minutes
 
         for ($time = $startTime; $time <= $endTime; $time++) {
             for ($minute = 0; $minute < 60; $minute += $interval) {
@@ -50,7 +69,8 @@ class ViewUkeplan extends Page
                     'exercises' => [],
                 ];
 
-                foreach ($this->getCollect() as $index => $item) {
+                $i = 0;
+                foreach ($this->getDayData() as $index => $item) {
                     $exercises = collect($item['exercises'])->filter(function ($exercise) use ($time, $minute, $interval) {
                         $from = strtotime($exercise['from']);
                         $to   = strtotime($exercise['to']);
@@ -64,16 +84,18 @@ class ViewUkeplan extends Page
                         $fromTime      = ($fromHour * 60) + $fromMinute;
                         $toTime        = ($toHour * 60) + $toMinute;
                         $intervalSlots = max(($toTime - $fromTime) / $interval, 1); // Ensure minimum 1 slot
-
-                        $currentTime = ($time * 60) + $minute;
+                        $currentTime   = ($time * 60) + $minute;
 
                         return $currentTime >= $fromTime && $currentTime < ($fromTime + $intervalSlots * $interval);
                     });
 
+
                     if ($exercises->isNotEmpty()) {
                         foreach ($exercises as $exercise) {
                             $row['exercises'][] = [
-                                'from'      => formatTime($exercise['from'], $exercise['to']),
+                                'day'       => $item['day'],
+                                'id'        => $i,
+                                'time'      => formatTime($exercise['from'], $exercise['to']),
                                 'intensity' => $exercise['intensity'],
                                 'exercise'  => $exercise['exercise'],
                             ];
@@ -81,6 +103,7 @@ class ViewUkeplan extends Page
                     } else {
                         $row['exercises'][] = [];
                     }
+                    $i++;
                 }
 
                 $data[] = $row;

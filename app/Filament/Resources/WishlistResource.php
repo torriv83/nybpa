@@ -47,7 +47,7 @@ class WishlistResource extends Resource
                         'Begynt å spare' => 'Begynt å spare',
                         'Kjøpt'          => 'Kjøpt',
                     ]),
-                TextInput::make('toalt')->disabled()->formatStateUsing(function ($record, $set) {
+                TextInput::make('totalt')->disabled()->formatStateUsing(function ($record, $set) {
                     $totalt = $record->find($record['id'])->wishlistitems->sum('koster');
 
                     if ($totalt > 0) {
