@@ -46,7 +46,16 @@ class WishlistResource extends Resource
                         'Venter'         => 'Venter',
                         'Begynt å spare' => 'Begynt å spare',
                         'Kjøpt'          => 'Kjøpt',
-                    ])
+                    ]),
+                TextInput::make('toalt')->disabled()->formatStateUsing(function ($record, $set) {
+                    $totalt = $record->find($record['id'])->wishlistitems->sum('koster');
+
+                    if ($totalt > 0) {
+                        $set('koster', $totalt);
+                    }
+                    return $totalt;
+
+                })->label('Totalt fra Liste')
             ]);
     }
 
@@ -85,7 +94,7 @@ class WishlistResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\WishlistItemsRelationManager::class,
         ];
     }
 

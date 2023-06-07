@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Wishlist extends Model
+class WishlistItem extends Model
 {
     use HasFactory;
 
@@ -15,12 +15,10 @@ class Wishlist extends Model
         'koster',
         'url',
         'antall',
-        'status',
-        'prioritet',
     ];
 
-    public function wishlistItems(): HasMany
+    public function wishlist(): BelongsTo
     {
-        return $this->hasMany(WishlistItem::class);
+        return $this->belongsTo(Wishlist::class);
     }
 }
