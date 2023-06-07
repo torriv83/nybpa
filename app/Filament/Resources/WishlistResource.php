@@ -26,13 +26,13 @@ class WishlistResource extends Resource
     protected static ?string $modelLabel           = 'Ønskeliste';
     protected static ?string $pluralModelLabel     = 'Ønskelister';
 
-    protected function getTableReorderColumn() : ?string
+    protected function getTableReorderColumn(): ?string
     {
 
         return 'prioritet';
     }
 
-    public static function form(Form $form) : Form
+    public static function form(Form $form): Form
     {
 
         return $form
@@ -42,10 +42,10 @@ class WishlistResource extends Resource
                 TextInput::make('url'),
                 TextInput::make('antall')->type('number'),
                 Select::make('status')
-                      ->options([
-                        'Venter' => 'Venter',
+                    ->options([
+                        'Venter'         => 'Venter',
                         'Begynt å spare' => 'Begynt å spare',
-                        'Kjøpt' => 'Kjøpt',
+                        'Kjøpt'          => 'Kjøpt',
                     ])
             ]);
     }
@@ -56,14 +56,14 @@ class WishlistResource extends Resource
             ->columns([
                 TextColumn::make('prioritet')->sortable(),
                 TextColumn::make('hva')->sortable(),
-                TextColumn::make('url')->formatStateUsing(fn () => 'Se her')
-                    ->url(fn ($record) => $record->url, true),
+                TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
+                    ->url(fn($record) => $record->url, true),
                 TextColumn::make('koster')->money('nok', true)->sortable(),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options([
                     'Begynt å spare' => 'Begynt å spare',
-                    'Kjøpt' => 'Kjøpt',
-                    'Venter' => 'Venter'
+                    'Kjøpt'          => 'Kjøpt',
+                    'Venter'         => 'Venter'
                 ])->disablePlaceholderSelection(),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
 
@@ -75,6 +75,7 @@ class WishlistResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -91,9 +92,10 @@ class WishlistResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWishlists::route('/'),
+            'index'  => Pages\ListWishlists::route('/'),
             'create' => Pages\CreateWishlist::route('/create'),
-            'edit' => Pages\EditWishlist::route('/{record}/edit'),
+            'edit'   => Pages\EditWishlist::route('/{record}/edit'),
+//            'view'   => Pages\EditWishlist::route('/{record}'),
         ];
     }
 }

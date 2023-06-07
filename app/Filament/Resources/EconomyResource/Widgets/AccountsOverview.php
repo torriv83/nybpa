@@ -21,13 +21,16 @@ class AccountsOverview extends BaseWidget
         $response = Http::withToken($token)->get($ynab . 'accounts/');
         $accounts = $response['data']['accounts'];
 
+        //Inkluder kun bruks og spare kontoer
         $filteredAccounts = collect($accounts)->filter(function ($account) {
             return $account['type'] === 'checking' || $account['type'] === 'savings';
         });
 
         $filteredAccounts->each(function ($account) use ($cards) {
-            $cards->push(Card::make($account['name'], number_format(($account['cleared_balance'] / 1000), 0, ',', ' '))
-                ->description('Last Reconciled: ' . Carbon::make($account['last_reconciled_at'])->format('d.m.Y H:i:s')));
+            $cards->push(
+                Card::make($account['name'], number_format(($account['cleared_balance'] / 1000), 0, ',', '.') . ' kr')
+                    ->description('Last Reconciled: ' . Carbon::make($account['last_reconciled_at'])->format('d.m.Y H:i:s'))
+            );
         });
 
         return $cards->toArray();

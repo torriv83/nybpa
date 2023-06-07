@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class StatsOverview extends BaseWidget
 {
-    // protected static string $view = 'filament.resources.economy-resource.widgets.stats-overview';
+    
     protected static ?string $pollingInterval = null;
 
     protected function getCards(): array
@@ -29,10 +29,10 @@ class StatsOverview extends BaseWidget
             $response = Http::withToken($token)->get($ynab . 'months/' . 'current');
             $aom      = $response['data']['month']['age_of_money'];
 
-            $cards[] = Card::make('I året før skatt', number_format($sumBeforeTax, 0, ',', ' '))
-                ->description(number_format($sumBeforeTax / 12, 0, ',', ' ') . ' i måneden');
-            $cards[] = Card::make('I året etter skatt', number_format($sumAfterTax, 0, ',', ' '))
-                ->description(number_format($sumAfterTax / 12, 0, ',', ' ') . ' i måneden');
+            $cards[] = Card::make('I året før skatt', number_format($sumBeforeTax, 0, ',', '.') . ' kr')
+                ->description(number_format($sumBeforeTax / 12, 0, ',', '.') . ' kr i måneden');
+            $cards[] = Card::make('I året etter skatt', number_format($sumAfterTax, 0, ',', '.') . ' kr')
+                ->description(number_format($sumAfterTax / 12, 0, ',', '.') . ' kr i måneden');
             $cards[] = Card::make('Prosent skatt', number_format($percent) . '%');
             $cards[] = Card::make('Age of money', $aom);
         } else {
