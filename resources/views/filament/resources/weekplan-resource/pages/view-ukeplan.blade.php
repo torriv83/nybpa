@@ -30,7 +30,7 @@
                     </td>
 
                     @foreach($row['exercises'] as $exercise)
-                        
+
                         @php $borderR = !$loop->last ? 'border-r' : ''; @endphp
 
                         @if (!isset($exercise['intensity']))

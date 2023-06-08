@@ -29,7 +29,7 @@ class AccountsOverview extends BaseWidget
         $filteredAccounts->each(function ($account) use ($cards) {
             $cards->push(
                 Card::make($account['name'], number_format(($account['cleared_balance'] / 1000), 0, ',', '.') . ' kr')
-                    ->description('Last Reconciled: ' . Carbon::make($account['last_reconciled_at'])->format('d.m.Y H:i:s'))
+                    ->description('Sist avstemt: ' . Carbon::make($account['last_reconciled_at'])->diffForHumans())
             );
         });
 

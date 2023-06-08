@@ -38,29 +38,14 @@ class ViewUkeplan extends Page
     public function getExercises(): array
     {
 
+        // Usage of the extracted function
+        $timeRange = $this->calculateTimeRange(true);
+
+        $startTime = $timeRange['startTime'];
+        $endTime   = $timeRange['endTime'];
+        $interval  = $timeRange['interval'];
+
         $data = [];
-
-        $exerciseData = $this->getDayData();
-        $earliestTime = PHP_INT_MAX;
-        $latestTime   = 0;
-
-        // Find the earliest and latest exercise times
-        foreach ($exerciseData as $item) {
-            foreach ($item['exercises'] as $exercise) {
-                $from = strtotime($exercise['from']);
-                $to   = strtotime($exercise['to']);
-
-                $fromTime = date('H', $from) * 60 + date('i', $from);
-                $toTime   = date('H', $to) * 60 + date('i', $to);
-
-                $earliestTime = min($earliestTime, $fromTime);
-                $latestTime   = max($latestTime, $toTime);
-            }
-        }
-
-        $startTime = floor($earliestTime / 60); // Start time in hours (24-hour format)
-        $endTime   = ceil($latestTime / 60); // End time in hours (24-hour format)
-        $interval  = 60; // Interval in minutes
 
         for ($time = $startTime; $time <= $endTime; $time++) {
             for ($minute = 0; $minute < 60; $minute += $interval) {
@@ -113,6 +98,45 @@ class ViewUkeplan extends Page
         return $data;
     }
 
+    private function calculateTimeRange($fixed = false): array
+    {
+        $exerciseData = $this->getDayData();
+
+        if ($fixed) {
+            $startTime = 7; // Start time in hours (24-hour format)
+            $endTime   = 23; // End time in hours (24-hour format)
+        } else {
+            $earliestTime = PHP_INT_MAX;
+            $latestTime   = 0;
+
+            // Find the earliest and latest exercise times
+            foreach ($exerciseData as $item) {
+                foreach ($item['exercises'] as $exercise) {
+                    $from = strtotime($exercise['from']);
+                    $to   = strtotime($exercise['to']);
+
+                    $fromTime = date('H', $from) * 60 + date('i', $from);
+                    $toTime   = date('H', $to) * 60 + date('i', $to);
+
+                    $earliestTime = min($earliestTime, $fromTime);
+                    $latestTime   = max($latestTime, $toTime);
+                }
+            }
+
+            $startTime = floor($earliestTime / 60); // Start time in hours (24-hour format)
+            $endTime   = ceil($latestTime / 60); // End time in hours (24-hour format)
+        }
+
+        $interval = 60; // Interval in minutes
+
+        return [
+            'startTime' => $startTime,
+            'endTime'   => $endTime,
+            'interval'  => $interval,
+        ];
+    }
+
+
     protected function getTitle(): string
     {
         // Retrieve the dynamic title from a database, configuration, or any other source
@@ -125,7 +149,7 @@ class ViewUkeplan extends Page
         $formattedDate     = '';
 
         if ($dynamicSubheading) {
-            $formattedDate = Carbon::parse($dynamicSubheading)->format('d.m.Y H:i');
+            $formattedDate = Carbon::parse($dynamicSubheading)->diffForHumans();
         }
 
         return 'Sist oppdatert: ' . $formattedDate;
