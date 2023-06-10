@@ -2,13 +2,11 @@
 
 namespace App\Filament\Widgets;
 
-//use DateTimeZone;
+use App\Models\Settings;
 use App\Models\Timesheet;
-use App\Settings\BpaTimer;
 use Carbon\Carbon;
 use Filament\Widgets\BarChartWidget;
 
-//use Barryvdh\Debugbar\Facades\Debugbar;
 
 class TimerChart extends BarChartWidget
 {
@@ -17,16 +15,11 @@ class TimerChart extends BarChartWidget
     protected static ?int      $sort            = 2;
     protected int|string|array $columnSpan      = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
 
-    // protected static ?array $options = [
-    //     'plugins' => [
-    //         'tooltip' => [
-    //             'backgroundColor' => 'rgba(2, 6, 3, 0.9)',
-    //             'callbacks' => [
-    //                 'label' => function(){},
-    //             ]
-    //         ],
-    //     ],
-    // ];
+    public function __construct()
+    {
+        $setting   = Settings::where('user_id', '=', \Auth::id())->first();
+        $this->bpa = $setting['bpa_hours_per_week'];
+    }
 
     protected function getData(): array
     {
@@ -92,9 +85,9 @@ class TimerChart extends BarChartWidget
             }
 
             if ($prosent == 1) {
-                $tider[$key] = 100 - round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
+                $tider[$key] = 100 - round($sum / (($this->bpa * 52) * 60) * 100, 1);
             } else {
-                $tider[$key] = round($sum / ((app(BpaTimer::class)->timer * 52) * 60) * 100, 1);
+                $tider[$key] = round($sum / (($this->bpa * 52) * 60) * 100, 1);
             }
 
         }

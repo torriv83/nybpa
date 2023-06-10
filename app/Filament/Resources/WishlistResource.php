@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\WishlistResource\Pages;
 use App\Filament\Resources\WishlistResource\RelationManagers;
 use App\Models\Wishlist;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -47,7 +48,7 @@ class WishlistResource extends Resource
                         'Begynt å spare' => 'Begynt å spare',
                         'Kjøpt'          => 'Kjøpt',
                     ]),
-                TextInput::make('totalt')->disabled()->formatStateUsing(function ($record, $set) {
+                Placeholder::make('totalt')->content(function ($record, $set) {
                     $totalt = $record->find($record['id'])->wishlistitems->sum('koster');
 
                     if ($totalt > 0) {

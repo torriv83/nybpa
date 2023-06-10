@@ -85,6 +85,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Timesheet::class);
     }
 
+    public function setting(): HasMany
+    {
+        return $this->hasMany(Settings::class);
+    }
+
     public function scopeAssistenter($query)
     {
         if (Role::where('name', 'tilkalling')->exists()) {

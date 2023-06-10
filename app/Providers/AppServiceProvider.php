@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
             Filament::registerUserMenuItems([
                 UserMenuItem::make()
                     ->label('Innstillinger')
-                    ->url(route('filament.pages.b-p-a'))
+                    ->url(route('filament.pages.settings'))
                     ->icon('heroicon-s-cog'),
             ]);
         });

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WeekplanResource\Pages;
 
 use App\Filament\Resources\WeekplanResource;
+use App\Models\Settings;
 use App\Models\Weekplan;
 use Carbon\Carbon;
 use Filament\Resources\Pages\Page;
@@ -38,11 +39,13 @@ class ViewUkeplan extends Page
     public function getExercises(): array
     {
 
-        // Usage of the extracted function
-        $timeRange = $this->calculateTimeRange(true);
+        $setting = Settings::where('user_id', '=', \Auth::id())->first();
 
-        $startTime = $timeRange['startTime'];
-        $endTime   = $timeRange['endTime'];
+        // Usage of the extracted function
+        $timeRange = $this->calculateTimeRange($setting['weekplan_timespan']);
+
+        $startTime = intval($timeRange['startTime']);
+        $endTime   = intval($timeRange['endTime']);
         $interval  = $timeRange['interval'];
 
         $data = [];
@@ -98,13 +101,15 @@ class ViewUkeplan extends Page
         return $data;
     }
 
-    private function calculateTimeRange($fixed = false): array
+    private function calculateTimeRange($fixed = 0): array
     {
         $exerciseData = $this->getDayData();
+        $setting      = Settings::where('user_id', '=', \Auth::id())->first();
 
         if ($fixed) {
-            $startTime = 7; // Start time in hours (24-hour format)
-            $endTime   = 23; // End time in hours (24-hour format)
+            $startTime = Carbon::createFromFormat('H:i:s', $setting->weekplan_from)->format('H:i'); // Start time in hours (24-hour format)
+            $endTime   = Carbon::createFromFormat('H:i:s', $setting->weekplan_to)->format('H:i'); // End time in hours (24-hour format)
+
         } else {
             $earliestTime = PHP_INT_MAX;
             $latestTime   = 0;

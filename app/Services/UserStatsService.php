@@ -8,22 +8,23 @@
 
 namespace App\Services;
 
+use App\Models\Settings;
 use App\Models\Timesheet;
 use App\Models\User;
 use App\Models\Utstyr;
-use App\Settings\BpaTimer;
 use Carbon\Carbon;
 
 class UserStatsService
 {
 
     protected Timesheet $timesheet;
-    protected BpaTimer  $bpaTimer;
+    protected           $bpa;
 
     public function __construct()
     {
         $this->timesheet = app(Timesheet::class);
-        $this->bpaTimer  = app(BpaTimer::class);
+        $setting         = Settings::where('user_id', '=', \Auth::id())->first();
+        $this->bpa       = $setting['bpa_hours_per_week'];
     }
 
     /**
@@ -64,8 +65,7 @@ class UserStatsService
             for ($i = 0; $i < $number; $i++) {
                 $sum += $value[$i]->totalt;
             }
-
-            $thisYearTimes[$key] = round($sum / $this->bpaTimer->timer * 100, 1);
+            $thisYearTimes[$key] = round($sum / $this->bpa * 100, 1);
         }
 
         return $thisYearTimes;
@@ -99,7 +99,7 @@ class UserStatsService
      */
     public function getHoursUsedThisMonthDescription(): string
     {
-        $hoursToUseThisMonth = ($this->bpaTimer->timer / 7) * Carbon::now()->daysInMonth;
+        $hoursToUseThisMonth = ($this->bpa / 7) * Carbon::now()->daysInMonth;
         $usedThisMonth       = $this->timesheet->monthToDate('fra_dato')->where('unavailable', '=', '0')->sum('totalt');
 
         return $this->minutesToTime($usedThisMonth) . ' brukt av ' . $hoursToUseThisMonth . ' denne måneden.';
@@ -112,7 +112,7 @@ class UserStatsService
      */
     public function getRemainingHours(): string
     {
-        $totalMinutes     = ($this->bpaTimer->timer * 52) * 60;
+        $totalMinutes     = ($this->bpa * 52) * 60;
         $hoursUsedMinutes = $this->getHoursUsedInMinutes();
         $remainingMinutes = $totalMinutes - $hoursUsedMinutes;
 
@@ -128,7 +128,7 @@ class UserStatsService
     {
         $hoursUsedMinutes = $this->getHoursUsedInMinutes();
         $weeksLeft        = Carbon::now()->floatDiffInWeeks(Carbon::now()->endOfYear());
-        $totalMinutes     = ($this->bpaTimer->timer * 52) * 60;
+        $totalMinutes     = ($this->bpa * 52) * 60;
         $hoursPerWeek     = 24 * 7;
         $leftPerWeek      = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $weeksLeft)) / $weeksLeft;
 

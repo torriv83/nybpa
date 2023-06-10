@@ -12,7 +12,6 @@
     "calebporzio/sushi": "^2.4",
     "doctrine/dbal": "^3.0",
     "filament/filament": "^2.16",
-    "filament/spatie-laravel-settings-plugin": "^2.16",
     "guzzlehttp/guzzle": "^7.2",
     "laravel/framework": "^10.0",
     "laravel/sanctum": "^3.2",
