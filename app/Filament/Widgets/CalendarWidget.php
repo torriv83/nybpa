@@ -13,6 +13,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
@@ -91,6 +92,11 @@ class CalendarWidget extends FullCalendarWidget
         Cache::forget('usedThisMonth');
         Cache::forget('timeUsedThisYear');
         $this->refreshEvents();
+
+        Notification::make()
+            ->title('Tiden er slettet')
+            ->success()
+            ->send();
     }
 
     /**
@@ -238,6 +244,11 @@ class CalendarWidget extends FullCalendarWidget
         Cache::forget('usedThisMonth');
         Cache::forget('timeUsedThisYear');
         $this->refreshEvents();
+
+        Notification::make()
+            ->title('Tid lagret')
+            ->success()
+            ->send();
     }
 
     public function editEvent(array $data): void
@@ -259,6 +270,11 @@ class CalendarWidget extends FullCalendarWidget
             Cache::forget('timeUsedThisYear');
             $this->refreshEvents();
         }
+
+        Notification::make()
+            ->title('Tid endret')
+            ->success()
+            ->send();
     }
 
     // Resolve Event record into Model property
@@ -283,6 +299,7 @@ class CalendarWidget extends FullCalendarWidget
     public function onEventDrop($newEvent): void
     {
         $this->eventUpdate($newEvent);
+        
     }
 
     /**
@@ -291,6 +308,11 @@ class CalendarWidget extends FullCalendarWidget
     public function onEventResize($event): void
     {
         $this->eventUpdate($event);
+
+        Notification::make()
+            ->title('Tid endret')
+            ->success()
+            ->send();
     }
 
     /**
@@ -317,5 +339,10 @@ class CalendarWidget extends FullCalendarWidget
             Cache::forget('timeUsedThisYear');
             $this->refreshEvents();
         }
+
+        Notification::make()
+            ->title('Tid endret')
+            ->success()
+            ->send();
     }
 }

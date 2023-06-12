@@ -15,10 +15,12 @@ class TimerChart extends BarChartWidget
     protected static ?int      $sort            = 2;
     protected int|string|array $columnSpan      = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
 
+    protected mixed $bpa;
+
     public function __construct()
     {
         $setting   = Settings::where('user_id', '=', \Auth::id())->first();
-        $this->bpa = $setting['bpa_hours_per_week'];
+        $this->bpa = $setting['bpa_hours_per_week'] ?? 1;
     }
 
     protected function getData(): array

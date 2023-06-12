@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
@@ -89,6 +90,11 @@ class Settings extends Page implements HasForms
     public function submit()
     {
         Setting::updateOrCreate(['user_id' => Auth::id()], $this->form->getState());
+
+        Notification::make()
+            ->title('Innstillinger er lagret')
+            ->success()
+            ->send();
 //        $settings->save();
 
 

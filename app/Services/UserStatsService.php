@@ -18,13 +18,13 @@ class UserStatsService
 {
 
     protected Timesheet $timesheet;
-    protected           $bpa;
+    protected mixed     $bpa;
 
     public function __construct()
     {
         $this->timesheet = app(Timesheet::class);
         $setting         = Settings::where('user_id', '=', \Auth::id())->first();
-        $this->bpa       = $setting['bpa_hours_per_week'];
+        $this->bpa       = $setting['bpa_hours_per_week'] ?? 1;
     }
 
     /**
