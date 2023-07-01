@@ -14,6 +14,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class Settings extends Page implements HasForms
 {
@@ -84,6 +85,9 @@ class Settings extends Page implements HasForms
     {
         return [
             Action::make('Lagre')->action('submit'),
+            Action::make('Cache')->action('clearCache')
+                ->label('Tøm Cache')
+                ->color('secondary'),
         ];
     }
 
@@ -99,5 +103,10 @@ class Settings extends Page implements HasForms
 
 
 //         SAVE THE SETTINGS HERE
+    }
+
+    public function clearCache()
+    {
+        return Cache::flush();
     }
 }

@@ -5,17 +5,18 @@ namespace App\Filament\Resources\EconomyResource\Widgets;
 use App\Models\Economy;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class StatsOverview extends BaseWidget
 {
-    
+
     protected static ?string $pollingInterval = null;
+
+    protected $listeners = ['updateStatsOverview' => '$refresh'];
 
     protected function getCards(): array
     {
-        $economy = Cache::remember('economy', now()->addYear(), fn() => Economy::first());
+        $economy = Economy::first();
 
         $cards = [];
 
