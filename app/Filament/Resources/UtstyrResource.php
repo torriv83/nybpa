@@ -6,6 +6,7 @@ use App\Filament\Resources\UtstyrResource\Pages;
 use App\Mail\BestillUtstyr as Bestilling;
 use App\Models\Utstyr;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -76,6 +77,10 @@ class UtstyrResource extends Resource
                     ->action(function (Collection $records, array $data) {
 
                         Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
+                        Notification::make()
+                            ->title('E-post har blitt sendt')
+                            ->success()
+                            ->send();
                     })
                     ->form([
                         Forms\Components\Textarea::make('info')

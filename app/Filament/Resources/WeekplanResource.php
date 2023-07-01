@@ -26,8 +26,9 @@ use Filament\Tables\Columns\TextColumn;
 
 class WeekplanResource extends Resource
 {
-    protected static ?string $model                = Weekplan::class;
-    protected static ?string $slug                 = 'weekplans';
+    protected static ?string $model = Weekplan::class;
+    protected static ?string $slug  = 'weekplans';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationIcon   = 'heroicon-o-collection';

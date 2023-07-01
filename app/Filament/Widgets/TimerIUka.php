@@ -2,17 +2,12 @@
 
 namespace App\Filament\Widgets;
 
-//use Closure;
-//use Filament\Tables;
 use App\Models\Timesheet;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-
-//use Illuminate\Contracts\Pagination\Paginator;
 
 class TimerIUka extends BaseWidget
 {
@@ -45,10 +40,11 @@ class TimerIUka extends BaseWidget
     {
 
         return Timesheet::query()
-            ->select(DB::raw('FROM_DAYS(TO_DAYS(fra_dato) -MOD(TO_DAYS(fra_dato) -2, 7)) AS Uke, SUM(totalt) AS Totalt, AVG(totalt) AS Gjennomsnitt, COUNT(*) AS Antall'))
-            ->groupBy(DB::raw('WEEK(fra_dato,7)'))
-            ->yearToDate('fra_dato')
-            ->where('unavailable', '!=', 1);
+            ->selectRaw('FROM_DAYS(TO_DAYS(timesheets.fra_dato) - MOD(TO_DAYS(timesheets.fra_dato) - 2, 7)) AS Uke')
+            ->selectRaw('SUM(timesheets.totalt) AS Totalt, AVG(timesheets.totalt) AS Gjennomsnitt, COUNT(*) AS Antall')
+            ->groupByRaw('WEEK(timesheets.fra_dato, 7)')
+            ->yearToDate('timesheets.fra_dato')
+            ->where('timesheets.unavailable', '!=', 1);
     }
 
     protected function getTableColumns(): array

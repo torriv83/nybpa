@@ -60,7 +60,7 @@ class CalendarWidget extends FullCalendarWidget
             return Timesheet::query()->with('user')->get();
         });
 
-        $data = $schedules->map(function ($item) {
+        return $schedules->map(function ($item) {
 
             $farge          = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
@@ -78,9 +78,8 @@ class CalendarWidget extends FullCalendarWidget
                 'backgroundColor' => $farge,
                 'borderColor'     => $farge,
             ];
-        });
+        })->toArray();
 
-        return $data->toArray();
     }
 
     public function deleteEvent(): void
@@ -240,9 +239,11 @@ class CalendarWidget extends FullCalendarWidget
             'description' => $data['description'],
             'totalt'      => Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']),
         ]);
+
         Cache::forget('schedules');
         Cache::forget('usedThisMonth');
         Cache::forget('timeUsedThisYear');
+
         $this->refreshEvents();
 
         Notification::make()
@@ -268,13 +269,15 @@ class CalendarWidget extends FullCalendarWidget
             Cache::forget('schedules');
             Cache::forget('usedThisMonth');
             Cache::forget('timeUsedThisYear');
+
             $this->refreshEvents();
+
+            Notification::make()
+                ->title('Tid endret')
+                ->success()
+                ->send();
         }
 
-        Notification::make()
-            ->title('Tid endret')
-            ->success()
-            ->send();
     }
 
     // Resolve Event record into Model property
@@ -299,7 +302,7 @@ class CalendarWidget extends FullCalendarWidget
     public function onEventDrop($newEvent): void
     {
         $this->eventUpdate($newEvent);
-        
+
     }
 
     /**

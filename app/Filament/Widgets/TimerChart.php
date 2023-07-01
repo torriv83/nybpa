@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Settings;
 use App\Models\Timesheet;
+use Auth;
 use Carbon\Carbon;
 use Filament\Widgets\BarChartWidget;
 
@@ -19,7 +20,9 @@ class TimerChart extends BarChartWidget
 
     public function __construct()
     {
-        $setting   = Settings::where('user_id', '=', \Auth::id())->first();
+        parent::__construct();
+        
+        $setting   = Settings::where('user_id', '=', Auth::id())->first();
         $this->bpa = $setting['bpa_hours_per_week'] ?? 1;
     }
 

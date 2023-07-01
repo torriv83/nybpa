@@ -8,6 +8,7 @@ use App\Models\Weekplan;
 use Carbon\Carbon;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ViewUkeplan extends Page
 {
@@ -22,11 +23,9 @@ class ViewUkeplan extends Page
         $this->record = Weekplan::find($record);
     }
 
-    public function getDayData(): Collection
-    {
-        return collect($this->record['data']);
-    }
-
+    /**
+     * @return array
+     */
     protected function getViewData(): array
     {
 
@@ -36,10 +35,15 @@ class ViewUkeplan extends Page
         return compact('okter', 'data');
     }
 
+    public function getDayData(): Collection
+    {
+        return collect($this->record['data']);
+    }
+
     public function getExercises(): array
     {
 
-        $setting = Settings::where('user_id', '=', \Auth::id())->first();
+        $setting = Settings::where('user_id', '=', Auth::id())->first();
 
         // Usage of the extracted function
         $timeRange = $this->calculateTimeRange($setting['weekplan_timespan']);
@@ -58,7 +62,7 @@ class ViewUkeplan extends Page
                 ];
 
                 $i = 0;
-                foreach ($this->getDayData() as $index => $item) {
+                foreach ($this->getDayData() as $item) {
                     $exercises = collect($item['exercises'])->filter(function ($exercise) use ($time, $minute, $interval) {
                         $from = strtotime($exercise['from']);
                         $to   = strtotime($exercise['to']);
