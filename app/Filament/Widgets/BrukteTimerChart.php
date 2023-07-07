@@ -29,9 +29,9 @@ class BrukteTimerChart extends LineChartWidget
             return Timesheet::lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
-
+        
         $lastYearTimes = $this->yearTimes($lastYear);
 
         return [
@@ -39,6 +39,7 @@ class BrukteTimerChart extends LineChartWidget
                 [
                     'label'           => Carbon::now()->format('Y'),
                     'data'            => $thisYearTimes,
+                    'tension'         => 0.4,
                     'fill'            => 'origin',
                     'backgroundColor' => 'rgba(255,153,0,0.6)',
                 ],

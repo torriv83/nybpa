@@ -87,9 +87,7 @@ class CalendarWidget extends FullCalendarWidget
         $this->event->delete();
 
         $this->dispatchBrowserEvent('close-modal', ['id' => 'fullcalendar--edit-event-modal']);
-        Cache::forget('schedules');
-        Cache::forget('usedThisMonth');
-        Cache::forget('timeUsedThisYear');
+        Cache::flush();
         $this->refreshEvents();
 
         Notification::make()
@@ -145,7 +143,7 @@ class CalendarWidget extends FullCalendarWidget
         return [
             Select::make('user_id')
                 ->label('Assistent')
-                ->options(User::all()->filter(fn($value) => $value->name != 'Tor J. Rivera')->pluck('name', 'id'))
+                ->options(User::role(['Fast ansatt', 'Tilkalling'])->pluck('name', 'id'))
                 ->required(),
             Grid::make()
                 ->schema([
@@ -240,9 +238,7 @@ class CalendarWidget extends FullCalendarWidget
             'totalt'      => Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']),
         ]);
 
-        Cache::forget('schedules');
-        Cache::forget('usedThisMonth');
-        Cache::forget('timeUsedThisYear');
+        Cache::flush();
 
         $this->refreshEvents();
 
@@ -266,9 +262,7 @@ class CalendarWidget extends FullCalendarWidget
         $tid->totalt      = Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']);
 
         if ($tid->save()) {
-            Cache::forget('schedules');
-            Cache::forget('usedThisMonth');
-            Cache::forget('timeUsedThisYear');
+            Cache::flush();
 
             $this->refreshEvents();
 
@@ -337,9 +331,7 @@ class CalendarWidget extends FullCalendarWidget
         $tid->totalt      = Carbon::parse($event['start'])->diffInMinutes($event['end']);
 
         if ($tid->save()) {
-            Cache::forget('schedules');
-            Cache::forget('usedThisMonth');
-            Cache::forget('timeUsedThisYear');
+            Cache::flush();
             $this->refreshEvents();
         }
 

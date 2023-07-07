@@ -7,6 +7,7 @@ use App\Models\Timesheet;
 use Auth;
 use Carbon\Carbon;
 use Filament\Widgets\BarChartWidget;
+use Illuminate\Support\Facades\Pipeline;
 
 
 class TimerChart extends BarChartWidget
@@ -21,25 +22,36 @@ class TimerChart extends BarChartWidget
     public function __construct()
     {
         parent::__construct();
-        
+
         $setting   = Settings::where('user_id', '=', Auth::id())->first();
         $this->bpa = $setting['bpa_hours_per_week'] ?? 1;
     }
 
     protected function getData(): array
     {
-        $timeSheet = new Timesheet();
+        $timeSheet        = new Timesheet();
+        $timeUsedThisYear = $timeSheet->timeUsedThisYear();
 
         /* Forrige år */
-        $tid           = $timeSheet->timeUsedLastYear();
-        $lastYearTimes = $this->usedTime($tid);
+        $lastYearTimes = Pipeline::send($timeSheet)
+            ->through([
+                function (Timesheet $timeSheet) {
+                    return $this->usedTime($timeSheet->timeUsedLastYear());
+                },
+            ])
+            ->then(fn($timeSheet) => $timeSheet);
 
         /* Dette året */
-        $thisYear      = $timeSheet->timeUsedThisYear();
-        $thisYearTimes = $this->usedTime($thisYear);
+        $thisYearTimes = Pipeline::send($timeSheet)
+            ->through([
+                function (Timesheet $timeSheet) use ($timeUsedThisYear) {
+                    return $this->usedTime($timeUsedThisYear);
+                }
+            ])
+            ->then(fn($timeSheet) => $timeSheet);
 
         /* Gjenstår */
-        $thisYearLeft = $this->usedTime($thisYear, true);
+        $thisYearLeft = $this->usedTime($timeUsedThisYear, true);
 
 
         /* Datasets Chartjs */

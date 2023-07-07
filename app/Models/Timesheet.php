@@ -95,7 +95,7 @@ class Timesheet extends Model
                 ->where('unavailable', '!=', 1)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
 
     }
@@ -111,7 +111,7 @@ class Timesheet extends Model
             return $this->lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMM'));
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
     }
 
