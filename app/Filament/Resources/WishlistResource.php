@@ -49,12 +49,12 @@ class WishlistResource extends Resource
                         'Kjøpt'          => 'Kjøpt',
                     ]),
                 Placeholder::make('totalt')->content(function ($record, $set) {
-                    $totalt = $record->find($record['id'])->wishlistitems->sum('koster');
 
-                    if ($totalt > 0) {
-                        $set('koster', $totalt);
-                    }
-                    return $totalt;
+                    $totalt = $record?->find($record['id'])->wishlistitems->sum('koster');
+
+                    $totalt > 0 ? $set('koster', $totalt) : $set('koster', 0);
+
+                    return $totalt > 0 ? $totalt : 0;
 
                 })->label('Totalt fra Liste')
             ]);
