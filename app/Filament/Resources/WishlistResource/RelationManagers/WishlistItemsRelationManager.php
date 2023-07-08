@@ -7,6 +7,7 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
 
 class WishlistItemsRelationManager extends RelationManager
 {
@@ -40,6 +41,10 @@ class WishlistItemsRelationManager extends RelationManager
                     ->url(fn($record) => $record->url, true),
                 Tables\Columns\TextColumn::make('koster')->money('nok', true)->sortable(),
                 Tables\Columns\TextColumn::make('antall'),
+                Tables\Columns\TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
+
+                    return $record->koster * $record->antall;
+                }),
             ])
             ->filters([
                 //
