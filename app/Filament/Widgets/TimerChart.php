@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Pipeline;
 
 class TimerChart extends BarChartWidget
 {
-    protected static ?string   $heading         = 'Brukte timer av totalene (%)';
+    protected static ?string   $heading         = 'Brukte timer av totalen (%)';
     protected static ?string   $pollingInterval = null;
     protected static ?int      $sort            = 2;
     protected int|string|array $columnSpan      = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
