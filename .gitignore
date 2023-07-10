@@ -49,3 +49,4 @@ config/livewire.php
 /.phpstorm.meta.php
 /_ide_helper_models.php
 /config/querydetector.php
+/docker-compose.yml

@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'host' => env('DS_APP_HOST', '127.0.0.1'),
+    'host' => env('DS_APP_HOST', 'host.docker.internal'),
 
     //'host' => 'host.docker.internal',    //Docker on Mac or Windows
     //'host' => '127.0.0.1',               //Homestead with the VirtualBox provider,
@@ -192,7 +192,7 @@ return [
     | When `true`, it allows to dump Livewire Events and send them to Desktop App.
     |
     */
-    'send_livewire_events' => env('DS_LIVEWIRE_EVENTS', false),
+    'send_livewire_events'               => env('DS_LIVEWIRE_EVENTS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -220,7 +220,7 @@ return [
     | and send them to Desktop App.
     |
     */
-    'send_livewire_dispatch' => env('DS_LIVEWIRE_DISPATCH', false),
+    'send_livewire_dispatch'          => env('DS_LIVEWIRE_DISPATCH', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -270,19 +270,19 @@ return [
     */
 
     'ide_handlers' => [
-        'atom' => [
+        'atom'          => [
             'handler'        => 'atom://core/open/file?filename=',
             'line_separator' => '&line=',
         ],
-        'phpstorm' => [
+        'phpstorm'      => [
             'handler'        => 'phpstorm://open?file=',
             'line_separator' => '&line=',
         ],
-        'sublime' => [
+        'sublime'       => [
             'handler'        => 'subl://open?url=file://',
             'line_separator' => '&line=',
         ],
-        'vscode' => [
+        'vscode'        => [
             'handler'        => 'vscode://file/',
             'line_separator' => ':',
         ],
@@ -335,14 +335,14 @@ return [
     */
 
     'ci_check' => [
-        'directories' => [
+        'directories'                    => [
             base_path('app'),
             base_path('resources'),
         ],
         'ignore_line_when_contains_text' => [
             //'ads()'
         ],
-        'text_to_search' => [
+        'text_to_search'                 => [
             'ds(',
             'dsq(',
             'dsd(',
@@ -380,10 +380,10 @@ return [
         'default' => [
             'default' => 'btn-white',
         ],
-        'danger' => [
+        'danger'  => [
             'default' => 'btn-danger',
         ],
-        'info' => [
+        'info'    => [
             'default' => 'btn-info',
         ],
         'success' => [
