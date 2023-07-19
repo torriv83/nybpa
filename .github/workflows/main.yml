@@ -1,0 +1,24 @@
+name: Deploy to SiteGround
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Deploy to SiteGround
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SITEGROUND_HOST }}
+        username: ${{ secrets.SITEGROUND_USERNAME }}
+        password: ${{ secrets.SITEGROUND_PASSWORD }}
+        script: |
+          cd /path/to/your/app
+          git pull
