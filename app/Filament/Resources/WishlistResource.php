@@ -29,7 +29,6 @@ class WishlistResource extends Resource
 
     protected function getTableReorderColumn(): ?string
     {
-
         return 'prioritet';
     }
 
