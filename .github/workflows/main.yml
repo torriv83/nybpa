@@ -20,5 +20,5 @@ jobs:
         username: ${{ secrets.SITEGROUND_USERNAME }}
         password: ${{ secrets.SITEGROUND_PASSWORD }}
         script: |
-          cd /path/to/your/app
+          cd /www/bpa.tor.priv.no/public_html
           git pull
