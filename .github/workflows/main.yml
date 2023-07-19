@@ -20,6 +20,7 @@ jobs:
         username: ${{ secrets.SITEGROUND_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        port: 18765
         script: |
           cd /www/bpa.tor.priv.no/public_html
           git pull
