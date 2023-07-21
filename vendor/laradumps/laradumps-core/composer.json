@@ -1,0 +1,64 @@
+{
+    "name": "laradumps/laradumps-core",
+    "description": "A dump component for php code.",
+    "homepage": "https://github.com/laradumps/laradumps-core",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Luan Freitas",
+            "email": "luanfreitas10@protonmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ramsey/uuid": "^3.9|^4.7.4",
+        "vlucas/phpdotenv": "^5.5",
+        "symfony/var-dumper": "^5.0|^6.0",
+        "symfony/console": "^5.0|^6.0",
+        "ext-curl": "*",
+        "nesbot/carbon": "^2.66",
+        "symfony/process": "^5.0|^6.0",
+        "symfony/finder": "^5.0|^6.0",
+        "nunomaduro/termwind": "^1.15"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.10",
+        "pestphp/pest": "^2.6",
+        "phpstan/phpstan": "^1.10.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "LaraDumps\\LaraDumpsCore\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaraDumps\\LaraDumpsCore\\Tests\\" : "tests"
+        }
+    },
+    "scripts": {
+        "pint": "./vendor/bin/pint --test",
+        "fix": "PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/pint",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
+        "test:tests": "./vendor/bin/pest --order-by random",
+        "verify": [
+            "@pint",
+            "@test:types",
+            "@test:tests"
+        ]
+    },
+    "bin": [
+        "bin/laradumps"
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
