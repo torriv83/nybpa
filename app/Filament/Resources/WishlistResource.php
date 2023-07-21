@@ -34,7 +34,7 @@ class WishlistResource extends Resource
 
     public static function form(Form $form): Form
     {
-        //TODO oppdater og lagre totalt fra liste etter at wishlist items har blitt oppdatert
+
         return $form
             ->schema([
                 TextInput::make('hva'),
@@ -75,7 +75,7 @@ class WishlistResource extends Resource
                     'Venter'         => 'Venter'
                 ])->disablePlaceholderSelection(),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
-
+                    //TODO oppdater og lagre totalt fra liste etter at wishlist items har blitt oppdatert
                     return $record->koster * $record->antall;
                 }),
             ])
