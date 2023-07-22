@@ -46,3 +46,4 @@ config/livewire.php
 /_ide_helper_models.php
 /config/querydetector.php
 /docker-compose.yml
+/node_modules/
