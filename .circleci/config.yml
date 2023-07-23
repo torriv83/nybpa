@@ -17,6 +17,7 @@ jobs:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
+      - run: mkdir -p storage/logs && chmod -R 777 storage
       - run: php artisan config:cache
       - run: php artisan event:cache
       - run: php artisan route:cache
