@@ -43,7 +43,6 @@ Homestead.json
 .ionide
 .vscode/launch.json
 .idea/*
-.env
 config/livewire.php
 /_ide_helper.php
 /.phpstorm.meta.php
