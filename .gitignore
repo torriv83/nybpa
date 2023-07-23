@@ -50,3 +50,4 @@ config/livewire.php
 /config/querydetector.php
 /docker-compose.yml
 /node_modules/
+/phpunit.xml.bak

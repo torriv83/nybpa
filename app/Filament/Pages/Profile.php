@@ -2,16 +2,15 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Pages\Page;
-use Phpsa\FilamentAuthentication\Pages\Profile as PagesProfile;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-// use Filament\Forms\Concerns\InteractsWithForms;
-// use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Phpsa\FilamentAuthentication\Pages\Profile as PagesProfile;
+
+// use Filament\Forms\Concerns\InteractsWithForms;
+// use Illuminate\Database\Eloquent\Model;
 
 class Profile extends PagesProfile
 {
@@ -46,7 +45,7 @@ class Profile extends PagesProfile
 
         if ($data['new_password']) {
 
-            Filament::auth()->login($this->getFormModel(), (bool) $this->getFormModel()->getRememberToken());
+            Filament::auth()->login($this->getFormModel(), (bool)$this->getFormModel()->getRememberToken());
         }
 
         $this->notify('success', strval(__('filament::resources/pages/edit-record.messages.saved')));
@@ -98,6 +97,7 @@ class Profile extends PagesProfile
                         ->columnSpan(1),
                     TextInput::make('new_password')
                         ->label('New Password')
+                        ->password()
                         ->rules(['confirmed', Password::defaults()])
                         ->autocomplete('new-password'),
                     TextInput::make('new_password_confirmation')
