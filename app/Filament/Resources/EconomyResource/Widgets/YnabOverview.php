@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\EconomyResource\Widgets;
 
-use App\Models\ynab;
+use App\Models\Ynab;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
@@ -41,7 +41,7 @@ class YnabOverview extends BaseWidget
 
     protected function getTableContentFooter(): ?View
     {
-        $query = ynab::query()->get();
+        $query = Ynab::query()->get();
 
         $income      = $query->sum('income');
         $activity    = $query->sum('activity');
