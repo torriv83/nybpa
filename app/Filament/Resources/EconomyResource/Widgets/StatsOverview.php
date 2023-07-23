@@ -28,7 +28,7 @@ class StatsOverview extends BaseWidget
             $ynab     = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
             $token    = config('app.ynab');
             $response = Http::withToken($token)->get($ynab . 'months/' . 'current');
-            ds($response);
+            
             $aom = $response['data']['month']['age_of_money'];
 
             $cards[] = Card::make('I året før skatt', number_format($sumBeforeTax, 0, ',', '.') . ' kr')
