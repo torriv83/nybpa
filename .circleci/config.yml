@@ -17,11 +17,11 @@ jobs:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
-      - run: mkdir -p storage/logs && chmod -R 777 storage
-      - run: php artisan config:cache
-      - run: php artisan event:cache
-      - run: php artisan route:cache
-      - run: php artisan view:cache
+      #- run: mkdir -p storage/logs && chmod -R 777 storage
+      #- run: php artisan config:cache
+      #- run: php artisan event:cache
+      #- run: php artisan route:cache
+      #- run: php artisan view:cache
       - add_ssh_keys:
           fingerprints:
             - "SHA256:tcdFZj5ZGOroAPkzZ+vjPABT8saKPbeAKx0PYcneu9I tor@trivera.net"
@@ -30,8 +30,12 @@ jobs:
             rsync -avz -e "ssh -p 18765 -o StrictHostKeyChecking=no" ~/project/ u886-j5nzx93enmkn@gnldm1046.siteground.biz:~/www/bpa.tor.priv.no/public_html &&
             ssh -p 18765 u886-j5nzx93enmkn@gnldm1046.siteground.biz "
             cd ~/www/bpa.tor.priv.no/public_html &&
-            /usr/local/php81/bin/php-cli artisan migrate --force
-            "
+                  /usr/local/php81/bin/php-cli artisan config:cache &&
+                  /usr/local/php81/bin/php-cli artisan event:cache &&
+                  /usr/local/php81/bin/php-cli artisan route:cache &&
+                  /usr/local/php81/bin/php-cli artisan view:cache &&
+                  /usr/local/php81/bin/php-cli artisan migrate --force
+                        "
 
 workflows:
   version: 2
