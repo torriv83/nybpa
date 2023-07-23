@@ -12,16 +12,22 @@ jobs:
             - v1-dependencies-{{ checksum "composer.json" }}
             - v1-dependencies-
       - run: composer install --optimize-autoloader --no-dev
+        
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-
       - run: npm install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+
+      - run: npm run build
       - save_cache:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
-      #- run: mkdir -p storage/logs && chmod -R 777 storage
-      #- run: php artisan config:cache
-      #- run: php artisan event:cache
-      #- run: php artisan route:cache
-      #- run: php artisan view:cache
       - add_ssh_keys:
           fingerprints:
             - "SHA256:tcdFZj5ZGOroAPkzZ+vjPABT8saKPbeAKx0PYcneu9I tor@trivera.net"
