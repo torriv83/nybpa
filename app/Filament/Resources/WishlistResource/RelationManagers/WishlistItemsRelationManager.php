@@ -50,14 +50,30 @@ class WishlistItemsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->after(function (RelationManager $livewire, Model $record) {
+                        // Runs after the form fields are saved to the database.
+                        $livewire->emit('itemedited', $record->wishlist_id);
+                    }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->after(function (RelationManager $livewire, Model $record) {
+                        // Runs after the form fields are saved to the database.
+                        $livewire->emit('itemedited', $record->wishlist_id);
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->after(function (RelationManager $livewire, Model $record) {
+                        // Runs after the form fields are saved to the database.
+                        $livewire->emit('itemedited', $record->wishlist_id);
+                    }),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->after(function (RelationManager $livewire, Model $record) {
+                        // Runs after the form fields are saved to the database.
+                        $livewire->emit('itemedited', $record->wishlist_id);
+                    }),
             ]);
     }
 }

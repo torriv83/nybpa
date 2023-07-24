@@ -49,7 +49,9 @@ class WishlistResource extends Resource
                     ]),
                 Placeholder::make('totalt')->content(function ($record, $set) {
 
-                    $totalt = $record?->find($record['id'])->wishlistitems->sum('koster');
+                    $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item) {
+                        return $item->koster * $item->antall;
+                    });
 
                     $totalt > 0 ? $set('koster', $totalt) : $set('koster', 0);
 
@@ -75,7 +77,6 @@ class WishlistResource extends Resource
                     'Venter'         => 'Venter'
                 ])->disablePlaceholderSelection(),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
-                    //TODO oppdater og lagre totalt fra liste etter at wishlist items har blitt oppdatert
                     return $record->koster * $record->antall;
                 }),
             ])
