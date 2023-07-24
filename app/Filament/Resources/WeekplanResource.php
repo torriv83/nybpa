@@ -19,10 +19,10 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class WeekplanResource extends Resource
 {
@@ -31,7 +31,7 @@ class WeekplanResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationIcon   = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup  = 'Landslag';
     protected static ?string $modelLabel       = 'Ukeplan';
     protected static ?string $pluralModelLabel = 'Ukeplaner';

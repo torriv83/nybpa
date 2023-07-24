@@ -26,7 +26,7 @@ class UserStats extends BaseWidget
 
     public function __construct()
     {
-        parent::__construct();
+//        parent::__construct();
         $this->userStatsService = new UserStatsService();
     }
 

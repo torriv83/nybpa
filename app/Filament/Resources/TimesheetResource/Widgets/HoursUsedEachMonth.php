@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
+abstract class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
 {
 
     use Tables\Concerns\InteractsWithTable;

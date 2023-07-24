@@ -6,11 +6,11 @@ use App\Filament\Resources\UtstyrResource\Pages;
 use App\Mail\BestillUtstyr as Bestilling;
 use App\Models\Utstyr;
 use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +26,7 @@ class UtstyrResource extends Resource
     protected static ?string $modelLabel       = 'Utstyr';
     protected static ?string $pluralModelLabel = 'Utstyr';
     protected static ?int    $navigationSort   = 1;
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+    protected static ?string $navigationIcon   = 'heroicon-o-rectangle-stack';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -126,7 +126,7 @@ class UtstyrResource extends Resource
             ]);
     }
 
-    protected static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
         return Cache::remember('UtstyrNavigationBadge', now()->addMonth(), function () {
             return static::getModel()::count();

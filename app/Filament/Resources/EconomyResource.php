@@ -10,10 +10,10 @@ use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
 use App\Filament\Resources\EconomyResource\Widgets\YnabOverview;
 use App\Models\Economy;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 
 class EconomyResource extends Resource
 {

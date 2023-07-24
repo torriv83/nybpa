@@ -12,17 +12,17 @@ use App\Filament\Resources\ExerciseResource\Pages;
 use App\Models\Exercise;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class ExerciseResource extends Resource
 {
     protected static ?string $model                = Exercise::class;
     protected static ?string $slug                 = 'exercises';
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $navigationIcon       = 'heroicon-o-collection';
+    protected static ?string $navigationIcon       = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup      = 'Landslag';
     protected static ?string $modelLabel           = 'Øvelse';
     protected static ?string $pluralModelLabel     = 'Øvelser';

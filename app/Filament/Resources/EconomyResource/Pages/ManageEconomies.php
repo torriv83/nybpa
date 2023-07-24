@@ -12,7 +12,7 @@ class ManageEconomies extends ManageRecords
 
     protected static string $resource = EconomyResource::class;
 
-    protected function getHeaderWidgetsColumns(): int|array
+    public function getHeaderWidgetsColumns(): int|array
     {
         return 12;
     }
