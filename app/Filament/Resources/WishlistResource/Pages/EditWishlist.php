@@ -25,7 +25,7 @@ class EditWishlist extends EditRecord
         ];
     }
 
-    public function refreshSum($id)
+    public function refreshSum($id): void
     {
 
         $record = Wishlist::find($id);
