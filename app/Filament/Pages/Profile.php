@@ -17,12 +17,12 @@ class Profile extends PagesProfile
     public function mount(): void
     {
         $this->form->fill([
-            'name' => $this->getFormModel()->name,
-            'email' => $this->getFormModel()->email,
-            'phone' => $this->getFormModel()->phone,
-            'adresse' => $this->getFormModel()->adresse,
+            'name'       => $this->getFormModel()->name,
+            'email'      => $this->getFormModel()->email,
+            'phone'      => $this->getFormModel()->phone,
+            'adresse'    => $this->getFormModel()->adresse,
             'postnummer' => $this->getFormModel()->postnummer,
-            'poststed' => $this->getFormModel()->poststed,
+            'poststed'   => $this->getFormModel()->poststed,
         ]);
     }
 
@@ -31,20 +31,20 @@ class Profile extends PagesProfile
         $data = $this->form->getState();
 
         $state = array_filter([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'adresse' => $data['adresse'],
+            'name'       => $data['name'],
+            'email'      => $data['email'],
+            'phone'      => $data['phone'],
+            'adresse'    => $data['adresse'],
             'postnummer' => $data['postnummer'],
-            'poststed' => $data['poststed'],
-            'password' => $data['new_password'] ? Hash::make($data['new_password']) : null,
+            'poststed'   => $data['poststed'],
+            'password'   => $data['new_password'] ? Hash::make($data['new_password']) : null,
         ]);
 
         $this->getFormModel()->update($state);
 
         if ($data['new_password']) {
 
-            Filament::auth()->login($this->getFormModel(), (bool) $this->getFormModel()->getRememberToken());
+            Filament::auth()->login($this->getFormModel(), (bool)$this->getFormModel()->getRememberToken());
         }
 
         $this->notify('success', strval(__('filament::resources/pages/edit-record.messages.saved')));
@@ -69,9 +69,10 @@ class Profile extends PagesProfile
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')
+                        ->label('Navn')
                         ->required(),
                     TextInput::make('email')
-                        ->label('Email Address')
+                        ->label('E-post Adresse')
                         ->required(),
                     Textinput::make('phone')
                         ->label('Telefon')
@@ -87,19 +88,19 @@ class Profile extends PagesProfile
                 ->columns(2)
                 ->schema([
                     TextInput::make('current_password')
-                        ->label('Current Password')
+                        ->label('Nåværende passord')
                         ->password()
                         ->rules(['required_with:new_password'])
                         ->currentPassword()
                         ->autocomplete('off')
                         ->columnSpan(1),
                     TextInput::make('new_password')
-                        ->label('New Password')
+                        ->label('Nytt Passord')
                         ->password()
                         ->rules(['confirmed', Password::defaults()])
                         ->autocomplete('new-password'),
                     TextInput::make('new_password_confirmation')
-                        ->label('Confirm Password')
+                        ->label('Bekreft Passord')
                         ->password()
                         ->rules([
                             'required_with:new_password',

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UtstyrResource\Pages;
 use App\Mail\BestillUtstyr as Bestilling;
+use App\Models\Settings;
 use App\Models\Utstyr;
 use Filament\Forms;
 use Filament\Notifications\Notification;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
@@ -56,8 +58,8 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('kategori.kategori')->sortable(),
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
-                    ->formatStateUsing(fn () => 'Se her')
-                    ->url(fn ($record) => $record->link, true),
+                    ->formatStateUsing(fn() => 'Se her')
+                    ->url(fn($record) => $record->link, true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -79,8 +81,8 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 Tables\Actions\BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data) {
-
-                        Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
+                        $setting = Settings::where('user_id', '=', Auth::id())->first();
+                        Mail::to($setting->apotek_epost)->send(new Bestilling($records, $data));
                         Notification::make()
                             ->title('E-post har blitt sendt')
                             ->success()
@@ -93,8 +95,8 @@ class UtstyrResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Bestill utstyr')
                     ->modalSubheading('Sikker på at du har valgt alt du trenger?')
-                    ->modalContent(fn ($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
-                    ->modalButton('ja, bestill utstyr!')
+                    ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
+                    ->modalButton('Ja, bestill utstyr!')
                     ->deselectRecordsAfterCompletion()->modalWidth('lg'),
             ]);
     }
@@ -115,10 +117,10 @@ class UtstyrResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUtstyrs::route('/'),
+            'index'  => Pages\ListUtstyrs::route('/'),
             'create' => Pages\CreateUtstyr::route('/create'),
-            'view' => Pages\ViewUtstyr::route('/{record}'),
-            'edit' => Pages\EditUtstyr::route('/{record}/edit'),
+            'view'   => Pages\ViewUtstyr::route('/{record}'),
+            'edit'   => Pages\EditUtstyr::route('/{record}/edit'),
         ];
     }
 

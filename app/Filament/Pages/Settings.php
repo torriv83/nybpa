@@ -22,13 +22,14 @@ class Settings extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
+    protected static ?string $navigationLabel = 'Innstillinger';
+
     protected static string $view = 'filament.pages.settings';
 
     public Setting $settings;
 
     public function mount(): void
     {
-        //        $this->settings = Setting::where('user_id', Auth::id())->first();
 
         if (Setting::where('user_id', Auth::id())->first() !== null) {
             $this->settings = Setting::where('user_id', Auth::id())->first();
@@ -37,10 +38,11 @@ class Settings extends Page implements HasForms
         }
 
         $this->form->fill([
-            'weekplan_timespan' => $this->settings->weekplan_timespan,
-            'weekplan_from' => $this->settings->weekplan_from,
-            'weekplan_to' => $this->settings->weekplan_to,
+            'weekplan_timespan'  => $this->settings->weekplan_timespan,
+            'weekplan_from'      => $this->settings->weekplan_from,
+            'weekplan_to'        => $this->settings->weekplan_to,
             'bpa_hours_per_week' => $this->settings->bpa_hours_per_week,
+            'apotek_epost'       => $this->settings->apotek_epost,
         ]);
     }
 
@@ -51,6 +53,12 @@ class Settings extends Page implements HasForms
                 ->description('Timer innvilget')
                 ->schema([
                     TextInput::make('bpa_hours_per_week')->label('Antall timer i uka')->required(),
+                ]),
+
+            Section::make('Apotek')
+                ->description('E-post adresse til apoteket')
+                ->schema([
+                    TextInput::make('apotek_epost')->label('E-post adresse')->required(),
                 ]),
 
             Section::make('Ukeplan')
@@ -65,16 +73,16 @@ class Settings extends Page implements HasForms
                                 ])
                                 ->label('Bruk fastsatt tid?')->required()
                                 ->reactive(),
-                            Forms\Components\Hidden::make('user_id')->formatStateUsing(fn () => Auth::id()),
+                            Forms\Components\Hidden::make('user_id')->formatStateUsing(fn() => Auth::id()),
                             TimePicker::make('weekplan_from')->withoutSeconds()
                                 ->format('H:i:s')
                                 ->label('Vis tid fra')
-                                ->hidden(fn (callable $get
+                                ->hidden(fn(callable $get
                                 ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
                             TimePicker::make('weekplan_to')->withoutSeconds()
                                 ->format('H:i:s')
                                 ->label('Vis tid til')
-                                ->hidden(fn (callable $get
+                                ->hidden(fn(callable $get
                                 ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
                         ]),
                 ]),
