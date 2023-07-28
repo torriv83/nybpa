@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\KategoriResource\Pages;
-use App\Filament\Resources\KategoriResource\RelationManagers;
 use App\Models\Kategori;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -17,13 +16,17 @@ use Illuminate\Support\Facades\Cache;
 
 class KategoriResource extends Resource
 {
+    protected static ?string $model = Kategori::class;
 
-    protected static ?string $model            = Kategori::class;
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
-    protected static ?string $navigationGroup  = 'Medisinsk';
-    protected static ?string $modelLabel       = 'Kategori';
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
+
+    protected static ?string $navigationGroup = 'Medisinsk';
+
+    protected static ?string $modelLabel = 'Kategori';
+
     protected static ?string $pluralModelLabel = 'Kategorier';
-    protected static ?int    $navigationSort   = 2;
+
+    protected static ?int $navigationSort = 2;
 
     protected static function getNavigationBadge(): ?string
     {
@@ -86,10 +89,10 @@ class KategoriResource extends Resource
     {
 
         return [
-            'index'  => Pages\ListKategoris::route('/'),
+            'index' => Pages\ListKategoris::route('/'),
             'create' => Pages\CreateKategori::route('/create'),
-            'view'   => Pages\ViewKategori::route('/{record}'),
-            'edit'   => Pages\EditKategori::route('/{record}/edit'),
+            'view' => Pages\ViewKategori::route('/{record}'),
+            'edit' => Pages\EditKategori::route('/{record}/edit'),
         ];
     }
 

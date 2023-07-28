@@ -16,21 +16,19 @@ use Carbon\Carbon;
 
 class UserStatsService
 {
-
     protected Timesheet $timesheet;
-    protected mixed     $bpa;
+
+    protected mixed $bpa;
 
     public function __construct()
     {
         $this->timesheet = app(Timesheet::class);
-        $setting         = Settings::where('user_id', '=', \Auth::id())->first();
-        $this->bpa       = $setting['bpa_hours_per_week'] ?? 1;
+        $setting = Settings::where('user_id', '=', \Auth::id())->first();
+        $this->bpa = $setting['bpa_hours_per_week'] ?? 1;
     }
 
     /**
      * Get the number of assistants.
-     *
-     * @return int
      */
     public function getNumberOfAssistents(): int
     {
@@ -39,26 +37,23 @@ class UserStatsService
 
     /**
      * Get the hours used this year.
-     *
-     * @return string
      */
     public function getHoursUsedThisYear(): string
     {
-        $tider     = $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1');
+        $tider = $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1');
         $hoursUsed = $tider->sum('totalt');
+
         return $this->minutesToTime($hoursUsed);
     }
 
     /**
      * Get the yearly time chart.
-     *
-     * @return array
      */
     public function getYearlyTimeChart(): array
     {
-        $thisYear      = $this->timesheet->TimeUsedThisYear();
+        $thisYear = $this->timesheet->TimeUsedThisYear();
         $thisYearTimes = [];
-        $sum           = 0;
+        $sum = 0;
 
         foreach ($thisYear as $key => $value) {
             $number = count($value);
@@ -73,14 +68,12 @@ class UserStatsService
 
     /**
      * Get the yearly time filters.
-     *
-     * @return array
      */
     public function getYearlyTimeFilters(): array
     {
-        $currentYear    = Carbon::now()->year;
+        $currentYear = Carbon::now()->year;
         $firstDayOfYear = Carbon::createFromDate($currentYear, 1, 1)->format('Y-m-d');
-        $lastDayOfYear  = Carbon::createFromDate($currentYear, 12, 31)->format('Y-m-d');
+        $lastDayOfYear = Carbon::createFromDate($currentYear, 12, 31)->format('Y-m-d');
 
         return [
             'tableFilters' => [
@@ -94,25 +87,21 @@ class UserStatsService
 
     /**
      * Get the description of hours used this month.
-     *
-     * @return string
      */
     public function getHoursUsedThisMonthDescription(): string
     {
         $hoursToUseThisMonth = ($this->bpa / 7) * Carbon::now()->daysInMonth;
-        $usedThisMonth       = $this->timesheet->monthToDate('fra_dato')->where('unavailable', '=', '0')->sum('totalt');
+        $usedThisMonth = $this->timesheet->monthToDate('fra_dato')->where('unavailable', '=', '0')->sum('totalt');
 
-        return $this->minutesToTime($usedThisMonth) . ' brukt av ' . $hoursToUseThisMonth . ' denne måneden.';
+        return $this->minutesToTime($usedThisMonth).' brukt av '.$hoursToUseThisMonth.' denne måneden.';
     }
 
     /**
      * Get the remaining hours.
-     *
-     * @return string
      */
     public function getRemainingHours(): string
     {
-        $totalMinutes     = ($this->bpa * 52) * 60;
+        $totalMinutes = ($this->bpa * 52) * 60;
         $hoursUsedMinutes = $this->getHoursUsedInMinutes();
         $remainingMinutes = $totalMinutes - $hoursUsedMinutes;
 
@@ -121,24 +110,20 @@ class UserStatsService
 
     /**
      * Get the average hours per week description.
-     *
-     * @return string
      */
     public function getAverageHoursPerWeekDescription(): string
     {
         $hoursUsedMinutes = $this->getHoursUsedInMinutes();
-        $weeksLeft        = Carbon::now()->floatDiffInWeeks(Carbon::now()->endOfYear());
-        $totalMinutes     = ($this->bpa * 52) * 60;
-        $hoursPerWeek     = 24 * 7;
-        $leftPerWeek      = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $weeksLeft)) / $weeksLeft;
+        $weeksLeft = Carbon::now()->floatDiffInWeeks(Carbon::now()->endOfYear());
+        $totalMinutes = ($this->bpa * 52) * 60;
+        $hoursPerWeek = 24 * 7;
+        $leftPerWeek = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $weeksLeft)) / $weeksLeft;
 
         return $this->calculateAvgPerWeek($leftPerWeek);
     }
 
     /**
      * Get the number of equipment.
-     *
-     * @return int
      */
     public function getNumberOfEquipment(): int
     {
@@ -147,28 +132,22 @@ class UserStatsService
 
     /**
      * Convert minutes to time format.
-     *
-     * @param int $minutes
-     * @return string
      */
     private function minutesToTime(int $minutes): string
     {
-        $hours   = $minutes / 60;
+        $hours = $minutes / 60;
         $minutes = ($minutes % 60);
-        $format  = '%02d:%02d';
+        $format = '%02d:%02d';
 
         return sprintf($format, $hours, $minutes);
     }
 
     /**
      * Calculate average per week.
-     *
-     * @param float $leftPerWeek
-     * @return string
      */
     private function calculateAvgPerWeek(float $leftPerWeek): string
     {
-        $hours   = floor($leftPerWeek);
+        $hours = floor($leftPerWeek);
         $minutes = floor(($leftPerWeek - $hours) * 60);
         $seconds = round((($leftPerWeek - $hours) * 60 - $minutes) * 60);
 

@@ -8,13 +8,12 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditTestResults extends EditRecord
 {
-
     protected static string $resource = TestResultsResource::class;
 
     /**
      * @throws \Exception
      */
-    protected function getActions() : array
+    protected function getActions(): array
     {
 
         return [

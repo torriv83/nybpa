@@ -20,13 +20,17 @@ use Illuminate\Support\Facades\Mail;
 
 class UtstyrResource extends Resource
 {
+    protected static ?string $model = Utstyr::class;
 
-    protected static ?string $model            = Utstyr::class;
-    protected static ?string $navigationGroup  = 'Medisinsk';
-    protected static ?string $modelLabel       = 'Utstyr';
+    protected static ?string $navigationGroup = 'Medisinsk';
+
+    protected static ?string $modelLabel = 'Utstyr';
+
     protected static ?string $pluralModelLabel = 'Utstyr';
-    protected static ?int    $navigationSort   = 1;
-    protected static ?string $navigationIcon   = 'heroicon-o-collection';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -52,8 +56,8 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('kategori.kategori')->sortable(),
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
-                    ->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record) => $record->link, true),
+                    ->formatStateUsing(fn () => 'Se her')
+                    ->url(fn ($record) => $record->link, true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -89,9 +93,9 @@ class UtstyrResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Bestill utstyr')
                     ->modalSubheading('Sikker på at du har valgt alt du trenger?')
-                    ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
+                    ->modalContent(fn ($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
                     ->modalButton('ja, bestill utstyr!')
-                    ->deselectRecordsAfterCompletion()->modalWidth('lg')
+                    ->deselectRecordsAfterCompletion()->modalWidth('lg'),
             ]);
     }
 
@@ -111,10 +115,10 @@ class UtstyrResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListUtstyrs::route('/'),
+            'index' => Pages\ListUtstyrs::route('/'),
             'create' => Pages\CreateUtstyr::route('/create'),
-            'view'   => Pages\ViewUtstyr::route('/{record}'),
-            'edit'   => Pages\EditUtstyr::route('/{record}/edit'),
+            'view' => Pages\ViewUtstyr::route('/{record}'),
+            'edit' => Pages\EditUtstyr::route('/{record}/edit'),
         ];
     }
 

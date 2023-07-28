@@ -14,16 +14,15 @@ use Phpsa\FilamentAuthentication\Pages\Profile as PagesProfile;
 
 class Profile extends PagesProfile
 {
-
     public function mount(): void
     {
         $this->form->fill([
-            'name'       => $this->getFormModel()->name,
-            'email'      => $this->getFormModel()->email,
-            'phone'      => $this->getFormModel()->phone,
-            'adresse'    => $this->getFormModel()->adresse,
+            'name' => $this->getFormModel()->name,
+            'email' => $this->getFormModel()->email,
+            'phone' => $this->getFormModel()->phone,
+            'adresse' => $this->getFormModel()->adresse,
             'postnummer' => $this->getFormModel()->postnummer,
-            'poststed'   => $this->getFormModel()->poststed,
+            'poststed' => $this->getFormModel()->poststed,
         ]);
     }
 
@@ -32,20 +31,20 @@ class Profile extends PagesProfile
         $data = $this->form->getState();
 
         $state = array_filter([
-            'name'       => $data['name'],
-            'email'      => $data['email'],
-            'phone'      => $data['phone'],
-            'adresse'    => $data['adresse'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'adresse' => $data['adresse'],
             'postnummer' => $data['postnummer'],
-            'poststed'   => $data['poststed'],
-            'password'   => $data['new_password'] ? Hash::make($data['new_password']) : null,
+            'poststed' => $data['poststed'],
+            'password' => $data['new_password'] ? Hash::make($data['new_password']) : null,
         ]);
 
         $this->getFormModel()->update($state);
 
         if ($data['new_password']) {
 
-            Filament::auth()->login($this->getFormModel(), (bool)$this->getFormModel()->getRememberToken());
+            Filament::auth()->login($this->getFormModel(), (bool) $this->getFormModel()->getRememberToken());
         }
 
         $this->notify('success', strval(__('filament::resources/pages/edit-record.messages.saved')));
@@ -82,7 +81,6 @@ class Profile extends PagesProfile
                     TextInput::make('poststed'),
                     TextInput::make('assistentnummer')->disabled(),
                     TextInput::make('ansatt_dato')->disabled(),
-
 
                 ]),
             Section::make('Oppdater Passord')

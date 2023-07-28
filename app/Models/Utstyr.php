@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * @method thisYear()
+ *
  * @mixin IdeHelperUtstyr
  */
 class Utstyr extends Model
@@ -19,6 +20,7 @@ class Utstyr extends Model
     protected $table = 'utstyr';
 
     public $timestamps = true;
+
     // protected $dates      = ['fra_dato', 'til_dato'];
     protected $fillable = [
         'hva',
@@ -38,13 +40,8 @@ class Utstyr extends Model
         // });
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'kategoriID');
     }
-
-
 }

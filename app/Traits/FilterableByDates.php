@@ -24,6 +24,7 @@ trait FilterableByDates
     public function scopeQuarterToDate($query, $column = 'created_at')
     {
         $now = Carbon::now();
+
         return $query->whereBetween($column, [$now->startOfQuarter(), $now]);
     }
 
@@ -45,6 +46,7 @@ trait FilterableByDates
     public function scopeLastQuarter($query, $column = 'created_at')
     {
         $now = Carbon::now();
+
         return $query->whereBetween($column, [$now->startOfQuarter()->subMonths(3), $now->startOfQuarter()]);
     }
 

@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
         $minutes = $t->where('user_id', '=', Auth::user()->id)->thisYear()->sum('totalt');
 
-        $timerJobbet = sprintf('%02d', intdiv($minutes, 60)) . 't ' . (sprintf('%02d', $minutes % 60) . 'm');
+        $timerJobbet = sprintf('%02d', intdiv($minutes, 60)).'t '.(sprintf('%02d', $minutes % 60).'m');
 
         $nesteArbeidstid = $t->whereDate('fra_dato', '>', today())->get();
 

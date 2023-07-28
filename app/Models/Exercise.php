@@ -12,5 +12,4 @@ class Exercise extends Model
     protected $fillable = [
         'name',
     ];
-
 }

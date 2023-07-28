@@ -12,7 +12,7 @@ class Weekplan extends Model
 
     protected $fillable = [
         'name',
-        'data'
+        'data',
     ];
 
     protected $casts = ['data' => 'json'];

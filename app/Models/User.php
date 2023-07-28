@@ -26,9 +26,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->email == 'tor@trivera.net' && $this->hasVerifiedEmail();
     }
 
-    /**
-     * @return bool
-     */
     public function canImpersonate(): bool
     {
         // For example
@@ -77,9 +74,6 @@ class User extends Authenticatable implements FilamentUser
     //     $this->attributes['password'] = Hash::make($pass);
     // }
 
-    /**
-     * @return HasMany
-     */
     public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestsResource\Pages;
-use App\Filament\Resources\TestsResource\RelationManagers;
 use App\Models\Tests;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -18,8 +17,11 @@ class TestsResource extends Resource
     protected static ?string $model = Tests::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup  = 'Landslag';
-    protected static ?string $modelLabel       = 'Test';
+
+    protected static ?string $navigationGroup = 'Landslag';
+
+    protected static ?string $modelLabel = 'Test';
+
     protected static ?string $pluralModelLabel = 'Tester';
 
     public static function form(Form $form): Form
@@ -41,7 +43,7 @@ class TestsResource extends Resource
                             ])
                             ->required(),
                     ])
-                    ->columns(2)
+                    ->columns(2),
             ]);
     }
 

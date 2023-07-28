@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -19,11 +18,16 @@ use Illuminate\Support\Facades\Cache;
 
 class UserResource extends Resource
 {
-    protected static ?string $model                = User::class;
-    protected static ?string $navigationGroup      = 'Authentication';
-    protected static ?string $navigationIcon       = 'heroicon-o-users';
-    protected static ?string $modelLabel           = 'Bruker';
-    protected static ?string $pluralModelLabel     = 'Brukere';
+    protected static ?string $model = User::class;
+
+    protected static ?string $navigationGroup = 'Authentication';
+
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    protected static ?string $modelLabel = 'Bruker';
+
+    protected static ?string $pluralModelLabel = 'Brukere';
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
@@ -49,7 +53,7 @@ class UserResource extends Resource
                             ->same('passwordConfirmation')
                             ->password()
                             ->maxLength(255)
-                            ->required(fn($record) => $record === null)
+                            ->required(fn ($record) => $record === null)
                             ->label('Passord'),
                         TextInput::make('passwordConfirmation')
                             ->password()
@@ -79,7 +83,7 @@ class UserResource extends Resource
                             ->maxLength(255),
                         TextInput::make('assistentnummer')
                             ->maxLength(255),
-                        DatePicker::make('ansatt_dato')
+                        DatePicker::make('ansatt_dato'),
                     ])->columns(3),
             ]);
     }
@@ -111,9 +115,9 @@ class UserResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\Filter::make('verified')
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
                 Tables\Filters\Filter::make('unverified')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
+                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -141,10 +145,10 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListUsers::route('/'),
+            'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'view'   => Pages\ViewUser::route('/{record}'),
-            'edit'   => Pages\EditUser::route('/{record}/edit'),
+            'view' => Pages\ViewUser::route('/{record}'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 

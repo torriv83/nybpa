@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Cache;
 
 class StyrkeChart extends LineChartWidget
 {
-    protected static ?string $heading         = 'Styrke tester';
+    protected static ?string $heading = 'Styrke tester';
+
     protected static ?string $pollingInterval = null;
 
     protected static ?array $options = [];
@@ -24,13 +25,13 @@ class StyrkeChart extends LineChartWidget
     {
         $styrketest = $this->fetchData();
 
-        if (!$styrketest || $styrketest->testResults->isEmpty()) {
+        if (! $styrketest || $styrketest->testResults->isEmpty()) {
             return $this->getDefaultChartData();
         }
 
         $transformedData = $this->transformData($styrketest->testResults);
-        $resultater      = $transformedData['resultater'];
-        $dato            = $transformedData['dato'];
+        $resultater = $transformedData['resultater'];
+        $dato = $transformedData['dato'];
 
         return $this->formatChartData($resultater, $dato);
     }
@@ -45,7 +46,7 @@ class StyrkeChart extends LineChartWidget
     protected function transformData($results): array
     {
         $resultater = [];
-        $dato       = [];
+        $dato = [];
 
         foreach ($results as $v) {
             $dato[] = $v->dato->format('d.m.y H:i');
@@ -57,32 +58,32 @@ class StyrkeChart extends LineChartWidget
 
         return [
             'resultater' => $resultater,
-            'dato'       => $dato,
+            'dato' => $dato,
         ];
     }
 
     protected function formatChartData(array $resultater, array $dato): array
     {
         $finalResults = [];
-        $randColors   = generateRandomColors(count($resultater));
+        $randColors = generateRandomColors(count($resultater));
 
         foreach ($resultater as $name => $res) {
             $randColor = array_shift($randColors);
-            $res       = count($dato) > 1 ? $res : [$res];
+            $res = count($dato) > 1 ? $res : [$res];
 
             $finalResults[] = [
-                'type'            => 'line',
-                'label'           => $name,
-                'data'            => $res,
+                'type' => 'line',
+                'label' => $name,
+                'data' => $res,
                 'backgroundColor' => $randColor,
-                'borderColor'     => $randColor,
-                'borderWidth'     => 1,
+                'borderColor' => $randColor,
+                'borderWidth' => 1,
             ];
         }
 
         return [
             'datasets' => $finalResults,
-            'labels'   => $dato,
+            'labels' => $dato,
         ];
     }
 
@@ -92,10 +93,10 @@ class StyrkeChart extends LineChartWidget
             'datasets' => [
                 [
                     'label' => 'Styrke',
-                    'data'  => [],
+                    'data' => [],
                 ],
             ],
-            'labels'   => [],
+            'labels' => [],
         ];
     }
 
@@ -104,13 +105,12 @@ class StyrkeChart extends LineChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode'      => 'index',
-                    'intersect' => false
+                    'mode' => 'index',
+                    'intersect' => false,
                 ],
             ],
             // Additional options
             // ...
         ];
     }
-
 }

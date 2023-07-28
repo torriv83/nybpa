@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Cache;
 
 class VektChart extends LineChartWidget
 {
-    protected static ?string $heading         = 'Vekt';
+    protected static ?string $heading = 'Vekt';
+
     protected static ?string $pollingInterval = null;
 
     protected static ?array $options = [];
@@ -24,7 +25,7 @@ class VektChart extends LineChartWidget
     protected function getData(): array
     {
         $weights = [];
-        $dates   = [];
+        $dates = [];
 
         try {
             $tests = $this->getTests();
@@ -32,7 +33,7 @@ class VektChart extends LineChartWidget
                 $results = $this->getTestResults($tests->first());
                 foreach ($results as $result) {
                     $weights[] = $result->resultat[0]['Vekt'];
-                    $dates[]   = $result->dato->format('d.m.y H:i');
+                    $dates[] = $result->dato->format('d.m.y H:i');
                 }
             }
         } catch (\Exception $e) {
@@ -43,10 +44,10 @@ class VektChart extends LineChartWidget
             'datasets' => [
                 [
                     'label' => 'Vekt',
-                    'data'  => $weights,
+                    'data' => $weights,
                 ],
             ],
-            'labels'   => $dates,
+            'labels' => $dates,
         ];
     }
 
@@ -74,7 +75,7 @@ class VektChart extends LineChartWidget
                     'display' => false,
                 ],
             ],
-            'scales'  => $this->getChartScales(),
+            'scales' => $this->getChartScales(),
         ];
     }
 
@@ -83,18 +84,18 @@ class VektChart extends LineChartWidget
         return [
             'x' => [
                 'display' => true,
-                'title'   => [
+                'title' => [
                     'display' => true,
-                    'text'    => 'Dato'
-                ]
+                    'text' => 'Dato',
+                ],
             ],
             'y' => [
                 'display' => true,
-                'title'   => [
+                'title' => [
                     'display' => true,
-                    'text'    => 'Kg'
-                ]
-            ]
+                    'text' => 'Kg',
+                ],
+            ],
         ];
     }
 }

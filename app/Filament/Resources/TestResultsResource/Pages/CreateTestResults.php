@@ -15,18 +15,17 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateTestResults extends CreateRecord
 {
-
     use CreateRecord\Concerns\HasWizard;
 
     protected static string $resource = TestResultsResource::class;
 
-    protected function getRedirectUrl() : string
+    protected function getRedirectUrl(): string
     {
 
         return $this->getResource()::getUrl('index');
     }
 
-    protected function getSteps() : array
+    protected function getSteps(): array
     {
 
         return [
@@ -35,10 +34,10 @@ class CreateTestResults extends CreateRecord
                 ->description('Velg hvilken test du skal loggføre')
                 ->schema([
                     Select::make('testsID')
-                          ->options(function () {
+                        ->options(function () {
 
-                              return tests::all()->pluck('navn', 'id');
-                          })->label('Test')->reactive(),
+                            return tests::all()->pluck('navn', 'id');
+                        })->label('Test')->reactive(),
                     DateTimePicker::make('dato'),
                 ]),
 
@@ -46,26 +45,26 @@ class CreateTestResults extends CreateRecord
                 ->description('Legg inn resultater fra testen her')
                 ->schema([
                     Repeater::make('resultat')
-                            ->schema(function (Closure $get) : array {
+                        ->schema(function (Closure $get): array {
 
-                                $schema = [];
-                                if ($get('testsID')) {
-                                    $data = tests::where('id', '=', $get('testsID'))->get();
-                                    foreach ($data[0]['ovelser'] as $o) {
-                                        if ($o['type'] == 'tid' || $o['type'] == 'kg') {
-                                            $schema[] = TextInput::make($o['navn'])
-                                                // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
-                                                                 ->required();
-                                        } else {
-                                            $schema[] = TextInput::make($o['navn'])
-                                                                 ->required();
-                                        }
+                            $schema = [];
+                            if ($get('testsID')) {
+                                $data = tests::where('id', '=', $get('testsID'))->get();
+                                foreach ($data[0]['ovelser'] as $o) {
+                                    if ($o['type'] == 'tid' || $o['type'] == 'kg') {
+                                        $schema[] = TextInput::make($o['navn'])
+                                            // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
+                                            ->required();
+                                    } else {
+                                        $schema[] = TextInput::make($o['navn'])
+                                            ->required();
                                     }
                                 }
+                            }
 
-                                return $schema;
-                            }),
-                    Hidden::make('testsID')
+                            return $schema;
+                        }),
+                    Hidden::make('testsID'),
                 ]),
         ];
     }

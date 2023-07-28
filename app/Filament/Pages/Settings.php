@@ -28,7 +28,7 @@ class Settings extends Page implements HasForms
 
     public function mount(): void
     {
-//        $this->settings = Setting::where('user_id', Auth::id())->first();
+        //        $this->settings = Setting::where('user_id', Auth::id())->first();
 
         if (Setting::where('user_id', Auth::id())->first() !== null) {
             $this->settings = Setting::where('user_id', Auth::id())->first();
@@ -37,9 +37,9 @@ class Settings extends Page implements HasForms
         }
 
         $this->form->fill([
-            'weekplan_timespan'  => $this->settings->weekplan_timespan,
-            'weekplan_from'      => $this->settings->weekplan_from,
-            'weekplan_to'        => $this->settings->weekplan_to,
+            'weekplan_timespan' => $this->settings->weekplan_timespan,
+            'weekplan_from' => $this->settings->weekplan_from,
+            'weekplan_to' => $this->settings->weekplan_to,
             'bpa_hours_per_week' => $this->settings->bpa_hours_per_week,
         ]);
     }
@@ -61,23 +61,23 @@ class Settings extends Page implements HasForms
                             Select::make('weekplan_timespan')
                                 ->options([
                                     0 => 'Nei',
-                                    1 => 'Ja'
+                                    1 => 'Ja',
                                 ])
                                 ->label('Bruk fastsatt tid?')->required()
                                 ->reactive(),
-                            Forms\Components\Hidden::make('user_id')->formatStateUsing(fn() => Auth::id()),
+                            Forms\Components\Hidden::make('user_id')->formatStateUsing(fn () => Auth::id()),
                             TimePicker::make('weekplan_from')->withoutSeconds()
                                 ->format('H:i:s')
                                 ->label('Vis tid fra')
-                                ->hidden(fn(callable $get
+                                ->hidden(fn (callable $get
                                 ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
                             TimePicker::make('weekplan_to')->withoutSeconds()
                                 ->format('H:i:s')
                                 ->label('Vis tid til')
-                                ->hidden(fn(callable $get
-                                ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0')
-                        ])
-                ])
+                                ->hidden(fn (callable $get
+                                ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
+                        ]),
+                ]),
         ];
     }
 
@@ -99,10 +99,9 @@ class Settings extends Page implements HasForms
             ->title('Innstillinger er lagret')
             ->success()
             ->send();
-//        $settings->save();
+        //        $settings->save();
 
-
-//         SAVE THE SETTINGS HERE
+        //         SAVE THE SETTINGS HERE
     }
 
     public function clearCache()

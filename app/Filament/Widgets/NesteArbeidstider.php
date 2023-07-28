@@ -7,25 +7,22 @@ use Filament\Tables;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use permission;
 
 class NesteArbeidstider extends BaseWidget
 {
-    protected static ?string   $pollingInterval = null;
-    protected static ?string   $heading         = 'De neste arbeidstidene';
-    protected static ?int      $sort            = 5;
-    protected array|string|int $columnSpan      = 3;
+    protected static ?string $pollingInterval = null;
+
+    protected static ?string $heading = 'De neste arbeidstidene';
+
+    protected static ?int $sort = 5;
+
+    protected array|string|int $columnSpan = 3;
 
     protected function getTableEmptyStateHeading(): ?string
     {
         return 'Ingen planlagte tider enda';
     }
 
-    /**
-     * @param Model $record
-     *
-     * @return string
-     */
     public function getTableRecordKey(Model $record): string
     {
         return $record;

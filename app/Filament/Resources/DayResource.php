@@ -19,13 +19,19 @@ use Filament\Tables\Columns\TextColumn;
 
 class DayResource extends Resource
 {
-    protected static ?string $model                = Day::class;
-    protected static ?string $slug                 = 'days';
+    protected static ?string $model = Day::class;
+
+    protected static ?string $slug = 'days';
+
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $navigationIcon       = 'heroicon-o-collection';
-    protected static ?string $navigationGroup      = 'Landslag';
-    protected static ?string $modelLabel           = 'Dag';
-    protected static ?string $pluralModelLabel     = 'Dager';
+
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
+
+    protected static ?string $navigationGroup = 'Landslag';
+
+    protected static ?string $modelLabel = 'Dag';
+
+    protected static ?string $pluralModelLabel = 'Dager';
 
     public static function form(Form $form): Form
     {
@@ -36,11 +42,11 @@ class DayResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Day $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Day $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Day $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Day $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -57,9 +63,9 @@ class DayResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListDays::route('/'),
+            'index' => Pages\ListDays::route('/'),
             'create' => Pages\CreateDay::route('/create'),
-            'edit'   => Pages\EditDay::route('/{record}/edit'),
+            'edit' => Pages\EditDay::route('/{record}/edit'),
         ];
     }
 

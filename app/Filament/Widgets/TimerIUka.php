@@ -11,10 +11,13 @@ use Illuminate\Support\Carbon;
 
 class TimerIUka extends BaseWidget
 {
-    protected static ?string   $pollingInterval = null;
-    protected static ?string   $heading         = 'Timer i uka';
-    protected static ?int      $sort            = 3;
-    protected array|string|int $columnSpan      = 3;
+    protected static ?string $pollingInterval = null;
+
+    protected static ?string $heading = 'Timer i uka';
+
+    protected static ?int $sort = 3;
+
+    protected array|string|int $columnSpan = 3;
 
     protected function getTableRecordsPerPageSelectOptions(): array
     {
@@ -51,15 +54,15 @@ class TimerIUka extends BaseWidget
     {
         return [
             TextColumn::make('Uke')
-                ->formatStateUsing(fn(string $state): ?string => __(Carbon::parse($state)->week()))
+                ->formatStateUsing(fn (string $state): ?string => __(Carbon::parse($state)->week()))
                 ->label('Uke')
                 ->sortable(),
             TextColumn::make('Totalt')
-                ->formatStateUsing(fn(string $state): string => __(date('H:i', mktime(0, $state))))
+                ->formatStateUsing(fn (string $state): string => __(date('H:i', mktime(0, $state))))
                 ->label('Totalt')
                 ->sortable(),
             TextColumn::make('Gjennomsnitt')
-                ->formatStateUsing(fn(string $state): string => __(date('H:i', mktime(0, $state))))
+                ->formatStateUsing(fn (string $state): string => __(date('H:i', mktime(0, $state))))
                 ->sortable(),
             TextColumn::make('Antall')
                 ->sortable(),
