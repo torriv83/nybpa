@@ -12,20 +12,26 @@ use App\Filament\Resources\ExerciseResource\Pages;
 use App\Models\Exercise;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Resources\Form;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 
 class ExerciseResource extends Resource
 {
-    protected static ?string $model                = Exercise::class;
-    protected static ?string $slug                 = 'exercises';
+    protected static ?string $model = Exercise::class;
+
+    protected static ?string $slug = 'exercises';
+
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $navigationIcon       = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup      = 'Landslag';
-    protected static ?string $modelLabel           = 'Øvelse';
-    protected static ?string $pluralModelLabel     = 'Øvelser';
+
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
+
+    protected static ?string $navigationGroup = 'Landslag';
+
+    protected static ?string $modelLabel = 'Øvelse';
+
+    protected static ?string $pluralModelLabel = 'Øvelser';
 
     public static function form(Form $form): Form
     {
@@ -36,11 +42,11 @@ class ExerciseResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Exercise $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Exercise $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Exercise $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Exercise $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -57,9 +63,9 @@ class ExerciseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListExercises::route('/'),
+            'index' => Pages\ListExercises::route('/'),
             'create' => Pages\CreateExercise::route('/create'),
-            'edit'   => Pages\EditExercise::route('/{record}/edit'),
+            'edit' => Pages\EditExercise::route('/{record}/edit'),
         ];
     }
 

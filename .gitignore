@@ -51,3 +51,17 @@ config/livewire.php
 /docker-compose.yml
 /node_modules/
 /phpunit.xml.bak
+/docker/mysql/create-testing-database.sh
+/docker/pgsql/create-testing-database.sql
+/docker/8.0/Dockerfile
+/docker/8.1/Dockerfile
+/docker/8.2/Dockerfile
+/docker/8.0/php.ini
+/docker/8.1/php.ini
+/docker/8.2/php.ini
+/docker/8.0/start-container
+/docker/8.1/start-container
+/docker/8.2/start-container
+/docker/8.0/supervisord.conf
+/docker/8.1/supervisord.conf
+/docker/8.2/supervisord.conf

@@ -4,29 +4,35 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UtstyrResource\Pages;
 use App\Mail\BestillUtstyr as Bestilling;
+use App\Models\Settings;
 use App\Models\Utstyr;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Resources\Form;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 
 class UtstyrResource extends Resource
 {
+    protected static ?string $model = Utstyr::class;
 
-    protected static ?string $model            = Utstyr::class;
-    protected static ?string $navigationGroup  = 'Medisinsk';
-    protected static ?string $modelLabel       = 'Utstyr';
+    protected static ?string $navigationGroup = 'Medisinsk';
+
+    protected static ?string $modelLabel = 'Utstyr';
+
     protected static ?string $pluralModelLabel = 'Utstyr';
-    protected static ?int    $navigationSort   = 1;
-    protected static ?string $navigationIcon   = 'heroicon-o-rectangle-stack';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -75,8 +81,8 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 Tables\Actions\BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data) {
-
-                        Mail::to('svinesundparken@dittapotek.no')->send(new Bestilling($records, $data));
+                        $setting = Settings::where('user_id', '=', Auth::id())->first();
+                        Mail::to($setting->apotek_epost)->send(new Bestilling($records, $data));
                         Notification::make()
                             ->title('E-post har blitt sendt')
                             ->success()
@@ -90,8 +96,8 @@ class UtstyrResource extends Resource
                     ->modalHeading('Bestill utstyr')
                     ->modalSubheading('Sikker på at du har valgt alt du trenger?')
                     ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
-                    ->modalButton('ja, bestill utstyr!')
-                    ->deselectRecordsAfterCompletion()->modalWidth('lg')
+                    ->modalButton('Ja, bestill utstyr!')
+                    ->deselectRecordsAfterCompletion()->modalWidth('lg'),
             ]);
     }
 
@@ -126,7 +132,7 @@ class UtstyrResource extends Resource
             ]);
     }
 
-    public static function getNavigationBadge(): ?string
+    protected static function getNavigationBadge(): ?string
     {
         return Cache::remember('UtstyrNavigationBadge', now()->addMonth(), function () {
             return static::getModel()::count();

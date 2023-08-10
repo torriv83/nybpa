@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->time('weekplan_to');
             $table->tinyInteger('bpa_hours_per_week');
 
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

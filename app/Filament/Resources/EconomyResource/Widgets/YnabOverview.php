@@ -15,9 +15,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class YnabOverview extends BaseWidget
 {
-    protected static ?string   $pollingInterval = null;
-    protected static ?string   $heading         = 'Tall fra YNAB';
-    protected int|string|array $columnSpan      = 'full';
+    protected static ?string $pollingInterval = null;
+
+    protected static ?string $heading = 'Tall fra YNAB';
+
+    protected int|string|array $columnSpan = 'full';
 
     protected function getTableRecordsPerPageSelectOptions(): array
     {
@@ -43,18 +45,18 @@ class YnabOverview extends BaseWidget
     {
         $query = Ynab::query()->get();
 
-        $income      = $query->sum('income');
-        $activity    = $query->sum('activity');
-        $budgeted    = $query->sum('budgeted');
-        $avgincome   = $query->avg('income');
+        $income = $query->sum('income');
+        $activity = $query->sum('activity');
+        $budgeted = $query->sum('budgeted');
+        $avgincome = $query->avg('income');
         $avgactivity = $query->avg('activity');
         $avgbudgeted = $query->avg('budgeted');
 
         return view('economy.table.table-footer', [
-            'income'      => $income,
-            'activity'    => $activity,
-            'budgeted'    => $budgeted,
-            'avgincome'   => $avgincome,
+            'income' => $income,
+            'activity' => $activity,
+            'budgeted' => $budgeted,
+            'avgincome' => $avgincome,
             'avgbudgeted' => $avgbudgeted,
             'avgactivity' => $avgactivity,
         ]);
@@ -146,21 +148,21 @@ class YnabOverview extends BaseWidget
                     return $query
                         ->when(
                             $data['fra'],
-                            fn(Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
                         )
                         ->when(
                             $data['til'],
-                            fn(Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
+                            fn (Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
                         );
                 }),
             Tables\Filters\Filter::make('last3months')->label('Siste 3 måneder')
-                ->query(fn(Builder $query): Builder => $query
+                ->query(fn (Builder $query): Builder => $query
                     ->where('month', '>=', Carbon::now()->subMonths(3))),
             Tables\Filters\Filter::make('last6months')->label('Siste 6 måneder')
-                ->query(fn(Builder $query): Builder => $query
+                ->query(fn (Builder $query): Builder => $query
                     ->where('month', '>=', Carbon::now()->subMonths(6))),
             Tables\Filters\Filter::make('lastyear')->label('Siste år')
-                ->query(fn(Builder $query): Builder => $query
+                ->query(fn (Builder $query): Builder => $query
                     ->where('month', '>=', Carbon::now()->subMonths(12)))->default(),
         ];
     }

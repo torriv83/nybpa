@@ -10,7 +10,7 @@ class Settings extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'weekplan_timespan', 'bpa_hours_per_week', 'weekplan_from', 'weekplan_to'];
+    protected $fillable = ['user_id', 'weekplan_timespan', 'bpa_hours_per_week', 'weekplan_from', 'weekplan_to', 'apotek_epost'];
 
     public function user(): BelongsTo
     {

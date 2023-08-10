@@ -18,10 +18,10 @@ class Economy extends Model
 
     public $timestamps = true;
 
-    protected $fillable   = [
+    protected $fillable = [
         'before_tax',
         'after_tax',
         'tax_table',
-        'grunnstonad'
+        'grunnstonad',
     ];
 }

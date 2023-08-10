@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpFullyQualifiedNameUsageInspection */
 
 /** @noinspection PhpUnused */
@@ -17,12 +18,15 @@ use Filament\Tables\Table;
 
 class EconomyResource extends Resource
 {
+    protected static ?string $model = Economy::class;
 
-    protected static ?string $model            = Economy::class;
-    protected static ?string $navigationGroup  = 'Diverse';
-    protected static ?string $modelLabel       = 'Økonomi';
+    protected static ?string $navigationGroup = 'Diverse';
+
+    protected static ?string $modelLabel = 'Økonomi';
+
     protected static ?string $pluralModelLabel = 'Økonomi';
-    protected static ?string $navigationIcon   = 'heroicon-o-currency-dollar';
+
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
     public static function form(Form $form): Form
     {

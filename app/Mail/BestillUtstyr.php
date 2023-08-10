@@ -2,21 +2,19 @@
 
 namespace App\Mail;
 
-use App\Models\Utstyr;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\SerializesModels;
 
 class BestillUtstyr extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $utstyr;
+
     public $data;
 
     /**
@@ -32,10 +30,8 @@ class BestillUtstyr extends Mailable
 
     /**
      * Get the message envelope.
-     *
-     * @return Envelope
      */
-    public function envelope() : Envelope
+    public function envelope(): Envelope
     {
         return new Envelope(
             from: new Address('tor@trivera.net', 'Tor J. Rivera'),
@@ -48,10 +44,8 @@ class BestillUtstyr extends Mailable
 
     /**
      * Get the message content definition.
-     *
-     * @return Content
      */
-    public function content() : Content
+    public function content(): Content
     {
         return new Content(
             view: 'emails.bestill',
@@ -60,10 +54,8 @@ class BestillUtstyr extends Mailable
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array
      */
-    public function attachments() : array
+    public function attachments(): array
     {
         return [];
     }

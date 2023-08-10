@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 /**
  * @method thisYear()
+ *
  * @mixin IdeHelperKategori
  */
 class Kategori extends Model
@@ -31,12 +32,8 @@ class Kategori extends Model
 
     }
 
-    /**
-     * @return HasMany
-     */
     public function utstyr(): HasMany
     {
         return $this->hasMany(Utstyr::class);
     }
-
 }

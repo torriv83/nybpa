@@ -19,18 +19,18 @@ class StatsOverview extends BaseWidget
 
         $weekplans = Weekplan::find($this->record);
 
-        if (!$weekplans) {
+        if (! $weekplans) {
             // Handle the situation when the record is not found
             return [];
         }
 
         $statistics = [
-            'okter'       => 0,
-            'timer'       => 0,
+            'okter' => 0,
+            'timer' => 0,
             'intensities' => [
-                'crimson'  => 0,
+                'crimson' => 0,
                 'darkcyan' => 0,
-                'green'    => 0,
+                'green' => 0,
             ],
         ];
 
@@ -48,8 +48,7 @@ class StatsOverview extends BaseWidget
             Card::make('Antall økter', $statistics['okter']),
             Card::make('Antall timer', CarbonInterval::seconds($statistics['timer'])->cascade()->forHumans()),
             Card::make('Antall U, V, R økter',
-                'U: ' . $statistics['intensities']['crimson'] . ', V: ' . $statistics['intensities']['darkcyan'] . ', R: ' . $statistics['intensities']['green']),
+                'U: '.$statistics['intensities']['crimson'].', V: '.$statistics['intensities']['darkcyan'].', R: '.$statistics['intensities']['green']),
         ];
     }
-
 }

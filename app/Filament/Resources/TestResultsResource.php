@@ -10,8 +10,9 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Resources\Form;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
@@ -19,7 +20,6 @@ use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -27,11 +27,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestResultsResource extends Resource
 {
+    protected static ?string $model = TestResults::class;
 
-    protected static ?string $model            = TestResults::class;
-    protected static ?string $navigationIcon   = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup  = 'Landslag';
-    protected static ?string $modelLabel       = 'Test resultat';
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
+
+    protected static ?string $navigationGroup = 'Landslag';
+
+    protected static ?string $modelLabel = 'Test resultat';
+
     protected static ?string $pluralModelLabel = 'Test resultater';
 
     public static function form(Form $form): Form
@@ -53,8 +56,8 @@ class TestResultsResource extends Resource
                     ->schema(function (Closure $get): array {
 
                         $schema = [];
-                        $test   = $get('testsID') == 0 ? 1 : $get('testsID');
-                        $data   = tests::where('id', '=', $test)->get();
+                        $test = $get('testsID') == 0 ? 1 : $get('testsID');
+                        $data = tests::where('id', '=', $test)->get();
 
                         foreach ($data[0]['ovelser'] as $o) {
                             if ($o['type'] == 'tid' || $o['type'] == 'kg') {
@@ -69,7 +72,7 @@ class TestResultsResource extends Resource
 
                         return $schema;
                     })
-                    ->columns(3)
+                    ->columns(3),
             ]);
     }
 
@@ -111,9 +114,9 @@ class TestResultsResource extends Resource
     {
 
         return [
-            'index'  => Pages\ListTestResults::route('/'),
+            'index' => Pages\ListTestResults::route('/'),
             'create' => Pages\CreateTestResults::route('/create'),
-            'edit'   => Pages\EditTestResults::route('/{record}/edit'),
+            'edit' => Pages\EditTestResults::route('/{record}/edit'),
             // 'view' => Pages\ViewTestResults::route('/{record}'),
         ];
     }

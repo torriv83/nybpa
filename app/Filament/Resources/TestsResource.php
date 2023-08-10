@@ -3,13 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestsResource\Pages;
-use App\Filament\Resources\TestsResource\RelationManagers;
 use App\Models\Tests;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Resources\Form;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -17,9 +16,12 @@ class TestsResource extends Resource
 {
     protected static ?string $model = Tests::class;
 
-    protected static ?string $navigationIcon   = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup  = 'Landslag';
-    protected static ?string $modelLabel       = 'Test';
+    protected static ?string $navigationIcon = 'heroicon-o-collection';
+
+    protected static ?string $navigationGroup = 'Landslag';
+
+    protected static ?string $modelLabel = 'Test';
+
     protected static ?string $pluralModelLabel = 'Tester';
 
     public static function form(Form $form): Form
@@ -35,13 +37,13 @@ class TestsResource extends Resource
                         Forms\Components\TextInput::make('navn')->required(),
                         Forms\Components\Select::make('type')
                             ->options([
-                                'kg'   => 'Kg',
-                                'tid'  => 'Tid',
+                                'kg' => 'Kg',
+                                'tid' => 'Tid',
                                 'watt' => 'Watt',
                             ])
                             ->required(),
                     ])
-                    ->columns(2)
+                    ->columns(2),
             ]);
     }
 
@@ -74,9 +76,9 @@ class TestsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTests::route('/'),
+            'index' => Pages\ListTests::route('/'),
             'create' => Pages\CreateTests::route('/create'),
-            'edit'   => Pages\EditTests::route('/{record}/edit'),
+            'edit' => Pages\EditTests::route('/{record}/edit'),
         ];
     }
 

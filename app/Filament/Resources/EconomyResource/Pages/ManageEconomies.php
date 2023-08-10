@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class ManageEconomies extends ManageRecords
 {
-
     protected static string $resource = EconomyResource::class;
 
     public function getHeaderWidgetsColumns(): int|array

@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 abstract class HoursUsedEachMonth extends Widget implements Tables\Contracts\HasTable
 {
-
     use Tables\Concerns\InteractsWithTable;
 
-    protected static string    $view            = 'filament.resources.timesheet-resource.widgets.hours-used-each-month';
-    protected static ?string   $pollingInterval = null;
-    protected int|string|array $columnSpan      = 'full';
+    protected static string $view = 'filament.resources.timesheet-resource.widgets.hours-used-each-month';
+
+    protected static ?string $pollingInterval = null;
+
+    protected int|string|array $columnSpan = 'full';
 
     public function getTableRecordKey(Model $record): string
     {
@@ -51,7 +52,7 @@ abstract class HoursUsedEachMonth extends Widget implements Tables\Contracts\Has
                 [
                     Carbon::parse('first day of January')
                         ->format('Y-m-d H:i:s'),
-                    Carbon::now()->endOfYear()
+                    Carbon::now()->endOfYear(),
                 ]
             )
             ->where('unavailable', '!=', 1);
@@ -70,5 +71,4 @@ abstract class HoursUsedEachMonth extends Widget implements Tables\Contracts\Has
                 }),
         ];
     }
-
 }

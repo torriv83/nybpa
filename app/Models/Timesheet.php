@@ -16,18 +16,18 @@ use Illuminate\Support\Facades\Cache;
  */
 class Timesheet extends Model
 {
-
     use Notifiable;
     use SoftDeletes;
     use FilterableByDates;
 
     public $timestamps = true;
 
-    protected $casts    = [
+    protected $casts = [
         'resultat' => 'array',
         'fra_dato' => 'datetime',
         'til_dato' => 'datetime',
     ];
+
     protected $fillable = [
         'fra_dato',
         'til_dato',
@@ -40,12 +40,9 @@ class Timesheet extends Model
 
     protected $attributes = [
         'unavailable' => '0',
-        'allDay'      => '0',
+        'allDay' => '0',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
 
@@ -65,7 +62,6 @@ class Timesheet extends Model
     }
 
     /**
-     * @param $query
      * @method static thisYear()
      */
     public function scopethisYear($query)
@@ -75,7 +71,6 @@ class Timesheet extends Model
     }
 
     /**
-     * @param $query
      * @method thisMonth()
      */
     public function scopethisMonth($query): void
@@ -84,9 +79,6 @@ class Timesheet extends Model
         $query->whereMonth('til_dato', '=', date('m'));
     }
 
-    /**
-     * @return Collection
-     */
     public function timeUsedThisYear(): Collection
     {
 
@@ -95,14 +87,11 @@ class Timesheet extends Model
                 ->where('unavailable', '!=', 1)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
 
     }
 
-    /**
-     * @return Collection
-     */
     public function timeUsedLastYear(): Collection
     {
 
@@ -111,8 +100,7 @@ class Timesheet extends Model
             return $this->lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
     }
-
 }

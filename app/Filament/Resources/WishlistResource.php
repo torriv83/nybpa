@@ -8,24 +8,27 @@ use App\Models\Wishlist;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Resources\Form;
 use Filament\Resources\Resource;
+use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
 class WishlistResource extends Resource
 {
-
     protected static ?string $model = Wishlist::class;
 
-    protected static ?string $navigationIcon       = 'heroicon-o-clipboard-document-list';
-    protected static ?string $navigationGroup      = 'Diverse';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-list';
+
+    protected static ?string $navigationGroup = 'Diverse';
+
     protected static ?string $recordTitleAttribute = 'hva';
-    protected static ?string $modelLabel           = 'Ønskeliste';
-    protected static ?string $pluralModelLabel     = 'Ønskelister';
+
+    protected static ?string $modelLabel = 'Ønskeliste';
+
+    protected static ?string $pluralModelLabel = 'Ønskelister';
 
     protected function getTableReorderColumn(): ?string
     {
@@ -43,9 +46,9 @@ class WishlistResource extends Resource
                 TextInput::make('antall')->type('number'),
                 Select::make('status')
                     ->options([
-                        'Venter'         => 'Venter',
+                        'Venter' => 'Venter',
                         'Begynt å spare' => 'Begynt å spare',
-                        'Kjøpt'          => 'Kjøpt',
+                        'Kjøpt' => 'Kjøpt',
                     ]),
                 Placeholder::make('totalt')->content(function ($record, $set) {
 
@@ -57,7 +60,7 @@ class WishlistResource extends Resource
 
                     return $totalt > 0 ? $totalt : 0;
 
-                })->label('Totalt fra Liste')
+                })->label('Totalt fra Liste'),
             ]);
     }
 
@@ -67,14 +70,14 @@ class WishlistResource extends Resource
             ->columns([
                 TextColumn::make('prioritet')->sortable(),
                 TextColumn::make('hva')->sortable(),
-                TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record) => $record->url, true),
+                TextColumn::make('url')->formatStateUsing(fn () => 'Se her')
+                    ->url(fn ($record) => $record->url, true),
                 TextColumn::make('koster')->money('nok', true)->sortable(),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options([
                     'Begynt å spare' => 'Begynt å spare',
-                    'Kjøpt'          => 'Kjøpt',
-                    'Venter'         => 'Venter'
+                    'Kjøpt' => 'Kjøpt',
+                    'Venter' => 'Venter',
                 ])->disablePlaceholderSelection(),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
                     return $record->koster * $record->antall;
@@ -102,10 +105,10 @@ class WishlistResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListWishlists::route('/'),
+            'index' => Pages\ListWishlists::route('/'),
             'create' => Pages\CreateWishlist::route('/create'),
-            'edit'   => Pages\EditWishlist::route('/{record}/edit'),
-//            'view'   => Pages\EditWishlist::route('/{record}'),
+            'edit' => Pages\EditWishlist::route('/{record}/edit'),
+            //            'view'   => Pages\EditWishlist::route('/{record}'),
         ];
     }
 }

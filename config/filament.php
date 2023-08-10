@@ -3,8 +3,6 @@
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Http\Middleware\MirrorConfigToSubpackages;
-use Filament\Pages;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -103,8 +101,8 @@ return [
 
     'pages' => [
         'namespace' => 'App\\Filament\\Pages',
-        'path' => app_path('Filament/Pages'),
-        'register' => [
+        'path'      => app_path('Filament/Pages'),
+        'register'  => [
             // Pages\Dashboard::class,
         ],
     ],
@@ -121,8 +119,8 @@ return [
 
     'resources' => [
         'namespace' => 'App\\Filament\\Resources',
-        'path' => app_path('Filament/Resources'),
-        'register' => [],
+        'path'      => app_path('Filament/Resources'),
+        'register'  => [],
     ],
 
     /*
@@ -137,8 +135,8 @@ return [
 
     'widgets' => [
         'namespace' => '', //'App\\Filament\\Widgetss',
-        'path' => '', //app_path('Filament/Widgetss'),
-        'register' => [
+        'path'      => '', //app_path('Filament/Widgetss'),
+        'register'  => [
             App\Filament\Widgets\BrukteTimerChart::class,
             App\Filament\Widgets\TimerChart::class,
             App\Filament\Widgets\TimerIUka::class,
@@ -161,7 +159,7 @@ return [
 
     'livewire' => [
         'namespace' => 'App\\Filament',
-        'path' => app_path('Filament'),
+        'path'      => app_path('Filament'),
     ],
 
     /*
@@ -187,7 +185,7 @@ return [
     */
 
     'database_notifications' => [
-        'enabled' => false,
+        'enabled'          => false,
         'polling_interval' => '30s',
     ],
 
@@ -227,34 +225,34 @@ return [
     */
 
     'layout' => [
-        'actions' => [
+        'actions'           => [
             'modal' => [
                 'actions' => [
                     'alignment' => 'left',
                 ],
             ],
         ],
-        'forms' => [
-            'actions' => [
+        'forms'             => [
+            'actions'            => [
                 'alignment' => 'left',
             ],
             'have_inline_labels' => false,
         ],
-        'footer' => [
+        'footer'            => [
             'should_show_logo' => false,
         ],
         'max_content_width' => 'full',
-        'notifications' => [
+        'notifications'     => [
             'vertical_alignment' => 'top',
-            'alignment' => 'right',
+            'alignment'          => 'right',
         ],
-        'sidebar' => [
+        'sidebar'           => [
             'is_collapsible_on_desktop' => true,
-            'groups' => [
+            'groups'                    => [
                 'are_collapsible' => true,
             ],
-            'width' => null,
-            'collapsed_width' => null,
+            'width'                     => null,
+            'collapsed_width'           => null,
         ],
     ],
 

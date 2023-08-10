@@ -22,13 +22,14 @@ class Settings extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
+    protected static ?string $navigationLabel = 'Innstillinger';
+
     protected static string $view = 'filament.pages.settings';
 
     public Setting $settings;
 
     public function mount(): void
     {
-//        $this->settings = Setting::where('user_id', Auth::id())->first();
 
         if (Setting::where('user_id', Auth::id())->first() !== null) {
             $this->settings = Setting::where('user_id', Auth::id())->first();
@@ -41,6 +42,7 @@ class Settings extends Page implements HasForms
             'weekplan_from'      => $this->settings->weekplan_from,
             'weekplan_to'        => $this->settings->weekplan_to,
             'bpa_hours_per_week' => $this->settings->bpa_hours_per_week,
+            'apotek_epost'       => $this->settings->apotek_epost,
         ]);
     }
 
@@ -53,6 +55,12 @@ class Settings extends Page implements HasForms
                     TextInput::make('bpa_hours_per_week')->label('Antall timer i uka')->required(),
                 ]),
 
+            Section::make('Apotek')
+                ->description('E-post adresse til apoteket')
+                ->schema([
+                    TextInput::make('apotek_epost')->label('E-post adresse')->required(),
+                ]),
+
             Section::make('Ukeplan')
 //                ->description('Description')
                 ->schema([
@@ -61,7 +69,7 @@ class Settings extends Page implements HasForms
                             Select::make('weekplan_timespan')
                                 ->options([
                                     0 => 'Nei',
-                                    1 => 'Ja'
+                                    1 => 'Ja',
                                 ])
                                 ->label('Bruk fastsatt tid?')->required()
                                 ->reactive(),
@@ -75,9 +83,9 @@ class Settings extends Page implements HasForms
                                 ->format('H:i:s')
                                 ->label('Vis tid til')
                                 ->hidden(fn(callable $get
-                                ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0')
-                        ])
-                ])
+                                ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
+                        ]),
+                ]),
         ];
     }
 
@@ -99,10 +107,9 @@ class Settings extends Page implements HasForms
             ->title('Innstillinger er lagret')
             ->success()
             ->send();
-//        $settings->save();
+        //        $settings->save();
 
-
-//         SAVE THE SETTINGS HERE
+        //         SAVE THE SETTINGS HERE
     }
 
     public function clearCache()

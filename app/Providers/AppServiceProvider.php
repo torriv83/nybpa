@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
 
         FilamentAsset::registerScriptData([
             // asset('build/assets/custom.css'),
-            app(Vite::class)('resources/css/custom.scss')
+            app(Vite::class)('resources/css/custom.scss'),
         ]);
 
     }
