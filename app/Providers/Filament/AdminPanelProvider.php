@@ -44,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\TimerChart::class,
                 Widgets\TimerIUka::class,
                 Widgets\UserStats::class,
+                //Widgets\CalendarWidget::class,
 //                Widgets\AccountWidget::class,
 //                Widgets\FilamentInfoWidget::class,
             ])

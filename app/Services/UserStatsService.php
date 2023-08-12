@@ -11,7 +11,6 @@ namespace App\Services;
 use App\Models\Settings;
 use App\Models\Timesheet;
 use App\Models\User;
-use App\Models\Utstyr;
 use Carbon\Carbon;
 
 class UserStatsService
@@ -122,14 +121,6 @@ class UserStatsService
         $leftPerWeek      = (($totalMinutes - $hoursUsedMinutes) / 60 - ($hoursPerWeek * $weeksLeft)) / $weeksLeft;
 
         return $this->calculateAvgPerWeek($leftPerWeek);
-    }
-
-    /**
-     * Get the number of equipment.
-     */
-    public function getNumberOfEquipment(): int
-    {
-        return Utstyr::all()->count();
     }
 
     /**

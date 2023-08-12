@@ -13,6 +13,7 @@ use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -38,6 +39,8 @@ class TimesheetResource extends Resource
     protected static ?string $modelLabel = 'Timeliste';
 
     protected static ?string $pluralModelLabel = 'Timelister';
+
+    protected static ?string $slug = 'timelister';
 
     /**
      * Tabell
@@ -300,10 +303,22 @@ class TimesheetResource extends Resource
     {
         return $infolist
             ->schema([
-                Infolists\Components\TextEntry::make('user.name')->label('Assistent'),
-                Infolists\Components\TextEntry::make('fra_dato'),
-                Infolists\Components\TextEntry::make('til_dato')
-                    ->columnSpanFull(),
+                Section::make('Assistent')
+                    ->description('test')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('user.name')->label('Assistent'),
+                        Infolists\Components\IconEntry::make('unavailable')->boolean()->label('Ikke tilgjengelig?'),
+                        Infolists\Components\IconEntry::make('allDay')->boolean()->label('Hele dagen?'),
+                    ])->columns(3),
+                Section::make('Tid')
+                    ->description('test')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('fra_dato'),
+                        Infolists\Components\TextEntry::make('til_dato'),
+                        Infolists\Components\TextEntry::make('description')->html()->label('Beskrivelse')->columnSpanFull(),
+                        /*Action::make('edit')
+                            ->url(fn(): string => TimesheetResource::getUrl('index'))//route('posts.edit', ['post' => $this->post]))*/
+                    ])->columns(),
             ]);
     }
 

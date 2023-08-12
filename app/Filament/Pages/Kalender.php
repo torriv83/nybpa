@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\CalendarWidget;
+use App\Filament\Resources\TimesheetResource\Widgets\CalendarWidget;
 use Filament\Pages\Page;
 
 class Kalender extends Page
@@ -20,7 +20,7 @@ class Kalender extends Page
     protected function getFooterWidgets(): array
     {
         return [
-            CalendarWidget::class,
+            CalendarWidget::class
         ];
     }
 }
