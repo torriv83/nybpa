@@ -15,7 +15,9 @@ class BrukteTimerChart extends LineChartWidget
 
     protected static ?int $sort = 1;
 
-    protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
+    //protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
+    protected int|string|array $columnSpan = 3;
+
 
     protected function getData(): array
     {
@@ -23,7 +25,7 @@ class BrukteTimerChart extends LineChartWidget
         $timesheet = new Timesheet();
 
         /* Dette året */
-        $thisYear = $timesheet->TimeUsedThisYear();
+        $thisYear      = $timesheet->TimeUsedThisYear();
         $thisYearTimes = $this->yearTimes($thisYear);
 
         /* Forrige år */
@@ -31,7 +33,7 @@ class BrukteTimerChart extends LineChartWidget
             return Timesheet::lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
 
         $lastYearTimes = $this->yearTimes($lastYear);
@@ -39,17 +41,17 @@ class BrukteTimerChart extends LineChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => Carbon::now()->format('Y'),
-                    'data' => $thisYearTimes,
-                    'tension' => 0.4,
-                    'fill' => 'origin',
+                    'label'           => Carbon::now()->format('Y'),
+                    'data'            => $thisYearTimes,
+                    'tension'         => 0.4,
+                    'fill'            => 'origin',
                     'backgroundColor' => 'rgba(255,153,0,0.6)',
                 ],
                 [
-                    'label' => Carbon::now()->subYear()->format('Y'),
-                    'data' => $lastYearTimes,
-                    'tension' => 0.4,
-                    'fill' => 'origin',
+                    'label'           => Carbon::now()->subYear()->format('Y'),
+                    'data'            => $lastYearTimes,
+                    'tension'         => 0.4,
+                    'fill'            => 'origin',
                     'backgroundColor' => 'rgba(153,255,51,0.3)',
                 ],
             ],
@@ -63,7 +65,7 @@ class BrukteTimerChart extends LineChartWidget
 
         foreach ($times as $key => $value) {
 
-            $yearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)).'.'.(sprintf('%02d', $value->sum('totalt') % 60));
+            $yearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)) . '.' . (sprintf('%02d', $value->sum('totalt') % 60));
 
         }
 

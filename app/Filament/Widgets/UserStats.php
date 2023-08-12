@@ -4,7 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Services\UserStatsService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class UserStats extends BaseWidget
 {
@@ -12,7 +12,7 @@ class UserStats extends BaseWidget
 
     protected static ?string $pollingInterval = null;
 
-    protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-6';
+    //protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-6';
 
     //        [
     //        'xs' => 6,
@@ -34,24 +34,24 @@ class UserStats extends BaseWidget
         return 4;
     }
 
-    protected function getCards(): array
+    protected function getStats(): array
     {
 
         return [
-            Card::make('Antall Assistenter', $this->userStatsService->getNumberOfAssistents())
-                ->url(route('filament.resources.users.index')),
+            Stat::make('Antall Assistenter', $this->userStatsService->getNumberOfAssistents())
+                ->url(route('filament.admin.resources.users.index')),
 
-            Card::make('Timer brukt i år', $this->userStatsService->getHoursUsedThisYear())
+            Stat::make('Timer brukt i år', $this->userStatsService->getHoursUsedThisYear())
                 ->chart($this->userStatsService->getYearlyTimeChart())
                 ->color('success')
-                ->url(route('filament.resources.timesheets.index', $this->userStatsService->getYearlyTimeFilters()))
+                ->url(route('filament.admin.resources.timesheets.index', $this->userStatsService->getYearlyTimeFilters()))
                 ->description($this->userStatsService->getHoursUsedThisMonthDescription()),
 
-            Card::make('Timer igjen', $this->userStatsService->getRemainingHours())
+            Stat::make('Timer igjen', $this->userStatsService->getRemainingHours())
                 ->description($this->userStatsService->getAverageHoursPerWeekDescription())
                 ->color('success'),
 
-            Card::make('Antall utstyr på lista', $this->userStatsService->getNumberOfEquipment()),
+            Stat::make('Antall utstyr på lista', $this->userStatsService->getNumberOfEquipment()),
         ];
     }
 }

@@ -26,7 +26,7 @@ class ViewUkeplan extends Page
         $this->record = Weekplan::find($record);
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\EditAction::make()->url('./'.$this->record->id.'/edit'),
@@ -151,13 +151,13 @@ class ViewUkeplan extends Page
         ];
     }
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
         // Retrieve the dynamic title from a database, configuration, or any other source
         return $this->record['name'];
     }
 
-    protected function getSubheading(): string
+    public function getSubheading(): string
     {
         $dynamicSubheading = $this->record['updated_at'];
         $formattedDate = '';

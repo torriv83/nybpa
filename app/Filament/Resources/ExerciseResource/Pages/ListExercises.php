@@ -16,7 +16,7 @@ class ListExercises extends ListRecords
 {
     protected static string $resource = ExerciseResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             CreateAction::make(),

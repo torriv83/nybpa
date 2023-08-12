@@ -8,9 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Sushi\Sushi;
 
-/**
- * @mixin IdeHelperynab
- */
+
 class Ynab extends Model
 {
     use Sushi;
@@ -20,9 +18,9 @@ class Ynab extends Model
     {
         //API
         // $products = Http::get('https://dummyjson.com/products')->json();
-        $ynab = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
-        $token = config('app.ynab');
-        $products = Http::withToken($token)->get($ynab.'months')->json();
+        $ynab     = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
+        $token    = config('app.ynab');
+        $products = Http::withToken($token)->get($ynab . 'months')->json();
 
         //filtering some attributes
         return Arr::map($products['data']['months'], function ($item) {
@@ -36,5 +34,10 @@ class Ynab extends Model
                 ]
             );
         });
+    }
+
+    protected function sushiShouldCache(): bool
+    {
+        return true;
     }
 }

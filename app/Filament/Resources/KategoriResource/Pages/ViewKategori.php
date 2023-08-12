@@ -10,7 +10,7 @@ class ViewKategori extends ViewRecord
 {
     protected static string $resource = KategoriResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\EditAction::make(),

@@ -13,7 +13,7 @@ class EditTestResults extends EditRecord
     /**
      * @throws \Exception
      */
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
 
         return [

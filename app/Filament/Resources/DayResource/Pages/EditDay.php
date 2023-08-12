@@ -16,7 +16,7 @@ class EditDay extends EditRecord
 {
     protected static string $resource = DayResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             DeleteAction::make(),

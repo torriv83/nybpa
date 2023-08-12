@@ -53,7 +53,7 @@ class UserResource extends Resource
                             ->same('passwordConfirmation')
                             ->password()
                             ->maxLength(255)
-                            ->required(fn ($record) => $record === null)
+                            ->required(fn($record) => $record === null)
                             ->label('Passord'),
                         TextInput::make('passwordConfirmation')
                             ->password()
@@ -101,7 +101,7 @@ class UserResource extends Resource
                     ->label('Telefon'),
                 Tables\Columns\IconColumn::make('email_verified_at')
                     ->boolean()
-                    ->label('Verified'),
+                    ->label('Verified')->alignCenter(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Slettet')
                     ->datetime('d.m.Y H:i:s'),
@@ -115,9 +115,9 @@ class UserResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\Filter::make('verified')
-                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
                 Tables\Filters\Filter::make('unverified')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
+                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -145,17 +145,19 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
+            'index'  => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'view'   => Pages\ViewUser::route('/{record}'),
+            'edit'   => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 
     public static function getNavigationBadge(): ?string
     {
         return Cache::remember('UserNavigationBadge', now()->addMonth(), function () {
-            return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
+            //TODO aktiver når phpsa auth er kompatibel med filamen v3
+            //return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
+            return static::getModel()::count();
         });
     }
 }

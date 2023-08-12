@@ -7,11 +7,11 @@ use App\Mail\BestillUtstyr as Bestilling;
 use App\Models\Settings;
 use App\Models\Utstyr;
 use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
-use Filament\Resources\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +32,7 @@ class UtstyrResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -52,7 +52,7 @@ class UtstyrResource extends Resource
 
         return $table
             ->columns([
-                Tables\Columns\TextInputColumn::make('antall')->type('number')->extraAttributes(['style' => 'width:60px']),
+                Tables\Columns\TextInputColumn::make('antall')->type('number')->extraAttributes(['style' => 'width:80px']),
                 Tables\Columns\TextColumn::make('hva')->sortable(),
                 Tables\Columns\TextColumn::make('navn')->sortable(),
                 Tables\Columns\TextColumn::make('kategori.kategori')->sortable(),
@@ -60,7 +60,7 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('link')
                     ->formatStateUsing(fn() => 'Se her')
                     ->url(fn($record) => $record->link, true),
-            ])
+            ])->striped()
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('kategori')
@@ -132,7 +132,7 @@ class UtstyrResource extends Resource
             ]);
     }
 
-    protected static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
         return Cache::remember('UtstyrNavigationBadge', now()->addMonth(), function () {
             return static::getModel()::count();

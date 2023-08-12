@@ -1,3 +1,5 @@
+<div></div>
+{{-- TODO oppdater fullcalendar. sjekk github
 @php($locale = strtolower(str_replace('_', '-', $this->config('locale', config('app.locale')))))
 
 <x-filament::widget>
@@ -82,3 +84,4 @@
         <x:filament-fullcalendar::edit-event-modal />
     @endif
 </x-filament::widget>
+--}}

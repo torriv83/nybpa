@@ -45,7 +45,7 @@ class CreateTestResults extends CreateRecord
                 ->description('Legg inn resultater fra testen her')
                 ->schema([
                     Repeater::make('resultat')
-                        ->schema(function (Closure $get): array {
+                        ->schema(function (\Filament\Forms\Get $get): array {
 
                             $schema = [];
                             if ($get('testsID')) {

@@ -16,7 +16,7 @@ class ManageEconomies extends ManageRecords
         return 12;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

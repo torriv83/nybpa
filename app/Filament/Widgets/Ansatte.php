@@ -1,7 +1,5 @@
 <?php
 
-/** @noinspection PhpUndefinedMethodInspection */
-
 namespace App\Filament\Widgets;
 
 use App\Models\User;
@@ -29,12 +27,15 @@ class Ansatte extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return User::query()->with('timesheet')->assistenter();
+//        TODO fiks når phpsa er kompatibel med v3
+//        return User::query()->with('timesheet')->assistenter();
+        return User::query()->with('timesheet');
     }
+
 
     protected function getTableRecordUrlUsing(): Closure
     {
-        return fn (Model $record): string => route('filament.resources.users.view', ['record' => $record]);
+        return fn(Model $record): string => route('filament.admin.resources.users.view', ['record' => $record]);
     }
 
     protected function getTableColumns(): array
@@ -51,19 +52,19 @@ class Ansatte extends BaseWidget
             Tables\Columns\TextColumn::make('email')
                 ->label('E-post')
                 ->limit(10)
-                ->tooltip(fn (Model $record): string => "$record->email"),
+                ->tooltip(fn(Model $record): string => "$record->email"),
             Tables\Columns\TextColumn::make('phone')
                 ->label('Telefon')
                 ->default('12345678'),
             Tables\Columns\TextColumn::make('Jobbet i år')
                 ->getStateUsing(function (Model $record) {
-                    $minutes = Cache::remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record) {
+                    $minutes = Cache::remember('WorkedThisYear' . $record->id, now()->addDay(), function () use ($record) {
                         return $record->timesheet()
                             ->yearToDate('fra_dato')
                             ->where('unavailable', '!=', 1)->sum('totalt');
                     });
 
-                    return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                    return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                 })
                 ->label('Jobbet i år')
                 ->default('0'),

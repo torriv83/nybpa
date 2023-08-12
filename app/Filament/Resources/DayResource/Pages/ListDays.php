@@ -16,7 +16,7 @@ class ListDays extends ListRecords
 {
     protected static string $resource = DayResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             CreateAction::make(),

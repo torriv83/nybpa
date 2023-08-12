@@ -10,7 +10,7 @@ class ListTimesheets extends ListRecords
 {
     protected static string $resource = TimesheetResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make()->label('Ny oppføring'),

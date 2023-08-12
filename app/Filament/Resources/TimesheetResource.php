@@ -9,12 +9,15 @@ use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
-use Closure;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -61,9 +64,9 @@ class TimesheetResource extends Resource
 
                 Tables\Columns\TextColumn::make('dato')
                     ->label('Dato')
-                    ->formatStateUsing(function ($record) {
+                    ->getStateUsing(function (Model $record) {
                         if ($record->unavailable == 1) {
-                            return Carbon::parse($record->fra_dato)->format('d.m.Y').' - '.Carbon::parse($record->til_dato)->format('d.m.Y');
+                            return Carbon::parse($record->fra_dato)->format('d.m.Y') . ' - ' . Carbon::parse($record->til_dato)->format('d.m.Y');
                         } else {
                             return Carbon::parse($record->fra_dato)->format('d.m.Y');
                         }
@@ -88,15 +91,15 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('Beskrivelse')
                     ->limit(20)
-                    ->getStateUsing(fn (Model $record) => ! is_null($record->description) ? strip_tags($record->description) : '')
-                    ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
-
+                    ->getStateUsing(fn(Model $record) => !is_null($record->description) ? strip_tags($record->description) : '')
+                    ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
-                        if (strlen($state) <= $column->getLimit()) {
+                        if (strlen($state) <= $column->getCharacterLimit()) {
                             return null;
                         }
 
+                        // Only render the tooltip if the column content exceeds the length limit.
                         return $state;
                     })
                     ->toggleable(),
@@ -109,17 +112,21 @@ class TimesheetResource extends Resource
                         } else {
                             $minutes = $record->totalt;
 
-                            return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                         }
                     })
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->summarize(Sum::make()->formatStateUsing(function (string $state) {
+                        $minutes = $state;
+                        return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                    })),
 
                 Tables\Columns\IconColumn::make('unavailable')
                     ->label('Borte')
                     ->sortable()
                     ->boolean()
-                    ->trueIcon('heroicon-o-badge-check')
+                    ->trueIcon('heroicon-o-check-badge')
                     ->falseIcon('heroicon-o-x-circle')
                     ->toggleable(),
 
@@ -127,7 +134,7 @@ class TimesheetResource extends Resource
                     ->label('Hele dagen?')
                     ->sortable()
                     ->boolean()
-                    ->trueIcon('heroicon-o-badge-check')
+                    ->trueIcon('heroicon-o-check-badge')
                     ->falseIcon('heroicon-o-x-circle')
                     ->toggleable(),
 
@@ -145,21 +152,23 @@ class TimesheetResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
 
                 Tables\Filters\Filter::make('Tilgjengelig')
-                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '0'))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '=', '0'))->default(),
 
                 Tables\Filters\Filter::make('Ikke tilgjengelig')
-                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '=', '1')),
+                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '=', '1')),
 
                 Tables\Filters\SelectFilter::make('assistent')
-                    ->relationship('user', 'name', fn (Builder $query) => $query->permission('Assistent')),
+                    ->relationship('user', 'name'),
+                //TODO fiks når phpsa har oppdatert auth. sjekk github
+                //->relationship('user', 'name', fn (Builder $query) => $query->permission('Assistent')),
 
                 Tables\Filters\Filter::make('Forrige måned')
-                    ->query(fn (Builder $query): Builder => $query
+                    ->query(fn(Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->subMonth()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->subMonth()->startOfMonth())),
 
                 Tables\Filters\Filter::make('Denne måneden')
-                    ->query(fn (Builder $query): Builder => $query
+                    ->query(fn(Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
 
@@ -173,11 +182,11 @@ class TimesheetResource extends Resource
                         return $query
                             ->when(
                                 $data['fra_dato'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('til_dato', '>=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('til_dato', '>=', $date),
                             )
                             ->when(
                                 $data['til_dato'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('fra_dato', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('fra_dato', '<=', $date),
                             );
                     }),
             ])
@@ -215,7 +224,7 @@ class TimesheetResource extends Resource
 
                         Forms\Components\Select::make('user_id')
                             ->label('Hvem')
-                            ->options(User::all()->filter(fn ($value) => $value->id != Auth::User()->id)->pluck('name',
+                            ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name',
                                 'id'))
                             ->required()
                             ->columnSpan(2),
@@ -241,13 +250,13 @@ class TimesheetResource extends Resource
                             ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->reactive()
-                            ->afterStateUpdated(function (Closure $set, $state, $get) {
+                            ->afterStateUpdated(function (\Filament\Forms\Set $set, $state, $get) {
 
                                 $fra = $get('fra_dato');
                                 $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
 
                                 $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
-                                $hours = sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                                $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                                 $set('Tid', $hours);
                             }),
 
@@ -269,11 +278,11 @@ class TimesheetResource extends Resource
                             ->afterStateHydrated(function (Forms\Components\TextInput $component, $state, $get) {
 
                                 if ($get('fra_dato')) {
-                                    $fra = Carbon::createFromFormat('Y-m-d H:i:s',
+                                    $fra     = Carbon::createFromFormat('Y-m-d H:i:s',
                                         $get('fra_dato'))->diffInMinutes($get('til_dato'));
                                     $minutes = $fra;
-                                    $hours = sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d',
-                                        $minutes % 60));
+                                    $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d',
+                                            $minutes % 60));
                                     $component->state($hours);
                                 }
                             })
@@ -283,6 +292,18 @@ class TimesheetResource extends Resource
                         Forms\Components\Hidden::make('totalt'),
 
                     ])->columns(),
+            ]);
+    }
+
+    //TODO Gjør ferdig denne.
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\TextEntry::make('user.name')->label('Assistent'),
+                Infolists\Components\TextEntry::make('fra_dato'),
+                Infolists\Components\TextEntry::make('til_dato')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -313,10 +334,10 @@ class TimesheetResource extends Resource
     {
 
         return [
-            'index' => Pages\ListTimesheets::route('/'),
+            'index'  => Pages\ListTimesheets::route('/'),
             'create' => Pages\CreateTimesheet::route('/create'),
             // 'view'   => Pages\ViewTimesheet::route('/{record}'),
-            'edit' => Pages\EditTimesheet::route('/{record}/edit'),
+            'edit'   => Pages\EditTimesheet::route('/{record}/edit'),
         ];
     }
 

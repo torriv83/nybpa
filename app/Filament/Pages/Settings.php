@@ -28,6 +28,13 @@ class Settings extends Page implements HasForms
 
     public Setting $settings;
 
+    public $user_id;
+    public $weekplan_timespan;
+    public $weekplan_from;
+    public $weekplan_to;
+    public $apotek_epost;
+    public $bpa_hours_per_week;
+
     public function mount(): void
     {
 
@@ -89,13 +96,13 @@ class Settings extends Page implements HasForms
         ];
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Action::make('Lagre')->action('submit'),
             Action::make('Cache')->action('clearCache')
                 ->label('Tøm Cache')
-                ->color('secondary'),
+                ->color('gray'),
         ];
     }
 

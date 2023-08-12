@@ -10,9 +10,9 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
@@ -29,7 +29,7 @@ class TestResultsResource extends Resource
 {
     protected static ?string $model = TestResults::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Landslag';
 
@@ -53,7 +53,7 @@ class TestResultsResource extends Resource
 
                 Repeater::make('resultat')
                     ->label('Resultater')
-                    ->schema(function (Closure $get): array {
+                    ->schema(function (\Filament\Forms\Get $get): array {
 
                         $schema = [];
                         $test = $get('testsID') == 0 ? 1 : $get('testsID');

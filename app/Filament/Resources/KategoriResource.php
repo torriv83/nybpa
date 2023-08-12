@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\KategoriResource\Pages;
 use App\Models\Kategori;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +18,7 @@ class KategoriResource extends Resource
 {
     protected static ?string $model = Kategori::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Medisinsk';
 
@@ -28,7 +28,7 @@ class KategoriResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
 
         return Cache::remember('CategoryNavigationBadge', now()->addMonth(), function () {

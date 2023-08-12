@@ -10,7 +10,7 @@ class EditUtstyr extends EditRecord
 {
     protected static string $resource = UtstyrResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\ViewAction::make(),
