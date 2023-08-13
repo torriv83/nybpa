@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\TestResultsResource\Widgets;
 
 use App\Models\Tests;
-use Filament\Widgets\LineChartWidget;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Cache;
 
-class RheitChart extends LineChartWidget
+class RheitChart extends ChartWidget
 {
     protected static ?string $heading = 'Rheit test';
 
@@ -16,8 +16,6 @@ class RheitChart extends LineChartWidget
 
     public function __construct()
     {
-        parent::__construct();
-
         self::$options = $this->getChartOptions();
     }
 
@@ -25,7 +23,7 @@ class RheitChart extends LineChartWidget
     {
         $rheit = $this->fetchData();
 
-        if (! $rheit || $rheit->testResults->isEmpty()) {
+        if (!$rheit || $rheit->testResults->isEmpty()) {
             return $this->getDefaultChartData();
         }
 
@@ -33,6 +31,11 @@ class RheitChart extends LineChartWidget
             $this->transformData($rheit->testResults)['resultater'],
             $this->transformData($rheit->testResults)['dato']
         );
+    }
+
+    protected function getType(): string
+    {
+        return 'line';
     }
 
     protected function fetchData()
@@ -45,49 +48,49 @@ class RheitChart extends LineChartWidget
     protected function transformData($results): array
     {
         $resultater = [];
-        $dato = [];
-        $drop = [];
+        $dato       = [];
+        $drop       = [];
 
         foreach ($results as $v) {
             $dato[] = $v->dato->format('d.m.y H:i');
 
             foreach ($v->resultat[0] as $name => $result) {
-                $resultater[] = ['Runde: '.$name => $result];
-                $drop[] = $result;
+                $resultater[] = ['Runde: ' . $name => $result];
+                $drop[]       = $result;
             }
 
-            $finalDrop = max($drop) - min($drop);
+            $finalDrop    = max($drop) - min($drop);
             $resultater[] = ['Drop' => $finalDrop];
         }
 
         return [
             'resultater' => $resultater,
-            'dato' => $dato,
+            'dato'       => $dato,
         ];
     }
 
     protected function formatChartData($resultater, $dato): array
     {
         $finalResults = [];
-        $colors = generateRandomColors(count(array_merge_recursive(...$resultater)));
+        $colors       = generateRandomColors(count(array_merge_recursive(...$resultater)));
 
         foreach (array_merge_recursive(...$resultater) as $name => $res) {
-            $randColor = array_shift($colors);
-            $res = count($dato) > 1 ? $res : [$res];
-            $type = 'line';
+            $randColor      = array_shift($colors);
+            $res            = count($dato) > 1 ? $res : [$res];
+            $type           = 'line';
             $finalResults[] = [
-                'type' => $type,
-                'label' => $name,
-                'data' => $res,
+                'type'            => $type,
+                'label'           => $name,
+                'data'            => $res,
                 'backgroundColor' => $randColor,
-                'borderColor' => $randColor,
-                'borderWidth' => 1,
+                'borderColor'     => $randColor,
+                'borderWidth'     => 1,
             ];
         }
 
         return [
             'datasets' => $finalResults,
-            'labels' => $dato,
+            'labels'   => $dato,
         ];
     }
 
@@ -97,10 +100,10 @@ class RheitChart extends LineChartWidget
             'datasets' => [
                 [
                     'label' => 'Rheit',
-                    'data' => [],
+                    'data'  => [],
                 ],
             ],
-            'labels' => [],
+            'labels'   => [],
         ];
     }
 
@@ -109,26 +112,26 @@ class RheitChart extends LineChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode' => 'index',
+                    'mode'      => 'index',
                     'intersect' => false,
                 ],
             ],
-            'scales' => [
+            'scales'  => [
                 'x' => [
                     'display' => true,
-                    'title' => [
+                    'title'   => [
                         'display' => true,
-                        'text' => 'Dato',
+                        'text'    => 'Dato',
                     ],
                 ],
                 'y' => [
-                    'display' => true,
+                    'display'     => true,
                     'beginAtZero' => false,
-                    'title' => [
+                    'title'       => [
                         'display' => true,
-                        'text' => 'sekunder',
+                        'text'    => 'sekunder',
                     ],
-                    'ticks' => [
+                    'ticks'       => [
                         'stepSize' => 0.2,
                     ],
                 ],

@@ -9,11 +9,14 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
 class WishlistResource extends Resource
@@ -46,9 +49,9 @@ class WishlistResource extends Resource
                 TextInput::make('antall')->type('number'),
                 Select::make('status')
                     ->options([
-                        'Venter' => 'Venter',
+                        'Venter'         => 'Venter',
                         'Begynt å spare' => 'Begynt å spare',
-                        'Kjøpt' => 'Kjøpt',
+                        'Kjøpt'          => 'Kjøpt',
                     ]),
                 Placeholder::make('totalt')->content(function ($record, $set) {
 
@@ -56,7 +59,7 @@ class WishlistResource extends Resource
                         return $item->koster * $item->antall;
                     });
 
-                    $totalt > 0 ? $set('koster', $totalt) : $set('koster', 0);
+                    $totalt > 0 ? $set('koster', $totalt) : $set('koster', $record->koster);
 
                     return $totalt > 0 ? $totalt : 0;
 
@@ -70,15 +73,15 @@ class WishlistResource extends Resource
             ->columns([
                 TextColumn::make('prioritet')->sortable(),
                 TextColumn::make('hva')->sortable(),
-                TextColumn::make('url')->formatStateUsing(fn () => 'Se her')
-                    ->url(fn ($record) => $record->url, true),
-                TextColumn::make('koster')->money('nok', true)->sortable(),
+                TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
+                    ->url(fn($record) => $record->url, true),
+                TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()->money('nok', true)),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options([
                     'Begynt å spare' => 'Begynt å spare',
-                    'Kjøpt' => 'Kjøpt',
-                    'Venter' => 'Venter',
-                ])->disablePlaceholderSelection(),
+                    'Kjøpt'          => 'Kjøpt',
+                    'Venter'         => 'Venter',
+                ])->selectablePlaceholder(false),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
                     return $record->koster * $record->antall;
                 }),
@@ -95,6 +98,29 @@ class WishlistResource extends Resource
             ])->reorderable('prioritet')->defaultSort('prioritet');
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Infolists\Components\TextEntry::make('hva'),
+                Infolists\Components\TextEntry::make('koster')->money('nok', true),
+                Infolists\Components\TextEntry::make('url')->formatStateUsing(fn() => 'Se her')->url(fn($record): string => $record->url,
+                    true),
+                Infolists\Components\TextEntry::make('antall'),
+                Infolists\Components\TextEntry::make('status'),
+                /*Infolists\Components\TextEntry::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
+                    return $record->koster * $record->antall;
+                }),*/
+                Infolists\Components\RepeatableEntry::make('WishlistItems')->label('Deler i ønskelisten')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('hva')->url(fn($record): string => $record->url,
+                            true)->columnSpanFull(),
+                        Infolists\Components\TextEntry::make('antall'),
+                        Infolists\Components\TextEntry::make('koster')->money('nok', true),
+                    ])->columnSpanFull()->columns(2)->grid(2)
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -105,9 +131,9 @@ class WishlistResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWishlists::route('/'),
+            'index'  => Pages\ListWishlists::route('/'),
             'create' => Pages\CreateWishlist::route('/create'),
-            'edit' => Pages\EditWishlist::route('/{record}/edit'),
+            'edit'   => Pages\EditWishlist::route('/{record}/edit'),
             //            'view'   => Pages\EditWishlist::route('/{record}'),
         ];
     }

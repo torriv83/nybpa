@@ -14,8 +14,9 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class DayResource extends Resource
 {
@@ -42,11 +43,11 @@ class DayResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn (?Day $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn(?Day $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn (?Day $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn(?Day $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -57,15 +58,20 @@ class DayResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('created_at')->label('Opprettet')->since(),
+                TextColumn::make('updated_at')->label('Sist oppdatert')->since(),
+            ])->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDays::route('/'),
+            'index'  => Pages\ListDays::route('/'),
             'create' => Pages\CreateDay::route('/create'),
-            'edit' => Pages\EditDay::route('/{record}/edit'),
+            'edit'   => Pages\EditDay::route('/{record}/edit'),
         ];
     }
 

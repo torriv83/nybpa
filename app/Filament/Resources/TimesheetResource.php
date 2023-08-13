@@ -17,6 +17,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Average;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -120,10 +121,16 @@ class TimesheetResource extends Resource
                     })
                     ->sortable()
                     ->toggleable()
-                    ->summarize(Sum::make()->formatStateUsing(function (string $state) {
-                        $minutes = $state;
-                        return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
-                    })),
+                    ->summarize([
+                        Sum::make()->formatStateUsing(function (string $state) {
+                            $minutes = $state;
+                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                        }),
+                        Average::make()->formatStateUsing(function (string $state) {
+                            $minutes = $state;
+                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                        })
+                    ]),
 
                 Tables\Columns\IconColumn::make('unavailable')
                     ->label('Borte')
@@ -196,9 +203,9 @@ class TimesheetResource extends Resource
 
             //Actions
             ->actions([
+                Tables\Actions\ViewAction::make()->label('Se'),
+                Tables\Actions\EditAction::make()->label('Endre'),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()->label('Se')->slideOver(),
-                    Tables\Actions\EditAction::make()->label('Endre'),
                     Tables\Actions\DeleteAction::make()->label('Slett'),
                     Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
                     Tables\Actions\RestoreAction::make()->label('Angre sletting'),
@@ -298,27 +305,35 @@ class TimesheetResource extends Resource
             ]);
     }
 
-    //TODO Gjør ferdig denne.
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
                 Section::make('Assistent')
-                    ->description('test')
                     ->schema([
-                        Infolists\Components\TextEntry::make('user.name')->label('Assistent'),
-                        Infolists\Components\IconEntry::make('unavailable')->boolean()->label('Ikke tilgjengelig?'),
-                        Infolists\Components\IconEntry::make('allDay')->boolean()->label('Hele dagen?'),
+                        Infolists\Components\TextEntry::make('user.name')
+                            ->label('Assistent'),
+                        Infolists\Components\IconEntry::make('unavailable')
+                            ->boolean()
+                            ->label('Ikke tilgjengelig?'),
+                        Infolists\Components\IconEntry::make('allDay')
+                            ->boolean()
+                            ->label('Hele dagen?'),
                     ])->columns(3),
                 Section::make('Tid')
-                    ->description('test')
                     ->schema([
-                        Infolists\Components\TextEntry::make('fra_dato'),
-                        Infolists\Components\TextEntry::make('til_dato'),
-                        Infolists\Components\TextEntry::make('description')->html()->label('Beskrivelse')->columnSpanFull(),
-                        /*Action::make('edit')
-                            ->url(fn(): string => TimesheetResource::getUrl('index'))//route('posts.edit', ['post' => $this->post]))*/
-                    ])->columns(),
+                        Infolists\Components\TextEntry::make('fra_dato')->dateTime('d.m.Y H:i'),
+                        Infolists\Components\TextEntry::make('til_dato')->dateTime('d.m.Y H:i'),
+                        Infolists\Components\TextEntry::make('totalt')
+                            ->formatStateUsing(function (string $state) {
+                                $minutes = $state;
+                                return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                            }),
+                        Infolists\Components\TextEntry::make('description')
+                            ->html()
+                            ->label('Beskrivelse')
+                            ->columnSpanFull(),
+                    ])->columns(3),
             ]);
     }
 

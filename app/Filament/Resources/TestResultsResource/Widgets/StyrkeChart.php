@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\TestResultsResource\Widgets;
 
 use App\Models\Tests;
-use Filament\Widgets\LineChartWidget;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Cache;
 
-class StyrkeChart extends LineChartWidget
+class StyrkeChart extends ChartWidget
 {
     protected static ?string $heading = 'Styrke tester';
 
@@ -16,8 +16,6 @@ class StyrkeChart extends LineChartWidget
 
     public function __construct()
     {
-        parent::__construct();
-
         self::$options = $this->getChartOptions();
     }
 
@@ -25,28 +23,40 @@ class StyrkeChart extends LineChartWidget
     {
         $styrketest = $this->fetchData();
 
-        if (! $styrketest || $styrketest->testResults->isEmpty()) {
+        if (!$styrketest || $styrketest->testResults->isEmpty()) {
             return $this->getDefaultChartData();
         }
 
         $transformedData = $this->transformData($styrketest->testResults);
-        $resultater = $transformedData['resultater'];
-        $dato = $transformedData['dato'];
+        $resultater      = $transformedData['resultater'];
+        $dato            = $transformedData['dato'];
 
         return $this->formatChartData($resultater, $dato);
     }
 
-    protected function fetchData()
+    protected function getType(): string
     {
-        return Cache::remember('styrkeChart', now()->addDay(), function () {
-            return Tests::with('testResults')->where('navn', '=', 'Styrketest')->first();
+        return 'line';
+    }
+
+    protected function fetchData($numberOfResults = 5)
+    {
+        return Cache::remember('styrkeChart', now()->addDay(), function () use ($numberOfResults) {
+            return Tests::with([
+                'testResults' => function ($query) use ($numberOfResults) {
+                    $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
+                    ->take($numberOfResults); // Take only the specified number of results
+                }
+            ])
+                ->where('navn', '=', 'Styrketest')
+                ->first();
         });
     }
 
     protected function transformData($results): array
     {
         $resultater = [];
-        $dato = [];
+        $dato       = [];
 
         foreach ($results as $v) {
             $dato[] = $v->dato->format('d.m.y H:i');
@@ -58,32 +68,32 @@ class StyrkeChart extends LineChartWidget
 
         return [
             'resultater' => $resultater,
-            'dato' => $dato,
+            'dato'       => $dato,
         ];
     }
 
     protected function formatChartData(array $resultater, array $dato): array
     {
         $finalResults = [];
-        $randColors = generateRandomColors(count($resultater));
+        $randColors   = generateRandomColors(count($resultater));
 
         foreach ($resultater as $name => $res) {
             $randColor = array_shift($randColors);
-            $res = count($dato) > 1 ? $res : [$res];
+            $res       = count($dato) > 1 ? $res : [$res];
 
             $finalResults[] = [
-                'type' => 'line',
-                'label' => $name,
-                'data' => $res,
+                'type'            => 'line',
+                'label'           => $name,
+                'data'            => $res,
                 'backgroundColor' => $randColor,
-                'borderColor' => $randColor,
-                'borderWidth' => 1,
+                'borderColor'     => $randColor,
+                'borderWidth'     => 1,
             ];
         }
 
         return [
             'datasets' => $finalResults,
-            'labels' => $dato,
+            'labels'   => $dato,
         ];
     }
 
@@ -93,10 +103,10 @@ class StyrkeChart extends LineChartWidget
             'datasets' => [
                 [
                     'label' => 'Styrke',
-                    'data' => [],
+                    'data'  => [],
                 ],
             ],
-            'labels' => [],
+            'labels'   => [],
         ];
     }
 
@@ -105,7 +115,7 @@ class StyrkeChart extends LineChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode' => 'index',
+                    'mode'      => 'index',
                     'intersect' => false,
                 ],
             ],

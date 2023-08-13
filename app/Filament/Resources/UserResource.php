@@ -7,7 +7,6 @@ use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -60,12 +59,12 @@ class UserResource extends Resource
                             ->dehydrated(false)
                             ->maxLength(255)
                             ->label('Bekreft Passord'),
-                        Select::make('roles')
-                            ->required()
-                            ->multiple()
-                            ->relationship('roles', 'name')
-                            ->preload(config('filament-authentication.preload_roles'))
-                            ->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
+                        /* TODO                        Select::make('roles')
+                                                    ->required()
+                                                    ->multiple()
+                                                    ->relationship('roles', 'name')
+                                                    ->preload(config('filament-authentication.preload_roles'))
+                                                    ->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),*/
                     ])->columns(3),
 
                 Section::make('Personlig data')

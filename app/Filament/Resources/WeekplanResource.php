@@ -21,8 +21,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Tables\Actions;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class WeekplanResource extends Resource
 {
@@ -52,11 +53,11 @@ class WeekplanResource extends Resource
                                     ->required(),
                                 Placeholder::make('created_at')
                                     ->label('Created Date')
-                                    ->content(fn (?Weekplan $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                                    ->content(fn(?Weekplan $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                                 Placeholder::make('updated_at')
                                     ->label('Last Modified Date')
-                                    ->content(fn (?Weekplan $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                                    ->content(fn(?Weekplan $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
                             ]),
 
                     ]),
@@ -74,9 +75,9 @@ class WeekplanResource extends Resource
                                                     ->schema([
                                                         Select::make('exercise')->options(Exercise::all()->pluck('name', 'name'))->label('Øvelse'),
                                                         Select::make('intensity')->options([
-                                                            'green' => 'Lett',
+                                                            'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
-                                                            'crimson' => 'Tung',
+                                                            'crimson'  => 'Tung',
                                                         ])->label('Hvor tung?'),
                                                         TimePicker::make('from')->withoutSeconds()->label('Fra'),
                                                         TimePicker::make('to')->withoutSeconds()->label('Til'),
@@ -101,16 +102,19 @@ class WeekplanResource extends Resource
                 TextColumn::make('updated_at')
                     ->dateTime('d.m.y H:i:s')
                     ->label('Sist oppdatert'),
+            ])->actions([
+                Actions\EditAction::make(),
+                Actions\ViewAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWeekplans::route('/'),
+            'index'  => Pages\ListWeekplans::route('/'),
             'create' => Pages\CreateWeekplan::route('/create'),
-            'edit' => Pages\EditWeekplan::route('/{record}/edit'),
-            'view' => Pages\ViewUkeplan::route('/{record}'),
+            'edit'   => Pages\EditWeekplan::route('/{record}/edit'),
+            'view'   => Pages\ViewUkeplan::route('/{record}'),
         ];
     }
 

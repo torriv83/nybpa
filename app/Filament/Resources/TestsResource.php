@@ -7,8 +7,8 @@ use App\Models\Tests;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -31,19 +31,22 @@ class TestsResource extends Resource
                 Forms\Components\TextInput::make('navn')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Repeater::make('ovelser')
-                    ->label('Øvelser')
-                    ->schema([
-                        Forms\Components\TextInput::make('navn')->required(),
-                        Forms\Components\Select::make('type')
-                            ->options([
-                                'kg' => 'Kg',
-                                'tid' => 'Tid',
-                                'watt' => 'Watt',
-                            ])
-                            ->required(),
-                    ])
-                    ->columns(2),
+                Forms\Components\Section::make([
+                    Forms\Components\Repeater::make('ovelser')
+                        ->label('Øvelser')
+                        ->schema([
+                            Forms\Components\TextInput::make('navn')->required(),
+                            Forms\Components\Select::make('type')
+                                ->options([
+                                    'kg'   => 'Kg',
+                                    'tid'  => 'Tid',
+                                    'watt' => 'Watt',
+                                    'rep'  => 'Repetisjoner',
+                                ])
+                                ->required(),
+                        ])->columns()
+                ])
+
             ]);
     }
 
@@ -52,6 +55,9 @@ class TestsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('navn'),
+                Tables\Columns\ViewColumn::make('ovelser')->label('Øvelse : Type')->view('filament.resources.tests-resource.tests-type-column'),
+                Tables\Columns\TextColumn::make('updated_at')->since()->label('Sist oppdatert'),
+                Tables\Columns\TextColumn::make('created_at')->since()->label('Opprettet')
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -66,6 +72,7 @@ class TestsResource extends Resource
             ]);
     }
 
+
     public static function getRelations(): array
     {
         return [
@@ -76,9 +83,9 @@ class TestsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTests::route('/'),
+            'index'  => Pages\ListTests::route('/'),
             'create' => Pages\CreateTests::route('/create'),
-            'edit' => Pages\EditTests::route('/{record}/edit'),
+            'edit'   => Pages\EditTests::route('/{record}/edit'),
         ];
     }
 

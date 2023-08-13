@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UtstyrResource\Pages;
 
 use App\Filament\Resources\UtstyrResource;
-use Filament\Pages\Actions;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListUtstyrs extends ListRecords

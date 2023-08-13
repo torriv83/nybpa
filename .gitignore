@@ -65,3 +65,5 @@ config/livewire.php
 /docker/8.0/supervisord.conf
 /docker/8.1/supervisord.conf
 /docker/8.2/supervisord.conf
+/public/build/assets/app-ffa2faf6.js
+/public/build/assets/app-35884f3e.css

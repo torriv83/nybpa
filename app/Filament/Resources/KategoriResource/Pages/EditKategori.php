@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\KategoriResource\Pages;
 
 use App\Filament\Resources\KategoriResource;
-use Filament\Pages\Actions;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditKategori extends EditRecord

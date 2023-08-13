@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\TestsResource\Pages;
 
 use App\Filament\Resources\TestsResource;
-use Filament\Pages\Actions;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTests extends ListRecords

@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,9 +38,9 @@ class WishlistItemsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('hva'),
-                Tables\Columns\TextColumn::make('url')->formatStateUsing(fn () => 'Se her')
-                    ->url(fn ($record) => $record->url, true),
-                Tables\Columns\TextColumn::make('koster')->money('nok', true)->sortable(),
+                Tables\Columns\TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
+                    ->url(fn($record) => $record->url, true),
+                Tables\Columns\TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()),
                 Tables\Columns\TextColumn::make('antall'),
                 Tables\Columns\TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
 

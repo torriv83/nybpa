@@ -14,8 +14,9 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class ExerciseResource extends Resource
 {
@@ -42,11 +43,11 @@ class ExerciseResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn (?Exercise $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn(?Exercise $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn (?Exercise $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn(?Exercise $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -57,15 +58,20 @@ class ExerciseResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('created_at')->label('Opprettet')->since(),
+                TextColumn::make('updated_at')->label('Sist oppdatert')->since()
+            ])->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExercises::route('/'),
+            'index'  => Pages\ListExercises::route('/'),
             'create' => Pages\CreateExercise::route('/create'),
-            'edit' => Pages\EditExercise::route('/{record}/edit'),
+            'edit'   => Pages\EditExercise::route('/{record}/edit'),
         ];
     }
 

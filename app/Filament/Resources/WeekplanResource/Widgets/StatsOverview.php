@@ -6,7 +6,7 @@ use App\Models\Weekplan;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
@@ -14,23 +14,23 @@ class StatsOverview extends BaseWidget
 
     public $record;
 
-    protected function getCards(): array
+    protected function getStats(): array
     {
 
         $weekplans = Weekplan::find($this->record);
 
-        if (! $weekplans) {
+        if (!$weekplans) {
             // Handle the situation when the record is not found
             return [];
         }
 
         $statistics = [
-            'okter' => 0,
-            'timer' => 0,
+            'okter'       => 0,
+            'timer'       => 0,
             'intensities' => [
-                'crimson' => 0,
+                'crimson'  => 0,
                 'darkcyan' => 0,
-                'green' => 0,
+                'green'    => 0,
             ],
         ];
 
@@ -45,10 +45,10 @@ class StatsOverview extends BaseWidget
         }
 
         return [
-            Card::make('Antall økter', $statistics['okter']),
-            Card::make('Antall timer', CarbonInterval::seconds($statistics['timer'])->cascade()->forHumans()),
-            Card::make('Antall U, V, R økter',
-                'U: '.$statistics['intensities']['crimson'].', V: '.$statistics['intensities']['darkcyan'].', R: '.$statistics['intensities']['green']),
+            Stat::make('Antall økter', $statistics['okter']),
+            Stat::make('Antall timer', CarbonInterval::seconds($statistics['timer'])->cascade()->forHumans()),
+            Stat::make('Antall U, V, R økter',
+                'U: ' . $statistics['intensities']['crimson'] . ', V: ' . $statistics['intensities']['darkcyan'] . ', R: ' . $statistics['intensities']['green']),
         ];
     }
 }

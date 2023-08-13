@@ -3,9 +3,8 @@
 namespace App\Filament\Resources\EconomyResource\Pages;
 
 use App\Filament\Resources\EconomyResource;
-use Filament\Pages\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
-use Illuminate\Support\Str;
 
 class ManageEconomies extends ManageRecords
 {
@@ -19,7 +18,7 @@ class ManageEconomies extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
@@ -32,10 +31,10 @@ class ManageEconomies extends ManageRecords
         ];
     }
 
-    public function updated($name)
-    {
-        if (Str::of($name)->contains(['mountedTableAction', 'mountedTableBulkAction'])) {
-            $this->emit('updateStatsOverview');
-        }
-    }
+    /*    public function updated($name): void
+        {//TODO emit fungerer ikke lenger
+            if (Str::of($name)->contains(['mountedTableAction', 'mountedTableBulkAction'])) {
+                $this->dispatch('updateStatsOverview');
+            }
+        }*/
 }
