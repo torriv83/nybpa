@@ -168,9 +168,7 @@ class TimesheetResource extends Resource
                     ->query(fn(Builder $query): Builder => $query->where('unavailable', '=', '1')),
 
                 Tables\Filters\SelectFilter::make('assistent')
-                    ->relationship('user', 'name'),
-                //TODO fiks når phpsa har oppdatert auth. sjekk github
-                //->relationship('user', 'name', fn (Builder $query) => $query->permission('Assistent')),
+                    ->relationship('user', 'name', fn(Builder $query) => $query->permission('Assistent')),
 
                 Tables\Filters\Filter::make('Forrige måned')
                     ->query(fn(Builder $query): Builder => $query

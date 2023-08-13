@@ -27,9 +27,7 @@ class Ansatte extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-//        TODO fiks når phpsa er kompatibel med v3
-//        return User::query()->with('timesheet')->assistenter();
-        return User::query()->with('timesheet');
+        return User::query()->with('timesheet')->assistenter();
     }
 
 

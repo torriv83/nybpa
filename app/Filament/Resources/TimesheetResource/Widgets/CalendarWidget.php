@@ -141,9 +141,7 @@ class CalendarWidget extends FullCalendarWidget
         return [
             Select::make('user_id')
                 ->label('Assistent')
-                //TODO aktiver når phpsa auth er kompatibel med filamen v3
-                //->options(User::role(['Fast ansatt', 'Tilkalling'])->pluck('name', 'id'))
-                ->options(User::all()->pluck('name', 'id'))
+                ->options(User::role(['Fast ansatt', 'Tilkalling'])->pluck('name', 'id'))
                 ->required(),
             Grid::make()
                 ->schema([

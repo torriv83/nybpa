@@ -7,6 +7,7 @@ use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -59,12 +60,12 @@ class UserResource extends Resource
                             ->dehydrated(false)
                             ->maxLength(255)
                             ->label('Bekreft Passord'),
-                        /* TODO                        Select::make('roles')
-                                                    ->required()
-                                                    ->multiple()
-                                                    ->relationship('roles', 'name')
-                                                    ->preload(config('filament-authentication.preload_roles'))
-                                                    ->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),*/
+                        Select::make('roles')
+                            ->required()
+                            ->multiple()
+                            ->relationship('roles', 'name')
+                        //->preload(config('filament-authentication.preload_roles'))
+                        //->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
                     ])->columns(3),
 
                 Section::make('Personlig data')
@@ -154,9 +155,7 @@ class UserResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return Cache::remember('UserNavigationBadge', now()->addMonth(), function () {
-            //TODO aktiver når phpsa auth er kompatibel med filamen v3
-            //return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
-            return static::getModel()::count();
+            return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
         });
     }
 }

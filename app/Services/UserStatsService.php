@@ -12,6 +12,7 @@ use App\Models\Settings;
 use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UserStatsService
 {
@@ -22,7 +23,7 @@ class UserStatsService
     public function __construct()
     {
         $this->timesheet = app(Timesheet::class);
-        $setting         = Settings::where('user_id', '=', \Auth::id())->first();
+        $setting         = Settings::where('user_id', '=', Auth::id())->first();
         $this->bpa       = $setting['bpa_hours_per_week'] ?? 1;
     }
 
@@ -31,9 +32,7 @@ class UserStatsService
      */
     public function getNumberOfAssistents(): int
     {
-        //TODO aktiver når phpsa auth er kompatibel med filamen v3
-        //return User::assistenter()->count();
-        return User::count();
+        return User::assistenter()->count();
     }
 
     /**

@@ -11,30 +11,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
-//TODO aktiver når phpsa auth er kompatibel med filamen v3
-//use Spatie\Permission\Models\Role;
-//use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @mixin IdeHelperUser
  */
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
     use SoftDeletes;
 
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->email == 'tor@trivera.net' && $this->hasVerifiedEmail();
     }
-
-    //TODO aktiver når phpsa auth er kompatibel med filamen v3
-    /*    public function canImpersonate(): bool
-        {
-            // For example
-            return User::can('Impersonate');
-        }*/
 
     /**
      * The attributes that are mass assignable.
@@ -88,14 +79,13 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Settings::class);
     }
 
-    //TODO aktiver når phpsa auth er kompatibel med filamen v3
-    /*public function scopeAssistenter($query)
+    public function scopeAssistenter($query)
     {
         if (Role::where('name', 'tilkalling')->exists()) {
             return $query->role(['Fast ansatt', 'Tilkalling']);
         }
 
         return null;
-    }*/
+    }
 
 }
