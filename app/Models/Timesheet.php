@@ -40,7 +40,7 @@ class Timesheet extends Model
 
     protected $attributes = [
         'unavailable' => '0',
-        'allDay' => '0',
+        'allDay'      => '0',
     ];
 
     public function user(): BelongsTo
@@ -49,13 +49,13 @@ class Timesheet extends Model
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);
     }
 
-    public function setFraDatoAttribute($value)
+    public function setFraDatoAttribute($value): void
     {
 
         $this->attributes['fra_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 
-    public function setTilDatoAttribute($value)
+    public function setTilDatoAttribute($value): void
     {
 
         $this->attributes['til_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
@@ -64,7 +64,7 @@ class Timesheet extends Model
     /**
      * @method static thisYear()
      */
-    public function scopethisYear($query)
+    public function scopethisYear($query): void
     {
 
         $query->whereYear('til_dato', '=', date('Y'));
@@ -87,7 +87,7 @@ class Timesheet extends Model
                 ->where('unavailable', '!=', 1)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
 
     }
@@ -100,7 +100,7 @@ class Timesheet extends Model
             return $this->lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
     }
 }

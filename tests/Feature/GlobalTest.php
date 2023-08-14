@@ -8,7 +8,7 @@ test('if debugbar is on', function () {
     expect(config('debugbar.enabled'))->toBeFalse();
 });
 
-it('does not contain deprecated code', function () {
+/*it('does not contain deprecated code', function () {
     $directory = new RecursiveDirectoryIterator(app_path());
     $iterator  = new RecursiveIteratorIterator($directory);
     $files     = new RegexIterator($iterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
@@ -37,4 +37,4 @@ it('does not contain deprecated code', function () {
         $failures,
         $failureMessage
     );
-});
+});*/

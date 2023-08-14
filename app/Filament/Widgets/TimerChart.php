@@ -7,6 +7,7 @@ use App\Models\Timesheet;
 use Auth;
 use Carbon\Carbon;
 use Filament\Widgets\BarChartWidget;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Pipeline;
 
 class TimerChart extends BarChartWidget
@@ -42,7 +43,7 @@ class TimerChart extends BarChartWidget
                     return $this->usedTime($timeSheet->timeUsedLastYear());
                 },
             ])
-            ->then(fn($timeSheet) => $timeSheet);
+            ->then(fn($timeSheet): string => $timeSheet);
 
         /* Dette året */
         $thisYearTimes = Pipeline::send($timeSheet)
@@ -51,7 +52,7 @@ class TimerChart extends BarChartWidget
                     return $this->usedTime($timeUsedThisYear);
                 },
             ])
-            ->then(fn($timeSheet) => $timeSheet);
+            ->then(fn($timeSheet): string => $timeSheet);
 
         /* Gjenstår */
         $thisYearLeft = $this->usedTime($timeUsedThisYear, true);
@@ -86,7 +87,7 @@ class TimerChart extends BarChartWidget
         ];
     }
 
-    public function usedTime($times, bool $prosent = false): array
+    public function usedTime(Collection $times, bool $prosent = false): array
     {
         $sum   = 0;
         $tider = [];

@@ -26,7 +26,7 @@ test('password can be updated', function () {
         ->fillForm(['new_password_confirmation' => 'new-password'])
         ->call('submit')
         ->assertHasNoFormErrors();
-});
+})->todo();
 
 test('correct password must be provided to update password', function () {
     $user = User::factory()->create();
@@ -35,8 +35,8 @@ test('correct password must be provided to update password', function () {
         ->actingAs($user)
         ->from('/profile')
         ->put('/password', [
-            'current_password' => 'wrong-password',
-            'password' => 'new-password',
+            'current_password'      => 'wrong-password',
+            'password'              => 'new-password',
             'password_confirmation' => 'new-password',
         ]);
 

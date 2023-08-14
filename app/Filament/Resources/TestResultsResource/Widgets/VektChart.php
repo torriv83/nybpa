@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TestResultsResource\Widgets;
 use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class VektChart extends ChartWidget
@@ -54,14 +55,14 @@ class VektChart extends ChartWidget
         return 'line';
     }
 
-    protected function getTests()
+    protected function getTests(): Collection
     {
         return Cache::remember('vektChart', now()->addDay(), function () {
             return Tests::where('navn', '=', 'Vekt')->get();
         });
     }
 
-    protected function getTestResults($test)
+    protected function getTestResults(Tests $test): Collection
     {
         return Cache::remember('vektResultat', now()->addDay(), function () use ($test) {
             return TestResults::where('testsID', '=', $test->id)

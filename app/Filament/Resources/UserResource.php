@@ -53,7 +53,7 @@ class UserResource extends Resource
                             ->same('passwordConfirmation')
                             ->password()
                             ->maxLength(255)
-                            ->required(fn($record) => $record === null)
+                            ->required(fn($record): string => $record === null)
                             ->label('Passord'),
                         TextInput::make('passwordConfirmation')
                             ->password()

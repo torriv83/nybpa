@@ -1,7 +1,7 @@
 <?php
 
 /* Brukes til å sette itensitet farger på ukeplan på de forskjellige øktene */
-function getIntensityColorClass($intensity)
+function getIntensityColorClass($intensity): string
 {
     switch ($intensity) {
         case 'crimson':
@@ -16,7 +16,7 @@ function getIntensityColorClass($intensity)
 }
 
 /* Brukes til å sette fra-til på ukeplan kalender*/
-function formatTime($from, $to)
+function formatTime($from, $to): string
 {
     return "{$from} - {$to}";
 }
@@ -29,7 +29,7 @@ function generateRandomColors(int $count): array
     $colors = [];
 
     for ($i = 0; $i < $count; $i++) {
-        $colors[] = 'rgb('.mt_rand(0, 255).', '.mt_rand(0, 255).', '.mt_rand(0, 255).')';
+        $colors[] = 'rgb(' . mt_rand(0, 255) . ', ' . mt_rand(0, 255) . ', ' . mt_rand(0, 255) . ')';
     }
 
     return $colors;

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TestResultsResource\Widgets;
 
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class StyrkeChart extends ChartWidget
@@ -39,11 +40,11 @@ class StyrkeChart extends ChartWidget
         return 'line';
     }
 
-    protected function fetchData($numberOfResults = 5)
+    protected function fetchData(int $numberOfResults = 5): Tests
     {
         return Cache::remember('styrkeChart', now()->addDay(), function () use ($numberOfResults) {
             return Tests::with([
-                'testResults' => function ($query) use ($numberOfResults) {
+                'testResults' => function ($query) use ($numberOfResults): Collection {
                     $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
                     ->take($numberOfResults); // Take only the specified number of results
                 }
@@ -53,7 +54,7 @@ class StyrkeChart extends ChartWidget
         });
     }
 
-    protected function transformData($results): array
+    protected function transformData(Collection $results): array
     {
         $resultater = [];
         $dato       = [];

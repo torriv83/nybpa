@@ -1,33 +1,32 @@
 <?php
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
+use Livewire\Livewire;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-test('login screen can be rendered', function () {
-    $response = $this->get('/login');
-
-    $response->assertStatus(200);
+it('can render page login page', function () {
+    $this->get('/admin/login')->assertSuccessful();
 });
 
-test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
 
-    $response = $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'password',
+test('users can authenticate using the login screen', function () {
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
     ]);
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(RouteServiceProvider::HOME);
+    livewire::test('Filament\Pages\Auth\Login')
+        ->set('email', $user->email)
+        ->set('password', 'password')
+        ->call('authenticate')
+        ->assertSuccessful();
 });
 
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
     $this->post('/login', [
-        'email' => $user->email,
+        'email'    => $user->email,
         'password' => 'wrong-password',
     ]);
 

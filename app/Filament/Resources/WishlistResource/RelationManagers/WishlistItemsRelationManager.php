@@ -39,7 +39,7 @@ class WishlistItemsRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('hva'),
                 Tables\Columns\TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record) => $record->url, true),
+                    ->url(fn($record): string => $record->url, true),
                 Tables\Columns\TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()),
                 Tables\Columns\TextColumn::make('antall'),
                 Tables\Columns\TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
@@ -54,26 +54,26 @@ class WishlistItemsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
-                        $livewire->emit('itemedited', $record->wishlist_id);
+                        $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
-                        $livewire->emit('itemedited', $record->wishlist_id);
+                        $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
                 Tables\Actions\DeleteAction::make()
                     ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
-                        $livewire->emit('itemedited', $record->wishlist_id);
+                        $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
                     ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
-                        $livewire->emit('itemedited', $record->wishlist_id);
+                        $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
             ]);
     }

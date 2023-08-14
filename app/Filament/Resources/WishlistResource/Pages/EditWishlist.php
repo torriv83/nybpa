@@ -30,7 +30,7 @@ class EditWishlist extends EditRecord
 
         $record = Wishlist::find($id);
 
-        $sumItems = $record->wishlistItems->sum(function ($item) {
+        $sumItems = $record->wishlistItems->sum(function ($item): string {
             return $item->koster * $item->antall;
         });
 

@@ -7,6 +7,8 @@ use App\Filament\Widgets;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -27,8 +29,31 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->profile()
+            ->passwordReset()
             ->colors([
-                'primary' => Color::Gray,
+                'primary' => Color::Slate,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Til Uloba siden')
+                    ->url('https://uloba.no', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->activeIcon('heroicon-s-presentation-chart-line')
+                    ->group('Eksterne Linker')
+                    ->sort(7),
+            ])
+            ->navigationGroups([
+                'Tider',
+                'Medisinsk',
+                'Diverse',
+                'Landslag',
+                'Authentication',
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Innstillinger')
+                    ->url('admin/innstillinger')
+                    ->icon('heroicon-o-cog-6-tooth'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -45,9 +70,8 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\TimerChart::class,
                 Widgets\TimerIUka::class,
                 Widgets\UserStats::class,
-                //Widgets\CalendarWidget::class,
-//                Widgets\AccountWidget::class,
-//                Widgets\FilamentInfoWidget::class,
+//                AccountWidget::class,
+//                FilamentInfoWidget::class,
             ])
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->middleware([
@@ -64,6 +88,8 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->maxContentWidth('full');
+            ->maxContentWidth('full')
+            //->sidebarFullyCollapsibleOnDesktop()
+            ->topNavigation();
     }
 }

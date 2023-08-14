@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class UtstyrResource extends Resource
 {
@@ -59,12 +60,10 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
                     ->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record) => $record->link, true),
+                    ->url(fn($record): string => $record->link, true),
             ])->striped()
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
-                Tables\Filters\SelectFilter::make('kategori')
-                    ->relationship('kategori', 'kategori'),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
@@ -94,9 +93,10 @@ class UtstyrResource extends Resource
                     ])
                     ->requiresConfirmation()
                     ->modalHeading('Bestill utstyr')
-                    ->modalSubheading('Sikker på at du har valgt alt du trenger?')
-                    ->modalContent(fn($records) => view('filament.pages.modalUtstyr', ['records' => $records]))
-                    ->modalButton('Ja, bestill utstyr!')
+                    ->modalDescription('Sikker på at du har valgt alt du trenger?')
+                    ->modalContent(fn($records): View => view('filament.pages.modalUtstyr',
+                        ['records' => $records]))
+                    ->modalSubmitActionLabel('Ja, bestill utstyr!')
                     ->deselectRecordsAfterCompletion()->modalWidth('lg'),
             ]);
     }

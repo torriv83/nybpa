@@ -68,14 +68,9 @@ class AnsattKanIkkeJobbe extends BaseWidget
                 ->label('Til'),
             IconColumn::make('allDay')
                 ->label('Hele dagen?')
-                ->options([
-                    'heroicon-o-x-circle',
-                    'heroicon-o-check-circle' => fn($state): bool => $state === 1,
-                ])
-                ->colors([
-                    'danger',
-                    'success' => 1,
-                ]),
+                ->boolean()
+                ->trueIcon('heroicon-o-check-circle')
+                ->falseIcon('heroicon-o-x-circle')
         ];
     }
 }

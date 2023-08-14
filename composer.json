@@ -26,7 +26,6 @@
         "beyondcode/laravel-query-detector": "^1.7",
         "fakerphp/faker": "^1.9.1",
         "laradumps/laradumps": "^2.0",
-        "laravel/breeze": "^1.16",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
@@ -34,6 +33,7 @@
         "pestphp/pest": "^v2.2.1",
         "pestphp/pest-plugin-drift": "^2.0",
         "pestphp/pest-plugin-livewire": "^2.1",
+        "pestphp/pest-plugin-type-coverage": "^2.0",
         "phpmd/phpmd": "^2.13.0",
         "phpunit/phpunit": "^10.0.18",
         "spatie/laravel-ignition": "^2.0"
