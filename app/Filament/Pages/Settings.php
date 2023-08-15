@@ -32,12 +32,12 @@ class Settings extends Page implements HasForms
 
     public Setting $settings;
 
-    public int    $user_id;
-    public string $weekplan_timespan;
-    public string $weekplan_from;
-    public string $weekplan_to;
-    public string $apotek_epost;
-    public int    $bpa_hours_per_week;
+    public int     $user_id;
+    public ?string $weekplan_timespan;
+    public ?string $weekplan_from;
+    public ?string $weekplan_to;
+    public ?string $apotek_epost;
+    public ?int    $bpa_hours_per_week;
 
     public function mount(): void
     {

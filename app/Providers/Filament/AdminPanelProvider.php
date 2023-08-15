@@ -52,7 +52,7 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Innstillinger')
-                    ->url('admin/innstillinger')
+                    ->url(fn() => route('filament.admin.pages.innstillinger'))
                     ->icon('heroicon-o-cog-6-tooth'),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')

@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Permission\Models\Role;
 
 class UserResource extends Resource
 {
@@ -155,7 +156,18 @@ class UserResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return Cache::remember('UserNavigationBadge', now()->addMonth(), function () {
-            return static::getModel()::role(['Fast ansatt', 'Tilkalling'])->count();
+
+            $roles = ['Fast ansatt', 'Tilkalling'];
+
+            // Check if any of the roles exist in the database
+            $rolesExist = Role::whereIn('name', $roles)->exists();
+
+            if (!$rolesExist) {
+                return static::getModel()::count();
+            } else {
+                return static::getModel()::role($roles)->count();
+            }
+
         });
     }
 }

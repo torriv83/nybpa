@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->tinyInteger('weekplan_timespan');
+            $table->tinyInteger('weekplan_timespan')->default(1);
             $table->time('weekplan_from');
             $table->time('weekplan_to');
             $table->tinyInteger('bpa_hours_per_week');

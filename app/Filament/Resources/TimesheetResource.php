@@ -284,7 +284,7 @@ class TimesheetResource extends Resource
                             ->maxLength(191),
 
                         Forms\Components\TextInput::make('Tid')
-                            ->afterStateHydrated(function (Forms\Components\TextInput $component, string $state, Get $get) {
+                            ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state, Get $get) {
 
                                 if ($get('fra_dato')) {
                                     $fra     = Carbon::createFromFormat('Y-m-d H:i:s',
