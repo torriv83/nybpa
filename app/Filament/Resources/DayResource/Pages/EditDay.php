@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\DayResource\Pages;
 
 use App\Filament\Resources\DayResource;
-use Filament\Pages\Actions\DeleteAction;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditDay extends EditRecord

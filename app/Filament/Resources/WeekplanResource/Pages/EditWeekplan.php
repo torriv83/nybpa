@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\WeekplanResource\Pages;
 
 use App\Filament\Resources\WeekplanResource;
-use Filament\Pages\Actions\DeleteAction;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditWeekplan extends EditRecord

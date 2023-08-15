@@ -84,7 +84,7 @@ class CalendarWidget extends FullCalendarWidget
     {
         $this->event->delete();
 
-        $this->dispatchBrowserEvent('close-modal', ['id' => 'fullcalendar--edit-event-modal']);
+        $this->dispatch('close-modal', ['id' => 'fullcalendar--edit-event-modal']);
         Cache::flush();
         $this->refreshEvents();
 

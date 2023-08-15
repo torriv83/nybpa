@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\DayResource\Pages;
 
 use App\Filament\Resources\DayResource;
-use Filament\Pages\Actions\CreateAction;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListDays extends ListRecords

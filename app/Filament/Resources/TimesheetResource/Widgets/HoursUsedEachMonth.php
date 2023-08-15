@@ -25,11 +25,6 @@ class HoursUsedEachMonth extends BaseWidget
         return uniqid();
     }
 
-    protected function getTableRecordsPerPageSelectOptions(): ?array
-    {
-        return [1, 3, 6, 9, 12];
-    }
-
     public function table(Table $table): Table
     {
         return $table

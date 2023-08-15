@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\ExerciseResource\Pages;
 
 use App\Filament\Resources\ExerciseResource;
-use Filament\Pages\Actions\CreateAction;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListExercises extends ListRecords

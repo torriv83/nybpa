@@ -9,7 +9,7 @@
 namespace App\Filament\Resources\WeekplanResource\Pages;
 
 use App\Filament\Resources\WeekplanResource;
-use Filament\Pages\Actions\CreateAction;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListWeekplans extends ListRecords
