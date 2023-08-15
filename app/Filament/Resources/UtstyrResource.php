@@ -54,9 +54,9 @@ class UtstyrResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextInputColumn::make('antall')->type('number')->extraAttributes(['style' => 'width:80px']),
-                Tables\Columns\TextColumn::make('hva')->sortable(),
-                Tables\Columns\TextColumn::make('navn')->sortable(),
-                Tables\Columns\TextColumn::make('kategori.kategori')->sortable(),
+                Tables\Columns\TextColumn::make('hva')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('navn')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('kategori.kategori')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
                     ->formatStateUsing(fn() => 'Se her')
