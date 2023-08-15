@@ -1,7 +1,7 @@
 <?php
 
 /* Brukes til å sette itensitet farger på ukeplan på de forskjellige øktene */
-function getIntensityColorClass($intensity): string
+function getIntensityColorClass($intensity)
 {
     switch ($intensity) {
         case 'crimson':
@@ -16,7 +16,7 @@ function getIntensityColorClass($intensity): string
 }
 
 /* Brukes til å sette fra-til på ukeplan kalender*/
-function formatTime($from, $to): string
+function formatTime($from, $to)
 {
     return "{$from} - {$to}";
 }

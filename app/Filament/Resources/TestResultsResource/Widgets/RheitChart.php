@@ -4,7 +4,6 @@ namespace App\Filament\Resources\TestResultsResource\Widgets;
 
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class RheitChart extends ChartWidget
@@ -39,14 +38,14 @@ class RheitChart extends ChartWidget
         return 'line';
     }
 
-    protected function fetchData(): Tests
+    protected function fetchData()
     {
         return Cache::remember('rheitTest', now()->addDay(), function () {
             return Tests::with('testResults')->where('navn', '=', 'Rheit')->first();
         });
     }
 
-    protected function transformData(Collection $results): array
+    protected function transformData($results)
     {
         $resultater = [];
         $dato       = [];
@@ -70,7 +69,7 @@ class RheitChart extends ChartWidget
         ];
     }
 
-    protected function formatChartData(array $resultater, array $dato): array
+    protected function formatChartData($resultater, $dato): array
     {
         $finalResults = [];
         $colors       = generateRandomColors(count(array_merge_recursive(...$resultater)));

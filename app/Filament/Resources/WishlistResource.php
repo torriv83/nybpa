@@ -53,9 +53,9 @@ class WishlistResource extends Resource
                         'Begynt å spare' => 'Begynt å spare',
                         'Kjøpt'          => 'Kjøpt',
                     ]),
-                Placeholder::make('totalt')->content(function ($record, $set): string {
+                Placeholder::make('totalt')->content(function ($record, $set) {
 
-                    $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item): int {
+                    $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item) {
                         return $item->koster * $item->antall;
                     });
 
@@ -73,7 +73,7 @@ class WishlistResource extends Resource
             ->columns([
                 TextColumn::make('prioritet')->sortable(),
                 TextColumn::make('hva')->sortable(),
-                TextColumn::make('url')->formatStateUsing(fn(): string => 'Se her')
+                TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
                     ->url(fn($record) => $record->url, true),
                 TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()->money('nok', true)),
                 TextColumn::make('antall'),
@@ -104,7 +104,7 @@ class WishlistResource extends Resource
             ->schema([
                 Infolists\Components\TextEntry::make('hva'),
                 Infolists\Components\TextEntry::make('koster')->money('nok', true),
-                Infolists\Components\TextEntry::make('url')->formatStateUsing(fn(): string => 'Se her')->url(fn($record): string => $record->url,
+                Infolists\Components\TextEntry::make('url')->formatStateUsing(fn() => 'Se her')->url(fn($record): string => $record->url,
                     true),
                 Infolists\Components\TextEntry::make('antall'),
                 Infolists\Components\TextEntry::make('status'),

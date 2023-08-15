@@ -32,12 +32,12 @@ class Settings extends Page implements HasForms
 
     public Setting $settings;
 
-    public int     $user_id;
-    public ?string $weekplan_timespan;
-    public ?string $weekplan_from;
-    public ?string $weekplan_to;
-    public ?string $apotek_epost;
-    public ?int    $bpa_hours_per_week;
+    public $user_id;
+    public $weekplan_timespan;
+    public $weekplan_from;
+    public $weekplan_to;
+    public $apotek_epost;
+    public $bpa_hours_per_week;
 
     public function mount(): void
     {
@@ -110,7 +110,7 @@ class Settings extends Page implements HasForms
         ];
     }
 
-    public function submit(): void
+    public function submit()
     {
         Setting::updateOrCreate(['user_id' => Auth::id()], $this->form->getState());
 
@@ -123,7 +123,7 @@ class Settings extends Page implements HasForms
         //         SAVE THE SETTINGS HERE
     }
 
-    public function clearCache(): bool
+    public function clearCache()
     {
         return Cache::flush();
     }

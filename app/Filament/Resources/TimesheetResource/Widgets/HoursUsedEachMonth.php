@@ -25,7 +25,7 @@ class HoursUsedEachMonth extends BaseWidget
         return uniqid();
     }
 
-    protected function getTableRecordsPerPageSelectOptions(): array
+    protected function getTableRecordsPerPageSelectOptions(): ?array
     {
         return [1, 3, 6, 9, 12];
     }

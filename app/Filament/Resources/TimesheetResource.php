@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Infolists;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
@@ -58,7 +57,7 @@ class TimesheetResource extends Resource
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Assistent')
-                    ->color(function ($record): string {
+                    ->color(function ($record) {
                         if ($record->unavailable == 1) {
                             return 'danger';
                         } else {
@@ -191,11 +190,11 @@ class TimesheetResource extends Resource
                         return $query
                             ->when(
                                 $data['fra_dato'],
-                                fn(Builder $query, string $date): Builder => $query->whereDate('til_dato', '>=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('til_dato', '>=', $date),
                             )
                             ->when(
                                 $data['til_dato'],
-                                fn(Builder $query, string $date): Builder => $query->whereDate('fra_dato', '<=', $date),
+                                fn(Builder $query, $date): Builder => $query->whereDate('fra_dato', '<=', $date),
                             );
                     }),
             ])
@@ -233,7 +232,7 @@ class TimesheetResource extends Resource
 
                         Forms\Components\Select::make('user_id')
                             ->label('Hvem')
-                            ->options(User::all()->filter(fn($value): bool => $value->id != Auth::User()->id)->pluck('name',
+                            ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name',
                                 'id'))
                             ->required()
                             ->columnSpan(2),
@@ -259,7 +258,7 @@ class TimesheetResource extends Resource
                             ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->reactive()
-                            ->afterStateUpdated(function (\Filament\Forms\Set $set, string $state, Get $get) {
+                            ->afterStateUpdated(function ($set, string $state, $get) {
 
                                 $fra = $get('fra_dato');
                                 $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
@@ -284,7 +283,7 @@ class TimesheetResource extends Resource
                             ->maxLength(191),
 
                         Forms\Components\TextInput::make('Tid')
-                            ->afterStateHydrated(function (Forms\Components\TextInput $component, ?string $state, Get $get) {
+                            ->afterStateHydrated(function ($component, $state, $get) {
 
                                 if ($get('fra_dato')) {
                                     $fra     = Carbon::createFromFormat('Y-m-d H:i:s',

@@ -49,13 +49,13 @@ class Timesheet extends Model
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);
     }
 
-    public function setFraDatoAttribute($value): void
+    public function setFraDatoAttribute($value)
     {
 
         $this->attributes['fra_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 
-    public function setTilDatoAttribute($value): void
+    public function setTilDatoAttribute($value)
     {
 
         $this->attributes['til_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
@@ -64,7 +64,7 @@ class Timesheet extends Model
     /**
      * @method static thisYear()
      */
-    public function scopethisYear($query): void
+    public function scopethisYear($query)
     {
 
         $query->whereYear('til_dato', '=', date('Y'));
@@ -73,7 +73,7 @@ class Timesheet extends Model
     /**
      * @method thisMonth()
      */
-    public function scopethisMonth($query): void
+    public function scopethisMonth($query)
     {
 
         $query->whereMonth('til_dato', '=', date('m'));
