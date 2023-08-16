@@ -17,18 +17,6 @@ jobs:
                   - v1-dependencies-{{ checksum "composer.json" }}
                   - v1-dependencies-
             - run: composer install --optimize-autoloader --no-dev
-
-            - restore_cache:
-                keys:
-                  - v1-dependencies-{{ checksum "package-lock.json" }}
-                  - v1-dependencies-
-            - run: npm install
-            - save_cache:
-                paths:
-                  - ./node_modules
-                key: v1-dependencies-{{ checksum "package-lock.json" }}
-
-            - run: npm run build
             - save_cache:
                 paths:
                   - ./vendor
