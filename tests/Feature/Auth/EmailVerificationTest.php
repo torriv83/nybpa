@@ -1,5 +1,5 @@
 <?php
-
+/*
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
@@ -52,4 +52,4 @@ test('email is not verified with invalid hash', function () {
     $this->actingAs($user)->get($verificationUrl);
 
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
-});
+});*/

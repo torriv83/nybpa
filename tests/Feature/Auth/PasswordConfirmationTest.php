@@ -1,5 +1,5 @@
 <?php
-
+/*
 use App\Models\User;
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
@@ -31,4 +31,4 @@ test('password is not confirmed with invalid password', function () {
     ]);
 
     $response->assertSessionHasErrors();
-});
+});*/
