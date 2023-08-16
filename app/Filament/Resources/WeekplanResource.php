@@ -71,7 +71,7 @@ class WeekplanResource extends Resource
                                         Select::make('day')->options(Day::all()->pluck('name', 'name'))->label('Dag'),
                                         Repeater::make('exercises')->label('Treninger')
                                             ->schema([
-                                                Grid::make(2)
+                                                Grid::make()
                                                     ->schema([
                                                         Select::make('exercise')->options(Exercise::all()->pluck('name', 'name'))->label('Øvelse'),
                                                         Select::make('intensity')->options([

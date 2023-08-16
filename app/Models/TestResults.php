@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-/**
- * @mixin IdeHelperTestResults
- */
 class TestResults extends Model
 {
     use HasFactory;
@@ -25,7 +22,7 @@ class TestResults extends Model
 
     protected $casts = [
         'resultat' => 'array',
-        'dato' => 'datetime',
+        'dato'     => 'datetime',
     ];
 
     public function tests(): BelongsTo

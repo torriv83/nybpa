@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-/**
- * @method thisYear()
- *
- * @mixin IdeHelperUtstyr
- */
 class Utstyr extends Model
 {
     use Notifiable;

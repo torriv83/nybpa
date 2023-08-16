@@ -14,7 +14,7 @@ class AccountsOverview extends BaseWidget
     protected function getCards(): array
     {
 
-        $cards = collect([]);
+        $cards = collect();
 
         $ynab     = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
         $token    = config('app.ynab');

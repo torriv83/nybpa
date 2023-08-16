@@ -11,9 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
-/**
- * @mixin IdeHelperTimesheet
- */
 class Timesheet extends Model
 {
     use Notifiable;

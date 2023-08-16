@@ -60,6 +60,11 @@ trait FilterableByDates
         return $query->whereBetween($column, [Carbon::now()->firstOfYear()->subYear(), Carbon::now()->lastOfYear()->subYear()]);
     }
 
+    /**
+     * @param $query
+     * @param $column
+     * @return mixed
+     */
     public function scopeInFuture($query, $column = 'created_at')
     {
         return $query->where($column, '>=', today());

@@ -60,7 +60,7 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
                     ->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record): string => $record->link, true),
+                    ->url(fn($record): ?string => $record->link, true),
             ])->striped()
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

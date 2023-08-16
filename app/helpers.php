@@ -3,16 +3,12 @@
 /* Brukes til å sette itensitet farger på ukeplan på de forskjellige øktene */
 function getIntensityColorClass($intensity)
 {
-    switch ($intensity) {
-        case 'crimson':
-            return 'background-color: #DC2626';
-        case 'darkcyan':
-            return 'background-color: #008B8B';
-        case 'green':
-            return 'background-color: green';
-        default:
-            return '';
-    }
+    return match ($intensity) {
+        'crimson' => 'background-color: #DC2626',
+        'darkcyan' => 'background-color: #008B8B',
+        'green' => 'background-color: green',
+        default => '',
+    };
 }
 
 /* Brukes til å sette fra-til på ukeplan kalender*/

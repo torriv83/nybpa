@@ -4,10 +4,10 @@ namespace App\Filament\Widgets;
 
 use App\Models\Timesheet;
 use Carbon\Carbon;
-use Filament\Widgets\LineChartWidget;
+use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Cache;
 
-class BrukteTimerChart extends LineChartWidget
+class BrukteTimerChart extends ChartWidget
 {
     protected static ?string $heading = 'Timer brukt hver måned';
 
@@ -18,6 +18,11 @@ class BrukteTimerChart extends LineChartWidget
     //protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
     protected int|string|array $columnSpan = 3;
 
+
+    protected function getType(): string
+    {
+        return 'line';
+    }
 
     protected function getData(): array
     {

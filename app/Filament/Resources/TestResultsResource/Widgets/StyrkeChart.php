@@ -40,12 +40,12 @@ class StyrkeChart extends ChartWidget
         return 'line';
     }
 
-    protected function fetchData(int $numberOfResults = 5): Tests
+    protected function fetchData(int $numberOfResults = 2): ?Tests
     {
         return Cache::remember('styrkeChart', now()->addDay(), function () use ($numberOfResults) {
             return Tests::with([
-                'testResults' => function ($query) use ($numberOfResults): Collection {
-                    $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
+                'testResults' => function ($query) use ($numberOfResults) {
+                    return $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
                     ->take($numberOfResults); // Take only the specified number of results
                 }
             ])

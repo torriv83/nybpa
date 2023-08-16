@@ -4,13 +4,12 @@ namespace App\Filament\Widgets;
 
 use App\Models\Settings;
 use App\Models\Timesheet;
-use Auth;
 use Carbon\Carbon;
-use Filament\Widgets\BarChartWidget;
-use Illuminate\Database\Eloquent\Collection;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Pipeline;
 
-class TimerChart extends BarChartWidget
+class TimerChart extends ChartWidget
 {
     protected static ?string $heading = 'Brukte timer av totalen (%)';
 
@@ -22,6 +21,11 @@ class TimerChart extends BarChartWidget
     protected int|string|array $columnSpan = 3;
 
     protected mixed $bpa;
+
+    protected function getType(): string
+    {
+        return 'bar';
+    }
 
     public function __construct()
     {
@@ -39,7 +43,7 @@ class TimerChart extends BarChartWidget
         /* Forrige år */
         $lastYearTimes = Pipeline::send($timeSheet)
             ->through([
-                function (Timesheet $timeSheet) {
+                function ($timeSheet) {
                     return $this->usedTime($timeSheet->timeUsedLastYear());
                 },
             ])
@@ -48,7 +52,7 @@ class TimerChart extends BarChartWidget
         /* Dette året */
         $thisYearTimes = Pipeline::send($timeSheet)
             ->through([
-                function (Timesheet $timeSheet) use ($timeUsedThisYear) {
+                function ($timeSheet) use ($timeUsedThisYear) {
                     return $this->usedTime($timeUsedThisYear);
                 },
             ])
@@ -87,7 +91,7 @@ class TimerChart extends BarChartWidget
         ];
     }
 
-    public function usedTime(Collection $times, bool $prosent = false): array
+    public function usedTime($times, bool $prosent = false): array
     {
         $sum   = 0;
         $tider = [];

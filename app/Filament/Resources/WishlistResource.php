@@ -117,7 +117,7 @@ class WishlistResource extends Resource
                             true)->columnSpanFull(),
                         Infolists\Components\TextEntry::make('antall'),
                         Infolists\Components\TextEntry::make('koster')->money('nok', true),
-                    ])->columnSpanFull()->columns(2)->grid(2)
+                    ])->columnSpanFull()->columns()->grid()
             ]);
     }
 

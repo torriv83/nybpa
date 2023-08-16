@@ -14,9 +14,6 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-/**
- * @mixin IdeHelperUser
- */
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -79,6 +76,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Settings::class);
     }
 
+    /**
+     * @param $query
+     * @return null
+     * @method assistenter()
+     */
     public function scopeAssistenter($query)
     {
         if (Role::where('name', 'tilkalling')->exists()) {

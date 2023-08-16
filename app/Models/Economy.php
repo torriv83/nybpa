@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-/**
- * @mixin IdeHelperEconomy
- */
 class Economy extends Model
 {
     use Notifiable;

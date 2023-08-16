@@ -31,6 +31,9 @@ class AnsattKanIkkeJobbe extends BaseWidget
         return $record;
     }
 
+    /**
+     * @return Builder
+     */
     protected function getTableQuery(): Builder
     {
         return Timesheet::query()->where('unavailable', '=', 1)->inFuture('til_dato');

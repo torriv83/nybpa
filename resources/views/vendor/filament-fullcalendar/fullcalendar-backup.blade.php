@@ -77,11 +77,11 @@
     </x-filament::card>
 
     @if($this::canCreate())
-        <x:filament-fullcalendar::create-event-modal />
+        <x:filament-fullcalendar::create-event-modal/>
     @endif
 
     @if($this::canView())
-        <x:filament-fullcalendar::edit-event-modal />
+        <x:filament-fullcalendar::edit-event-modal/>
     @endif
 </x-filament::widget>
 --}}

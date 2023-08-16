@@ -115,7 +115,7 @@ class ViewUkeplan extends Page
     private function calculateTimeRange($fixed = 0): array
     {
         $exerciseData = $this->getDayData();
-        $setting      = Settings::where('user_id', '=', \Auth::id())->first();
+        $setting      = Settings::where('user_id', '=', Auth::id())->first();
 
         if ($fixed) {
             $startTime = Carbon::createFromFormat('H:i:s', $setting->weekplan_from)->format('H:i'); // Start time in hours (24-hour format)

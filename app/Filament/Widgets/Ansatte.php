@@ -41,7 +41,8 @@ class Ansatte extends BaseWidget
         return [
             Tables\Columns\TextColumn::make('name')
                 ->label('Navn'),
-            Tables\Columns\BadgeColumn::make('roles.name')
+            Tables\Columns\TextColumn::make('roles.name')
+                ->badge()
                 ->label('Stilling')
                 ->colors([
                     'success',

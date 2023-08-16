@@ -13,6 +13,7 @@ use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class UserStatsService
 {
@@ -153,7 +154,7 @@ class UserStatsService
      */
     private function getHoursUsedInMinutes(): mixed
     {
-        return \Cache::remember('hoursUsedInMinutes', now()->addDay(), function () {
+        return Cache::remember('hoursUsedInMinutes', now()->addDay(), function () {
             return $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1')->sum('totalt');
         });
 

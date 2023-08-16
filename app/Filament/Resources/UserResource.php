@@ -65,6 +65,7 @@ class UserResource extends Resource
                             ->required()
                             ->multiple()
                             ->relationship('roles', 'name')
+                            ->preload()
                         //->preload(config('filament-authentication.preload_roles'))
                         //->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
                     ])->columns(3),

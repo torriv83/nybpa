@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Settings as Setting;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -11,7 +12,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -85,12 +85,12 @@ class Settings extends Page implements HasForms
                                 ->label('Bruk fastsatt tid?')->required()
                                 ->reactive(),
                             Forms\Components\Hidden::make('user_id')->formatStateUsing(fn() => Auth::id()),
-                            TimePicker::make('weekplan_from')->withoutSeconds()
+                            TimePicker::make('weekplan_from')->seconds(false)
                                 ->format('H:i:s')
                                 ->label('Vis tid fra')
                                 ->hidden(fn(callable $get
                                 ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
-                            TimePicker::make('weekplan_to')->withoutSeconds()
+                            TimePicker::make('weekplan_to')->seconds(false)
                                 ->format('H:i:s')
                                 ->label('Vis tid til')
                                 ->hidden(fn(callable $get

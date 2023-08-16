@@ -16,7 +16,7 @@ class CreateKategoriTable extends Migration
         Schema::create('kategori', function (Blueprint $table) {
             $table->id();
             $table->string('kategori', 191);
-            $table->softDeletes('deleted_at', 0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
