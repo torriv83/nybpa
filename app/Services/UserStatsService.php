@@ -126,7 +126,7 @@ class UserStatsService
     /**
      * Convert minutes to time format.
      */
-    private function minutesToTime(int $minutes): string
+    public function minutesToTime(int $minutes): string
     {
         $hours   = $minutes / 60;
         $minutes = ($minutes % 60);
