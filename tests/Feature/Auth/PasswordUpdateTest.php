@@ -1,13 +1,29 @@
 <?php
 
-use App\Filament\Pages\Profile;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 it('can render page', function () {
+    // Create the role (if it doesn't already exist)
+    $role = Role::create(['name' => 'Admin']);
+
+    // Create the user
+    $user = User::factory()->create([
+        'email'             => fake()->name . '@trivera.net',
+        'email_verified_at' => now(),
+    ]);
+
+    // Assign the role to the user
+    $user->assignRole('Admin');
+
+    $this->actingAs($user);
+
     $this->get(route('filament.admin.auth.profile'))->assertSuccessful();
 });
+
 
 /*test('password can be updated', function () {
 

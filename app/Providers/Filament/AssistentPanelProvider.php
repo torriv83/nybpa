@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Assistent\Pages\Auth\EditProfile;
 use App\Filament\Assistent\Widgets as AssistentWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,7 +31,7 @@ class AssistentPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->login()
-            ->profile()
+            ->profile(EditProfile::class)
             ->passwordReset()
             ->navigationItems([
                 NavigationItem::make('Til Uloba siden')
