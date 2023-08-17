@@ -18,7 +18,7 @@ class TotalWorked extends BaseWidget
         $timeSheet           = new Timesheet();
         $timeWorkedThisYear  = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->sum('totalt');
         $timeWorkedThisMonth = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->thisMonth()->sum('totalt');
-        $nextWorkTime        = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->where('fra_dato', '>=', now())->first();
+        $nextWorkTime        = $timeSheet->inFuture('fra_dato')->where('user_id', Auth::user()->id)->where('unavailable', '=', 0)->first();
 
         $timeWorkedThisYearFormatted = $timeWorkedThisYear
             ? (new \App\Services\UserStatsService)->minutesToTime($timeWorkedThisYear)

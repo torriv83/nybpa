@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -62,10 +61,10 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($pass)
-    {
-        $this->attributes['password'] = Hash::make($pass);
-    }
+    /*    public function setPasswordAttribute($pass)
+        {
+            $this->attributes['password'] = Hash::make($pass);
+        }*/
 
     public function timesheet(): HasMany
     {

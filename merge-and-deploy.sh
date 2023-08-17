@@ -10,7 +10,7 @@ fi
 
 # Step 1: Run npm build
 echo "Running npm build..."
-sh vendor/bin/sail npm run build
+sail npm run build
 
 if [ $? -ne 0 ]; then
   echo "Build failed. Aborting."
@@ -19,7 +19,7 @@ fi
 
 # Step 2: Run tests with PestPHP
 echo "Running tests..."
-sh vendor/bin/sail pest
+sail pest
 
 if [ $? -ne 0 ]; then
   echo "Tests failed. Aborting."
@@ -33,11 +33,12 @@ git commit -m "Build and tests passed."
 
 # Merge Staging into Master
 echo "Merging Staging into Master..."
-git checkout master
-git merge --no-edit Staging
+git checkout Master
+git merge Staging
 
 # Push Master to GitHub
-echo "Pushing changes to GitHub..."
-git push origin master
+#echo "Pushing changes to GitHub..."
+#git push origin Master
 
 echo "Process completed successfully."
+echo "Remember to push to github."
