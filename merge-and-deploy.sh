@@ -33,12 +33,12 @@ git commit -m "Build and tests passed."
 
 # Merge Staging into Master
 echo "Merging Staging into Master..."
-git checkout Master
+git checkout master
 git merge Staging
 
 # Push Master to GitHub
 #echo "Pushing changes to GitHub..."
-#git push origin Master
+#git push origin master
 
 echo "Process completed successfully."
 echo "Remember to push to github."
