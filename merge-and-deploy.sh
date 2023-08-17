@@ -34,7 +34,7 @@ git commit -m "Build and tests passed."
 # Merge Staging into Master
 echo "Merging Staging into Master..."
 git checkout master
-git merge Staging
+git merge --no-edit Staging
 
 # Push Master to GitHub
 echo "Pushing changes to GitHub..."
