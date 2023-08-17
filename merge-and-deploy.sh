@@ -37,7 +37,8 @@ git checkout Master
 git merge Staging
 
 # Push Master to GitHub
-echo "Pushing changes to GitHub..."
-git push origin Master
+#echo "Pushing changes to GitHub..."
+#git push origin Master
 
 echo "Process completed successfully."
+echo "Remember to push to github."
