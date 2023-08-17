@@ -2,17 +2,15 @@
 
 namespace App\Providers\Filament;
 
-use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
-use App\Filament\Widgets;
-use App\Http\Middleware\IsAdmin;
+use App\Filament\Assistent\Widgets as AssistentWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -21,20 +19,19 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class AssistentPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('assistent')
+            ->path('assistent')
+            ->colors([
+                'primary' => Color::Amber,
+            ])
             ->login()
             ->profile()
             ->passwordReset()
-            ->colors([
-                'primary' => Color::Slate,
-            ])
             ->navigationItems([
                 NavigationItem::make('Til Uloba siden')
                     ->url('https://uloba.no', shouldOpenInNewTab: true)
@@ -43,38 +40,19 @@ class AdminPanelProvider extends PanelProvider
                     ->group('Eksterne Linker')
                     ->sort(7),
             ])
-            ->navigationGroups([
-                'Tider',
-                'Medisinsk',
-                'Diverse',
-                'Landslag',
-                'Authentication',
-            ])
-            ->userMenuItems([
-                MenuItem::make()
-                    ->label('Innstillinger')
-                    ->url(fn() => route('filament.admin.pages.innstillinger'))
-                    ->icon('heroicon-o-cog-6-tooth'),
-            ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Assistent/Resources'), for: 'App\\Filament\\Assistent\\Resources')
+            ->discoverPages(in: app_path('Filament/Assistent/Pages'), for: 'App\\Filament\\Assistent\\Pages')
             ->pages([
                 //Pages\Dashboard::class,
             ])
-            /*->discoverWidgets(in : app_path('Filament/Widgets'),
-                              for: 'App\\Filament\\Widgets')//app_path('Filament/Widgets'), //'App\\Filament\\Widgets'*/
+            //->discoverWidgets(in: app_path('Filament/Assistent/Widgets'), for: 'App\\Filament\\Assistent\\Widgets')
             ->widgets([
-                Widgets\Ansatte::class,
-                Widgets\AnsattKanIkkeJobbe::class,
-                Widgets\BrukteTimerChart::class,
-                Widgets\NesteArbeidstider::class,
-                Widgets\TimerChart::class,
-                Widgets\TimerIUka::class,
-                Widgets\UserStats::class,
-//                AccountWidget::class,
-//                FilamentInfoWidget::class,
+                Widgets\AccountWidget::class,
+                AssistentWidget\TotalWorked::class,
+                AssistentWidget\UpcomingWorkTabell::class,
+                AssistentWidget\TimeTabell::class,
+                //Widgets\FilamentInfoWidget::class,
             ])
-            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -85,13 +63,9 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                IsAdmin::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->maxContentWidth('full')
-            //->sidebarFullyCollapsibleOnDesktop()
-            ->topNavigation();
+            ]);
     }
 }
