@@ -10,7 +10,7 @@ fi
 
 # Step 1: Run npm build
 echo "Running npm build..."
-sail npm run build
+sh vendor/bin/sail npm run build
 
 if [ $? -ne 0 ]; then
   echo "Build failed. Aborting."
@@ -19,7 +19,7 @@ fi
 
 # Step 2: Run tests with PestPHP
 echo "Running tests..."
-sail pest
+sh vendor/bin/sail pest
 
 if [ $? -ne 0 ]; then
   echo "Tests failed. Aborting."
