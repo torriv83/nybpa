@@ -15,8 +15,14 @@ test:
 	sh vendor/bin/sail pest
 
 install:
-		sh vendor/bin/sail composer install
-		sh vendor/bin/sail npm install
+	sh vendor/bin/sail composer install
+	sh vendor/bin/sail npm install
+
+update:
+	sh vendor/bin/sail composer update
+	sh vendor/bin/sail npm update
+	git add composer.lock package-lock.json
+	git commit -m "npm and composer update"
 
 clear-cache:
 	sh vendor/bin/sail artisan cache:clear
