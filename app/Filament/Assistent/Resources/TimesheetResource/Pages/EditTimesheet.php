@@ -3,7 +3,6 @@
 namespace App\Filament\Assistent\Resources\TimesheetResource\Pages;
 
 use App\Filament\Assistent\Resources\TimesheetResource;
-use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditTimesheet extends EditRecord
@@ -13,7 +12,7 @@ class EditTimesheet extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            // Actions\DeleteAction::make(),
         ];
     }
 }
