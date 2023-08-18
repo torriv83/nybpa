@@ -14,7 +14,7 @@ class UpcomingWorkTabell extends BaseWidget
 
     protected static ?string $heading         = 'Kommende arbeidstider';
     protected static ?string $pollingInterval = null;
-    protected static ?int    $sort            = 3;
+    protected static ?int    $sort            = 5;
 
     public function table(Table $table): Table
     {

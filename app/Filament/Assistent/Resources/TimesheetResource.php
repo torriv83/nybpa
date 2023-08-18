@@ -5,12 +5,16 @@ namespace App\Filament\Assistent\Resources;
 use App\Filament\Assistent\Resources\TimesheetResource\Pages;
 use App\Filament\Assistent\Resources\TimesheetResource\RelationManagers;
 use App\Models\Timesheet;
+use Carbon\Carbon;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -38,22 +42,35 @@ class TimesheetResource extends Resource
                     ->description('Velg om det gjelder hele dagen eller ikke')
                     ->schema([
                         Checkbox::make('allDay')
-                            ->label('Hele dagen?'),
-
+                            ->label('Hele dagen?')->live()
                     ])->columns(),
 
                 //Seksjon
                 Section::make('Tid')
-                    ->description('Velg fra og til. Har du valgt hele dagen trenger du ikke å velge klokkeslett')
+                    ->description('Velg fra og til.')
                     ->schema([
 
                         DateTimePicker::make('fra_dato')
-                            ->displayFormat('d.m.Y H:i')
-                            ->required(),
-
+                            ->displayFormat('d.m.Y')
+                            ->seconds(false)
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(fn(Set $set, ?string $state) => $set('til_dato',
+                                Carbon::parse($state)->addHour()->format('Y-m-d H:i')))
+                            ->hidden(fn(Get $get): bool => $get('allDay')),
                         DateTimePicker::make('til_dato')
-                            ->displayFormat('d.m.Y H:i')
-                            ->required(),
+                            ->displayFormat('d.m.Y')->seconds(false)
+                            ->required()
+                            ->hidden(fn(Get $get): bool => $get('allDay')),
+
+                        DatePicker::make('fra_dato')
+                            ->displayFormat('d.m.Y')
+                            ->required()
+                            ->hidden(fn(Get $get): bool => !$get('allDay')),
+                        DatePicker::make('til_dato')
+                            ->displayFormat('d.m.Y')
+                            ->required()
+                            ->hidden(fn(Get $get): bool => !$get('allDay')),
 
                         RichEditor::make('description')
                             ->label('Begrunnelse (Valgfritt)')
