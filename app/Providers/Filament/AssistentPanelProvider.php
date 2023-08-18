@@ -46,7 +46,7 @@ class AssistentPanelProvider extends PanelProvider
             ->pages([
                 //Pages\Dashboard::class,
             ])
-            //->discoverWidgets(in: app_path('Filament/Assistent/Widgets'), for: 'App\\Filament\\Assistent\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Assistent/Widgets'), for: 'App\\Filament\\Assistent\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 AssistentWidget\TotalWorked::class,

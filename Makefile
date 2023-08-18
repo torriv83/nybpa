@@ -39,10 +39,30 @@ migrate:
 seed:
 	sh vendor/bin/sail artisan db:seed
 
-lint:
-	sh vendor/bin/sail ./vendor/bin/phpcs
-
 clean:
 	rm -rf build/ dist/
 
+routelist:
+	sh vendor/bin/sail artisan route:list
+
 ##fresh-install: install migrate
+
+##Filament
+
+f-r:
+	sh vendor/bin/sail artisan make:filament-resource
+
+f-rm:
+	sh vendor/bin/sail artisan make:filament-relation-manager
+
+f-wt:
+	sh vendor/bin/sail artisan make:filament-widget --table
+
+f-wc:
+	sh vendor/bin/sail artisan make:filament-widget --chart
+
+f-ws:
+	sh vendor/bin/sail artisan make:filament-widget --stats-overview
+
+f-wcustom:
+	sh vendor/bin/sail artisan make:filament-widget
