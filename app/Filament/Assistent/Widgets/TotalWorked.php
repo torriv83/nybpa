@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class TotalWorked extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
+    protected static ?int    $sort            = 2;
 
     protected function getStats(): array
     {

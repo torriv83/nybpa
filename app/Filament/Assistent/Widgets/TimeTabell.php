@@ -17,6 +17,7 @@ class TimeTabell extends BaseWidget
 
     protected static ?string $heading         = 'Time tabell';
     protected static ?string $pollingInterval = null;
+    protected static ?int    $sort            = 4;
 
     public function table(Table $table): Table
     {
