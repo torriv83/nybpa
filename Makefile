@@ -42,6 +42,9 @@ seed:
 clean:
 	rm -rf build/ dist/
 
+routelist:
+	sh vendor/bin/sail artisan route:list
+
 ##fresh-install: install migrate
 
 ##Filament

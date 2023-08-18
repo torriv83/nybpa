@@ -13,7 +13,8 @@ class ListTimesheets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('Legg til tider du ikke kan jobbe'),
+            //FIXME sender ikke tilbake til liste
+            Actions\CreateAction::make()->label('Legg til tider du ikke kan jobbe')->successRedirectUrl(route('filament.assistent.resources.timesheets.index')),
         ];
     }
 }
