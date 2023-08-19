@@ -19,7 +19,8 @@
     "laravel/tinker": "^2.7",
     "livewire/livewire": "3.0.0-beta.8",
     "saade/filament-fullcalendar": "^v3.0.0-beta1",
-    "sentry/sentry-laravel": "^3.4"
+    "sentry/sentry-laravel": "^3.4",
+    "stechstudio/filament-impersonate": "^3.5"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "^3.7",
