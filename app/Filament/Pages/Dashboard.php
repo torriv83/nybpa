@@ -7,14 +7,14 @@ use Filament\Pages\Dashboard as BasePage;
 class Dashboard extends BasePage
 {
 
-    public function getColumns(): int|array
-    {
-        return 6;
+    /*    public function getColumns(): int|array
+        {
+            return 4;
 
-    }
+        }*/
 
-    public function getHeading(): string
-    {
-        return 'BPA Dashboard';
-    }
+    /*    public function getHeading(): string
+        {
+            return 'BPA Dashboard';
+        }*/
 }

@@ -14,15 +14,11 @@ class UserStats extends BaseWidget
     private UserStatsService $userStatsService;
 
     protected static ?string $pollingInterval = null;
+    protected static ?int    $sort            = 1;
 
     public function __construct()
     {
         $this->userStatsService = new UserStatsService();
-    }
-
-    protected function getColumns(): int
-    {
-        return 4;
     }
 
     protected function getStats(): array

@@ -6,6 +6,7 @@ use App\Models\Ynab;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,129 +22,113 @@ class YnabOverview extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected function getTableRecordsPerPageSelectOptions(): array
+    public function table(Table $table): Table
     {
-        return [12];
-    }
+        return $table
+            ->query(
+                Ynab::query()
+            )
+            ->columns([
+                Tables\Columns\TextColumn::make('month')
+                    ->label('Måned')
+                    ->formatStateUsing(function ($column): ?string {
 
-    protected function getDefaultTableSortColumn(): ?string
-    {
-        return 'month';
-    }
+                        Carbon::setlocale(config('app.locale'));
 
-    protected function getDefaultTableSortDirection(): ?string
-    {
-        return 'desc';
-    }
+                        return ucfirst(Carbon::parse($column->getState())->translatedFormat('F, Y'));
+                    })
+                    ->sortable()
+                    ->alignLeft(),
 
-    protected function getTableQuery(): Builder
-    {
-        return ynab::query();
-    }
+                Tables\Columns\TextColumn::make('income')
+                    ->getStateUsing(function (Model $record) {
+                        return $record->income / 1000;
+                    })
+                    ->money('nok', true)
+                    ->label('Inntekter')
+                    ->sortable()
+                    ->alignLeft(),
+                //->summarize(Average::make()),
 
-    protected function getTableColumns(): array
-    {
+                Tables\Columns\TextColumn::make('activity')
+                    ->getStateUsing(function (Model $record) {
+                        return $record->activity / 1000;
+                    })
+                    ->money('nok', true)
+                    ->label('Utgifter')
+                    ->sortable()
+                    ->alignLeft(),
 
-        return [
-            Tables\Columns\TextColumn::make('month')
-                ->label('Måned')
-                ->formatStateUsing(function ($column): ?string {
+                Tables\Columns\TextColumn::make('budgeted')
+                    ->getStateUsing(function (Model $record) {
+                        return $record->budgeted / 1000;
+                    })
+                    ->money('nok', true)
+                    ->label('Budgetert')
+                    ->sortable()
+                    ->alignLeft(),
 
-                    Carbon::setlocale(config('app.locale'));
+                Tables\Columns\TextColumn::make('inntektutgift')
+                    ->getStateUsing(function (Model $record) {
+                        return ($record->income + $record->activity) / 1000;
+                    })
+                    ->money('nok', true)
+                    ->sortable()
+                    ->color(function ($record) {
+                        if (($record->income + $record->activity) / 1000 < 0) {
+                            return 'danger';
+                        } else {
+                            return 'success';
+                        }
+                    })
+                    ->alignLeft()->label('Inntekt - Utgift'),
 
-                    return ucfirst(Carbon::parse($column->getState())->translatedFormat('F, Y'));
-                })
-                ->sortable()
-                ->alignLeft(),
-
-            Tables\Columns\TextColumn::make('income')
-                ->getStateUsing(function (Model $record) {
-                    return $record->income / 1000;
-                })
-                ->money('nok', true)
-                ->label('Inntekter')
-                ->sortable()
-                ->alignLeft(),
-
-            Tables\Columns\TextColumn::make('activity')
-                ->getStateUsing(function (Model $record) {
-                    return $record->activity / 1000;
-                })
-                ->money('nok', true)
-                ->label('Utgifter')
-                ->sortable()
-                ->alignLeft(),
-
-            Tables\Columns\TextColumn::make('budgeted')
-                ->getStateUsing(function (Model $record) {
-                    return $record->budgeted / 1000;
-                })
-                ->money('nok', true)
-                ->label('Budgetert')
-                ->sortable()
-                ->alignLeft(),
-
-            Tables\Columns\TextColumn::make('inntektutgift')
-                ->getStateUsing(function (Model $record) {
-                    return ($record->income + $record->activity) / 1000;
-                })
-                ->money('nok', true)
-                ->sortable()
-                ->color(function ($record) {
-                    if (($record->income + $record->activity) / 1000 < 0) {
-                        return 'danger';
-                    } else {
-                        return 'success';
-                    }
-                })
-                ->alignLeft()->label('Inntekt - Utgift'),
-
-            Tables\Columns\TextColumn::make('Balanse')
-                ->getStateUsing(function (Model $record) {
-                    return ($record->income - $record->budgeted) / 1000;
-                })
-                ->money('nok', true)
-                ->sortable()
-                ->color(function ($record) {
-                    if (($record->income - $record->budgeted) / 1000 < 0) {
-                        return 'danger';
-                    } else {
-                        return 'success';
-                    }
-                })
-                ->alignLeft(),
-        ];
-    }
-
-    protected function getTableFilters(): array
-    {
-        return [
-            Tables\Filters\Filter::make('month')
-                ->form([
-                    Forms\Components\DatePicker::make('fra'),
-                    Forms\Components\DatePicker::make('til')->default(now()),
-                ])
-                ->query(function (Builder $query, array $data): Builder {
-                    return $query
-                        ->when(
-                            $data['fra'],
-                            fn(Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
-                        )
-                        ->when(
-                            $data['til'],
-                            fn(Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
-                        );
-                }),
-            Tables\Filters\Filter::make('last3months')->label('Siste 3 måneder')
-                ->query(fn(Builder $query): Builder => $query
-                    ->where('month', '>=', Carbon::now()->subMonths(3))),
-            Tables\Filters\Filter::make('last6months')->label('Siste 6 måneder')
-                ->query(fn(Builder $query): Builder => $query
-                    ->where('month', '>=', Carbon::now()->subMonths(6))),
-            Tables\Filters\Filter::make('lastyear')->label('Siste år')
-                ->query(fn(Builder $query): Builder => $query
-                    ->where('month', '>=', Carbon::now()->subMonths(12)))->default(),
-        ];
+                Tables\Columns\TextColumn::make('Balanse')
+                    ->getStateUsing(function (Model $record) {
+                        return ($record->income - $record->budgeted) / 1000;
+                    })
+                    ->money('nok', true)
+                    ->sortable()
+                    ->color(function ($record) {
+                        if (($record->income - $record->budgeted) / 1000 < 0) {
+                            return 'danger';
+                        } else {
+                            return 'success';
+                        }
+                    })
+                    ->alignLeft(),
+            ])
+            ->striped()
+            ->deferLoading()
+            ->defaultSort('month', 'desc')
+            ->paginated([12, 25, 50, 100, 'all'])
+            ->filters([
+                Tables\Filters\Filter::make('month')
+                    ->form([
+                        Forms\Components\DatePicker::make('fra'),
+                        Forms\Components\DatePicker::make('til')->default(now()),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['fra'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
+                            )
+                            ->when(
+                                $data['til'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
+                            );
+                    }),
+                Tables\Filters\Filter::make('last3months')->label('Siste 3 måneder')
+                    ->query(fn(Builder $query): Builder => $query
+                        ->where('month', '>=', Carbon::now()->subMonths(3))),
+                Tables\Filters\Filter::make('last6months')->label('Siste 6 måneder')
+                    ->query(fn(Builder $query): Builder => $query
+                        ->where('month', '>=', Carbon::now()->subMonths(6))),
+                Tables\Filters\Filter::make('lastyear')->label('Siste år')
+                    ->query(fn(Builder $query): Builder => $query
+                        ->where('month', '>=', Carbon::now()->subMonths(12)))->default(),
+            ]);
     }
 
     //TODO endre denne

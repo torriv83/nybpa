@@ -34,7 +34,7 @@ class ManageEconomies extends ManageRecords
 
     public function updated($name): void
     {
-        //FIXME 
+        //FIXME
         if (Str::of($name)->contains(['mountedTableAction', 'mountedTableBulkAction'])) {
             $this->dispatch('updateStatsOverview');
         }
