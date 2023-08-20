@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TimesheetResource extends Resource
@@ -102,8 +103,16 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 Tables\Columns\TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 Tables\Columns\TextColumn::make('totalt')
-                    ->formatStateUsing(fn(string $state): string => (new \App\Services\UserStatsService)
-                        ->minutesToTime($state))
+                    ->getStateUsing(function (Model $record) {
+
+                        if ($record->allDay) {
+                            return '-';
+                        } else {
+                            $minutes = $record->totalt;
+
+                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                        }
+                    })
                     ->summarize(Sum::make()
                         ->formatStateUsing(fn(
                             string $state
@@ -115,7 +124,12 @@ class TimesheetResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->hidden(function ($record) {
+                    return $record->unavailable != 1;
+                }),
+                Tables\Actions\DeleteAction::make()->hidden(function ($record) {
+                    return $record->unavailable != 1;
+                }),
             ])
             ->bulkActions([
 //                Tables\Actions\BulkActionGroup::make([

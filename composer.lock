@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Althinect/filament-spatie-roles-permissions.git",
-                "reference": "a361295cc438ebaa961ec50ce96ac494c4980af0"
+                "reference": "f0a7331f0964ff1aee69d488a2bc67cb60df30dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/a361295cc438ebaa961ec50ce96ac494c4980af0",
-                "reference": "a361295cc438ebaa961ec50ce96ac494c4980af0",
+                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/f0a7331f0964ff1aee69d488a2bc67cb60df30dc",
+                "reference": "f0a7331f0964ff1aee69d488a2bc67cb60df30dc",
                 "shasum": ""
             },
             "require": {
@@ -65,9 +65,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Althinect/filament-spatie-roles-permissions/issues",
-                "source": "https://github.com/Althinect/filament-spatie-roles-permissions/tree/v2.0.2"
+                "source": "https://github.com/Althinect/filament-spatie-roles-permissions/tree/v2.0.3"
             },
-            "time": "2023-08-02T04:10:03+00:00"
+            "time": "2023-08-18T00:11:21+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",

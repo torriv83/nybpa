@@ -10,6 +10,14 @@ class EditTimesheet extends EditRecord
 {
     protected static string $resource = TimesheetResource::class;
 
+    protected function mutateFormDataBeforeFill(array $data,): array
+    {
+        $data['fra_datod'] = $this->record->fra_dato;
+        $data['til_datod'] = $this->record->til_dato;
+
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
