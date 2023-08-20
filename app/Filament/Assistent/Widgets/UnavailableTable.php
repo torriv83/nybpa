@@ -34,7 +34,7 @@ class UnavailableTable extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
             ])->headerActions([
-                CreateAction::make()
+                CreateAction::make()->label('Legg til tid du ikke kan jobbe')
                     ->form([
                         //Seksjon
                         Section::make(fn() => Auth::user()->name)
