@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
 class UserResource extends Resource
 {
@@ -132,6 +133,7 @@ class UserResource extends Resource
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
                     Tables\Actions\RestoreAction::make()->label('Angre sletting'),
+                    Impersonate::make()->redirectTo(route('filament.assistent.pages.dashboard')),
                 ]),
             ])
             ->bulkActions([
