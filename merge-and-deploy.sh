@@ -9,6 +9,15 @@ if [ "$CURRENT_BRANCH" = "Staging" ]; then
   exit 1
 fi
 
+# Step 1: Run tests with PestPHP
+echo "Running tests..."
+sh vendor/bin/sail pest
+
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Aborting."
+  exit 1
+fi
+
 # Merge current branch into Staging
 echo "Merging $CURRENT_BRANCH into Staging..."
 git checkout Staging
@@ -20,15 +29,6 @@ sh vendor/bin/sail npm run build
 
 if [ $? -ne 0 ]; then
   echo "Build failed. Aborting."
-  exit 1
-fi
-
-# Step 2: Run tests with PestPHP
-echo "Running tests..."
-sh vendor/bin/sail pest
-
-if [ $? -ne 0 ]; then
-  echo "Tests failed. Aborting."
   exit 1
 fi
 
