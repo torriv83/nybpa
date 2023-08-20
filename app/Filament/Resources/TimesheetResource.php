@@ -251,7 +251,7 @@ class TimesheetResource extends Resource
                 Forms\Components\Section::make('Tid')
                     ->description('Velg fra og til')
                     ->schema([
-                        Forms\Components\DateTimePicker::make('fra_dato_tid')
+                        Forms\Components\DateTimePicker::make('fra_dato')
                             ->displayFormat('d.m.Y H:i')
                             ->seconds(false)
                             ->minutesStep(15)
@@ -259,20 +259,20 @@ class TimesheetResource extends Resource
                             ->live()
                             ->hidden(fn(Get $get): bool => $get('allDay'))
                             ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
-                                $set('til_dato_tid',
+                                $set('til_dato',
                                     Carbon::parse($state)->addHour()->format('Y-m-d H:i:s'));
 
                                 $fra = Carbon::parse($state)->format('Y-m-d H:i:s');
-                                $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($get('til_dato_tid')));
+                                $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($get('til_dato')));
 
-                                $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($get('til_dato_tid'));
+                                $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($get('til_dato'));
                                 $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                                 $set('Tid', $hours);
 
-                                $set('til_dato', $get('til_dato_tid'));
-                                $set('fra_dato', $state);
+                                /*$set('til_dato', $get('til_dato_tid'));
+                                $set('fra_dato', $state);*/
                             }),
-                        Forms\Components\DateTimePicker::make('til_dato_tid')
+                        Forms\Components\DateTimePicker::make('til_dato')
                             ->displayFormat('d.m.Y H:i')
                             ->seconds(false)
                             ->minutesStep(15)
@@ -281,29 +281,29 @@ class TimesheetResource extends Resource
                             ->hidden(fn(Get $get): bool => $get('allDay'))
                             ->afterStateUpdated(function ($set, string $state, $get) {
 
-                                $fra = Carbon::parse($get('fra_dato_tid'))->format('Y-m-d H:i:s');
+                                $fra = Carbon::parse($get('fra_dato'))->format('Y-m-d H:i:s');
                                 $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
 
                                 $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
                                 $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                                 $set('Tid', $hours);
 
-                                $set('til_dato', $state);
-                                $set('fra_dato', $get('fra_dato_tid'));
+                                /*                                $set('til_dato', $state);
+                                                                $set('fra_dato', $get('fra_dato_tid'));*/
                             }),
 
-                        Forms\Components\DatePicker::make('fra_dato_d')
-                            ->displayFormat('d.m.Y')
+                        Forms\Components\DatePicker::make('fra_datod')
+                            ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->hidden(fn(Get $get): bool => !$get('allDay')),
-                        Forms\Components\DatePicker::make('til_dato_d')
+                        Forms\Components\DatePicker::make('til_datod')
                             ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->live()
                             ->hidden(fn(Get $get): bool => !$get('allDay'))
                             ->afterStateUpdated(function ($set, string $state, $get) {
 
-                                $fra = Carbon::parse($get('fra_dato_d'))->format('Y-m-d H:i:s');
+                                $fra = Carbon::parse($get('fra_dato'))->format('Y-m-d H:i:s');
                                 $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
 
                                 $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
@@ -311,7 +311,7 @@ class TimesheetResource extends Resource
                                 $set('Tid', $hours);
 
                                 $set('til_dato', $state);
-                                $set('fra_dato', $get('fra_dato_d'));
+                                $set('fra_dato', $get('fra_datod'));
                             }),
 
                         Forms\Components\RichEditor::make('description')
