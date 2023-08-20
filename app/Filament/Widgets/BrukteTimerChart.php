@@ -13,11 +13,7 @@ class BrukteTimerChart extends ChartWidget
 
     protected static ?string $pollingInterval = null;
 
-    protected static ?int $sort = 1;
-
-    //protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
-    protected int|string|array $columnSpan = 3;
-
+    protected static ?int $sort = 2;
 
     protected function getType(): string
     {

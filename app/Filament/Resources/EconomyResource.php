@@ -8,6 +8,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EconomyResource\Pages;
 use app\Filament\Resources\EconomyResource\Widgets\StatsOverview;
+use App\Filament\Resources\EconomyResource\Widgets\tester;
 use App\Filament\Resources\EconomyResource\Widgets\YnabOverview;
 use App\Models\Economy;
 use Filament\Forms;

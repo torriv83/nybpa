@@ -38,6 +38,6 @@ class Ynab extends Model
 
     protected function sushiShouldCache(): bool
     {
-        return true;
+        return false;
     }
 }

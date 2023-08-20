@@ -15,10 +15,7 @@ class TimerChart extends ChartWidget
 
     protected static ?string $pollingInterval = null;
 
-    protected static ?int $sort = 2;
-
-    //protected int|string|array $columnSpan = 'col-span-3 sm:col-span-3 md:col-span-3 lg:col-span-3';
-    protected int|string|array $columnSpan = 3;
+    protected static ?int $sort = 3;
 
     protected mixed $bpa;
 
@@ -29,8 +26,6 @@ class TimerChart extends ChartWidget
 
     public function __construct()
     {
-//        parent::__construct();
-
         $setting   = Settings::where('user_id', '=', Auth::id())->first();
         $this->bpa = $setting['bpa_hours_per_week'] ?? 1;
     }
