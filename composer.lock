@@ -1209,7 +1209,7 @@
         },
         {
             "name": "filament/actions",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/actions.git",
@@ -1259,16 +1259,16 @@
         },
         {
             "name": "filament/filament",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/panels.git",
-                "reference": "b53d46994926ab26d229a9f585286d4bd39bd5c3"
+                "reference": "fca2482eaee1cd42285ad03062529179287c5ca7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/panels/zipball/b53d46994926ab26d229a9f585286d4bd39bd5c3",
-                "reference": "b53d46994926ab26d229a9f585286d4bd39bd5c3",
+                "url": "https://api.github.com/repos/filamentphp/panels/zipball/fca2482eaee1cd42285ad03062529179287c5ca7",
+                "reference": "fca2482eaee1cd42285ad03062529179287c5ca7",
                 "shasum": ""
             },
             "require": {
@@ -1320,11 +1320,11 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2023-08-21T10:29:21+00:00"
+            "time": "2023-08-21T11:03:32+00:00"
         },
         {
             "name": "filament/forms",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
@@ -1380,7 +1380,7 @@
         },
         {
             "name": "filament/infolists",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/infolists.git",
@@ -1431,7 +1431,7 @@
         },
         {
             "name": "filament/notifications",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/notifications.git",
@@ -1483,7 +1483,7 @@
         },
         {
             "name": "filament/support",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/support.git",
@@ -1540,7 +1540,7 @@
         },
         {
             "name": "filament/tables",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
@@ -1593,7 +1593,7 @@
         },
         {
             "name": "filament/widgets",
-            "version": "v3.0.29",
+            "version": "v3.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/widgets.git",
