@@ -13,6 +13,12 @@ fi
 echo "Running tests..."
 sh vendor/bin/sail pest
 
+# Check if tests passed
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Aborting."
+  exit 1
+fi
+
 # # Step 2: Merge current branch into Staging
 echo "Merging $CURRENT_BRANCH into Staging..."
 git checkout Staging
