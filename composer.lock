@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6ebb5667688514dc2e6d66d68e50c25",
+    "content-hash": "e6942b7a6cb5896a869d9d1da4d64f34",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -3431,16 +3431,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.0.0-beta.8",
+            "version": "v3.0.0-beta.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "888c869df2c886c603ffafa7b70240891dbc56ed"
+                "reference": "526bda01304b16908d029f2010504957d8c46e05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/888c869df2c886c603ffafa7b70240891dbc56ed",
-                "reference": "888c869df2c886c603ffafa7b70240891dbc56ed",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/526bda01304b16908d029f2010504957d8c46e05",
+                "reference": "526bda01304b16908d029f2010504957d8c46e05",
                 "shasum": ""
             },
             "require": {
@@ -3492,7 +3492,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.0.0-beta.8"
+                "source": "https://github.com/livewire/livewire/tree/v3.0.0-beta.10"
             },
             "funding": [
                 {
@@ -3500,7 +3500,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-08T19:03:42+00:00"
+            "time": "2023-08-19T04:25:59+00:00"
         },
         {
             "name": "masterminds/html5",
