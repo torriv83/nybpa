@@ -114,7 +114,8 @@ class WeekplanResource extends Resource
             'index'  => Pages\ListWeekplans::route('/'),
             'create' => Pages\CreateWeekplan::route('/create'),
             'edit'   => Pages\EditWeekplan::route('/{record}/edit'),
-            'view'   => Pages\ViewUkeplan::route('/{record}'),
+//            'view'   => Pages\ViewWeekplan::route('/{record}'),
+            'view'   => Pages\ViewWeekplan::route('/{record}'),
         ];
     }
 
