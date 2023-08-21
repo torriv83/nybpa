@@ -7,12 +7,18 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Database\Eloquent\Model;
 
 class StatsOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    public $record;
+    public ?Model $record = null;
+
+    public function mount($record)
+    {
+        $this->record = $record;
+    }
 
     protected function getStats(): array
     {

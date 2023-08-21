@@ -16,12 +16,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         $data = [
             [
@@ -132,93 +126,3 @@ class DatabaseSeeder extends Seeder
         DB::table('settings')->insert(['user_id' => '6', 'weekplan_timespan' => '0', 'bpa_hours_per_week' => 7]);
     }
 }
-/*DB::table('users')->insert([
-            [
-                'id'                => '6',
-                'name'              => 'Tor J. Rivera',
-                'email'             => 'tor@trivera.net',
-                'phone'             => '47311906',
-                'adresse'           => 'Tollbugata 6',
-                'postnummer'        => '1776',
-                'poststed'          => 'Halden',
-                'password'          => Hash::make('voit63983'),
-                'email_verified_at' => today(),
-            ],
-            [
-                'id'                => '4',
-                'name'              => 'Henrik Dahl',
-                'email'             => 'henrik.dahl.98@hotmail.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('henrik123'),
-            ],
-            [
-                'id'                => '8',
-                'name'              => 'Benjamin Huseby',
-                'email'             => 'test@test.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('benjamin123'),
-            ],
-            [
-                'id'                => '1',
-                'name'              => 'Veronica Sudnell Hansen',
-                'email'             => 'test@test.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('voit63983'),
-            ],
-            [
-                'id'                => '2',
-                'name'              => 'Cecilie Andersson',
-                'email'             => 'test@test.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('voit63983'),
-            ],
-            [
-                'id'                => '3',
-                'name'              => 'Abelone Ledin',
-                'email'             => 'test@test.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('voit63983'),
-            ],
-            [
-                'id'                => '5',
-                'name'              => 'Amalie Grimsrud',
-                'email'             => 'test@test.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('voit63983'),
-            ],
-            [
-                'id'                => '8',
-                'name'              => 'Marius Moe Olsen',
-                'email'             => 'test@test.com',
-                'phone'             => '',
-                'adresse'           => '',
-                'postnummer'        => '',
-                'poststed'          => '',
-                'email_verified_at' => today(),
-                'password'          => Hash::make('voit63983'),
-            ]
-        ]);*/
