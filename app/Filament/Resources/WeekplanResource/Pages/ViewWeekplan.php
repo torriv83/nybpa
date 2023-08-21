@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\WeekplanResource\Pages;
 
 use App\Filament\Resources\WeekplanResource;
-use App\Filament\Resources\WeekplanResource\Widgets\StatsOverview;
 use App\Models\Settings;
 use App\Models\Weekplan;
 use Carbon\Carbon;
@@ -12,27 +11,12 @@ use Filament\Resources\Pages\Page;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
-class ViewUkeplan extends Page
+class ViewWeekplan extends Page
 {
     protected static string $resource = WeekplanResource::class;
 
     protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
-    protected static ?string $title = 'Ukeplan';
-
-    public $record;
-
-    public function mount($record): void
-    {
-        $this->record = Weekplan::find($record);
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('edit')->url('./' . $this->record->id . '/edit'),
-        ];
-    }
 
     protected function getViewData(): array
     {
@@ -43,9 +27,40 @@ class ViewUkeplan extends Page
         return compact('okter', 'data');
     }
 
+    public function getTitle(): string
+    {
+        // Retrieve the dynamic title from a database, configuration, or any other source
+        return $this->record['name'];
+    }
+
+    public function getSubheading(): string
+    {
+        $dynamicSubheading = $this->record['updated_at'];
+        $formattedDate     = '';
+
+        if ($dynamicSubheading) {
+            $formattedDate = Carbon::parse($dynamicSubheading)->diffForHumans();
+        }
+
+        return 'Sist oppdatert: ' . $formattedDate;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('edit')->url('./' . $this->record->id . '/edit'),
+        ];
+    }
+
+    public function mount($record): void
+    {
+        $this->record = Weekplan::find($record);
+    }
+
     public function getDayData(): Collection
     {
         return collect($this->record['data']);
+
     }
 
     public function getExercises(): array
@@ -152,28 +167,11 @@ class ViewUkeplan extends Page
         ];
     }
 
-    public function getTitle(): string
-    {
-        // Retrieve the dynamic title from a database, configuration, or any other source
-        return $this->record['name'];
-    }
-
-    public function getSubheading(): string
-    {
-        $dynamicSubheading = $this->record['updated_at'];
-        $formattedDate     = '';
-
-        if ($dynamicSubheading) {
-            $formattedDate = Carbon::parse($dynamicSubheading)->diffForHumans();
-        }
-
-        return 'Sist oppdatert: ' . $formattedDate;
-    }
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            StatsOverview::make(['record' => $this->record]),
-        ];
-    }
+    //TODO
+    /*    protected function getHeaderWidgets(): array
+        {
+            return [
+                StatsOverview::make(['record' => $this->record]),
+            ];
+        }*/
 }
