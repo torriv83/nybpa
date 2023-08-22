@@ -3,6 +3,7 @@
 namespace App\Filament\Assistent\Widgets;
 
 use App\Models\Timesheet;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -12,6 +13,8 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -35,6 +38,27 @@ class UnavailableTable extends BaseWidget
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
             ])->headerActions([
                 CreateAction::make()->label('Legg til tid du ikke kan jobbe')
+                    ->after(function () {
+                        $recipient = User::query()->role('admin')->get();
+
+                        Notification::make()
+                            ->title(auth()->user()->name . ' Har lagt til en tid han/hun ikke kan jobbe.')
+                            ->actions([
+                                Action::make('view')
+                                    ->url((route('filament.admin.resources.timelister.index', [
+                                        'tableFilters' => [
+                                            'Ikke tilgjengelig' => [
+                                                'isActive' => true
+                                            ],
+                                            'assistent'         => [
+                                                'value' => auth()->user()->id
+                                            ]
+                                        ],
+                                    ])))
+                                    ->button(),
+                            ])
+                            ->sendToDatabase($recipient);
+                    })
                     ->form([
                         //Seksjon
                         Section::make(fn() => Auth::user()->name)

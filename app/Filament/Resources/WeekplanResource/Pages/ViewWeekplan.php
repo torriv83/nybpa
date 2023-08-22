@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\WeekplanResource\Pages;
 
 use App\Filament\Resources\WeekplanResource;
+use App\Filament\Resources\WeekplanResource\Widgets\StatsOverview;
 use App\Models\Settings;
 use App\Models\Weekplan;
 use Carbon\Carbon;
@@ -167,11 +168,10 @@ class ViewWeekplan extends Page
         ];
     }
 
-    //TODO
-    /*    protected function getHeaderWidgets(): array
-        {
-            return [
-                StatsOverview::make(['record' => $this->record]),
-            ];
-        }*/
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            StatsOverview::make(['record' => $this->record]),
+        ];
+    }
 }
