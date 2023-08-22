@@ -50,6 +50,7 @@ class SendWorkReminderEmail extends Command
             foreach ($reminderTimes as $label => $reminderTime) {
                 // Check if the current time is within a 1-minute window of the reminder time
                 if (now()->gte($reminderTime) && now()->lt($reminderTime->addMinutes(1))) {
+                    $this->info("Sending email ($label)");
                     $details = [
                         'date'      => $timesheet->fra_dato,
                         'time'      => $timesheet->fra_dato,
@@ -57,6 +58,8 @@ class SendWorkReminderEmail extends Command
                     ];
 
                     Mail::to('tor@trivera.net')->send(new WorkReminderMail($details));
+                } else {
+                    $this->comment("Not time to send email ($label)");
                 }
             }
         }
