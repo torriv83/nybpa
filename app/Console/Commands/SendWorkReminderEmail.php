@@ -52,8 +52,8 @@ class SendWorkReminderEmail extends Command
                 if (now()->gte($reminderTime) && now()->lt($reminderTime->addMinutes(1))) {
                     $this->info("Sending email ($label)");
                     $details = [
-                        'date'      => $timesheet->fra_dato,
-                        'time'      => $timesheet->fra_dato,
+                        'date'      => Carbon::parse($timesheet->fra_dato)->format('d.m.Y'),
+                        'time'      => Carbon::parse($timesheet->fra_dato)->format('H:i'),
                         'assistent' => $timesheet->user->name,
                     ];
 
