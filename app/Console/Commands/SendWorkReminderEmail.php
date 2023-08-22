@@ -35,7 +35,7 @@ class SendWorkReminderEmail extends Command
      */
     public function handle()
     {
-        $timesheets = Timesheet::where('fra_dato', '>=', now())->with('user')->get();
+        $timesheets = Timesheet::where('fra_dato', '>=', now())->whereNull('deleted_at')->where('unavailable', 0)->with('user')->get();
 
         foreach ($timesheets as $timesheet) {
             $workTime = Carbon::parse($timesheet->fra_dato);
