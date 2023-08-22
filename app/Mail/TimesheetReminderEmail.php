@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WorkReminderMail extends Mailable
+class TimesheetReminderEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,8 +29,8 @@ class WorkReminderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from   : new Address('bpa@trivera.net', 'Bpa - Tor Rivera'),
-            subject: 'Work Reminder',
+            from   : new Address('tor@trivera.net', 'Tor Rivera'),
+            subject: 'Tid for å sende inn timeliste',
         );
     }
 
@@ -40,7 +40,7 @@ class WorkReminderMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.work_reminder',
+            markdown: 'emails.timesheet_reminder',
         );
     }
 

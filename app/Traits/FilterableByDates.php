@@ -67,6 +67,6 @@ trait FilterableByDates
      */
     public function scopeInFuture($query, $column = 'created_at')
     {
-        return $query->where($column, '>=', today());
+        return $query->where($column, '>=', now());
     }
 }
