@@ -7,9 +7,9 @@ use App\Models\Kategori;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Cache;
@@ -30,8 +30,8 @@ class KategoriResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-
-        return Cache::remember('CategoryNavigationBadge', now()->addMonth(), function () {
+        
+        return Cache::tags(['medisinsk'])->remember('CategoryNavigationBadge', now()->addMonth(), function () {
             return static::getModel()::count();
         });
     }

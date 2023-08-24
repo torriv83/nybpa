@@ -4,7 +4,6 @@ namespace App\Filament\Resources\TestResultsResource\Pages;
 
 use App\Filament\Resources\TestResultsResource;
 use App\Models\Tests;
-use Closure;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -12,6 +11,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Cache;
 
 class CreateTestResults extends CreateRecord
 {
@@ -67,5 +67,10 @@ class CreateTestResults extends CreateRecord
                     Hidden::make('testsID'),
                 ]),
         ];
+    }
+
+    protected function afterCreate(): void
+    {
+        Cache::tags(['testresult'])->flush();
     }
 }

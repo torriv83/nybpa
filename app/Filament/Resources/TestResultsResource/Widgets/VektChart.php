@@ -23,31 +23,33 @@ class VektChart extends ChartWidget
 
     protected function getData(): array
     {
-        $weights = [];
-        $dates   = [];
+        return Cache::tags(['testresult'])->remember('vektChart', now()->addMonth(), function () {
+            $weights = [];
+            $dates   = [];
 
-        try {
-            $tests = $this->getTests();
-            if ($tests) {
-                $results = $this->getTestResults($tests->first());
-                foreach ($results as $result) {
-                    $weights[] = $result->resultat[0]['Vekt'];
-                    $dates[]   = $result->dato->format('d.m.y H:i');
+            try {
+                $tests = $this->getTests();
+                if ($tests) {
+                    $results = $this->getTestResults($tests->first());
+                    foreach ($results as $result) {
+                        $weights[] = $result->resultat[0]['Vekt'];
+                        $dates[]   = $result->dato->format('d.m.y H:i');
+                    }
                 }
+            } catch (\Exception $e) {
+                // Handle the exception, log, or display an error message
             }
-        } catch (\Exception $e) {
-            // Handle the exception, log, or display an error message
-        }
 
-        return [
-            'datasets' => [
-                [
-                    'label' => 'Vekt',
-                    'data'  => $weights,
+            return [
+                'datasets' => [
+                    [
+                        'label' => 'Vekt',
+                        'data'  => $weights,
+                    ],
                 ],
-            ],
-            'labels'   => $dates,
-        ];
+                'labels'   => $dates,
+            ];
+        });
     }
 
     protected function getType(): string
@@ -57,18 +59,14 @@ class VektChart extends ChartWidget
 
     protected function getTests(): Collection
     {
-        return Cache::remember('vektChart', now()->addDay(), function () {
-            return Tests::where('navn', '=', 'Vekt')->get();
-        });
+        return Tests::where('navn', '=', 'Vekt')->get();
     }
 
     protected function getTestResults(Tests $test): Collection
     {
-        return Cache::remember('vektResultat', now()->addDay(), function () use ($test) {
-            return TestResults::where('testsID', '=', $test->id)
-                ->orderBy('dato')
-                ->get();
-        });
+        return TestResults::where('testsID', '=', $test->id)
+            ->orderBy('dato')
+            ->get();
     }
 
     private function getChartOptions(): array

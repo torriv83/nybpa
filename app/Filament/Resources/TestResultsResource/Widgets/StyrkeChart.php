@@ -22,17 +22,21 @@ class StyrkeChart extends ChartWidget
 
     protected function getData(): array
     {
-        $styrketest = $this->fetchData();
 
-        if (!$styrketest || $styrketest->testResults->isEmpty()) {
-            return $this->getDefaultChartData();
-        }
+        return Cache::tags(['testresult'])->remember('styrkeChart', now()->addMonth(), function () {
+            $styrketest = $this->fetchData();
 
-        $transformedData = $this->transformData($styrketest->testResults);
-        $resultater      = $transformedData['resultater'];
-        $dato            = $transformedData['dato'];
+            if (!$styrketest || $styrketest->testResults->isEmpty()) {
+                return $this->getDefaultChartData();
+            }
 
-        return $this->formatChartData($resultater, $dato);
+            $transformedData = $this->transformData($styrketest->testResults);
+            $resultater      = $transformedData['resultater'];
+            $dato            = $transformedData['dato'];
+
+            return $this->formatChartData($resultater, $dato);
+
+        });
     }
 
     protected function getType(): string
@@ -40,18 +44,18 @@ class StyrkeChart extends ChartWidget
         return 'line';
     }
 
-    protected function fetchData(int $numberOfResults = 2): ?Tests
+    protected function fetchData(int $numberOfResults = 6)
     {
-        return Cache::remember('styrkeChart', now()->addDay(), function () use ($numberOfResults) {
-            return Tests::with([
-                'testResults' => function ($query) use ($numberOfResults) {
-                    return $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
+
+        return Tests::with([
+            'testResults' => function ($query) use ($numberOfResults) {
+                return $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
                     ->take($numberOfResults); // Take only the specified number of results
-                }
-            ])
-                ->where('navn', '=', 'Styrketest')
-                ->first();
-        });
+            }
+        ])
+            ->where('navn', '=', 'Styrketest')
+            ->first();
+
     }
 
     protected function transformData(Collection $results): array

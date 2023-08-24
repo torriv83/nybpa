@@ -30,8 +30,8 @@ class ListTimesheets extends ListRecords
 
     public function getTabs(): array
     {
-        // Cache the years for 24 hours
-        $years = Cache::remember('timesheets-years', 60 * 24, function () {
+
+        $years = Cache::tags(['timesheet'])->remember('timesheets-years', 60 * 24, function () {
             return DB::table('timesheets')
                 ->selectRaw('YEAR(fra_dato) as year')
                 ->groupBy(DB::raw('YEAR(fra_dato)'))

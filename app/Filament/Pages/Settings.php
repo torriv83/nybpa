@@ -41,12 +41,8 @@ class Settings extends Page implements HasForms
 
     public function mount(): void
     {
-
-        if (Setting::where('user_id', Auth::id())->first() !== null) {
-            $this->settings = Setting::where('user_id', Auth::id())->first();
-        } else {
-            $this->settings = new Setting();
-        }
+        
+        $this->settings = Setting::getUserSettings(Auth::id()) ?? new Setting();
 
         $this->form->fill([
             'weekplan_timespan'  => $this->settings->weekplan_timespan,
@@ -118,9 +114,9 @@ class Settings extends Page implements HasForms
             ->title('Innstillinger er lagret')
             ->success()
             ->send();
-        //        $settings->save();
 
-        //         SAVE THE SETTINGS HERE
+        Cache::tags(['settings'])->forget('user-settings-' . Auth::id());
+
     }
 
     public function clearCache()
