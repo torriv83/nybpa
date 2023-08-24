@@ -79,7 +79,7 @@ class Timesheet extends Model
     public function timeUsedThisYear(): Collection
     {
 
-        return Cache::remember('timeUsedThisYear', now()->addDay(), function () {
+        return Cache::tags(['timesheet'])->remember('timeUsedThisYear', now()->addMonth(), function () {
             return $this->yearToDate()
                 ->where('unavailable', '!=', 1)
                 ->orderByRaw('fra_dato ASC')
@@ -92,7 +92,7 @@ class Timesheet extends Model
     public function timeUsedLastYear(): Collection
     {
 
-        return Cache::remember('timeUsedLastYear', now()->addDay(), function () {
+        return Cache::tags(['timesheet'])->remember('timeUsedLastYear', now()->addMonth(), function () {
 
             return $this->lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')

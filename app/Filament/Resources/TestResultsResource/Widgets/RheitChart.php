@@ -21,16 +21,18 @@ class RheitChart extends ChartWidget
 
     protected function getData(): array
     {
-        $rheit = $this->fetchData();
+        return Cache::tags(['testresult'])->remember('rheitChart', now()->addMonth(), function () {
+            $rheit = $this->fetchData();
 
-        if (!$rheit || $rheit->testResults->isEmpty()) {
-            return $this->getDefaultChartData();
-        }
+            if (!$rheit || $rheit->testResults->isEmpty()) {
+                return $this->getDefaultChartData();
+            }
 
-        return $this->formatChartData(
-            $this->transformData($rheit->testResults)['resultater'],
-            $this->transformData($rheit->testResults)['dato']
-        );
+            return $this->formatChartData(
+                $this->transformData($rheit->testResults)['resultater'],
+                $this->transformData($rheit->testResults)['dato']
+            );
+        });
     }
 
     protected function getType(): string
@@ -40,9 +42,7 @@ class RheitChart extends ChartWidget
 
     protected function fetchData()
     {
-        return Cache::remember('rheitTest', now()->addDay(), function () {
-            return Tests::with('testResults')->where('navn', '=', 'Rheit')->first();
-        });
+        return Tests::with('testResults')->where('navn', '=', 'Rheit')->first();
     }
 
     protected function transformData($results)

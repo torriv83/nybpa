@@ -61,10 +61,6 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    /*    public function setPasswordAttribute($pass)
-        {
-            $this->attributes['password'] = Hash::make($pass);
-        }*/
 
     public function timesheet(): HasMany
     {

@@ -10,6 +10,7 @@ use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class HoursUsedEachMonth extends BaseWidget
@@ -29,13 +30,13 @@ class HoursUsedEachMonth extends BaseWidget
     {
         return $table
             ->query(
-                Timesheet::query()->select(DB::raw('DATE(DATE_FORMAT(fra_dato, \'%Y-%m-01\')) AS month, SUM(totalt) AS Totalt'))
+                Timesheet::query()
+                    ->select(DB::raw('DATE(DATE_FORMAT(fra_dato, \'%Y-%m-01\')) AS month, SUM(totalt) AS Totalt'))
                     ->groupBy(DB::raw("DATE(DATE_FORMAT(fra_dato, '%Y-%m-01'))"))
                     ->whereBetween(
                         'fra_dato',
                         [
-                            Carbon::parse('first day of January')
-                                ->format('Y-m-d H:i:s'),
+                            Carbon::parse('first day of January')->format('Y-m-d H:i:s'),
                             Carbon::now()->endOfYear(),
                         ]
                     )
@@ -50,13 +51,15 @@ class HoursUsedEachMonth extends BaseWidget
                             }),
                         Tables\Columns\TextColumn::make('Totalt')
                             ->formatStateUsing(function ($state) {
-                                return $state / 60;
+                                return Cache::tags(['timesheet'])->remember('Totalt-' . $state, now()->addMonth(), function () use ($state) {
+                                    return $state / 60;
+                                });
                             }),
                     ])
                 ])
             ])
             ->paginated([1, 3, 6, 9, 12])
             ->contentGrid(['md' => 12]);
-
     }
+
 }

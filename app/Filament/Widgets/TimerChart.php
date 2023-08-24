@@ -6,7 +6,6 @@ use App\Models\Settings;
 use App\Models\Timesheet;
 use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Pipeline;
 
 class TimerChart extends ChartWidget
@@ -26,8 +25,7 @@ class TimerChart extends ChartWidget
 
     public function __construct()
     {
-        $setting   = Settings::where('user_id', '=', Auth::id())->first();
-        $this->bpa = $setting['bpa_hours_per_week'] ?? 1;
+        $this->bpa = Settings::getUserBpa();
     }
 
     protected function getData(): array
