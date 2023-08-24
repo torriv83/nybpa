@@ -162,7 +162,8 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::remember('UserNavigationBadge', now()->addMonth(), function () {
+        
+        return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function () {
 
             $roles = ['Fast ansatt', 'Tilkalling'];
 

@@ -30,7 +30,7 @@ class BrukteTimerChart extends ChartWidget
         $thisYearTimes = $this->yearTimes($thisYear);
 
         /* Forrige år */
-        $lastYear = Cache::remember('lastYear', now()->addDay(), function () {
+        $lastYear = Cache::tags(['timesheet'])->remember('lastYear', now()->addMonth(), function () {
             return Timesheet::lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
                 ->get()

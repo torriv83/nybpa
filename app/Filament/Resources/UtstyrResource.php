@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
@@ -80,8 +79,7 @@ class UtstyrResource extends Resource
                 Tables\Actions\RestoreBulkAction::make(),
                 Tables\Actions\BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data) {
-                        $setting = Settings::where('user_id', '=', Auth::id())->first();
-                        Mail::to($setting->apotek_epost)->send(new Bestilling($records, $data));
+                        Mail::to(Settings::getUserApotekEpost())->send(new Bestilling($records, $data));
                         Notification::make()
                             ->title('E-post har blitt sendt')
                             ->success()
@@ -134,7 +132,7 @@ class UtstyrResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::remember('UtstyrNavigationBadge', now()->addMonth(), function () {
+        return Cache::tags(['medisinsk'])->remember('UtstyrNavigationBadge', now()->addMonth(), function () {
             return static::getModel()::count();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TimesheetResource\Pages;
 use App\Filament\Resources\TimesheetResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Cache;
 
 class EditTimesheet extends EditRecord
 {
@@ -25,5 +26,10 @@ class EditTimesheet extends EditRecord
             Actions\ForceDeleteAction::make()->label('Tving sletting'),
             Actions\RestoreAction::make()->label('Angre sletting'),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        Cache::tags(['timesheet'])->flush();
     }
 }

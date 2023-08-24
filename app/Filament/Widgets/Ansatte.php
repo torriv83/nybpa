@@ -43,7 +43,7 @@ class Ansatte extends BaseWidget
                     ->default('12345678'),
                 Tables\Columns\TextColumn::make('Jobbet i år')
                     ->getStateUsing(function (Model $record) {
-                        $minutes = Cache::remember('WorkedThisYear' . $record->id, now()->addDay(), function () use ($record) {
+                        $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear' . $record->id, now()->addDay(), function () use ($record) {
                             return $record->timesheet()
                                 ->yearToDate('fra_dato')
                                 ->where('unavailable', '!=', 1)->sum('totalt');

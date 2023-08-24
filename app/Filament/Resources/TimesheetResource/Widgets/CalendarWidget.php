@@ -54,7 +54,7 @@ class CalendarWidget extends FullCalendarWidget
     public function getViewData(): array
     {
 
-        $schedules = Cache::remember('schedules', now()->addDay(), function () {
+        $schedules = Cache::tags(['timesheet'])->remember('schedules', now()->addDay(), function () {
             return Timesheet::query()->with('user')->get();
         });
 
@@ -85,7 +85,8 @@ class CalendarWidget extends FullCalendarWidget
         $this->event->delete();
 
         $this->dispatch('close-modal', ['id' => 'fullcalendar--edit-event-modal']);
-        Cache::flush();
+
+        Cache::tags(['timesheet'])->flush();
         $this->refreshEvents();
 
         Notification::make()
@@ -236,7 +237,7 @@ class CalendarWidget extends FullCalendarWidget
             'totalt'      => Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']),
         ]);
 
-        Cache::flush();
+        Cache::tags(['timesheet'])->flush();
 
         $this->refreshEvents();
 
@@ -260,7 +261,8 @@ class CalendarWidget extends FullCalendarWidget
         $tid->totalt      = Carbon::createFromFormat('Y-m-d H:i:s', $data['start'])->diffInMinutes($data['end']);
 
         if ($tid->save()) {
-            Cache::flush();
+
+            Cache::tags(['timesheet'])->flush();
 
             $this->refreshEvents();
 
@@ -293,7 +295,7 @@ class CalendarWidget extends FullCalendarWidget
     public function onEventDrop($newEvent): void
     {
         $this->eventUpdate($newEvent);
-
+        Cache::tags(['timesheet'])->flush();
     }
 
     /**
@@ -307,6 +309,8 @@ class CalendarWidget extends FullCalendarWidget
             ->title('Tid endret')
             ->success()
             ->send();
+
+        Cache::tags(['timesheet'])->flush();
     }
 
     public function eventUpdate($event): void
@@ -323,7 +327,7 @@ class CalendarWidget extends FullCalendarWidget
         $tid->totalt      = Carbon::parse($event['start'])->diffInMinutes($event['end']);
 
         if ($tid->save()) {
-            Cache::flush();
+            Cache::tags(['timesheet'])->flush();
             $this->refreshEvents();
         }
 

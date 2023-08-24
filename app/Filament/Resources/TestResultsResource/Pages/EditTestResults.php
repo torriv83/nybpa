@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TestResultsResource\Pages;
 use App\Filament\Resources\TestResultsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Cache;
 
 class EditTestResults extends EditRecord
 {
@@ -21,5 +22,10 @@ class EditTestResults extends EditRecord
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        Cache::tags(['testresult'])->flush();
     }
 }

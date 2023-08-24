@@ -67,6 +67,22 @@ trait FilterableByDates
      */
     public function scopeInFuture($query, $column = 'created_at')
     {
-        return $query->where($column, '>=', now());
+        return $query->where(function ($query) use ($column) {
+            $currentDateTime = now();
+            $currentDateOnly = $currentDateTime->format('Y-m-d');
+
+            $query->where($column, '>', $currentDateTime)
+                ->orWhere(function ($query) use ($column, $currentDateOnly, $currentDateTime) {
+                    $query->whereDate($column, '=', $currentDateOnly)
+                        ->where(function ($query) use ($column, $currentDateTime) {
+                            $query->whereTime($column, '>', '00:00:00')
+                                ->whereTime($column, '>', $currentDateTime->format('H:i:s'))
+                                ->orWhereTime($column, '=', '00:00:00');
+                        });
+                });
+        });
     }
+
+
+
 }

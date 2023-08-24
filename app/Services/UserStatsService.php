@@ -12,7 +12,6 @@ use App\Models\Settings;
 use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class UserStatsService
@@ -23,9 +22,9 @@ class UserStatsService
 
     public function __construct()
     {
-        $this->timesheet = app(Timesheet::class);
-        $setting         = Settings::where('user_id', '=', Auth::id())->first();
-        $this->bpa       = $setting['bpa_hours_per_week'] ?? 1;
+        $this->timesheet = new Timesheet();
+
+        $this->bpa = Settings::getUserBpa();
     }
 
     /**
@@ -33,7 +32,9 @@ class UserStatsService
      */
     public function getNumberOfAssistents(): int
     {
-        return User::assistenter()->count();
+        return Cache::tags(['timesheet'])->remember('number-of-assisstents', now()->addWeek(), function () {
+            return User::assistenter()->count();
+        });
     }
 
     /**
@@ -41,10 +42,12 @@ class UserStatsService
      */
     public function getHoursUsedThisYear(): string
     {
-        $tider     = $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1');
-        $hoursUsed = $tider->sum('totalt');
+        return Cache::tags(['timesheet'])->remember('hours-used-this-year', now()->addWeek(), function () {
+            $tider     = $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1');
+            $hoursUsed = $tider->sum('totalt');
 
-        return $this->minutesToTime($hoursUsed);
+            return $this->minutesToTime($hoursUsed);
+        });
     }
 
     /**
@@ -91,11 +94,14 @@ class UserStatsService
      */
     public function getHoursUsedThisMonthDescription(): string
     {
-        $hoursToUseThisMonth = ($this->bpa / 7) * Carbon::now()->daysInMonth;
-        $usedThisMonth       = $this->timesheet->monthToDate('fra_dato')->where('unavailable', '=', '0')->sum('totalt');
+        return Cache::tags(['timesheet'])->remember('hours-used-this-month-description', now()->addWeek(), function () {
+            $hoursToUseThisMonth = ($this->bpa / 7) * Carbon::now()->daysInMonth;
+            $usedThisMonth = $this->timesheet->monthToDate('fra_dato')->where('unavailable', '=', '0')->sum('totalt');
 
-        return $this->minutesToTime($usedThisMonth) . ' brukt av ' . $hoursToUseThisMonth . ' denne måneden.';
+            return $this->minutesToTime($usedThisMonth) . ' brukt av ' . $hoursToUseThisMonth . ' denne måneden.';
+        });
     }
+
 
     /**
      * Get the remaining hours.
@@ -154,7 +160,7 @@ class UserStatsService
      */
     private function getHoursUsedInMinutes(): mixed
     {
-        return Cache::remember('hoursUsedInMinutes', now()->addDay(), function () {
+        return Cache::tags(['timesheet'])->remember('hoursUsedInMinutes', now()->addWeek(), function () {
             return $this->timesheet->yearToDate('fra_dato')->where('unavailable', '!=', '1')->sum('totalt');
         });
 
