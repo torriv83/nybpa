@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6942b7a6cb5896a869d9d1da4d64f34",
+    "content-hash": "530ee18cfd88e4f1ed14247eaf038471",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -13341,8 +13341,10 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": [],
+    "minimum-stability": "beta",
+    "stability-flags": {
+        "saade/filament-fullcalendar": 10
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
