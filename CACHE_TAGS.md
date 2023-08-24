@@ -121,6 +121,14 @@
 - **Invalidated When:**
 
 - **Invalidated Where:**
+  
+  1. CreateKategori.php
+     
+     - `function afterCreate(){}`
+  
+  2- EditKategori.php
+     
+     - `function afterSave(){}`
 
 ---
 
@@ -134,10 +142,18 @@
   
   1. UserResource.php
      
-     - function getNavigationBadge(){}
+     - `function getNavigationBadge(){}`
 
 - **Invalidated When:** Updating or adding users. Default 1 month.
 
 - **Invalidated Where:**
+  
+  1. EditUser.php
+     
+     - `function afterSave(){}`
+  
+  2- CreateUser.php
+     
+     - `function afterCreate(){}`
 
 

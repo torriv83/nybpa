@@ -31,7 +31,7 @@ class UnavailableTable extends BaseWidget
     {
         return $table
             ->query(
-                Timesheet::query()->where('user_id', Auth::user()->id)->where('unavailable', '=', 1)->inFuture('til_dato')
+                Timesheet::query()->where('user_id', Auth::id())->where('unavailable', '=', 1)->inFuture('til_dato')
             )
             ->columns([
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),

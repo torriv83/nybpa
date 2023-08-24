@@ -10,6 +10,10 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section as InfoSection;
+use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -71,8 +75,6 @@ class UserResource extends Resource
                             ->multiple()
                             ->relationship('roles', 'name')
                             ->preload()
-                        //->preload(config('filament-authentication.preload_roles'))
-                        //->label(strval(__('filament-authentication::filament-authentication.field.user.roles'))),
                     ])->columns(3),
 
                 Section::make('Personlig data')
@@ -127,13 +129,13 @@ class UserResource extends Resource
                     ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()->slideOver(),
+                Impersonate::make()->redirectTo(route('filament.assistent.pages.dashboard')),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
-                    Tables\Actions\ViewAction::make(),
                     Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
                     Tables\Actions\RestoreAction::make()->label('Angre sletting'),
-                    Impersonate::make()->redirectTo(route('filament.assistent.pages.dashboard')),
                 ]),
             ])
             ->bulkActions([
@@ -141,6 +143,29 @@ class UserResource extends Resource
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
             ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Split::make([
+                    InfoSection::make([
+                        TextEntry::make('name')->label('Navn'),
+                        TextEntry::make('email')->label('E-post'),
+                        TextEntry::make('phone')->label('Tlf'),
+                        TextEntry::make('adresse'),
+                        TextEntry::make('postnummer'),
+                        TextEntry::make('poststed'),
+                    ])->grow()->columns(),
+                    InfoSection::make([
+                        TextEntry::make('roles.name')->label('Rolle'),
+                        TextEntry::make('created_at')->label('Opprettet')->dateTime('d.m.Y H:i'),
+                        TextEntry::make('updated_at')->label('Oppdatert')->dateTime('d.m.Y H:i'),
+                    ])->columns(),
+                ])->from('md'),
+            ])->columns(1);
+
     }
 
     public static function getRelations(): array
@@ -155,14 +180,14 @@ class UserResource extends Resource
         return [
             'index'  => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'view'   => Pages\ViewUser::route('/{record}'),
+            //'view'   => Pages\ViewUser::route('/{record}'),
             'edit'   => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 
     public static function getNavigationBadge(): ?string
     {
-        
+
         return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function () {
 
             $roles = ['Fast ansatt', 'Tilkalling'];
@@ -170,11 +195,7 @@ class UserResource extends Resource
             // Check if any of the roles exist in the database
             $rolesExist = Role::whereIn('name', $roles)->exists();
 
-            if (!$rolesExist) {
-                return static::getModel()::count();
-            } else {
-                return static::getModel()::role($roles)->count();
-            }
+            return !$rolesExist ? static::getModel()::count() : static::getModel()::role($roles)->count();
 
         });
     }
