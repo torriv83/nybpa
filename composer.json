@@ -17,7 +17,7 @@
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
-        "livewire/livewire": "^3.0.0-beta.8",
+        "livewire/livewire": "^3.0.0",
         "saade/filament-fullcalendar": "^v3.0.0-beta1",
         "sentry/sentry-laravel": "^3.4",
         "stechstudio/filament-impersonate": "^3.5"
@@ -86,6 +86,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "prefer-stable": true
 }
