@@ -56,7 +56,7 @@ class Ansatte extends BaseWidget
             ])
             ->paginated([3, 4, 8, 12, 24, 36])
             ->recordUrl(
-                fn(Model $record): string => UserResource::getUrl('view', ['record' => $record]),
+                fn(Model $record): string => UserResource::getUrl('index'),//getUrl('view', ['record' => $record]),
             );
     }
 

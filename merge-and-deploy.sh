@@ -11,7 +11,7 @@ fi
 
 # Step 1: Run tests with PestPHP
 echo "Running tests..."
-sh vendor/bin/sail pest
+sh vendor/bin/sail pest --parallel
 
 # Check if tests passed
 if [ $? -ne 0 ]; then
