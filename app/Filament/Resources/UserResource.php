@@ -100,6 +100,9 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                User::query()->assistenter()
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
