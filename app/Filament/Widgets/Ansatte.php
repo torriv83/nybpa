@@ -26,14 +26,14 @@ class Ansatte extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Navn'),
+                    ->label('Navn')->sortable(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->badge()
                     ->label('Stilling')
                     ->colors([
                         'success',
                         'primary' => 'Tilkalling',
-                    ]),
+                    ])->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('E-post')
                     ->limit(10)

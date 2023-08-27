@@ -12,7 +12,7 @@ build:
 	sh vendor/bin/sail npm run build
 
 test:
-	sh vendor/bin/sail pest
+	sh vendor/bin/sail pest --parallel
 
 install:
 	sh vendor/bin/sail composer install
