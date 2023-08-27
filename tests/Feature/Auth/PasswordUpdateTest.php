@@ -1,13 +1,10 @@
 <?php
 
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-
 
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 it('can render page', function () {
-    // Create the role (if it doesn't already exist)
+/*    // Create the role (if it doesn't already exist)
     $role = Role::create(['name' => 'Admin']);
 
     // Create the user
@@ -19,9 +16,9 @@ it('can render page', function () {
     // Assign the role to the user
     $user->assignRole('Admin');
 
-    $this->actingAs($user);
+    $this->actingAs($user);*/
 
-    $this->get(route('filament.admin.auth.profile'))->assertSuccessful();
+    $this->get('admin/profile/')->assertSuccessful();
 });
 
 

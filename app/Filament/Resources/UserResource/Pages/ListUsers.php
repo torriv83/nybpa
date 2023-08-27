@@ -3,8 +3,15 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Mail\sendMessageMail;
+use App\Models\User;
 use Filament\Actions;
+use Filament\Actions\Action;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ListUsers extends ListRecords
 {
@@ -13,7 +20,21 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->color('warning'),
+            Action::make('Send melding til ansatte')
+                ->form([
+                    Select::make('assistent')->multiple()
+                        ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name',
+                        'email')),
+                    MarkdownEditor::make('body')->required(),
+                ])
+                ->action(function (array $data) {
+                    Mail::to('noreply@trivera.net')
+                        ->bcc($data['assistent'])
+                        ->send(clone new sendMessageMail(
+                            body: $data['body'],
+                        ));
+                }),
         ];
     }
 }

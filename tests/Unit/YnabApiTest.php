@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Http;
 
+uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+
 it('get a response of 200', function () {
     // Arrange - Set up the necessary data for the test
     $ynab = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';

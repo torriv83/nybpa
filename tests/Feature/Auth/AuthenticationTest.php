@@ -6,11 +6,13 @@ use Livewire\Livewire;
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 it('can render page login page', function () {
+    auth()->logout();
     $this->get('/admin/login')->assertSuccessful();
 });
 
 
 test('users can authenticate using the login screen', function () {
+    auth()->logout();
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
@@ -23,6 +25,7 @@ test('users can authenticate using the login screen', function () {
 });
 
 test('users can not authenticate with invalid password', function () {
+    auth()->logout();
     $user = User::factory()->create();
 
     $this->post('/login', [
