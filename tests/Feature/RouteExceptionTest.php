@@ -22,6 +22,19 @@ beforeEach(function () {
 $urls = [
     '/admin/utstyrs',
     '/admin',
+    '/admin/kalender',
+//    '/admin/timelister',
+    '/admin/kategoris',
+    '/admin/economies',
+    '/admin/wishlists',
+    '/admin/days',
+    '/admin/exercises',
+    '/admin/test-results',
+    '/admin/tests',
+    '/admin/weekplans',
+    '/admin/users',
+    '/admin/roles',
+    '/admin/permissions',
     // Add other URLs to test here
 ];
 
