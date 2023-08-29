@@ -9,7 +9,6 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -21,17 +20,13 @@ class HoursUsedEachMonth extends BaseWidget
     protected int|string|array $columnSpan = 'full';
     protected static ?string   $heading    = '';
 
-    public function getTableRecordKey(Model $record): string
-    {
-        return uniqid();
-    }
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 Timesheet::query()
-                    ->select(DB::raw('DATE(DATE_FORMAT(fra_dato, \'%Y-%m-01\')) AS month, SUM(totalt) AS Totalt'))
+                    ->select(DB::raw('id, DATE(DATE_FORMAT(fra_dato, \'%Y-%m-01\')) AS month, SUM(totalt) AS Totalt'))
                     ->groupBy(DB::raw("DATE(DATE_FORMAT(fra_dato, '%Y-%m-01'))"))
                     ->whereBetween(
                         'fra_dato',

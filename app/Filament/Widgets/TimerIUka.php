@@ -6,7 +6,6 @@ use App\Models\Timesheet;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class TimerIUka extends BaseWidget
@@ -16,18 +15,13 @@ class TimerIUka extends BaseWidget
     protected static ?string $heading = 'Timer i uka';
 
     protected static ?int $sort = 4;
-
-    public function getTableRecordKey(Model $record): string
-    {
-        return $record;
-    }
-
+    
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 Timesheet::query()
-                    ->selectRaw('FROM_DAYS(TO_DAYS(timesheets.fra_dato) - MOD(TO_DAYS(timesheets.fra_dato) - 2, 7)) AS Uke')
+                    ->selectRaw('id, FROM_DAYS(TO_DAYS(timesheets.fra_dato) - MOD(TO_DAYS(timesheets.fra_dato) - 2, 7)) AS Uke')
                     ->selectRaw('SUM(timesheets.totalt) AS Totalt, AVG(timesheets.totalt) AS Gjennomsnitt, COUNT(*) AS Antall')
                     ->groupByRaw('WEEK(timesheets.fra_dato, 7)')
                     ->yearToDate('timesheets.fra_dato')

@@ -9,7 +9,6 @@ use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;
-use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -26,7 +25,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\Auth;
 
 class TimesheetResource extends Resource
 {
@@ -45,12 +43,18 @@ class TimesheetResource extends Resource
 
     protected static ?string $slug = 'timelister';
 
-    /**
-     * Tabell
-     *
-     *
-     * @throws Exception
-     */
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'fra_dato';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+
+        return 'desc';
+    }
+
+
     public static function table(Table $table): Table
     {
 
@@ -164,10 +168,10 @@ class TimesheetResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
 
                 Tables\Filters\Filter::make('Tilgjengelig')
-                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '=', '0'))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '0'))->default(),
 
                 Tables\Filters\Filter::make('Ikke tilgjengelig')
-                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '=', '1')),
+                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '1')),
 
                 Tables\Filters\SelectFilter::make('assistent')
                     ->relationship('user', 'name', fn(Builder $query) => $query->permission('Assistent')),
@@ -218,9 +222,6 @@ class TimesheetResource extends Resource
             ]);
     }
 
-    /**
-     * Skjema
-     */
     public static function form(Form $form): Form
     {
 
@@ -234,8 +235,7 @@ class TimesheetResource extends Resource
 
                         Forms\Components\Select::make('user_id')
                             ->label('Hvem')
-                            ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name',
-                                'id'))
+                            ->options(User::query()->assistenter()->pluck('name', 'id'))
                             ->required()
                             ->columnSpan(2),
 
@@ -269,8 +269,6 @@ class TimesheetResource extends Resource
                                 $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
                                 $set('Tid', $hours);
 
-                                /*$set('til_dato', $get('til_dato_tid'));
-                                $set('fra_dato', $state);*/
                             }),
                         Forms\Components\DateTimePicker::make('til_dato')
                             ->displayFormat('d.m.Y H:i')
@@ -281,15 +279,7 @@ class TimesheetResource extends Resource
                             ->hidden(fn(Get $get): bool => $get('allDay'))
                             ->afterStateUpdated(function ($set, string $state, $get) {
 
-                                $fra = Carbon::parse($get('fra_dato'))->format('Y-m-d H:i:s');
-                                $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
-
-                                $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
-                                $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
-                                $set('Tid', $hours);
-
-                                /*                                $set('til_dato', $state);
-                                                                $set('fra_dato', $get('fra_dato_tid'));*/
+                                self::setTimes($get, $set, $state);
                             }),
 
                         Forms\Components\DatePicker::make('fra_datod')
@@ -303,12 +293,7 @@ class TimesheetResource extends Resource
                             ->hidden(fn(Get $get): bool => !$get('allDay'))
                             ->afterStateUpdated(function ($set, string $state, $get) {
 
-                                $fra = Carbon::parse($get('fra_dato'))->format('Y-m-d H:i:s');
-                                $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
-
-                                $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
-                                $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
-                                $set('Tid', $hours);
+                                self::setTimes($get, $set, $state);
 
                                 $set('til_dato', $state);
                                 $set('fra_dato', $get('fra_datod'));
@@ -380,9 +365,6 @@ class TimesheetResource extends Resource
         ];
     }
 
-    /**
-     * Uten global scopes
-     */
     public static function getEloquentQuery(): Builder
     {
 
@@ -392,9 +374,6 @@ class TimesheetResource extends Resource
             ]);
     }
 
-    /**
-     * Sider
-     */
     public static function getPages(): array
     {
 
@@ -414,14 +393,15 @@ class TimesheetResource extends Resource
         ];
     }
 
-    protected function getDefaultTableSortColumn(): ?string
+    public static function setTimes($get, $set, string $state): void
     {
-        return 'fra_dato';
+        $fra = Carbon::parse($get('fra_dato'))->format('Y-m-d H:i:s');
+        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
+
+        $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
+        $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+        $set('Tid', $hours);
     }
 
-    protected function getDefaultTableSortDirection(): ?string
-    {
 
-        return 'desc';
-    }
 }
