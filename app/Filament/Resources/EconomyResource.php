@@ -64,7 +64,7 @@ class EconomyResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(), //TODO ->dispatch('updateStatsOverview'),
+                Tables\Actions\EditAction::make()->dispatch('updateStatsOverview'),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
