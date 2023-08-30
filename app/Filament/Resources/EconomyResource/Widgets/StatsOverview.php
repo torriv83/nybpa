@@ -11,7 +11,7 @@ class StatsOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    //FIXME  protected $listeners = ['updateStatsOverview' => '$refresh'];
+    protected $listeners = ['updateStatsOverview' => '$refresh'];
 
     protected function getStats(): array
     {

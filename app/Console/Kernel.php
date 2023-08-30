@@ -22,6 +22,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('email:send-work-reminder')->everyMinute();
         $schedule->command('timesheets:delete-old')->daily();
         $schedule->command('email:send-timesheet-reminder')->lastDayOfMonth('12:00');
+        $schedule->call(function () {
+            \App\Models\Ynab::fetchData();
+        })->everySixHours();
+
     }
 
     /**

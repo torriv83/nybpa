@@ -6,11 +6,12 @@ use App\Models\Ynab;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as sumBuilder;
 
 //use permission;
 
@@ -41,62 +42,103 @@ class YnabOverview extends BaseWidget
                     ->alignLeft(),
 
                 Tables\Columns\TextColumn::make('income')
-                    ->getStateUsing(function (Model $record) {
-                        return $record->income / 1000;
-                    })
-                    ->money('nok', true)
+                    ->money('nok')
                     ->label('Inntekter')
                     ->sortable()
-                    ->alignLeft(),
-                //->summarize(Average::make()),
+                    ->alignLeft()
+                    ->summarize(Summarizer::make()
+                        ->label('Sum')
+                        ->using(fn(sumBuilder $query): float => $query->sum('income') / 1000)
+                        ->money('nok')
+                    )
+                    ->summarize(Summarizer::make()
+                        ->label('Gjennomsnitt')
+                        ->using(fn(sumBuilder $query): float => $query->avg('income') / 1000)
+                        ->money('nok')
+                    ),
 
                 Tables\Columns\TextColumn::make('activity')
-                    ->getStateUsing(function (Model $record) {
-                        return $record->activity / 1000;
-                    })
                     ->money('nok', true)
                     ->label('Utgifter')
                     ->sortable()
-                    ->alignLeft(),
+                    ->alignLeft()
+                    ->summarize(Summarizer::make()
+                        ->label('Sum')
+                        ->using(fn(sumBuilder $query): float => $query->sum('activity') / 1000)
+                        ->money('nok')
+                    )
+                    ->summarize(Summarizer::make()
+                        ->label('Gjennomsnitt')
+                        ->using(fn(sumBuilder $query): float => $query->avg('activity') / 1000)
+                        ->money('nok')
+                    ),
 
                 Tables\Columns\TextColumn::make('budgeted')
-                    ->getStateUsing(function (Model $record) {
-                        return $record->budgeted / 1000;
-                    })
                     ->money('nok', true)
                     ->label('Budgetert')
                     ->sortable()
-                    ->alignLeft(),
+                    ->alignLeft()
+                    ->summarize(Summarizer::make()
+                        ->label('Sum')
+                        ->using(fn(sumBuilder $query): float => $query->sum('budgeted') / 1000)
+                        ->money('nok')
+                    )
+                    ->summarize(Summarizer::make()
+                        ->label('Gjennomsnitt')
+                        ->using(fn(sumBuilder $query): float => $query->avg('budgeted') / 1000)
+                        ->money('nok')
+                    ),
 
                 Tables\Columns\TextColumn::make('inntektutgift')
                     ->getStateUsing(function (Model $record) {
-                        return ($record->income + $record->activity) / 1000;
+                        return ($record->income + $record->activity);
                     })
                     ->money('nok', true)
                     ->sortable()
                     ->color(function ($record) {
-                        if (($record->income + $record->activity) / 1000 < 0) {
+                        if (($record->income + $record->activity) < 0) {
                             return 'danger';
                         } else {
                             return 'success';
                         }
                     })
-                    ->alignLeft()->label('Inntekt - Utgift'),
+                    ->alignLeft()
+                    ->label('Inntekt - Utgift')
+                    ->summarize(Summarizer::make()
+                        ->label('Sum')
+                        ->using(fn(sumBuilder $query): float => $query->sum('income') / 1000 + $query->sum('activity') / 1000)
+                        ->money('nok')
+                    )
+                    ->summarize(Summarizer::make()
+                        ->label('Gjennomsnitt')
+                        ->using(fn(sumBuilder $query): float => $query->avg('income') / 1000 + $query->avg('activity') / 1000)
+                        ->money('nok')
+                    ),
 
                 Tables\Columns\TextColumn::make('Balanse')
                     ->getStateUsing(function (Model $record) {
-                        return ($record->income - $record->budgeted) / 1000;
+                        return ($record->income - $record->budgeted);
                     })
                     ->money('nok', true)
                     ->sortable()
                     ->color(function ($record) {
-                        if (($record->income - $record->budgeted) / 1000 < 0) {
+                        if (($record->income - $record->budgeted) < 0) {
                             return 'danger';
                         } else {
                             return 'success';
                         }
                     })
-                    ->alignLeft(),
+                    ->alignLeft()
+                    ->summarize(Summarizer::make()
+                        ->label('Sum')
+                        ->using(fn(sumBuilder $query): float => $query->sum('income') / 1000 - $query->sum('budgeted') / 1000)
+                        ->money('nok')
+                    )
+                    ->summarize(Summarizer::make()
+                        ->label('Gjennomsnitt')
+                        ->using(fn(sumBuilder $query): float => $query->avg('income') / 1000 - $query->avg('budgeted') / 1000)
+                        ->money('nok')
+                    ),
             ])
             ->striped()
             ->deferLoading()
@@ -131,25 +173,4 @@ class YnabOverview extends BaseWidget
             ]);
     }
 
-    //TODO endre denne
-    protected function getTableContentFooter(): ?View
-    {
-        $query = Ynab::query()->get();
-
-        $income      = $query->sum('income');
-        $activity    = $query->sum('activity');
-        $budgeted    = $query->sum('budgeted');
-        $avgincome   = $query->avg('income');
-        $avgactivity = $query->avg('activity');
-        $avgbudgeted = $query->avg('budgeted');
-
-        return view('economy.table.table-footer', [
-            'income'      => $income,
-            'activity'    => $activity,
-            'budgeted'    => $budgeted,
-            'avgincome'   => $avgincome,
-            'avgbudgeted' => $avgbudgeted,
-            'avgactivity' => $avgactivity,
-        ]);
-    }
 }
