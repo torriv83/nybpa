@@ -32,7 +32,6 @@ class ManageEconomies extends ManageRecords
         ];
     }
 
-
     public function updated($name): void
     {
         if (Str::of($name)->contains(['mountedTableAction', 'mountedTableBulkAction'])) {
