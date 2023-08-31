@@ -5,7 +5,9 @@ namespace App\Filament\Resources\EconomyResource\Widgets;
 use App\Models\Ynab;
 use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -19,8 +21,6 @@ class YnabOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    protected static ?string $heading = 'Tall fra YNAB';
-
     protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
@@ -29,6 +29,8 @@ class YnabOverview extends BaseWidget
             ->query(
                 Ynab::query()
             )
+            ->heading('Tall fra YNAB')
+            ->description(fn() => 'Sist oppdatert: ' . Ynab::latest('updated_at')->first()->updated_at->format('d.m.Y H:i:s'))
             ->columns([
                 Tables\Columns\TextColumn::make('month')
                     ->label('Måned')
@@ -144,6 +146,9 @@ class YnabOverview extends BaseWidget
             ->deferLoading()
             ->defaultSort('month', 'desc')
             ->paginated([12, 25, 50, 100, 'all'])
+            ->headerActions([
+                Action::make('Oppdater Ynab')->action('updateYnab'),
+            ])
             ->filters([
                 Tables\Filters\Filter::make('month')
                     ->form([
@@ -171,6 +176,15 @@ class YnabOverview extends BaseWidget
                     ->query(fn(Builder $query): Builder => $query
                         ->where('month', '>=', Carbon::now()->subMonths(12)))->default(),
             ]);
+    }
+
+    public function updateYnab(): void
+    {
+        Ynab::fetchData();
+        Notification::make()
+            ->title('Ynab er oppdatert')
+            ->success()
+            ->send();
     }
 
 }
