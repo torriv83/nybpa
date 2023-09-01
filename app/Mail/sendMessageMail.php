@@ -14,6 +14,7 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Spatie\Permission\Models\Role;
 
 class sendMessageMail extends Mailable
 {
@@ -29,11 +30,11 @@ class sendMessageMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('tor@trivera.net', 'Tor J. Rivera'),
+            from: new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
             replyTo: [
-                new Address('tor@trivera.net', 'Tor J. Rivera'),
+                new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
             ],
-            subject: 'Ny melding fra Tor',
+            subject: 'Ny melding fra '. Role::findByName('admin')->users->first()->name,
         );
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Spatie\Permission\Models\Role;
 
 class TimesheetReminderEmail extends Mailable
 {
@@ -29,7 +30,7 @@ class TimesheetReminderEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from   : new Address('tor@trivera.net', 'Tor Rivera'),
+            from   : new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
             subject: 'Tid for å sende inn timeliste',
         );
     }

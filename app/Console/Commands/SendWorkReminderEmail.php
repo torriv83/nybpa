@@ -7,6 +7,7 @@ use App\Models\Timesheet;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Permission\Models\Role;
 
 class SendWorkReminderEmail extends Command
 {
@@ -57,7 +58,7 @@ class SendWorkReminderEmail extends Command
                         'assistent' => $timesheet->user->name,
                     ];
 
-                    Mail::to('tor@trivera.net')->send(new WorkReminderMail($details));
+                    Mail::to(Role::findByName('admin')->users->first()->email)->send(new WorkReminderMail($details));
                 } else {
                     $this->comment("Not time to send email ($label)");
                 }
