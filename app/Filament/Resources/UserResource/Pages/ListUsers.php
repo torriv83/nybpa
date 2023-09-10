@@ -29,7 +29,7 @@ class ListUsers extends ListRecords
                     MarkdownEditor::make('body')->required(),
                 ])
                 ->action(function (array $data) {
-                    Mail::to('noreply@trivera.net')
+                    Mail::to('tor@trivera.net')
                         ->bcc($data['assistent'])
                         ->send(clone new sendMessageMail(
                             body: $data['body'],

@@ -10,6 +10,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step;
+use Filament\Forms\Get;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Cache;
 
@@ -45,7 +46,7 @@ class CreateTestResults extends CreateRecord
                 ->description('Legg inn resultater fra testen her')
                 ->schema([
                     Repeater::make('resultat')
-                        ->schema(function (\Filament\Forms\Get $get): array {
+                        ->schema(function (Get $get): array {
 
                             $schema = [];
                             if ($get('testsID')) {
@@ -53,6 +54,7 @@ class CreateTestResults extends CreateRecord
                                 foreach ($data[0]['ovelser'] as $o) {
                                     if ($o['type'] == 'tid' || $o['type'] == 'kg') {
                                         $schema[] = TextInput::make($o['navn'])
+                                            ->regex('/^\d{1,3}(\.\d{1,2})?$/')
                                             // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
                                             ->required();
                                     } else {
