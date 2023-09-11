@@ -32,6 +32,7 @@ class UpcomingWorkTabell extends BaseWidget
                     ): string => (new \App\Services\UserStatsService)->minutesToTime($state))),
 
 
-            ]);
+            ])
+            ->emptyStateHeading('Ingen kommende arbeidstider.');
     }
 }

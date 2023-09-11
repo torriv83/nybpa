@@ -36,7 +36,10 @@ class UnavailableTable extends BaseWidget
             ->columns([
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
-            ])->headerActions([
+            ])
+            ->emptyStateHeading('Ingen tider registrert.')
+            ->emptyStateDescription('')
+            ->emptyStateActions([
                 CreateAction::make()->label('Legg til tid du ikke kan jobbe')
                     ->after(function () {
                         $recipient = User::query()->role('admin')->get();

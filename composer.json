@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.1",
         "althinect/filament-spatie-roles-permissions": "^2.0",
+        "bezhansalleh/filament-panel-switch": "^0.0.3",
         "calebporzio/sushi": "^2.4",
         "doctrine/dbal": "^3.0",
         "filament/filament": "^v3.0.22",
@@ -18,6 +19,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^3.0.0",
+        "rickdbcn/filament-email": "^1.0",
         "saade/filament-fullcalendar": "^v3.0.0-beta1",
         "sentry/sentry-laravel": "^3.4",
         "stechstudio/filament-impersonate": "^3.5"
