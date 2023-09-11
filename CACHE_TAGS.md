@@ -38,6 +38,7 @@
   1. TimesheetResource/Pages/Edit.php
      
      - `function afterSave(){}`
+     - `function DeleteAction::make()->after(),`
   
   2- TimesheetResource/Pages/Create.php
      

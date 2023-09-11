@@ -4,15 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TestResultsResource\Pages;
 use App\Models\TestResults;
-use App\Models\Tests;
-use Closure;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
@@ -20,8 +12,7 @@ use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Table;
 
 //use App\Filament\Resources\TestResultsResource\RelationManagers;
 
@@ -37,7 +28,7 @@ class TestResultsResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Test resultater';
 
-    public static function form(Form $form): Form
+    /*public static function form(Form $form): Form
     {
 
         return $form
@@ -53,7 +44,7 @@ class TestResultsResource extends Resource
 
                 Repeater::make('resultat')
                     ->label('Resultater')
-                    ->schema(function (\Filament\Forms\Get $get): array {
+                    ->schema(function (Get $get): array {
 
                         $schema = [];
                         $test = $get('testsID') == 0 ? 1 : $get('testsID');
@@ -62,7 +53,8 @@ class TestResultsResource extends Resource
                         foreach ($data[0]['ovelser'] as $o) {
                             if ($o['type'] == 'tid' || $o['type'] == 'kg') {
                                 $schema[] = TextInput::make($o['navn'])
-                                    // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
+                                    ->mask('9[99].[99]')->placeholder('00.00')
+                                    //->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
                                     ->required();
                             } else {
                                 $schema[] = TextInput::make($o['navn'])
@@ -74,7 +66,7 @@ class TestResultsResource extends Resource
                     })
                     ->columns(3),
             ]);
-    }
+    }*/
 
     /**
      * @throws \Exception
@@ -99,7 +91,7 @@ class TestResultsResource extends Resource
                 DeleteBulkAction::make(),
                 ForceDeleteBulkAction::make(),
                 RestoreBulkAction::make(),
-            ]);
+            ])->defaultSort('dato', 'desc');
     }
 
     public static function getRelations(): array
@@ -121,12 +113,12 @@ class TestResultsResource extends Resource
         ];
     }
 
-    public static function getEloquentQuery(): Builder
+/*    public static function getEloquentQuery(): Builder
     {
 
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
+    }*/
 }

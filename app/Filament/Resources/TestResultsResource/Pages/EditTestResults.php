@@ -18,7 +18,7 @@ class EditTestResults extends EditRecord
     {
 
         return [
-            Actions\DeleteAction::make()->label('Slett'),
+            Actions\DeleteAction::make()->label('Slett')->after(function(){Cache::tags(['testresult'])->flush();}),
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];
