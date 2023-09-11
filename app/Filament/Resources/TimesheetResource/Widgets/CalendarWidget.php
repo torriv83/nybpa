@@ -180,7 +180,7 @@ class CalendarWidget extends FullCalendarWidget
     {
         return [
 
-            TextInput::make('title')
+            TextInput::make('title')->label('Assistent')
                 ->disabled(),
             Grid::make()
                 ->schema([
