@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Filament\Resources\UserResource;
 use App\Models\User;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
@@ -57,7 +58,16 @@ class Ansatte extends BaseWidget
             ->paginated([3, 4, 8, 12, 24, 36])
             ->recordUrl(
                 fn(Model $record): string => UserResource::getUrl('index'),//getUrl('view', ['record' => $record]),
-            );
+            )
+            ->emptyStateHeading('Ingen ansatte er registrert')
+            ->emptyStateDescription('Legg til en ansatt for å komme i gang.')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Legg til')
+                    ->url(route('filament.admin.resources.users.create'))
+                    ->icon('heroicon-m-plus')
+                    ->button(),
+            ]);
     }
 
 }

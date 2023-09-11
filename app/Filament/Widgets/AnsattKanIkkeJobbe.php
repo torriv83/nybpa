@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Timesheet;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -18,11 +19,6 @@ class AnsattKanIkkeJobbe extends BaseWidget
     protected static ?string $heading = 'Ansatte kan ikke jobbe';
 
     protected static ?int $sort = 6;
-
-    protected function getTableEmptyStateHeading(): ?string
-    {
-        return 'Alle kan jobbe';
-    }
 
     public function table(Table $table): Table
     {
@@ -62,6 +58,16 @@ class AnsattKanIkkeJobbe extends BaseWidget
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
+            ])
+            ->emptyStateHeading('Alle kan jobbe!')
+            ->emptyStateIcon('heroicon-o-check-circle')
+            ->emptyStateDescription('Opprett en tid under')
+            ->emptyStateActions([
+                Action::make('create')
+                    ->label('Legg til')
+                    ->url(route('filament.admin.resources.timelister.create'))
+                    ->icon('heroicon-m-plus')
+                    ->button(),
             ]);
     }
 }
