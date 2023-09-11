@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
+use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
-use Illuminate\Foundation\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,10 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        FilamentAsset::registerScriptData([
-            // asset('build/assets/custom.css'),
-            app(Vite::class)('resources/css/custom.scss'),
+        FilamentAsset::register([
+            Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
         ]);
-
     }
 }

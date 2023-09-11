@@ -1,42 +1,41 @@
 // For Kalender
-.fc-theme-standard {
 
-    td,
-    tr,
-    th {
-        border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
-    }
-
-    .fc-list {
-        border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
-    }
-}
-
-.fc-scrollgrid {
-    border-color: rgb(55 65 81 / var(--tw-border-opacity)) !important;
+.fc-theme-standard .fc-list-day-cushion{
+    background-color: #1a252f;
 }
 
 .fc-daygrid-week-number {
     color: #fff !important;
 }
 
-.fc .fc-list-sticky .fc-list-day>* {
-    background-color: rgb(17, 24, 39) !important;
+.fc{
+    .fc-toolbar-title{
+        text-align: center!important;
+    }
+
+    .fc-list-event:hover td{
+        background-color: #223241;
+    }
 }
 
-.fc-list-table .fc-list-event:hover td {
-    background-color: rgb(17, 24, 39) !important;
-}
 
-.fc-day-today {
-    background: rgba(0, 0, 0, 0.352) !important;
-    border: none !important;
 
-}
-
-.fc-daygrid-dot-event .fc-event-title {
-    font-weight: 500 !important;
-    letter-spacing: 0.8px !important;
+@media screen and (max-width: 767px) {
+    .fc-toolbar.fc-header-toolbar {
+        flex-direction: column;
+        order: 2;
+    }
+    .fc-toolbar-chunk {
+        display: table-row;
+        text-align: center;
+        padding: 5px 0;
+    }
+    .fc-direction-ltr .fc-daygrid-event .fc-event-time{
+        display: none;
+    }
+    .fc-daygrid-dot-event .fc-event-title{
+        display: none;
+    }
 }
 
 //Tabeller
