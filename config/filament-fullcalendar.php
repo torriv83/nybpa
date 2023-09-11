@@ -13,7 +13,7 @@ return [
     'locale' => config('app.locale'),
 
     'headerToolbar' => [
-        'left' => 'prevYear,nextYear,prev,next,today',
+        'left' => 'prev,next,today',
         'center' => 'title',
         'right' => 'dayGridMonth,timeGridWeek,timeGridDay,listWeek', //,timeGridFourDay',
     ],
@@ -26,19 +26,19 @@ return [
     //    ],
 
     'buttonText' => [
-        'prev' => 'Forrige',
-        'next' => 'Neste',
+        'prev' => '<',
+        'next' => '>',
         'today' => 'Idag',
-        'month' => 'Måned',
-        'week' => 'Uke',
-        'day' => 'Dag',
+        'month' => 'Mnd',
+        'week' => 'U',
+        'day' => 'D',
         'prevYear' => 'Forrige år',
         'nextYear' => 'Neste år',
         'listMonth' => 'Agenda',
-        'listWeek' => 'Uke Liste',
+        'listWeek' => 'UL',
     ],
 
-    // 'contentHeight' => 'auto',
+    'contentHeight' => 'auto',
 
     'navLinks' => true,
 
@@ -72,5 +72,5 @@ return [
         'meridiem' => 'short',
     ],
 
-    'aspectRatio' => 2,
+//    'aspectRatio' => 2,
 ];
