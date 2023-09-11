@@ -11,6 +11,9 @@ deploy:
 build:
 	sh vendor/bin/sail npm run build
 
+build-filament:
+	sh vendor/bin/sail artisan filament:assets
+
 test:
 	sh vendor/bin/sail pest --parallel
 
