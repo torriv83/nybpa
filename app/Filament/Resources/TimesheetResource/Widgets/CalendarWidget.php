@@ -99,49 +99,43 @@ class CalendarWidget extends FullCalendarWidget
      * FullCalendar will call this function whenever it needs new event data.
      * This is triggered when the user clicks prev/next or switches views on the calendar.
      */
-<<<<<<< HEAD
-     public function fetchEvents(array $fetchInfo): array
-     {
-=======
-    //
-    // public function fetchEvents(array $fetchInfo): array
-    // {
->>>>>>> devtest
-
-         // You can use $fetchInfo to filter events by date.
-         $schedules = Timesheet::query()
-             ->where([
-                 ['fra_dato', '>=', $fetchInfo['start']],
-                 ['til_dato', '<', $fetchInfo['end']],
-             ])
-             ->get();
-
-         $data = $schedules->map(function ($item, $key) {
-
-             $farge = $item->unavailable ? '#ff0000' : '';
-             // $display = $item->unavailable ? 'background' : '';
-             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
-
-             return [
-                 'id'              => $item->id,
-                 'title'           => $item->user->name,
-                 'start'           => $item->fra_dato,
-                 'end'             => $item->til_dato,
-                 'allDay'          => $item->allDay,
-                 'description'     => $item->description,
-                 'heleDagen'       => $item->allDay,
-                 'assistentID'     => $item->user_id,
-                 'unavailable'     => $item->unavailable,
-                 'backgroundColor' => $farge,
-                 'borderColor'     => $farge,
-                 // 'display' => $display,
-             ];
-         });
-
-         // $data = $data['eventBorderColor'][] = '#000000';
-
-         return $data->toArray();
-     }
+//     public function fetchEvents(array $fetchInfo): array
+//     {
+//
+//         // You can use $fetchInfo to filter events by date.
+//         $schedules = Timesheet::query()
+//             ->where([
+//                 ['fra_dato', '>=', $fetchInfo['start']],
+//                 ['til_dato', '<', $fetchInfo['end']],
+//             ])
+//             ->get();
+//
+//         $data = $schedules->map(function ($item, $key) {
+//
+//             $farge = $item->unavailable ? '#ff0000' : '';
+//             // $display = $item->unavailable ? 'background' : '';
+//             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
+//
+//             return [
+//                 'id'              => $item->id,
+//                 'title'           => $item->user->name,
+//                 'start'           => $item->fra_dato,
+//                 'end'             => $item->til_dato,
+//                 'allDay'          => $item->allDay,
+//                 'description'     => $item->description,
+//                 'heleDagen'       => $item->allDay,
+//                 'assistentID'     => $item->user_id,
+//                 'unavailable'     => $item->unavailable,
+//                 'backgroundColor' => $farge,
+//                 'borderColor'     => $farge,
+//                 // 'display' => $display,
+//             ];
+//         });
+//
+//         // $data = $data['eventBorderColor'][] = '#000000';
+//
+//         return $data->toArray();
+//     }
 
     protected static function getCreateEventFormSchema(): array
     {
