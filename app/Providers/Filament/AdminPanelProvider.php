@@ -75,6 +75,7 @@ class AdminPanelProvider extends PanelProvider
 //                FilamentInfoWidget::class,
             ])
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            ->plugin(new \RickDBCN\FilamentEmail\FilamentEmail())
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
