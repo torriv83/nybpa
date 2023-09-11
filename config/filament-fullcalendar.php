@@ -12,6 +12,15 @@ return [
 
     'locale' => config('app.locale'),
 
+    'plugins' => [
+        'rrule' => false,
+        'resourceTimeline' => false,
+        'dayGrid' => true,
+        'timeGrid' => true,
+        'interaction' => true,
+        'list' => true,
+    ],
+
     'headerToolbar' => [
         'left' => 'prev,next,today',
         'center' => 'title',
