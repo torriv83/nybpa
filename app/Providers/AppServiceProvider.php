@@ -32,7 +32,8 @@ class AppServiceProvider extends ServiceProvider
 
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-                ->visible(fn (): bool => auth()->user()?->hasRole('Admin'));
+                ->visible(fn (): bool => auth()->user()?->hasRole('Admin'))
+                ->renderHook('panels::global-search.before');
 });
     }
 }
