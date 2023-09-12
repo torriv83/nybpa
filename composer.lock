@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
-            "version": "v2.0.6",
+            "version": "v2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Althinect/filament-spatie-roles-permissions.git",
-                "reference": "f0266a84a70206a23586ab61da625a44aa0405fb"
+                "reference": "3f76641f47fc3d29208f8a90926097b997a1297e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/f0266a84a70206a23586ab61da625a44aa0405fb",
-                "reference": "f0266a84a70206a23586ab61da625a44aa0405fb",
+                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/3f76641f47fc3d29208f8a90926097b997a1297e",
+                "reference": "3f76641f47fc3d29208f8a90926097b997a1297e",
                 "shasum": ""
             },
             "require": {
@@ -65,9 +65,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Althinect/filament-spatie-roles-permissions/issues",
-                "source": "https://github.com/Althinect/filament-spatie-roles-permissions/tree/v2.0.6"
+                "source": "https://github.com/Althinect/filament-spatie-roles-permissions/tree/v2.0.7"
             },
-            "time": "2023-09-07T15:41:58+00:00"
+            "time": "2023-09-11T15:41:38+00:00"
         },
         {
             "name": "bezhansalleh/filament-panel-switch",
