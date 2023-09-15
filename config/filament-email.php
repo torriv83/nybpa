@@ -2,7 +2,6 @@
 
 // config for RickDBCN/FilamentEmail
 return [
-
     'resource' => [
         'group' => 'Diverse',
         'sort' => null,

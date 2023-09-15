@@ -1,0 +1,10 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+parameters:
+    paths:
+        - app
+    level: 5
+    ignoreErrors:
+        - '#has no return type specified#'
+        - '#Access to an undefined property#'
+    excludePaths:

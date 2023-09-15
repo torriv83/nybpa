@@ -9,9 +9,9 @@ deploy:
 	./merge-and-deploy.sh
 
 build:
-	sh vendor/bin/sail npm run build
+	sh vendor/bin/sail bun run build
 
-build-filament:
+buildf:
 	sh vendor/bin/sail artisan filament:assets
 
 test:
@@ -19,13 +19,13 @@ test:
 
 install:
 	sh vendor/bin/sail composer install
-	sh vendor/bin/sail npm install
+	sh vendor/bin/sail bun install
 
 update:
 	sh vendor/bin/sail composer update
-	sh vendor/bin/sail npm update
-	git add composer.lock package-lock.json
-	git commit -m "npm and composer update"
+	sh vendor/bin/sail bun update
+	git add composer.lock bun.lockb
+	git commit -m "bun and composer update"
 
 clear-cache:
 	sh vendor/bin/sail artisan cache:clear
@@ -49,6 +49,8 @@ routelist:
 	sh vendor/bin/sail artisan route:list
 
 ##fresh-install: install migrate
+phpstan:
+	./vendor/bin/sail exec laravel.test bash -c "./vendor/bin/phpstan analyse"
 
 ##Filament
 

@@ -40,7 +40,8 @@
         "phpmd/phpmd": "^2.13.0",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^10.0.18",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-ignition": "^2.0",
+        "nunomaduro/larastan": "^v2.6.4"
     },
     "autoload": {
         "psr-4": {

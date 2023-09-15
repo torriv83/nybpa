@@ -10,16 +10,6 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
      * Bootstrap any application services.
      *
      * @return void
@@ -32,8 +22,18 @@ class AppServiceProvider extends ServiceProvider
 
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-                ->visible(fn (): bool => auth()->user()?->hasRole('Admin'))
+                ->visible(fn(): bool => auth()->user()?->hasRole('Admin'))
                 ->renderHook('panels::user-menu.before');
-});
+        });
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
     }
 }
