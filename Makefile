@@ -11,7 +11,7 @@ deploy:
 build:
 	sh vendor/bin/sail npm run build
 
-build-filament:
+buildf:
 	sh vendor/bin/sail artisan filament:assets
 
 test:
@@ -49,6 +49,8 @@ routelist:
 	sh vendor/bin/sail artisan route:list
 
 ##fresh-install: install migrate
+phpstan:
+	./vendor/bin/sail exec laravel.test bash -c "./vendor/bin/phpstan analyse"
 
 ##Filament
 
