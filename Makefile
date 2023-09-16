@@ -4,6 +4,14 @@ debug:
 	echo $$SHELL
 	echo ./sail
 
+start:
+	sh vendor/bin/sail up -d
+
+stop:
+	sh vendor/bin/sail stop
+
+down:
+	sh vendor/bin/sail down
 
 deploy:
 	./merge-and-deploy.sh
