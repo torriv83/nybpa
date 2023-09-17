@@ -10,7 +10,14 @@
                     @else
                         @php $border = ''; @endphp
                     @endif
-                    <th class="py-2 px-4 border-b dark:border-gray-700" style="{{$border}}">{{ $item['day'] }}</th>
+
+                    @php $today = ''; @endphp
+
+                    @if($item['day'] == ucfirst(\Illuminate\Support\Carbon::today()->isoFormat('dddd')))
+                        @php $today = 'background-color: grey;' @endphp
+                    @endif
+
+                    <th class="py-2 px-4 border-b dark:border-gray-700" style="{{$border}} {{$today}}">{{ $item['day'] }}</th>
                 @endforeach
             </tr>
             </thead>
