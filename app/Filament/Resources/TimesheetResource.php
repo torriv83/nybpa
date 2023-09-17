@@ -82,7 +82,7 @@ class TimesheetResource extends Resource
                         }
                     })
                     ->searchable()
-                    ->sortable()
+                    ->sortable(['fra_dato'])
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('fra_dato')
