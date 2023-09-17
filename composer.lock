@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
-            "version": "v2.0.8",
+            "version": "v2.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Althinect/filament-spatie-roles-permissions.git",
-                "reference": "7d7fd8b2357098452b58cbf43ae9ec09fd820170"
+                "reference": "2137e2ca31b94b2b9abe2766bf20dc7f6943bbf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/7d7fd8b2357098452b58cbf43ae9ec09fd820170",
-                "reference": "7d7fd8b2357098452b58cbf43ae9ec09fd820170",
+                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/2137e2ca31b94b2b9abe2766bf20dc7f6943bbf7",
+                "reference": "2137e2ca31b94b2b9abe2766bf20dc7f6943bbf7",
                 "shasum": ""
             },
             "require": {
@@ -65,9 +65,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Althinect/filament-spatie-roles-permissions/issues",
-                "source": "https://github.com/Althinect/filament-spatie-roles-permissions/tree/v2.0.8"
+                "source": "https://github.com/Althinect/filament-spatie-roles-permissions/tree/v2.0.9"
             },
-            "time": "2023-09-14T04:09:05+00:00"
+            "time": "2023-09-16T15:05:13+00:00"
         },
         {
             "name": "bezhansalleh/filament-panel-switch",
@@ -10742,16 +10742,16 @@
         },
         {
             "name": "pestphp/pest-plugin-drift",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest-plugin-drift.git",
-                "reference": "f1ddeabdc153024e626222be3f6bd250aba3d9ad"
+                "reference": "e422174c6fd3374ca9491a161b3651d882cdc84c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin-drift/zipball/f1ddeabdc153024e626222be3f6bd250aba3d9ad",
-                "reference": "f1ddeabdc153024e626222be3f6bd250aba3d9ad",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin-drift/zipball/e422174c6fd3374ca9491a161b3651d882cdc84c",
+                "reference": "e422174c6fd3374ca9491a161b3651d882cdc84c",
                 "shasum": ""
             },
             "require": {
@@ -10792,7 +10792,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest-plugin-drift/issues",
-                "source": "https://github.com/pestphp/pest-plugin-drift/tree/v2.4.0"
+                "source": "https://github.com/pestphp/pest-plugin-drift/tree/v2.4.1"
             },
             "funding": [
                 {
@@ -10808,7 +10808,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-03T09:29:00+00:00"
+            "time": "2023-09-17T08:30:16+00:00"
         },
         {
             "name": "pestphp/pest-plugin-livewire",
