@@ -82,8 +82,16 @@ class WeekplanResource extends Resource
                                                         TimePicker::make('from')->seconds(false)->label('Fra'),
                                                         TimePicker::make('to')->seconds(false)->label('Til'),
                                                     ]),
-                                            ])->addActionLabel('Legg til øvelse'),
-                                    ])->addActionLabel('Legg til dag')->collapsible()->maxItems(7)->grid(3),
+                                            ])
+                                            ->itemLabel(fn (array $state): ?string => $state['exercise'] ?? null)
+                                            ->addActionLabel('Legg til øvelse')
+                                            ->collapsible()->collapsed(),
+                                    ])
+                                    ->itemLabel(fn (array $state): ?string => $state['day'] ?? null)
+                                    ->addActionLabel('Legg til dag')
+                                    ->collapsible()
+                                    ->maxItems(7)
+                                    ->grid(3),
                             ]),
                     ]),
             ]);
