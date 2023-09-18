@@ -195,6 +195,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\AssistentPanelProvider::class,
+        App\Providers\Filament\LandslagPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],
