@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Admin\Pages;
 
 use App\Models\Settings as Setting;
 use Filament\Actions\Action;
@@ -41,7 +41,7 @@ class Settings extends Page implements HasForms
 
     public function mount(): void
     {
-        
+
         $this->settings = Setting::getUserSettings(Auth::id()) ?? new Setting();
 
         $this->form->fill([

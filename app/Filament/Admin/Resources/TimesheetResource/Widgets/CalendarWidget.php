@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\TimesheetResource\Widgets;
+namespace App\Filament\Admin\Resources\TimesheetResource\Widgets;
 
 use App\Models\Timesheet;
 use App\Models\User;

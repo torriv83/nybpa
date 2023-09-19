@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Admin\Widgets;
 
-use App\Filament\Resources\UserResource;
+use App\Filament\Admin\Resources\UserResource;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;

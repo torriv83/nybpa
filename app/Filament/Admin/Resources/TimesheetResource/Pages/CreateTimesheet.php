@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\TimesheetResource\Pages;
+namespace App\Filament\Admin\Resources\TimesheetResource\Pages;
 
-use App\Filament\Resources\TimesheetResource;
+use App\Filament\Admin\Resources\TimesheetResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Cache;
 

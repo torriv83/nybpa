@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Admin\Widgets;
 
+use App\Filament\Admin\Resources\TimesheetResource;
+use App\Filament\Admin\Resources\UserResource;
 use App\Filament\Privat\Resources\UtstyrResource;
-use App\Filament\Resources\TimesheetResource;
-use App\Filament\Resources\UserResource;
 use App\Services\UserStatsService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;

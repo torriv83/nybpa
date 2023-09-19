@@ -2,10 +2,10 @@
 
 /** @noinspection PhpUnused */
 
-namespace App\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
-use App\Filament\Resources\TimesheetResource\Pages;
-use App\Filament\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
+use App\Filament\Admin\Resources\TimesheetResource\Pages;
+use App\Filament\Admin\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use App\Models\Timesheet;
 use App\Models\User;
 use Carbon\Carbon;

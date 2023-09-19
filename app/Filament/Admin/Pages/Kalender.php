@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Filament\Admin\Pages;
 
-use App\Filament\Resources\TimesheetResource\Widgets\CalendarWidget;
+use App\Filament\Admin\Resources\TimesheetResource\Widgets\CalendarWidget;
 use Filament\Pages\Page;
 
 class Kalender extends Page

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\TimesheetResource\Pages;
+namespace App\Filament\Admin\Resources\TimesheetResource\Pages;
 
-use App\Filament\Resources\TimesheetResource;
+use App\Filament\Admin\Resources\TimesheetResource;
+use App\Filament\Admin\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Pages\ListRecords\Tab;
@@ -24,7 +25,7 @@ class ListTimesheets extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            TimesheetResource\Widgets\HoursUsedEachMonth::class,
+            HoursUsedEachMonth::class,
         ];
     }
 

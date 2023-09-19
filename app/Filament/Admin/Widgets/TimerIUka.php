@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Admin\Widgets;
 
 use App\Models\Timesheet;
 use Filament\Tables\Columns\TextColumn;
@@ -15,7 +15,7 @@ class TimerIUka extends BaseWidget
     protected static ?string $heading = 'Timer i uka';
 
     protected static ?int $sort = 4;
-    
+
     public function table(Table $table): Table
     {
         return $table
