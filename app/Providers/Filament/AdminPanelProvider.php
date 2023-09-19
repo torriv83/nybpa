@@ -3,7 +3,7 @@
 namespace App\Providers\Filament;
 
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
-use App\Filament\Widgets;
+use App\Filament\Admin\Widgets;
 use App\Http\Middleware\IsAdmin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -56,13 +56,13 @@ class AdminPanelProvider extends PanelProvider
                     ->url(fn() => route('filament.admin.pages.innstillinger'))
                     ->icon('heroicon-o-cog-6-tooth'),
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
+            ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
                 //Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in : app_path('Filament/Widgets'),
-                              for: 'App\\Filament\\Widgets')//app_path('Filament/Widgets'), //'App\\Filament\\Widgets'*/
+            ->discoverWidgets(in : app_path('Filament/Admin/Widgets'),
+                              for: 'App\\Filament\\Admin\\Widgets')//app_path('Filament/Widgets'), //'App\\Filament\\Widgets'*/
             ->widgets([
                 Widgets\Ansatte::class,
                 Widgets\AnsattKanIkkeJobbe::class,

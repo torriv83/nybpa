@@ -196,6 +196,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\AssistentPanelProvider::class,
         App\Providers\Filament\LandslagPanelProvider::class,
+        App\Providers\Filament\PrivatPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],
