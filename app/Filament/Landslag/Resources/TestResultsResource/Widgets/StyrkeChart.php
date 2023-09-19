@@ -92,7 +92,7 @@ class StyrkeChart extends ChartWidget
                 'data'            => $res,
                 'backgroundColor' => $randColor,
                 'borderColor'     => $randColor,
-                'borderWidth'     => 1,
+                'borderWidth'     => 2,
             ];
         }
 
@@ -120,8 +120,9 @@ class StyrkeChart extends ChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode'      => 'index',
+                    'mode'      => 'nearest',
                     'intersect' => false,
+                    'displayColors' => false,
                 ],
             ],
             // Additional options

@@ -20,9 +20,9 @@ class ListTestResults extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Landslag\Resources\TestResultsResource\Widgets\VektChart::class,
-            \App\Filament\Landslag\Resources\TestResultsResource\Widgets\StyrkeChart::class,
-            \App\Filament\Landslag\Resources\TestResultsResource\Widgets\RheitChart::class,
+/*            VektChart::class,
+            StyrkeChart::class,
+            RheitChart::class,*/
         ];
     }
 }

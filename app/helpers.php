@@ -20,7 +20,7 @@ function formatTime($from, $to)
 /* Blir brukt for å lage random farger på charts */
 function generateRandomColors(int $count): array
 {
-    mt_srand(7890); // Set the seed value
+    mt_srand(); // Set the seed value
 
     $colors = [];
 

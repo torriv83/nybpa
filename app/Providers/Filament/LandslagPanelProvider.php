@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Landslag\Resources\TestResultsResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -9,7 +10,6 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -25,6 +25,7 @@ class LandslagPanelProvider extends PanelProvider
         return $panel
             ->id('landslag')
             ->path('landslag')
+            ->login()
             ->colors([
                 'primary' => Color::Green,
             ])
@@ -35,8 +36,11 @@ class LandslagPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Landslag/Widgets'), for: 'App\\Filament\\Landslag\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                TestResultsResource\Widgets\VektChart::class,
+                TestResultsResource\Widgets\StyrkeChart::class,
+                TestResultsResource\Widgets\RheitChart::class,
+//                Widgets\AccountWidget::class,
+//                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
