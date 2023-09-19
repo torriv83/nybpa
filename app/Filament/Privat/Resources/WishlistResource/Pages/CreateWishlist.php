@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Filament\Privat\Resources\WishlistResource\Pages;
+
+use App\Filament\Privat\Resources\WishlistResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateWishlist extends CreateRecord
+{
+    protected static string $resource = WishlistResource::class;
+}

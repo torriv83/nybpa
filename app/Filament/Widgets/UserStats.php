@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Privat\Resources\UtstyrResource;
 use App\Filament\Resources\TimesheetResource;
 use App\Filament\Resources\UserResource;
-use App\Filament\Resources\UtstyrResource;
 use App\Services\UserStatsService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
