@@ -15,8 +15,6 @@ class EconomyResource extends Resource
 {
     protected static ?string $model = Economy::class;
 
-    protected static ?string $navigationGroup = 'Diverse';
-
     protected static ?string $modelLabel = 'Økonomi';
 
     protected static ?string $pluralModelLabel = 'Økonomi';

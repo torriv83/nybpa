@@ -27,8 +27,6 @@ class WishlistResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $navigationGroup = 'Diverse';
-
     protected static ?string $recordTitleAttribute = 'hva';
 
     protected static ?string $modelLabel = 'Ønskeliste';
