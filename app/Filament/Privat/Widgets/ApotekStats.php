@@ -18,12 +18,12 @@ class ApotekStats extends BaseWidget
             ->latest()
             ->first()->created_at)->format('d.m.Y H:i');
 
-        $reseptValidTo = Resepter::query()->orderBy('validTo')->first()->validTo;
+        $reseptValidTo = Resepter::query()->orderBy('validTo')->first()?->validTo ?? null;
 
         return [
             Stat::make('Antall utstyr på lista', UtstyrResource::getEloquentQuery()->where('deleted_at', null)->count()),
             Stat::make('Siste bestilling', $lastOrder),
-            Stat::make('Neste resept går ut', Carbon::parse($reseptValidTo)->diffForHumans()),
+            Stat::make('Neste resept går ut', $reseptValidTo ? Carbon::parse($reseptValidTo)->diffForHumans() : 'Ingen resepter'),
         ];
     }
 }
