@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Privat\Resources\UtstyrResource\Pages;
+namespace App\Filament\Privat\Resources\ResepterResource\Pages;
 
-use App\Filament\Privat\Resources\UtstyrResource;
+use App\Filament\Privat\Resources\ResepterResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Cache;
 
-class EditUtstyr extends EditRecord
+class EditResepter extends EditRecord
 {
-    protected static string $resource = UtstyrResource::class;
+    protected static string $resource = ResepterResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -20,10 +20,7 @@ class EditUtstyr extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
-            Actions\ForceDeleteAction::make(),
-            Actions\RestoreAction::make(),
         ];
     }
 

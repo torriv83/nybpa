@@ -52,7 +52,6 @@ class TimesheetResource extends Resource
                     ->schema([
 
                         DateTimePicker::make('fra_dato')
-                            ->displayFormat('d.m.Y')
                             ->seconds(false)
                             ->required()
                             ->live()
@@ -60,7 +59,7 @@ class TimesheetResource extends Resource
                                 Carbon::parse($state)->addHour()->format('Y-m-d H:i')))
                             ->hidden(fn(Get $get): bool => $get('allDay')),
                         DateTimePicker::make('til_dato')
-                            ->displayFormat('d.m.Y')->seconds(false)
+                            ->seconds(false)
                             ->required()
                             ->hidden(fn(Get $get): bool => $get('allDay')),
 

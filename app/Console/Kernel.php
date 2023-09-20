@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             \App\Models\Ynab::fetchData();
         })->everySixHours();
+        $schedule->command('email:send-prescription-reminder')->daily();
 
     }
 
