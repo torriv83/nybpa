@@ -10,7 +10,7 @@
     "require": {
         "php": "^8.1",
         "althinect/filament-spatie-roles-permissions": "^2.0",
-        "bezhansalleh/filament-panel-switch": "^0.0.3",
+        "bezhansalleh/filament-panel-switch": "^1.0.0",
         "calebporzio/sushi": "^2.4",
         "doctrine/dbal": "^3.0",
         "filament/filament": "^v3.0.22",

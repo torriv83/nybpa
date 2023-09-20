@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0630e9aeb52ccba78de0c653a8cb4e2f",
+    "content-hash": "5d3cd745a0ffc61f7a84ff41027b5891",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -71,16 +71,16 @@
         },
         {
             "name": "bezhansalleh/filament-panel-switch",
-            "version": "0.0.3",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bezhanSalleh/filament-panel-switch.git",
-                "reference": "367bcfaca3d1e6becdc20667a0848c3fc4370173"
+                "reference": "691a1f645509422a91e007aae9a83f7fe4352b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bezhanSalleh/filament-panel-switch/zipball/367bcfaca3d1e6becdc20667a0848c3fc4370173",
-                "reference": "367bcfaca3d1e6becdc20667a0848c3fc4370173",
+                "url": "https://api.github.com/repos/bezhanSalleh/filament-panel-switch/zipball/691a1f645509422a91e007aae9a83f7fe4352b17",
+                "reference": "691a1f645509422a91e007aae9a83f7fe4352b17",
                 "shasum": ""
             },
             "require": {
@@ -145,7 +145,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-06T16:08:15+00:00"
+            "time": "2023-09-19T23:20:49+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
