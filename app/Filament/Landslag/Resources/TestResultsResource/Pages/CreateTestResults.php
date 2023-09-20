@@ -39,7 +39,7 @@ class CreateTestResults extends CreateRecord
 
                             return tests::all()->pluck('navn', 'id');
                         })->label('Test')->reactive(),
-                    DateTimePicker::make('dato'),
+                    DateTimePicker::make('dato')->seconds(false),
                 ]),
 
             Step::make('Resultater')
@@ -56,7 +56,7 @@ class CreateTestResults extends CreateRecord
                                         $schema[] = TextInput::make($o['navn'])
                                             ->regex('/^\d{1,3}(\.\d{1,2})?$/')
                                             // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
-                                            ->required();
+                                            ->required()->placeholder('00.00');
                                     } else {
                                         $schema[] = TextInput::make($o['navn'])
                                             ->required();

@@ -252,7 +252,6 @@ class TimesheetResource extends Resource
                     ->description('Velg fra og til')
                     ->schema([
                         Forms\Components\DateTimePicker::make('fra_dato')
-                            ->displayFormat('d.m.Y H:i')
                             ->seconds(false)
                             ->minutesStep(15)
                             ->required()
@@ -271,7 +270,6 @@ class TimesheetResource extends Resource
 
                             }),
                         Forms\Components\DateTimePicker::make('til_dato')
-                            ->displayFormat('d.m.Y H:i')
                             ->seconds(false)
                             ->minutesStep(15)
                             ->required()
