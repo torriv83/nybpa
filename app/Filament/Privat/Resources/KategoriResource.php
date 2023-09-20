@@ -46,7 +46,8 @@ class KategoriResource extends Resource
             ->schema([
                 TextInput::make('kategori')
                     ->required()
-                    ->maxLength(191),
+                    ->maxLength(191)
+                    ->autofocus(),
             ]);
     }
 

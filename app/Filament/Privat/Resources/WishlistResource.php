@@ -43,7 +43,7 @@ class WishlistResource extends Resource
 
         return $form
             ->schema([
-                TextInput::make('hva'),
+                TextInput::make('hva')->autofocus(),
                 TextInput::make('koster'),
                 TextInput::make('url'),
                 TextInput::make('antall')->type('number'),
