@@ -105,7 +105,7 @@ class UtstyrResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('hva'),
+                Forms\Components\TextInput::make('hva')->autofocus(),
                 Forms\Components\TextInput::make('navn'),
                 Forms\Components\TextInput::make('artikkelnummer'),
                 Forms\Components\TextInput::make('link'),
