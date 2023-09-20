@@ -24,6 +24,12 @@ class EditKategori extends EditRecord
         ];
     }
 
+    protected function getRedirectUrl(): string
+    {
+
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function afterSave(): void
     {
         Cache::tags(['medisinsk'])->flush();

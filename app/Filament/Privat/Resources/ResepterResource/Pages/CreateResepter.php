@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Privat\Resources\UtstyrResource\Pages;
+namespace App\Filament\Privat\Resources\ResepterResource\Pages;
 
-use App\Filament\Privat\Resources\UtstyrResource;
+use App\Filament\Privat\Resources\ResepterResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Cache;
 
-class CreateUtstyr extends CreateRecord
+class CreateResepter extends CreateRecord
 {
-    protected static string $resource = UtstyrResource::class;
+    protected static string $resource = ResepterResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -20,4 +20,5 @@ class CreateUtstyr extends CreateRecord
     {
         Cache::tags(['medisinsk'])->flush();
     }
+    
 }
