@@ -71,16 +71,16 @@
         },
         {
             "name": "bezhansalleh/filament-panel-switch",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bezhanSalleh/filament-panel-switch.git",
-                "reference": "691a1f645509422a91e007aae9a83f7fe4352b17"
+                "reference": "ee8cd3c6c235f2476ea71735e0fefb96ad774d03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bezhanSalleh/filament-panel-switch/zipball/691a1f645509422a91e007aae9a83f7fe4352b17",
-                "reference": "691a1f645509422a91e007aae9a83f7fe4352b17",
+                "url": "https://api.github.com/repos/bezhanSalleh/filament-panel-switch/zipball/ee8cd3c6c235f2476ea71735e0fefb96ad774d03",
+                "reference": "ee8cd3c6c235f2476ea71735e0fefb96ad774d03",
                 "shasum": ""
             },
             "require": {
@@ -145,7 +145,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-19T23:20:49+00:00"
+            "time": "2023-09-24T18:37:55+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
