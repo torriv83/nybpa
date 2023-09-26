@@ -33,7 +33,7 @@ class TimesheetResource extends Resource
      */
     protected static ?string $model = Timesheet::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clock';
+    protected static ?string $navigationIcon = 'icon-schedule';
 
     protected static ?string $navigationGroup = 'Tider';
 

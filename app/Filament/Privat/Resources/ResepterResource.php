@@ -16,7 +16,7 @@ class ResepterResource extends Resource
 {
     protected static ?string $model = Resepter::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'icon-resept';
 
     protected static ?string $navigationGroup = 'Medisinsk';
 

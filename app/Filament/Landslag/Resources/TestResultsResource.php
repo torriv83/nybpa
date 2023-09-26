@@ -23,7 +23,7 @@ class TestResultsResource extends Resource
 {
     protected static ?string $model = TestResults::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'icon-graph';
 
     protected static ?string $navigationGroup = 'Tester';
 
