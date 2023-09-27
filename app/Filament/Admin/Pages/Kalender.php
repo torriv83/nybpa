@@ -7,7 +7,7 @@ use Filament\Pages\Page;
 
 class Kalender extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $navigationIcon = 'icon-calendar';
 
     protected static ?string $title = 'Kalender';
 

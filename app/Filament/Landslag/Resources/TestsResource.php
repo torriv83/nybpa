@@ -18,7 +18,7 @@ class TestsResource extends Resource
 {
     protected static ?string $model = Tests::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'icon-type-test';
 
     protected static ?string $navigationGroup = 'Tester';
 

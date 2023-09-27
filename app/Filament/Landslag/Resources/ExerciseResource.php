@@ -21,7 +21,7 @@ class ExerciseResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'icon-exercise';
 
     protected static ?string $navigationGroup = 'Ukeplan';
 

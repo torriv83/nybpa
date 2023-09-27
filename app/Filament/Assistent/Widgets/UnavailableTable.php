@@ -80,6 +80,7 @@ class UnavailableTable extends BaseWidget
                                     ->displayFormat('d.m.Y')
                                     ->seconds(false)
                                     ->required()
+                                    ->minDate(Carbon::parse(now())->format('d.m.Y H:i'))
                                     ->live()
                                     ->afterStateUpdated(fn(Set $set, ?string $state) => $set('til_dato',
                                         Carbon::parse($state)->addHour()->format('Y-m-d H:i')))
@@ -87,16 +88,19 @@ class UnavailableTable extends BaseWidget
                                 DateTimePicker::make('til_dato')
                                     ->displayFormat('d.m.Y')->seconds(false)
                                     ->required()
-                                    ->hidden(fn(Get $get): bool => $get('allDay')),
+                                    ->hidden(fn(Get $get): bool => $get('allDay'))
+                                    ->afterOrEqual('fra_dato'),
 
                                 DatePicker::make('fra_dato')
                                     ->displayFormat('d.m.Y')
                                     ->required()
+                                    ->minDate(Carbon::parse(today())->format('d.m.Y'))
                                     ->hidden(fn(Get $get): bool => !$get('allDay')),
                                 DatePicker::make('til_dato')
                                     ->displayFormat('d.m.Y')
                                     ->required()
-                                    ->hidden(fn(Get $get): bool => !$get('allDay')),
+                                    ->hidden(fn(Get $get): bool => !$get('allDay'))
+                                    ->afterOrEqual('fra_dato'),
 
                                 RichEditor::make('description')
                                     ->label('Begrunnelse (Valgfritt)')

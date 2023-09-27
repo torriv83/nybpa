@@ -64,6 +64,11 @@ class ViewWeekplan extends Page
 
     }
 
+    /**
+     * Retrieves an array of exercises based on the current user's settings.
+     *
+     * @return array An array of exercises with their corresponding time slots and intensities.
+     */
     public function getExercises(): array
     {
 
@@ -128,6 +133,13 @@ class ViewWeekplan extends Page
         return $data;
     }
 
+    /**
+     * Calculates the time range based on the exercise data and user settings.
+     *
+     * @param int $fixed Indicates if the time range should be fixed or dynamic. Default is 0.
+     * @throws Some_Exception_Class Exception thrown if there is an error retrieving the user settings.
+     * @return array An array containing the start time, end time, and interval.
+     */
     private function calculateTimeRange($fixed = 0): array
     {
         $exerciseData = $this->getDayData();
