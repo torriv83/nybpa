@@ -115,6 +115,7 @@ class AdminPanelProvider extends PanelProvider
                         'droppable' => true,
                         'displayEventEnd' => true,
                         'slotDuration' => '00:15:00',
+                        'navLinks' => 'true'
 
                     ])
             )

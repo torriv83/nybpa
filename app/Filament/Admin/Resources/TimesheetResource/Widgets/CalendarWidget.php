@@ -12,11 +12,13 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Saade\FilamentFullCalendar\Actions\CreateAction;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class CalendarWidget extends FullCalendarWidget
@@ -116,18 +118,6 @@ class CalendarWidget extends FullCalendarWidget
          })->toArray();
      }
 
-/*    public function onDateSelect(string $start, ?string $end, bool $allDay): void
-    {
-        parent::onDateSelect($start, $end, $allDay);
-
-        $this->mountAction('create', [
-            'type' => 'select',
-            'start' => $start,
-            'end' => $end,
-            'allDay' => $allDay,
-        ]);
-    }*/
-
     /**
      * Triggered when dragging stops and the event has moved to a different day/time.
      */
@@ -137,6 +127,22 @@ class CalendarWidget extends FullCalendarWidget
         $this->eventUpdate($event);
 
         return false;
+    }
+
+    protected function headerActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->mountUsing(
+                    function (Form $form, array $arguments) {
+                        $form->fill([
+                            'allDay' => $arguments['allDay'] ?? false,
+                            'fra_dato' => $arguments['start'] ?? null,
+                            'til_dato' => $arguments['end'] ?? null
+                        ]);
+                    }
+                )
+        ];
     }
 
     /**
