@@ -21,6 +21,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use RickDBCN\FilamentEmail\FilamentEmail;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -76,6 +77,48 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->plugin(new FilamentEmail())
+            ->plugin(
+                FilamentFullCalendarPlugin::make()
+                    ->selectable()
+                    ->editable()
+                    ->plugins(['dayGrid', 'timeGrid', 'rrule', 'interaction', 'list'], true)
+                    ->config([
+                        'headerToolbar' => [
+                            'left' => 'prev,next,today',
+                            'center' => 'title',
+                            'right' => 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+                        ],
+                        'buttonText' => [
+                            'prev' => '<',
+                            'next' => '>',
+                            'today' => 'Idag',
+                            'month' => 'Mnd',
+                            'week' => 'U',
+                            'day' => 'D',
+                            'prevYear' => 'Forrige år',
+                            'nextYear' => 'Neste år',
+                            'listMonth' => 'Agenda',
+                            'listWeek' => 'UL',
+                        ],
+                        'slotLabelFormat' => [
+                            'hour' => 'numeric',
+                            'minute' => '2-digit',
+                            'omitZeroMinute' => false,
+                            'meridiem' => 'short',
+                        ],
+                        'contentHeight' => 'auto',
+                        'dayMaxEvents' => true,
+                        'weekNumbers' => true,
+                        'weekNumberCalculation' => 'ISO',
+                        'weekNumberFormat' => ['week' => 'numeric'],
+                        'nowIndicator' => true,
+                        'droppable' => true,
+                        'displayEventEnd' => true,
+                        'slotDuration' => '00:15:00',
+                        'navLinks' => 'true'
+
+                    ])
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
