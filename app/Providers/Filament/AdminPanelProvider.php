@@ -63,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 //Pages\Dashboard::class,
             ])
             ->discoverWidgets(in : app_path('Filament/Admin/Widgets'),
-                              for: 'App\\Filament\\Admin\\Widgets')//app_path('Filament/Widgets'), //'App\\Filament\\Widgets'*/
+                              for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 Widgets\Ansatte::class,
                 Widgets\AnsattKanIkkeJobbe::class,
@@ -115,6 +115,8 @@ class AdminPanelProvider extends PanelProvider
                         'droppable' => true,
                         'displayEventEnd' => true,
                         'slotDuration' => '00:15:00',
+                        'slotMinTime' => '08:00:00',
+                        'slotMaxTime' => '23:00:00',
                         'navLinks' => 'true'
 
                     ])
