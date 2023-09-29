@@ -23,7 +23,6 @@ use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class CalendarWidget extends FullCalendarWidget
 {
-
     public Model | string | null $model = Timesheet::class;
 
     public function getFormSchema(): array
@@ -42,29 +41,51 @@ class CalendarWidget extends FullCalendarWidget
                 ]),
             DateTimePicker::make('fra_dato')
                 ->label('Starter')
-                ->displayFormat('d.m.Y H:i')
                 ->minutesStep(15)
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($set, $get, $state) {
-                    $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
-                    $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
+                    if($get('allDay')){
+                        $set('totalt', 0);
+                        $set('tot', 0);
+                    }else{
+                        $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
+                        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
+                    }
                 })
                 ->formatStateUsing(function ($state, $set, $get) {
-                    $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
-                    $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
-                    return Carbon::parse($state)->format('Y-m-d H:i:s');
+                    if($get('allDay')){
+                        $set('totalt', 0);
+                        $set('tot', 0);
+                    }else{
+                        $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
+                        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
+                    }
+
+                    return Carbon::parse($state)->timezone('Europe/Oslo')->format('Y-m-d H:i:s');
                 })
                 ->required(),
             DateTimePicker::make('til_dato')
                 ->label('Slutter')
-                ->displayFormat('d.m.Y H:i')
+                ->seconds(false)
                 ->minutesStep(15)
                 ->required()
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($set, $get, $state) {
-                    $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
-                    $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
-                }),
+                    if($get('allDay')){
+                        $set('totalt', 0);
+                        $set('tot', 0);
+                    }else{
+                        $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
+                        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
+                    }
+                })
+            ->formatStateUsing(function ($state, $set, $get) {
+                if($get('allDay')){
+                    return Carbon::parse($state)->timezone('Europe/Oslo')->setHours(00)->setMinutes(00)->format('Y-m-d H:i');
+                }else{
+                    return Carbon::parse($state)->timezone('Europe/Oslo')->format('Y-m-d H:i:s');
+                }
+            }),
             RichEditor::make('description')
                 ->label('Beskrivelse')
                 ->disableToolbarButtons([
@@ -145,7 +166,6 @@ class CalendarWidget extends FullCalendarWidget
             CreateAction::make()
                 ->mountUsing(
                     function (Form $form, array $arguments) {
-                        debug($arguments);
                         $form->fill([
                             'allDay' => $arguments['allDay'] ?? false,
                             'fra_dato' => $arguments['start'] ?? null,
