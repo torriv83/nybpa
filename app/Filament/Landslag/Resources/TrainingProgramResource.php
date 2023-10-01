@@ -27,8 +27,11 @@ class TrainingProgramResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('program_name')->required(),
-                Forms\Components\TextInput::make('description'),
+                Forms\Components\TextInput::make('program_name')
+                    ->label('Navn')
+                    ->required(),
+                Forms\Components\TextInput::make('description')
+                ->label('Beskrivelse'),
             ]);
     }
 

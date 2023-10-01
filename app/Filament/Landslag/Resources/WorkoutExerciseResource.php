@@ -13,15 +13,19 @@ use Filament\Tables\Table;
 
 class WorkoutExerciseResource extends Resource
 {
-    protected static ?string $model = WorkoutExercise::class;
+    protected static ?string $model           = WorkoutExercise::class;
     protected static ?string $navigationGroup = 'Treningsprogram';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $label           = 'Øvelse';
+    protected static ?string $pluralLabel     = 'Øvelser';
+    protected static ?string $navigationIcon  = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('exercise_name')
+                    ->label('Navn')
+                    ->required()
             ]);
     }
 
@@ -29,7 +33,7 @@ class WorkoutExerciseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('exercise_name'),
+                Tables\Columns\TextColumn::make('exercise_name')->label('Navn'),
             ])
             ->filters([
                 //
@@ -54,9 +58,9 @@ class WorkoutExerciseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWorkoutExercises::route('/'),
+            'index'  => Pages\ListWorkoutExercises::route('/'),
             'create' => Pages\CreateWorkoutExercise::route('/create'),
-            'edit' => Pages\EditWorkoutExercise::route('/{record}/edit'),
+            'edit'   => Pages\EditWorkoutExercise::route('/{record}/edit'),
         ];
     }
 }

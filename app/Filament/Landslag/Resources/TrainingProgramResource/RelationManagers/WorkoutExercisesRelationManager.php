@@ -10,10 +10,15 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class WorkoutExercisesRelationManager extends RelationManager
 {
     protected static string $relationship = 'WorkoutExercises';
+
+    public static function getTitle(Model $ownerRecord,string $pageClass) : string{
+        return 'Øvelser';
+    }
 
     public function form(Form $form): Form
     {
@@ -40,7 +45,6 @@ class WorkoutExercisesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('exercise_name')
             ->columns([
                 Tables\Columns\TextColumn::make('exercise_name')
                     ->description(fn (WorkoutExercise $record): string => $record->description)
