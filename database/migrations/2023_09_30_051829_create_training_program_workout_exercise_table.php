@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->bigInteger('training_program_id');
             $table->bigInteger('workout_exercise_id');
             $table->integer('order');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('repetitions');
             $table->integer('sets');
             $table->time('rest');
