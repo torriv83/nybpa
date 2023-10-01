@@ -61,7 +61,7 @@ class TrainingProgramResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('program_name')
                     ->label('Program Navn')
-                    ->description(fn(TrainingProgram $record): string => $record->description),
+                    ->description(fn(TrainingProgram $record): string => $record->description ?? ''),
                 Tables\Columns\TextColumn::make('workout_exercises_count')
                     ->counts('WorkoutExercises')
                     ->label('Antall Øvelser'),

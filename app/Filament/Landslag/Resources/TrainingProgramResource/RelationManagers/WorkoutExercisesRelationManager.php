@@ -47,7 +47,7 @@ class WorkoutExercisesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('exercise_name')
-                    ->description(fn (WorkoutExercise $record): string => $record->description)
+                    ->description(fn (WorkoutExercise $record): string => $record->description ?? '')
                     ->label('Øvelse'),
                 Tables\Columns\TextColumn::make('repetitions')->label('Reps'),
                 Tables\Columns\TextColumn::make('sets')->label('Set'),
