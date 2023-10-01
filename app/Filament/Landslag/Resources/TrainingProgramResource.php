@@ -5,12 +5,8 @@ namespace App\Filament\Landslag\Resources;
 use App\Filament\Landslag\Resources\TrainingProgramResource\Pages;
 use App\Filament\Landslag\Resources\TrainingProgramResource\RelationManagers;
 use App\Models\TrainingProgram;
-use App\Models\WorkoutExercise;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,7 +31,7 @@ class TrainingProgramResource extends Resource
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+/*    public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
@@ -57,7 +53,7 @@ class TrainingProgramResource extends Resource
                     ])
                     ->columns(4)
             ])->columns(1);
-    }
+    }*/
 
     public static function table(Table $table): Table
     {
@@ -103,6 +99,7 @@ class TrainingProgramResource extends Resource
             'index'  => Pages\ListTrainingPrograms::route('/'),
             'create' => Pages\CreateTrainingProgram::route('/create'),
             'edit'   => Pages\EditTrainingProgram::route('/{record}/edit'),
+            'view'   => Pages\ViewTrainingProgram::route('/{record}'),
         ];
     }
 }
