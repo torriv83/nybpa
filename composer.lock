@@ -10887,26 +10887,26 @@
         },
         {
             "name": "pestphp/pest-plugin-type-coverage",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest-plugin-type-coverage.git",
-                "reference": "da609bee5490a3148475038fbcd3aff60f1923d8"
+                "reference": "fb76bbac3b4f50f403ec0ee42c9e5301e120bfb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin-type-coverage/zipball/da609bee5490a3148475038fbcd3aff60f1923d8",
-                "reference": "da609bee5490a3148475038fbcd3aff60f1923d8",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin-type-coverage/zipball/fb76bbac3b4f50f403ec0ee42c9e5301e120bfb6",
+                "reference": "fb76bbac3b4f50f403ec0ee42c9e5301e120bfb6",
                 "shasum": ""
             },
             "require": {
                 "pestphp/pest-plugin": "^2.1.1",
                 "php": "^8.1",
-                "phpstan/phpstan": "^1.10.32",
+                "phpstan/phpstan": "^1.10.36",
                 "tomasvotruba/type-coverage": "^0.2.1"
             },
             "require-dev": {
-                "pestphp/pest": "^2.16.0",
+                "pestphp/pest": "^2.20.0",
                 "pestphp/pest-dev-tools": "^2.16.0"
             },
             "type": "library",
@@ -10940,7 +10940,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest-plugin-type-coverage/issues",
-                "source": "https://github.com/pestphp/pest-plugin-type-coverage/tree/v2.2.0"
+                "source": "https://github.com/pestphp/pest-plugin-type-coverage/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -10956,7 +10956,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2023-08-29T09:01:34+00:00"
+            "time": "2023-10-01T08:50:49+00:00"
         },
         {
             "name": "phar-io/manifest",
