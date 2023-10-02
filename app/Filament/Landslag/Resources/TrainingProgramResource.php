@@ -17,7 +17,7 @@ class TrainingProgramResource extends Resource
     protected static ?string $navigationGroup = 'Treningsprogram';
     protected static ?string $label           = 'Treningsprogram';
     protected static ?string $pluralLabel     = 'Treningsprogrammer';
-    protected static ?string $navigationIcon  = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon  = 'heroicon-o-calendar-days';
 
     public static function form(Form $form): Form
     {
@@ -27,33 +27,9 @@ class TrainingProgramResource extends Resource
                     ->label('Navn')
                     ->required(),
                 Forms\Components\TextInput::make('description')
-                ->label('Beskrivelse'),
+                    ->label('Beskrivelse'),
             ]);
     }
-
-/*    public static function infolist(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                RepeatableEntry::make('WorkoutExercises')->label('Øvelser')
-                    ->schema([
-                        TextEntry::make('exercise_name')
-                            ->label('Øvelse')
-                            ->helperText(fn(WorkoutExercise $record): string => $record->pivot->description ?? ''),
-                        TextEntry::make('repetitions')
-                            ->getStateUsing(fn(WorkoutExercise $record): string => $record->pivot->repetitions)
-                            ->label('Reps'),
-                        TextEntry::make('sets')
-                            ->getStateUsing(fn(WorkoutExercise $record): string => $record->pivot->sets)
-                            ->label('Set'),
-                        TextEntry::make('rest')
-                            ->getStateUsing(fn(WorkoutExercise $record): string => $record->pivot->rest)
-                            ->label('Pause')
-                            ->time('i:s'),
-                    ])
-                    ->columns(4)
-            ])->columns(1);
-    }*/
 
     public static function table(Table $table): Table
     {

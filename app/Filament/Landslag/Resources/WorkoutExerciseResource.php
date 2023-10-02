@@ -17,7 +17,7 @@ class WorkoutExerciseResource extends Resource
     protected static ?string $navigationGroup = 'Treningsprogram';
     protected static ?string $label           = 'Øvelse';
     protected static ?string $pluralLabel     = 'Øvelser';
-    protected static ?string $navigationIcon  = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon  = 'icon-exercise';
 
     public static function form(Form $form): Form
     {
