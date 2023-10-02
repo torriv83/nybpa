@@ -9,7 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TrainingProgramResource extends Resource
 {
@@ -37,28 +40,50 @@ class TrainingProgramResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('program_name')
                     ->label('Program Navn')
-                    ->description(fn(TrainingProgram $record): string => $record->description ?? ''),
+                    ->description(fn(TrainingProgram $record): string => $record->description ?? '')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('workout_exercises_count')
                     ->counts('WorkoutExercises')
-                    ->label('Antall Øvelser'),
+                    ->label('Antall Øvelser')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Opprettet')
-                    ->date('d.m.Y H:i'),
+                    ->date('d.m.Y H:i')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Oppdatert')
-                    ->date('d.m.Y H:i'),
+                    ->date('d.m.Y H:i')
+                    ->sortable(),
             ])
             ->filters([
-                //
+                TernaryFilter::make('arkivert')
+                    ->placeholder('Uten arkiverte programmer')
+                    ->trueLabel('Med arkiverte programmer')
+                    ->falseLabel('Bare arkiverte programmer')
+                    ->queries(
+                        true: fn (Builder $query) => $query->withTrashed(),
+                        false: fn (Builder $query) => $query->onlyTrashed(),
+                        blank: fn (Builder $query) => $query->withoutTrashed(),
+                    )
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make()
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Arkiver'),
+                    Tables\Actions\ForceDeleteBulkAction::make()
                 ]),
+            ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
             ]);
     }
 
