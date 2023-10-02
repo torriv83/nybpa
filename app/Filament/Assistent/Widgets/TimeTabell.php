@@ -44,6 +44,7 @@ class TimeTabell extends BaseWidget
                         ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
             ])
+            ->defaultSort('fra_dato')
             ->emptyStateHeading('Ingen timer jobbet.');
     }
 }

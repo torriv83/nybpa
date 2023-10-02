@@ -9,7 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class WorkoutExerciseResource extends Resource
 {
@@ -33,18 +36,43 @@ class WorkoutExerciseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('exercise_name')->label('Navn'),
-            ])
+                Tables\Columns\TextColumn::make('exercise_name')
+                    ->label('Navn')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('IAntallProgrammer')
+                    ->getStateUsing(function (WorkoutExercise $record) {
+                        return $record->TrainingPrograms->count();
+                    }),
+                Tables\Columns\TextColumn::make('created_at')->dateTime('d.m.y H:i')->label('Lagt til')
+            ])->reorderable()
             ->filters([
-                //
+                TernaryFilter::make('arkivert')
+                    ->placeholder('Uten arkiverte øvelser')
+                    ->trueLabel('Med arkiverte øvelser')
+                    ->falseLabel('Bare arkiverte øvelser')
+                    ->queries(
+                        true: fn (Builder $query) => $query->withTrashed(),
+                        false: fn (Builder $query) => $query->onlyTrashed(),
+                        blank: fn (Builder $query) => $query->withoutTrashed(),
+                    )
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->label('Arkiver'),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
             ]);
     }
 

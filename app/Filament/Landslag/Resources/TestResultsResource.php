@@ -11,9 +11,9 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreBulkAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -31,21 +31,12 @@ class TestResultsResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Test resultater';
 
-/*    public static function form(Form $form): Form
-    {
-
-        return $form
-            ->schema([
-               //
-            ]);
-    }*/
 
     /**
      * @throws \Exception
      */
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
                 TextColumn::make('dato')
@@ -55,13 +46,13 @@ class TestResultsResource extends Resource
             ])
             ->filters([
                 TrashedFilter::make(),
+                SelectFilter::make('Test')->relationship('tests', 'navn')
             ])
             ->actions([
                 EditAction::make(),
-                ViewAction::make(),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+                DeleteBulkAction::make()->label('Arkiver'),
                 ForceDeleteBulkAction::make(),
                 RestoreBulkAction::make(),
             ])->defaultSort('dato', 'desc');
@@ -69,7 +60,6 @@ class TestResultsResource extends Resource
 
     public static function getRelations(): array
     {
-
         return [
             //
         ];
@@ -77,11 +67,10 @@ class TestResultsResource extends Resource
 
     public static function getPages(): array
     {
-
         return [
-            'index' => ListTestResults::route('/'),
+            'index'  => ListTestResults::route('/'),
             'create' => CreateTestResults::route('/create'),
-            'edit' => EditTestResults::route('/{record}/edit'),
+            'edit'   => EditTestResults::route('/{record}/edit'),
             // 'view' => Pages\ViewTestResults::route('/{record}'),
         ];
     }

@@ -39,7 +39,6 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
                 Section::make('Standard data')
@@ -106,13 +105,15 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
-                    ->label('Navn'),
+                    ->label('Navn')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->label('E-post'),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon'),
                 Tables\Columns\IconColumn::make('email_verified_at')
                     ->boolean()
+                    ->sortable()
                     ->label('Verified')->alignCenter(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Slettet')
@@ -168,7 +169,6 @@ class UserResource extends Resource
                     ])->columns(),
                 ])->from('md'),
             ])->columns(1);
-
     }
 
     public static function getRelations(): array
@@ -190,16 +190,13 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-
         return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function () {
-
             $roles = ['Fast ansatt', 'Tilkalling'];
 
             // Check if any of the roles exist in the database
             $rolesExist = Role::whereIn('name', $roles)->exists();
 
             return !$rolesExist ? static::getModel()::count() : static::getModel()::role($roles)->count();
-
         });
     }
 }

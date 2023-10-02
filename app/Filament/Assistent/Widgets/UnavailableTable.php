@@ -37,6 +37,7 @@ class UnavailableTable extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
             ])
+            ->defaultSort('fra_dato')
             ->emptyStateHeading('Ingen tider registrert.')
             ->emptyStateDescription('')
             ->emptyStateActions([
