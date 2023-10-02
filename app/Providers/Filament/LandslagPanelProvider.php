@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Landslag\Resources\TestResultsResource;
+use App\Filament\Landslag\Widgets;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -39,6 +40,7 @@ class LandslagPanelProvider extends PanelProvider
                 TestResultsResource\Widgets\VektChart::class,
                 TestResultsResource\Widgets\StyrkeChart::class,
                 TestResultsResource\Widgets\RheitChart::class,
+                Widgets\TreningsProgrammerTable::class,
 //                Widgets\AccountWidget::class,
 //                Widgets\FilamentInfoWidget::class,
             ])
