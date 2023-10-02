@@ -20,9 +20,7 @@ class ListTestResults extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-/*            VektChart::class,
-            StyrkeChart::class,
-            RheitChart::class,*/
+            // ... 
         ];
     }
 }
