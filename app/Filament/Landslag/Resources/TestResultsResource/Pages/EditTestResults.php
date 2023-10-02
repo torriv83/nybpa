@@ -11,6 +11,10 @@ class EditTestResults extends EditRecord
 {
     protected static string $resource = TestResultsResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
     /**
      * @throws \Exception
      */

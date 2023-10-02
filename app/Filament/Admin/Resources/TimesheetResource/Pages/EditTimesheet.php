@@ -11,6 +11,10 @@ class EditTimesheet extends EditRecord
 {
     protected static string $resource = TimesheetResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
     protected function mutateFormDataBeforeFill(array $data,): array
     {
         $data['fra_datod'] = $this->record->fra_dato;
