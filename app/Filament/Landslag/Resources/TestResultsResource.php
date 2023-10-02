@@ -6,6 +6,16 @@ use App\Filament\Landslag\Resources\TestResultsResource\Pages\CreateTestResults;
 use App\Filament\Landslag\Resources\TestResultsResource\Pages\EditTestResults;
 use App\Filament\Landslag\Resources\TestResultsResource\Pages\ListTestResults;
 use App\Models\TestResults;
+use App\Models\Tests;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Wizard\Step;
+use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -31,6 +41,50 @@ class TestResultsResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Test resultater';
 
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Wizard::make([
+                    Step::make('hvilken_test')
+                        ->label('Hvilken test?')
+                        ->description('Velg hvilken test du skal loggføre')
+                        ->schema([
+                            Select::make('testsID')
+                                ->options(function () {
+                                    return tests::all()->pluck('navn', 'id');
+                                })->label('Test')->reactive(),
+                            DateTimePicker::make('dato')->seconds(false),
+                        ]),
+
+                    Step::make('Resultater')
+                        ->description('Legg inn resultater fra testen her')
+                        ->schema([
+                            Repeater::make('resultat')
+                                ->schema(function (Get $get): array {
+                                    $schema = [];
+                                    if ($get('testsID')) {
+                                        $data = tests::where('id', '=', $get('testsID'))->get();
+                                        foreach ($data[0]['ovelser'] as $o) {
+                                            if ($o['type'] == 'tid' || $o['type'] == 'kg') {
+                                                $schema[] = TextInput::make($o['navn'])
+                                                    ->regex('/^\d{1,3}(\.\d{1,2})?$/')
+                                                    // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
+                                                    ->required()->placeholder('00.00');
+                                            } else {
+                                                $schema[] = TextInput::make($o['navn'])
+                                                    ->required();
+                                            }
+                                        }
+                                    }
+
+                                    return $schema;
+                                }),
+                            Hidden::make('testsID'),
+                        ]),
+                ]),
+            ]);
+    }
 
     /**
      * @throws \Exception

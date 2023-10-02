@@ -15,15 +15,16 @@ class EditTestResults extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
-    /**
-     * @throws \Exception
-     */
+
     protected function getHeaderActions(): array
     {
 
         return [
-            Actions\DeleteAction::make()->label('Slett')->after(function(){Cache::tags(['testresult'])->flush();}),
-            Actions\ForceDeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->label('Slett')
+                ->after(function(){Cache::tags(['testresult'])->flush();}),
+            Actions\ForceDeleteAction::make()
+                ->after(function(){Cache::tags(['testresult'])->flush();}),
             Actions\RestoreAction::make(),
         ];
     }
