@@ -6,6 +6,7 @@ use App\Filament\Landslag\Resources\WeekplanResource\Pages;
 use App\Filament\Landslag\Resources\WeekplanResource\RelationManagers;
 use App\Models\Day;
 use App\Models\Exercise;
+use App\Models\TrainingProgram;
 use App\Models\Weekplan;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
@@ -69,7 +70,14 @@ class WeekplanResource extends Resource
                                             ->schema([
                                                 Grid::make()
                                                     ->schema([
-                                                        Select::make('exercise')->options(Exercise::all()->pluck('name', 'name'))->label('Øvelse'),
+                                                        Select::make('exercise')
+                                                            ->options(Exercise::all()->pluck('name', 'name'))
+                                                            ->label('Øvelse')
+                                                            ->live(),
+                                                        Select::make('program')->visible(fn ($get): bool => $get('exercise') == 'Styrketrening')
+                                                            ->options(function (){
+                                                                return TrainingProgram::all()->pluck('program_name', 'program_name');
+                                                            }),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',

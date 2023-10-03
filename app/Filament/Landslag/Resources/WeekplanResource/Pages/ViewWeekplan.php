@@ -5,6 +5,7 @@ namespace App\Filament\Landslag\Resources\WeekplanResource\Pages;
 use App\Filament\Landslag\Resources\WeekplanResource;
 use App\Filament\Landslag\Resources\WeekplanResource\Widgets\StatsOverview;
 use App\Models\Settings;
+use App\Models\TrainingProgram;
 use App\Models\Weekplan;
 use Carbon\Carbon;
 use Filament\Actions\Action;
@@ -118,6 +119,8 @@ class ViewWeekplan extends Page
                                 'time'      => formatTime($exercise['from'], $exercise['to']),
                                 'intensity' => $exercise['intensity'],
                                 'exercise'  => $exercise['exercise'],
+                                'program'   => $exercise['program'] ?? null,
+                                'program_id' => TrainingProgram::where('program_name', '=', $exercise['program'])->first()->id ?? null,
                             ];
                         }
                     } else {
