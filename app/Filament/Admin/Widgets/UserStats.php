@@ -4,7 +4,6 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Filament\Admin\Resources\TimesheetResource;
 use App\Filament\Admin\Resources\UserResource;
-use App\Filament\Privat\Resources\UtstyrResource;
 use App\Services\UserStatsService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -39,7 +38,7 @@ class UserStats extends BaseWidget
                 ->description($this->userStatsService->getAverageHoursPerWeekDescription())
                 ->color('success'),
 
-            Stat::make('Antall utstyr på lista', UtstyrResource::getEloquentQuery()->where('deleted_at', null)->count())
+            Stat::make('Timer brukt denne uka', $this->userStatsService->getHoursUsedThisWeek())
 
         ];
     }

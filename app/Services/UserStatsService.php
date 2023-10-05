@@ -165,4 +165,21 @@ class UserStatsService
         });
 
     }
+
+    public function getHoursUsedThisWeek()
+    {
+        return Cache::tags(['timesheet'])->remember('getHoursUsedThisWeek', now()->addWeek(), function(){
+            // Get the start and end of the current week
+            $startOfWeek = now()->startOfWeek();
+            $endOfWeek = now()->endOfWeek();
+
+            // Run the query
+            $minutes = Timesheet::query()
+                ->where('timesheets.unavailable', '!=', 1)
+                ->whereBetween('timesheets.fra_dato', [$startOfWeek, $endOfWeek])
+                ->sum('timesheets.totalt');
+
+            return self::minutesToTime($minutes);
+        });
+    }
 }
