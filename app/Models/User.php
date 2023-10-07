@@ -16,7 +16,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens;
+    use HasFactory;
+    use HasRoles;
+    use Notifiable;
     use SoftDeletes;
 
     public function canAccessPanel(Panel $panel): bool
@@ -79,11 +82,15 @@ class User extends Authenticatable implements FilamentUser
      */
     public function scopeAssistenter($query)
     {
-        if (Role::where('name', 'tilkalling')->exists()) {
-            return $query->role(['Fast ansatt', 'Tilkalling']);
+        $rolesToCheck = ['Tilkalling', 'Fast ansatt'];
+        $existingRoles = Role::whereIn('name', $rolesToCheck)->pluck('name')->toArray();
+
+        if (!empty($existingRoles)) {
+            return $query->role($existingRoles);
         }
 
         return null;
     }
+
 
 }

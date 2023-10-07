@@ -117,7 +117,7 @@ class UserResource extends Resource
                     ->label('Verified')->alignCenter(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Slettet')
-                    ->datetime('d.m.Y H:i:s'),
+                    ->datetime('d.m.Y H:i'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Opprettet')
                     ->dateTime('d.m.Y H:i:s')->sortable(),
