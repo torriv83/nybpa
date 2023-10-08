@@ -5,7 +5,6 @@ namespace App\Filament\Landslag\Resources\WeekplanResource\Pages;
 use App\Filament\Landslag\Resources\WeekplanResource;
 use App\Filament\Landslag\Widgets\SessionsStats;
 use App\Models\Settings;
-use App\Models\TrainingProgram;
 use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use Carbon\Carbon;
@@ -157,13 +156,14 @@ class ViewWeekplan extends Page
                     // Add filtered exercises to row
                     if ($filteredExercises->isNotEmpty()) {
                         foreach ($filteredExercises as $exercise) {
+                            $trainingProgram = $exercise->trainingProgram;
                             $row['exercises'][] = [
                                 'day' => $day,
                                 'time' => formatTime(Carbon::parse($exercise->start_time)->format('H:i'), Carbon::parse($exercise->end_time)->format('H:i')),
                                 'intensity' => $exercise->intensity,
                                 'exercise' => $exercise->exercise->name,
-                                'program' => $exercise->program ?? null,
-                                'program_id' => TrainingProgram::where('program_name', '=', $exercise->program)->first()->id ?? null,
+                                'program' => $trainingProgram ? $trainingProgram->program_name : null,
+                                'program_id' => $trainingProgram ? $trainingProgram->id : null,
                             ];
                         }
                     } else {

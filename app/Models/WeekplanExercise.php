@@ -21,6 +21,7 @@ class WeekplanExercise extends Model
         'weekplan_id',
         'exercise_id',
         'day',
+        'training_program_id',
     ];
 
     protected $casts = [
@@ -35,6 +36,11 @@ class WeekplanExercise extends Model
     public function exercise(): BelongsTo
     {
         return $this->belongsTo(Exercise::class);
+    }
+
+    public function trainingProgram(): BelongsTo
+    {
+        return $this->belongsTo(TrainingProgram::class);
     }
 
 }

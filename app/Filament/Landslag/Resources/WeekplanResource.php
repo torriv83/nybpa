@@ -4,8 +4,8 @@ namespace App\Filament\Landslag\Resources;
 
 use App\Filament\Landslag\Resources\WeekplanResource\Pages;
 use App\Filament\Landslag\Resources\WeekplanResource\RelationManagers;
-use App\Models\Day;
 use App\Models\Exercise;
+use App\Models\TrainingProgram;
 use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use Filament\Forms\Components\Fieldset;
@@ -79,6 +79,13 @@ class WeekplanResource extends Resource
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
                                                             ->live(onBlur: true),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                        ->hidden(function ($get) {
+                                                            $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                            return $exerciseName !== 'Styrketrening';
+                                                        }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
                                                             ->label('Start'),

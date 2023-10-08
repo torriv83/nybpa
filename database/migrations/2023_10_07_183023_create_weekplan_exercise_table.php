@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('day');
             $table->unsignedBigInteger('weekplan_id');
             $table->unsignedBigInteger('exercise_id');
+            $table->unsignedBigInteger('training_program_id')->nullable();
             $table->time('start_time');
             $table->time('end_time');
             $table->string('intensity');
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('weekplan_exercise');
+        Schema::dropIfExists('weekplan_exercises');
     }
 };
