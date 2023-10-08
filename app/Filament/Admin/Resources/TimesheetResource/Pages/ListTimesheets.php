@@ -35,6 +35,7 @@ class ListTimesheets extends ListRecords
         $years = Cache::tags(['timesheet'])->remember('timesheets-years', 60 * 24, function () {
             return DB::table('timesheets')
                 ->selectRaw('YEAR(fra_dato) as year')
+                ->where('unavailable', 0)
                 ->groupBy(DB::raw('YEAR(fra_dato)'))
                 ->pluck('year')
                 ->reverse();
