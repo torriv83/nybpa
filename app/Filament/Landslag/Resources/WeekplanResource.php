@@ -78,30 +78,36 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
                                                         Select::make('training_program_id')
                                                             ->label('Velg styrkeprogram')
                                                             ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                        ->hidden(function ($get) {
-                                                            $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                            return $exerciseName !== 'Styrketrening';
-                                                        }),
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -119,27 +125,40 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
-                                                ]),
+                                            ]),
                                         Tabs\Tab::make('Onsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 3)->where('weekplan_id', $record?->id)->count())
                                             ->schema([
@@ -153,23 +172,36 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -187,23 +219,36 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -221,23 +266,36 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -255,23 +313,36 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -289,23 +360,36 @@ class WeekplanResource extends Resource
                                                         Select::make('exercise_id')
                                                             ->options(Exercise::all()->pluck('name', 'id'))
                                                             ->label('Øvelse')
-                                                            ->live(onBlur: true),
+                                                            ->live(onBlur: true)
+                                                            ->required(),
+                                                        Select::make('training_program_id')
+                                                            ->label('Velg styrkeprogram')
+                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                                                            ->hidden(function ($get) {
+                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+                                                                return $exerciseName !== 'Styrketrening';
+                                                            }),
                                                         TimePicker::make('start_time')
                                                             ->seconds(false)
-                                                            ->label('Start'),
+                                                            ->label('Start')
+                                                            ->required(),
                                                         TimePicker::make('end_time')
                                                             ->seconds(false)
-                                                            ->label('Slutt'),
+                                                            ->label('Slutt')
+                                                            ->required(),
                                                         Select::make('intensity')->options([
                                                             'green'    => 'Lett',
                                                             'darkcyan' => 'Vedlikehold',
                                                             'crimson'  => 'Tung',
-                                                        ])->label('Hvor tung?'),
+                                                        ])
+                                                            ->label('Hvor tung?')
+                                                            ->required(),
                                                     ])
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
+                                                        )?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
