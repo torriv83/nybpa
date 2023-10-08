@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Weekplan extends Model
@@ -12,13 +12,15 @@ class Weekplan extends Model
 
     protected $fillable = [
         'name',
-        'data',
     ];
 
-    protected $casts = ['data' => 'json'];
+    protected $casts = [
+        //
+    ];
 
-    public function days(): BelongsToMany
+    public function weekplanExercises(): HasMany
     {
-        return $this->belongsToMany(Day::class, 'days');
+        return $this->hasMany(WeekplanExercise::class);
     }
+
 }

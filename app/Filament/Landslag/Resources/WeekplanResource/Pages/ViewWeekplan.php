@@ -3,14 +3,13 @@
 namespace App\Filament\Landslag\Resources\WeekplanResource\Pages;
 
 use App\Filament\Landslag\Resources\WeekplanResource;
-use App\Filament\Landslag\Resources\WeekplanResource\Widgets\StatsOverview;
+use App\Filament\Landslag\Widgets\SessionsStats;
 use App\Models\Settings;
-use App\Models\TrainingProgram;
 use App\Models\Weekplan;
+use App\Models\WeekplanExercise;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ViewWeekplan extends Page
@@ -19,15 +18,7 @@ class ViewWeekplan extends Page
 
     protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
-
-    protected function getViewData(): array
-    {
-
-        $okter = $this->getDayData();
-        $data  = $this->getExercises();
-
-        return compact('okter', 'data');
-    }
+    public array $exercises;
 
     public function getTitle(): string
     {
@@ -56,13 +47,61 @@ class ViewWeekplan extends Page
 
     public function mount($record): void
     {
-        $this->record = Weekplan::find($record);
+        $this->record = Weekplan::with('weekplanExercises')->find($record);
+        $this->exercises = $this->getExercises();
     }
 
-    public function getDayData(): Collection
+    protected function getViewData(): array
     {
-        return collect($this->record['data']);
 
+        $okter = $this->getDayData($this->record->id);
+        $data  = $this->getExercises();
+
+        return compact('okter', 'data');
+    }
+
+
+    public function getDayData($weekplanId): array
+    {
+        // Fetch the related exercises from the WeekplanExercise model based on weekplan_id
+        $weekplanExercises = WeekplanExercise::where('weekplan_id', $weekplanId)
+            ->with(['exercise'])
+            ->orderBy('day', 'asc')
+            ->get();
+
+        $days = [
+            1 => 'Mandag',
+            2 => 'Tirsdag',
+            3 => 'Onsdag',
+            4 => 'Torsdag',
+            5 => 'Fredag',
+            6 => 'Lørdag',
+            7 => 'Søndag',
+        ];
+
+        $data = [];
+
+        // Organize the data by day
+        foreach ($days as $dayIndex => $dayName) {
+            $exercisesForDay = $weekplanExercises->where('day', $dayIndex);
+            $exerciseData = [];
+
+            foreach ($exercisesForDay as $exercise) {
+                $exerciseData[] = [
+                    'exercise'  => $exercise->exercise->name,
+                    'from'      => $exercise->start_time,
+                    'to'        => $exercise->end_time,
+                    'intensity' => $exercise->intensity,
+                ];
+            }
+
+            $data[] = [
+                'day'       => $dayName,
+                'exercises' => $exerciseData,
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -72,63 +111,67 @@ class ViewWeekplan extends Page
      */
     public function getExercises(): array
     {
-
+        // Retrieve settings and time range
         $setting = Settings::where('user_id', '=', Auth::id())->first();
-
-        // Usage of the extracted function
         $timeRange = $this->calculateTimeRange($setting['weekplan_timespan']);
-
         $startTime = intval($timeRange['startTime']);
-        $endTime   = intval($timeRange['endTime']);
-        $interval  = $timeRange['interval'];
+        $endTime = intval($timeRange['endTime']);
+        $interval = $timeRange['interval'];
 
+        // Initialize data and groupedExercises arrays
         $data = [];
+        $groupedExercises = [];
 
+        // Group exercises by day
+        foreach ($this->record->weekplanExercises as $weekplanExercise) {
+            $day = $weekplanExercise->day;
+            if (!isset($groupedExercises[$day])) {
+                $groupedExercises[$day] = [];
+            }
+            $groupedExercises[$day][] = $weekplanExercise;
+        }
+
+        // Generate timetable rows
         for ($time = $startTime; $time <= $endTime; $time++) {
             for ($minute = 0; $minute < 60; $minute += $interval) {
                 $row = [
-                    'time'      => sprintf('%02d', $time) . ':' . sprintf('%02d', $minute),
+                    'time' => sprintf('%02d', $time) . ':' . sprintf('%02d', $minute),
                     'exercises' => [],
                 ];
 
-                $i = 0;
-                foreach ($this->getDayData() as $item) {
-                    $exercises = collect($item['exercises'])->filter(function ($exercise) use ($time, $minute, $interval) {
-                        $from = strtotime($exercise['from']);
-                        $to   = strtotime($exercise['to']);
+                // Loop through grouped exercises by day
+                foreach ($groupedExercises as $day => $exercisesForDay) {
+                    $filteredExercises = collect($exercisesForDay)->filter(function ($exercise) use ($time, $minute, $interval) {
 
-                        $fromHour   = date('H', $from);
-                        $fromMinute = date('i', $from);
-                        $toHour     = date('H', $to);
-                        $toMinute   = date('i', $to);
-
-                        // Calculate the number of time slots based on the from and to times
-                        $fromTime      = ($fromHour * 60) + $fromMinute;
-                        $toTime        = ($toHour * 60) + $toMinute;
-                        $intervalSlots = max(($toTime - $fromTime) / $interval, 1); // Ensure minimum 1 slot
-                        $currentTime   = ($time * 60) + $minute;
+                        $from = strtotime($exercise->start_time);
+                        $to = strtotime($exercise->end_time);
+                        $fromTime = (date('H', $from) * 60) + date('i', $from);
+                        $toTime = (date('H', $to) * 60) + date('i', $to);
+                        $intervalSlots = max(($toTime - $fromTime) / $interval, 1);
+                        $currentTime = ($time * 60) + $minute;
 
                         return $currentTime >= $fromTime && $currentTime < ($fromTime + $intervalSlots * $interval);
                     });
 
-                    if ($exercises->isNotEmpty()) {
-                        foreach ($exercises as $exercise) {
+                    // Add filtered exercises to row
+                    if ($filteredExercises->isNotEmpty()) {
+                        foreach ($filteredExercises as $exercise) {
+                            $trainingProgram = $exercise->trainingProgram;
                             $row['exercises'][] = [
-                                'day'       => $item['day'],
-                                'id'        => $i,
-                                'time'      => formatTime($exercise['from'], $exercise['to']),
-                                'intensity' => $exercise['intensity'],
-                                'exercise'  => $exercise['exercise'],
-                                'program'   => $exercise['program'] ?? null,
-                                'program_id' => TrainingProgram::where('program_name', '=', $exercise['program'])->first()->id ?? null,
+                                'day' => $day,
+                                'time' => formatTime(Carbon::parse($exercise->start_time)->format('H:i'), Carbon::parse($exercise->end_time)->format('H:i')),
+                                'intensity' => $exercise->intensity,
+                                'exercise' => $exercise->exercise->name,
+                                'program' => $trainingProgram ? $trainingProgram->program_name : null,
+                                'program_id' => $trainingProgram ? $trainingProgram->id : null,
                             ];
                         }
                     } else {
                         $row['exercises'][] = [];
                     }
-                    $i++;
                 }
 
+                // Add row to data
                 $data[] = $row;
             }
         }
@@ -145,7 +188,7 @@ class ViewWeekplan extends Page
      */
     private function calculateTimeRange($fixed = 0): array
     {
-        $exerciseData = $this->getDayData();
+        $exerciseData = $this->getDayData($this->record->id);
         $setting      = Settings::where('user_id', '=', Auth::id())->first();
 
         if ($fixed) {
@@ -186,7 +229,7 @@ class ViewWeekplan extends Page
     protected function getHeaderWidgets(): array
     {
         return [
-            StatsOverview::make(['record' => $this->record]),
+            SessionsStats::make(['record' => $this->record]),
         ];
     }
 }

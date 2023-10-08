@@ -3,6 +3,7 @@
 namespace App\Filament\Landslag\Widgets;
 
 use App\Models\Weekplan;
+use App\Models\WeekplanExercise;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -16,12 +17,8 @@ class SessionsStats extends BaseWidget
     protected function getStats(): array
     {
 
-        $weekplans = Weekplan::all();
-
-        if (!$weekplans) {
-            // Handle the situation when the record is not found
-            return [];
-        }
+        // Fetch all weekplans along with their exercises
+        $weekplans = Weekplan::with('weekplanExercises.exercise')->get();
 
         $statistics = [
             'okter'       => 0,
@@ -33,29 +30,20 @@ class SessionsStats extends BaseWidget
             ],
         ];
 
-        foreach ($weekplans[0]['data'] as $weekplan) {
-            foreach ($weekplan['exercises'] as $exercise) {
-                $statistics['okter']++;
-                $statistics['timer'] += Carbon::parse($exercise['to'])->diffInSeconds($exercise['from']);
-
-                $statistics['intensities'][$exercise['intensity']]++;
-
-            }
-        }
-
-        $todayExercises = [];
-        $today = ucfirst(\Carbon\Carbon::now()->translatedFormat('l'));
-
         foreach ($weekplans as $weekplan) {
-            foreach ($weekplan->data as $dayPlan) {
-                if ($dayPlan['day'] === $today) {
-                    $todayExercises[] = $dayPlan['exercises'];
-                }
+            foreach ($weekplan->weekplanExercises as $exercise) {
+                $statistics['okter']++;
+                $statistics['timer'] += Carbon::parse($exercise->end_time)->diffInSeconds(Carbon::parse($exercise->start_time));
+
+                $statistics['intensities'][$exercise->intensity]++;
             }
         }
 
-        // Flattening the array if multiple plans exist for the same day
-        $todayExercises = array_merge([], ...$todayExercises);
+        $today = Carbon::now()->dayOfWeek + 1; // Convert Sunday to 7, Monday to 1, etc.
+
+        $todayExercises = WeekplanExercise::where('day', $today)
+            ->with(['exercise'])
+            ->get();
 
         return [
             Stat::make('Antall økter', $statistics['okter']),
@@ -64,18 +52,16 @@ class SessionsStats extends BaseWidget
                 'U: ' . $statistics['intensities']['crimson'] . ', V: ' . $statistics['intensities']['darkcyan'] . ', R: ' . $statistics['intensities']['green']),
             Stat::make('Neste økt', function () use ($todayExercises)
             {
-                $now = \Carbon\Carbon::now()->format('H:i');
+                $now = Carbon::now()->format('H:i');
                 $nextSession = null;
 
-                // Sorter øktene etter tidspunktet "fra"
-                usort($todayExercises, function ($a, $b) {
-                    return $a['from'] <=> $b['from'];
-                });
+                // Sort the exercises by the start_time
+                $todayExercises = $todayExercises->sortBy('start_time');
 
-                // Finn neste økt basert på nåværende tid
+                // Find the next session based on the current time
                 foreach ($todayExercises as $exercise) {
-                    if ($exercise['from'] > $now) {
-                        $nextSession = "{$exercise['from']} - {$exercise['to']}: {$exercise['exercise']}";
+                    if ($exercise->start_time > $now) {
+                        $nextSession = "{$exercise->start_time} - {$exercise->end_time}: {$exercise->exercise->name}";
                         break;
                     }
                 }
@@ -83,5 +69,6 @@ class SessionsStats extends BaseWidget
                 return $nextSession ?? 'Ingen flere økter i dag';
             }),
         ];
+
     }
 }

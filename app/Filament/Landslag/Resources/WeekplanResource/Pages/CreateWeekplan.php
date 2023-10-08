@@ -7,9 +7,9 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateWeekplan extends CreateRecord
 {
-    protected function getRedirectUrl(): string
+/*    protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
-    }
+    }*/
     protected static string $resource = WeekplanResource::class;
 }
