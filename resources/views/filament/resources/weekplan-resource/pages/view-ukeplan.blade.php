@@ -29,7 +29,6 @@
             @foreach($data as $row)
 
                 <tr>
-                    {{--Display time with x-minute interval--}}
                     <td class="py-2 px-4 border-t dark:border-gray-600 border-gray-500" style="border-right: 1px solid #52525B;">
                         {{ $row['time'] }}
                     </td>
@@ -45,7 +44,7 @@
                         @else
                             @php
                                 $exerciseExists = collect($exists)->contains(function ($value) use ($exercise) {
-                                    return $value['day'] === $exercise['day'] && $value['id'] === $exercise['id'] && $value['exercise'] === $exercise['exercise'];
+                                    return $value['day'] === $exercise['day'] && $value['exercise'] === $exercise['exercise'];
                                 });
                             @endphp
 
@@ -66,10 +65,11 @@
                             @endif
 
                             @php
-                                $exists[] = array('day' => $exercise['day'], 'id' => $exercise['id'], 'exercise' => $exercise['exercise']);
+                                $exists[] = array('day' => $exercise['day'], 'exercise' => $exercise['exercise']);
                             @endphp
                         @endif
                     @endforeach
+
 
                 </tr>
             @endforeach
