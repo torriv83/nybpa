@@ -27,50 +27,47 @@
             @endphp
 
             @foreach($data as $row)
-
                 <tr>
                     <td class="py-2 px-4 border-t dark:border-gray-600 border-gray-500" style="border-right: 1px solid #52525B;">
                         {{ $row['time'] }}
                     </td>
 
-                    @foreach($row['exercises'] as $exercise)
+                    @for($day = 1; $day <= 7; $day++)
+                        @php
+                            $exercise = $row['exercises'][$day] ?? null;
+                            $borderR = $day != 7 ? 'border-right: 1px solid #52525B;' : '';
+                        @endphp
+                        <td class="
+                                py-2 px-4 {{ $exercise !== null && isset($exercise['intensity']) ? '' : 'border-t' }}
+                                dark:border-gray-600 border-gray-500"
+                            style="
+                                {{ $exercise !== null && isset($exercise['intensity']) ? getIntensityColorClass($exercise['intensity']) : '' }};
+                                {{$borderR}}
+                            "
+                        >
+                            @if ($exercise !== null && isset($exercise['intensity']))
+                                @php
+                                    $exerciseExists = collect($exists)->contains(function ($value) use ($exercise) {
+                                        return $value['day'] === $exercise['day'] && $value['exercise'] === $exercise['exercise'];
+                                    });
+                                @endphp
 
-                        @php $borderR = !$loop->last ? 'border-right: 1px solid #52525B;' : ''; @endphp
-
-                        @if (!isset($exercise['intensity']))
-                            <td class="py-2 px-4 border-t dark:border-gray-600 border-gray-500" style="{{$borderR}}">
-                                &nbsp;
-                            </td>
-                        @else
-                            @php
-                                $exerciseExists = collect($exists)->contains(function ($value) use ($exercise) {
-                                    return $value['day'] === $exercise['day'] && $value['exercise'] === $exercise['exercise'];
-                                });
-                            @endphp
-
-                            @if($exerciseExists)
-                                <td class="py-2 px-4 dark:border-gray-600 border-gray-500"
-                                    style="{{ getIntensityColorClass($exercise['intensity']) }}; {{$borderR}}">
-                                    &nbsp;
-                                </td>
-                            @else
-                                <td class="py-2 px-4 border-t dark:border-gray-600 border-gray-500"
-                                    style="{{ getIntensityColorClass($exercise['intensity']) }}; {{$borderR}}">
+                                @if(!$exerciseExists)
                                     <div class="mb-1">{{ $exercise['time'] }}</div>
                                     <div>{{ $exercise['exercise'] }}</div>
                                     @if($exercise['program'])
-                                        <div class="text-sm"><a href="/landslag/training-programs/{{$exercise['program_id']}}">({{ $exercise['program'] }})</a></div>
+                                        <div class="text-xs"><a href="/landslag/training-programs/{{$exercise['program_id']}}">({{ $exercise['program'] }})</a></div>
                                     @endif
-                                </td>
+                                @endif
+
+                                @php
+                                    $exists[] = array('day' => $exercise['day'], 'exercise' => $exercise['exercise']);
+                                @endphp
+                            @else
+                                &nbsp;
                             @endif
-
-                            @php
-                                $exists[] = array('day' => $exercise['day'], 'exercise' => $exercise['exercise']);
-                            @endphp
-                        @endif
-                    @endforeach
-
-
+                        </td>
+                    @endfor
                 </tr>
             @endforeach
             </tbody>

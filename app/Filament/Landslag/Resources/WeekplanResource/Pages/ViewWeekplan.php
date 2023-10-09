@@ -154,10 +154,12 @@ class ViewWeekplan extends Page
                     });
 
                     // Add filtered exercises to row
+                    $exerciseDataForDay = [];
+
                     if ($filteredExercises->isNotEmpty()) {
                         foreach ($filteredExercises as $exercise) {
                             $trainingProgram = $exercise->trainingProgram;
-                            $row['exercises'][] = [
+                            $exerciseDataForDay = [
                                 'day' => $day,
                                 'time' => formatTime(Carbon::parse($exercise->start_time)->format('H:i'), Carbon::parse($exercise->end_time)->format('H:i')),
                                 'intensity' => $exercise->intensity,
@@ -166,10 +168,19 @@ class ViewWeekplan extends Page
                                 'program_id' => $trainingProgram ? $trainingProgram->id : null,
                             ];
                         }
-                    } else {
-                        $row['exercises'][] = [];
+                    }
+
+                    $row['exercises'][$day] = $exerciseDataForDay;
+                }
+
+                for ($day = 1; $day <= 7; $day++) {
+                    if (!isset($row['exercises'][$day])) {
+                        $row['exercises'][$day] = [];
                     }
                 }
+
+                // Sort exercises by day to keep them in order
+                ksort($row['exercises']);
 
                 // Add row to data
                 $data[] = $row;
