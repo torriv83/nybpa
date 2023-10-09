@@ -281,10 +281,12 @@ class TimesheetResource extends Resource
                             }),
 
                         Forms\Components\DatePicker::make('fra_datod')
+                            ->label('Fra dato')
                             ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->hidden(fn(Get $get): bool => !$get('allDay')),
                         Forms\Components\DatePicker::make('til_datod')
+                            ->label('Til dato')
                             ->displayFormat('d.m.Y H:i')
                             ->required()
                             ->live()

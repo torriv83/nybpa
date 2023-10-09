@@ -150,7 +150,7 @@ class UserStatsService
         $minutes = floor(($leftPerWeek - $hours) * 60);
         $seconds = round((($leftPerWeek - $hours) * 60 - $minutes) * 60);
 
-        return date('H:i:s', mktime($hours, $minutes, $seconds, 0, 0, 0));
+        return date('H:i', mktime($hours, $minutes, $seconds, 0, 0, 0));
     }
 
     /**
