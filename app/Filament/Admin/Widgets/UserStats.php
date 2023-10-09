@@ -35,7 +35,7 @@ class UserStats extends BaseWidget
                 ->description($this->userStatsService->getHoursUsedThisMonthDescription()),
 
             Stat::make('Timer igjen', $this->userStatsService->getRemainingHours())
-                ->description($this->userStatsService->getAverageHoursPerWeekDescription())
+                ->description($this->userStatsService->getAverageHoursPerWeekDescription() .' i uka igjen')
                 ->color('success'),
 
             Stat::make('Timer brukt denne uka', $this->userStatsService->getHoursUsedThisWeek())

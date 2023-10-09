@@ -56,7 +56,7 @@
                                     <div class="mb-1">{{ $exercise['time'] }}</div>
                                     <div>{{ $exercise['exercise'] }}</div>
                                     @if($exercise['program'])
-                                        <div class="text-xs"><a href="/landslag/training-programs/{{$exercise['program_id']}}">({{ $exercise['program'] }})</a></div>
+                                        <div class="text-xs hover:underline"><a href="/landslag/training-programs/{{$exercise['program_id']}}">({{ $exercise['program'] }})</a></div>
                                     @endif
                                 @endif
 
