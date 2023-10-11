@@ -106,8 +106,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -153,8 +153,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -200,8 +200,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -247,8 +247,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -294,8 +294,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -341,8 +341,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -388,8 +388,8 @@ class WeekplanResource extends Resource
                                                     ->defaultItems(0)
                                                     ->grid(4)
                                                     ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first(
-                                                        )?->name
+                                                        fn(array $state): ?string => Exercise::all()->where('id',
+                                                            $state['exercise_id'])->first()?->name
                                                     )
                                                     ->addActionLabel('Legg til økt')
                                                     ->collapsible(),
@@ -408,6 +408,8 @@ class WeekplanResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\ToggleColumn::make('is_active')
+                    ->label('Aktiv'),
                 TextColumn::make('created_at')
                     ->dateTime('d.m.y H:i:s')
                     ->label('Opprettet'),

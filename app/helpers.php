@@ -1,7 +1,7 @@
 <?php
 
 /* Brukes til å sette itensitet farger på ukeplan på de forskjellige øktene */
-function getIntensityColorClass($intensity)
+function getIntensityColorClass($intensity): string
 {
     return match ($intensity) {
         'crimson' => 'background-color: #DC2626',
@@ -12,7 +12,7 @@ function getIntensityColorClass($intensity)
 }
 
 /* Brukes til å sette fra-til på ukeplan kalender*/
-function formatTime($from, $to)
+function formatTime($from, $to): string
 {
     return "{$from} - {$to}";
 }
