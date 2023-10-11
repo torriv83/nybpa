@@ -4,7 +4,7 @@
 
 {{--            <livewire:Landslag.Weekplan.table-header />--}}
 
-{{--            @livewire('landslag.weekplan.table-header')--}}
+            @livewire('landslag.weekplan.table-header')
 
 
             <tbody>
