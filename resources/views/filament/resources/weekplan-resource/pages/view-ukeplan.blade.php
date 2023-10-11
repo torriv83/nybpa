@@ -4,9 +4,14 @@
 
 {{--            <livewire:landslag.weekplan.table-header/>--}}
 <<<<<<< HEAD
+<<<<<<< HEAD
             <livewire:Landslag.Weekplan.table-header />
 =======
             @livewire('landslag.weekplan.table-header')
+
+>>>>>>> devtest
+=======
+{{--            @livewire('landslag.weekplan.table-header')--}}
 
 >>>>>>> devtest
 
