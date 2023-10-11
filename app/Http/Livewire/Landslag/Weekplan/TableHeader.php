@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Landslag\Weekplan;
 
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 
 class TableHeader extends Component
@@ -35,7 +36,7 @@ class TableHeader extends Component
     public function getDayStyles($day): string
     {
         $border = $day != 'Søndag' ? 'border-right: 1px solid #52525B;' : '';
-        $today = $day == ucfirst(\Illuminate\Support\Carbon::today()->isoFormat('dddd')) ? 'background-color: grey;' : '';
+        $today = $day == ucfirst(Carbon::today()->isoFormat('dddd')) ? 'background-color: grey;' : '';
         return $border . ' ' . $today;
     }
 }
