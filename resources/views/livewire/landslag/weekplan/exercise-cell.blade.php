@@ -9,7 +9,7 @@
 
         @if ($exercise !== null && isset($exercise['intensity']))
             @if(!$isDuplicate)
-                <div class="mb-1">{{ $exercise['time'] }}</div>
+                <div class="mb-1 font-bold">{{ $exercise['time'] }}</div>
                 <div>{{ $exercise['exercise'] }}</div>
                 @if($exercise['program'])
                     <div class="text-xs hover:underline">
