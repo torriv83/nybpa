@@ -4,9 +4,6 @@
 
             <livewire:table-header />
 
-            @livewire('landslag.weekplan.table-header')
-
-
             <tbody>
                 <livewire:landslag.weekplan.table-row :weekplanId="$this->weekplan->id"/>
             </tbody>
