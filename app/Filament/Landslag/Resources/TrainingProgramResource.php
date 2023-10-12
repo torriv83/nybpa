@@ -5,6 +5,7 @@ namespace App\Filament\Landslag\Resources;
 use App\Filament\Landslag\Resources\TrainingProgramResource\Pages;
 use App\Filament\Landslag\Resources\TrainingProgramResource\RelationManagers;
 use App\Models\TrainingProgram;
+use App\Models\WeekplanExercise;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -54,6 +55,10 @@ class TrainingProgramResource extends Resource
                     ->label('Oppdatert')
                     ->date('d.m.Y H:i')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('IAntallUkeplaner')
+                    ->getStateUsing(function ($record) {
+                        return WeekplanExercise::where('training_program_id', $record->id)->count();
+                    }),
             ])
             ->filters([
                 TernaryFilter::make('arkivert')

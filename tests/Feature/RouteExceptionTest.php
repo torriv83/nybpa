@@ -24,7 +24,6 @@ $urls = [
     '/privat/kategoris',
     '/privat/economies',
     '/privat/wishlists',
-    '/landslag/days',
     '/landslag/exercises',
     '/landslag/test-results',
     '/landslag/tests',
