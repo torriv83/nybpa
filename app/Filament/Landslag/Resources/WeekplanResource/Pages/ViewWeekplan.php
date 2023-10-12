@@ -47,6 +47,9 @@ class ViewWeekplan extends Page
 
     public function mount($record): void
     {
+        if (!is_numeric($record)) {
+            return; // Exit early if the record isn't a number
+        }
         $this->weekplan = Weekplan::with('weekplanExercises')->find($record);
     }
 

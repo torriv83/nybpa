@@ -13,7 +13,7 @@
                 <div>{{ $exercise['exercise'] }}</div>
                 @if($exercise['program'])
                     <div class="text-xs hover:underline">
-                        <a href="/landslag/training-programs/{{$exercise['program_id']}}">({{ $exercise['program'] }})</a>
+                        @livewire('landslag.weekplan.exercise-modal', ['programId' => $exercise['program_id'], 'programName' => $exercise['program']])
                     </div>
                 @endif
         @endif

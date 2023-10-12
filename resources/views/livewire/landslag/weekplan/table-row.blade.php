@@ -29,4 +29,5 @@
             @endfor
         </tr>
     @endforeach
+
 </div>
