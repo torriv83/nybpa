@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Http\Livewire\TableHeader;
 use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Livewire::component('table-header ', TableHeader::class);
+
         /* Filament Assets*/
         FilamentAsset::register([
             Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
