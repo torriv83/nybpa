@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\Landslag\Weekplan;
+namespace App\Http\Livewire;
 
 use Illuminate\Support\Carbon;
 use Livewire\Component;
@@ -20,7 +20,7 @@ class TableHeader extends Component
 
 /*    public function render()
     {
-        return view('livewire.landslag.weekplan.table-header');
+        return view('livewire.table-header');
     }*/
 
     public function getDayStyles($day): string
