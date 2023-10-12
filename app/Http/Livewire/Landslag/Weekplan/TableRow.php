@@ -6,7 +6,6 @@ use App\Models\Settings;
 use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -20,10 +19,9 @@ class TableRow extends Component
     public $exists = [];
     public $weekplanId;
 
-    public function mount($weekplanId)
+    public function mount()
     {
-        $this->weekplanId = $weekplanId;
-        $this->data       = $this->getExercises();
+        $this->data = $this->getExercises();
     }
 
     /**
@@ -62,7 +60,7 @@ class TableRow extends Component
      * @return array An array containing the start time, end time, and interval.
      * @throws Some_Exception_Class A description of the exception that can be thrown.
      */
-    private function calculateTimeRange($fixed = 0): array
+    private function calculateTimeRange(int $fixed = 0): array
     {
         $exerciseData = $this->getDayData($this->weekplanId);
         $setting      = $this->getSettings();
@@ -229,13 +227,4 @@ class TableRow extends Component
         return $data;
     }
 
-    /**
-     * Renders the view for the given function.
-     *
-     * @return View
-     */
-    public function render(): View
-    {
-        return view('livewire.landslag.weekplan.table-row');
-    }
 }

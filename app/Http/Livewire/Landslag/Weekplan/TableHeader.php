@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Landslag\Weekplan;
 
 use Illuminate\Support\Carbon;
 use Livewire\Component;
@@ -17,11 +17,6 @@ class TableHeader extends Component
         6 => 'Lørdag',
         7 => 'Søndag',
     ];
-
-/*    public function render()
-    {
-        return view('livewire.table-header');
-    }*/
 
     public function getDayStyles($day): string
     {
