@@ -5,10 +5,10 @@
 
     <td class="py-2 px-4 {{ $exercise !== null && isset($exercise['intensity']) ? '' : 'border-t' }} dark:border-gray-600 border-gray-500"
         style="{{ $exercise !== null && isset($exercise['intensity']) ? getIntensityColorClass($exercise['intensity']) : '' }}; {{$borderR}}"
+        @if(isset($rowspan) && $rowspan > 1) rowspan="{{ $rowspan }}" @endif
     >
 
-        @if ($exercise !== null && isset($exercise['intensity']))
-            @if(!$isDuplicate)
+        @if ($exercise !== null && isset($exercise['intensity']) && !$isDuplicate)
                 <div class="mb-1 font-bold">{{ $exercise['time'] }}</div>
                 <div>{{ $exercise['exercise'] }}</div>
                 @if($exercise['program'])
@@ -16,9 +16,6 @@
                         <a href="/landslag/training-programs/{{$exercise['program_id']}}">({{ $exercise['program'] }})</a>
                     </div>
                 @endif
-            @endif
-        @else
-            &nbsp;
         @endif
     </td>
 </div>

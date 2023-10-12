@@ -200,6 +200,11 @@ class TableRow extends Component
                         $exercise        = $filteredExercises->first();
                         $trainingProgram = $exercise->trainingProgram;
 
+                        // Calculate rowspan for the exercise based on its duration
+                        $fromTime = (date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + date('i', strtotime($exercise->start_time));
+                        $toTime = (date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + date('i', strtotime($exercise->end_time));
+                        $rowspan = ceil(($toTime - $fromTime) / $interval);
+
                         $exerciseDataForDay = [
                             'day'        => $day,
                             'time'       => formatTime(Carbon::parse($exercise->start_time)->format('H:i'),
@@ -208,11 +213,13 @@ class TableRow extends Component
                             'exercise'   => $exercise->exercise->name,
                             'program'    => $trainingProgram ? $trainingProgram->program_name : null,
                             'program_id' => $trainingProgram ? $trainingProgram->id : null,
+                            'rowspan'    => $rowspan // Adding rowspan value to the exercise data
                         ];
                     }
 
                     $row['exercises'][$day] = $exerciseDataForDay;
                 }
+
 
                 for ($day = 1; $day <= self::DAYS_IN_WEEK; $day++) {
                     $row['exercises'][$day] = $row['exercises'][$day] ?? [];

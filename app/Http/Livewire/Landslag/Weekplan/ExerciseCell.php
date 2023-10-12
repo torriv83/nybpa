@@ -10,6 +10,7 @@ class ExerciseCell extends Component
     public static $exists = [];
     public        $exercise;
     public        $day;
+    public $rowspan = 1;
 
     public function render()
     {
@@ -24,6 +25,6 @@ class ExerciseCell extends Component
             }
         }
 
-        return view('livewire.landslag.weekplan.exercise-cell', ['isDuplicate' => $isDuplicate]);
+        return view('livewire.landslag.weekplan.exercise-cell', ['isDuplicate' => $isDuplicate, 'rowspan' => $this->rowspan]);
     }
 }
