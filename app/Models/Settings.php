@@ -14,6 +14,10 @@ class Settings extends Model
 
     protected $fillable = ['user_id', 'weekplan_timespan', 'bpa_hours_per_week', 'weekplan_from', 'weekplan_to', 'apotek_epost'];
 
+    protected $casts = [
+        'weekplan_timespan' => 'boolean',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);

@@ -7,10 +7,10 @@ use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
@@ -32,12 +32,12 @@ class Settings extends Page implements HasForms
 
     public Setting $settings;
 
-    public $user_id;
-    public $weekplan_timespan;
-    public $weekplan_from;
-    public $weekplan_to;
-    public $apotek_epost;
-    public $bpa_hours_per_week;
+    public int|null $user_id;
+    public bool $weekplan_timespan;
+    public string $weekplan_from;
+    public string $weekplan_to;
+    public string $apotek_epost;
+    public int $bpa_hours_per_week;
 
     public function mount(): void
     {
@@ -69,28 +69,30 @@ class Settings extends Page implements HasForms
                 ]),
 
             Section::make('Ukeplan')
-//                ->description('Description')
                 ->schema([
                     Grid::make(3)
                         ->schema([
-                            Select::make('weekplan_timespan')
-                                ->options([
-                                    0 => 'Nei',
-                                    1 => 'Ja',
-                                ])
-                                ->label('Bruk fastsatt tid?')->required()
-                                ->reactive(),
-                            Forms\Components\Hidden::make('user_id')->formatStateUsing(fn() => Auth::id()),
+                            Forms\Components\Toggle::make('weekplan_timespan')
+                                ->label('Bruk fastsatt tid?')
+                                ->inline(false)
+                                ->onColor('success')
+                                ->offColor('danger')
+                                ->onIcon('heroicon-m-check')
+                                ->offIcon('heroicon-m-x-mark')
+                                ->required()
+                                ->live(),
+                            Forms\Components\Hidden::make('user_id')
+                                ->formatStateUsing(fn() => Auth::id()),
                             TimePicker::make('weekplan_from')->seconds(false)
                                 ->format('H:i:s')
                                 ->label('Vis tid fra')
-                                ->hidden(fn(callable $get
-                                ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
+                                ->hidden(
+                                    fn (Get $get): bool => ! $get('weekplan_timespan')
+                                ),
                             TimePicker::make('weekplan_to')->seconds(false)
                                 ->format('H:i:s')
                                 ->label('Vis tid til')
-                                ->hidden(fn(callable $get
-                                ) => $get('weekplan_timespan') === null || $get('weekplan_timespan') === 0 || $get('weekplan_timespan') === '0'),
+                                ->hidden(fn (Get $get): bool => ! $get('weekplan_timespan')),
                         ]),
                 ]),
         ];
