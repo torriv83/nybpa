@@ -15,7 +15,7 @@ class EditTimesheet extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
-    protected function mutateFormDataBeforeFill(array $data,): array
+    protected function mutateFormDataBeforeFill(array $data): array
     {
         $data['fra_datod'] = $this->record->fra_dato;
         $data['til_datod'] = $this->record->til_dato;
