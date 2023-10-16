@@ -105,7 +105,8 @@ class TimesheetResource extends Resource
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
-                        if (strlen($state) <= $column->getCharacterLimit()) {
+                        if ($state === null || strlen($state) <= $column->getCharacterLimit()) {
+                            // Handle the case where $state is null, e.g., return null or throw an exception.
                             return null;
                         }
 
