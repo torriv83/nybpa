@@ -53,7 +53,7 @@ return [
     /*
     * When enabled, all requests made to this app will automatically be sent to Ray.
     */
-    'send_requests_to_ray' => env('SEND_REQUESTS_TO_RAY', false),
+    'send_requests_to_ray' => env('SEND_REQUESTS_TO_RAY', true),
 
     /**
      * When enabled, all Http Client requests made by this app will be automatically sent to Ray.
