@@ -46,17 +46,17 @@ class Timesheet extends Model
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);
     }
 
-    public function setFraDatoAttribute($value)
+/*    public function setFraDatoAttribute($value)
     {
 
         $this->attributes['fra_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
-    }
+    }*/
 
-    public function setTilDatoAttribute($value)
+/*    public function setTilDatoAttribute($value)
     {
 
         $this->attributes['til_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
-    }
+    }*/
 
     /**
      * @method static thisYear()

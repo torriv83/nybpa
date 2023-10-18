@@ -4,12 +4,14 @@ namespace App\Filament\Assistent\Resources\TimesheetResource\Pages;
 
 use App\Filament\Assistent\Resources\TimesheetResource;
 use App\Models\User;
+use App\Traits\DateAndTimeHelper;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateTimesheet extends CreateRecord
 {
+    use DateAndTimeHelper;
     protected static string $resource = TimesheetResource::class;
 
     protected function getRedirectUrl(): string
@@ -17,6 +19,11 @@ class CreateTimesheet extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        return self::transformFormDataForSave($data);
+
+    }
     protected function afterCreate(): void
     {
         $recipient = User::query()->role('admin')->get();
