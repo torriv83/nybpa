@@ -188,6 +188,9 @@ trait DateAndTimeHelper
         $component = DatePicker::make($name)
             ->label($label)
             ->native(false)
+            ->disabledDates(function (Get $get) {
+                return self::getAllDisabledDates($get('user_id')) ?? [];
+            })
             ->suffixIcon('calendar')
             ->displayFormat('d.m.Y')
             ->minDate(fn($operation) => ($operation == 'edit' || $config['isAdmin'])
