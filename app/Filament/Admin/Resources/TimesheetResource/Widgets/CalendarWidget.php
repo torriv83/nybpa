@@ -4,109 +4,61 @@ namespace App\Filament\Admin\Resources\TimesheetResource\Widgets;
 
 use App\Models\Timesheet;
 use App\Models\User;
+use App\Traits\DateAndTimeHelper;
 use Carbon\Carbon;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Saade\FilamentFullCalendar\Actions;
 use Saade\FilamentFullCalendar\Actions\CreateAction;
+use Saade\FilamentFullCalendar\Actions\DeleteAction;
+use Saade\FilamentFullCalendar\Actions\EditAction;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class CalendarWidget extends FullCalendarWidget
 {
-    public Model | string | null $model = Timesheet::class;
+    use DateAndTimeHelper;
+
+    public Model|string|null $model = Timesheet::class;
 
     public function getFormSchema(): array
     {
         return [
-            Select::make('user_id')
-                ->label('Assistent')
-                ->options(User::role(['Fast ansatt', 'Tilkalling'])->pluck('name', 'id'))
-                ->required(),
-            Grid::make()
+            // Section
+            Section::make('Assistent')
+                ->description('Velg assistent og om han/hun er tilgjengelig eller ikke, og om det gjelder hele dagen.')
                 ->schema([
-                    Checkbox::make('allDay')
-                        ->label('Hele dagen?'),
-                    Checkbox::make('unavailable')
-                        ->label('Settes som borte?'),
-                ]),
-            DateTimePicker::make('fra_dato')
-                ->label('Starter')
-                ->minutesStep(15)
-                ->live(onBlur: true)
-                ->afterStateUpdated(function ($set, $get, $state) {
-                    if($get('allDay')){
-                        $set('totalt', 0);
-                        $set('tot', 0);
-                    }else{
-                        $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
-                        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
-                    }
-                })
-                ->formatStateUsing(function ($state, $set, $get) {
-                    if($get('allDay')){
-                        $set('totalt', 0);
-                        $set('tot', 0);
-                    }else{
-                        $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
-                        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
-                    }
+                    Select::make('user_id')
+                        ->label('Hvem')
+                        ->options(User::query()->assistenter()->pluck('name', 'id'))
+                        ->required()
+                        ->live()
+                        ->columnSpan(2),
 
-                    return Carbon::parse($state)->timezone('Europe/Oslo')->format('Y-m-d H:i:s');
-                })
-                ->required(),
-            DateTimePicker::make('til_dato')
-                ->label('Slutter')
-                ->seconds(false)
-                ->minutesStep(15)
-                ->required()
-                ->live(onBlur: true)
-                ->afterStateUpdated(function ($set, $get, $state) {
-                    if($get('allDay')){
-                        $set('totalt', 0);
-                        $set('tot', 0);
-                    }else{
-                        $set('tot', Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I'));
-                        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($get('fra_dato')))->diffInMinutes(Carbon::parse($get('til_dato'))));
-                    }
-                })
-            ->formatStateUsing(function ($state, $set, $get) {
-                if($get('allDay')){
-                    return Carbon::parse($state)->timezone('Europe/Oslo')->setHours(00)->setMinutes(00)->format('Y-m-d H:i');
-                }else{
-                    return Carbon::parse($state)->timezone('Europe/Oslo')->format('Y-m-d H:i:s');
-                }
-            }),
-            RichEditor::make('description')
-                ->label('Beskrivelse')
-                ->disableToolbarButtons([
-                    'attachFiles',
-                    'blockquote',
-                    'codeBlock',
-                    'h2',
-                    'h3',
-                    'link',
-                    'redo',
-                    'strike',
-                ]),
-            Placeholder::make('tot')
-                ->label('Totalt')
-                ->content(function (Get $get) {
-                    if($get('fra_dato') == null || $get('til_dato') == null){
-                        return 0;
-                    }
-                    return Carbon::parse($get('til_dato'))->diff(Carbon::parse($get('fra_dato')))->format('%H:%I');
-                }),
-            Hidden::make('totalt'),
+                    Checkbox::make('unavailable')
+                        ->label('Ikke Tilgjengelig?'),
+
+                    Checkbox::make('allDay')
+                        ->label('Hele dagen?')->live(),
+
+                ])->columns(),
+
+            // Section
+            Section::make('Tid')
+                ->description('Velg fra og til')
+                ->schema([
+                    ...self::getCommonFields(true),
+                    TextInput::make('totalt')
+                        ->label('Total tid')
+                        ->disabled()
+                        ->dehydrated(),
+                ])->columns(),
         ];
     }
 
@@ -114,72 +66,42 @@ class CalendarWidget extends FullCalendarWidget
     {
         parent::refreshRecords();
         Cache::tags(['timesheet'])->flush();
-
     }
 
     /**
      * FullCalendar will call this function whenever it needs new event data.
      * This is triggered when the user clicks prev/next or switches views on the calendar.
      */
-     public function fetchEvents(array $fetchInfo): array
-     {
+    public function fetchEvents(array $fetchInfo): array
+    {
+        $schedules = Cache::tags(['timesheet'])->remember('schedules', now()->addDay(), function () {
+            return Timesheet::query()->with('user')->get();
+        });
 
-         $schedules = Cache::tags(['timesheet'])->remember('schedules', now()->addDay(), function () {
-             return Timesheet::query()->with('user')->get();
-         });
-
-         return $schedules->map(function ($item) {
-
-             $color          = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
-             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
-             return [
-                 'id'              => $item->id,
-                 'title'           => Str::limit($item->user->name, 15),
-                 'start'           => $item->fra_dato,
-                 'end'             => $item->til_dato,
-                 'allDay'          => $item->allDay,
-                 'description'     => $item->description,
-                 'heleDagen'       => $item->allDay,
-                 'assistentID'     => $item->user_id,
-                 'unavailable'     => $item->unavailable,
-                 'totalt'          => $item->totalt,
-                 'backgroundColor' => $color,
-                 'borderColor'     => $color,
-             ];
-         })->toArray();
-     }
+        return $schedules->map(function ($item) {
+            $color          = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
+            $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
+            return [
+                'id'              => $item->id,
+                'title'           => Str::limit($item->user->name, 15),
+                'start'           => $item->fra_dato,
+                'end'             => $item->til_dato,
+                'allDay'          => $item->allDay,
+                'description'     => $item->description,
+                'heleDagen'       => $item->allDay,
+                'assistentID'     => $item->user_id,
+                'unavailable'     => $item->unavailable,
+                'totalt'          => $item->totalt,
+                'backgroundColor' => $color,
+                'borderColor'     => $color,
+            ];
+        })->toArray();
+    }
 
     /**
      * Triggered when dragging stops and the event has moved to a different day/time.
      */
     public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta): bool
-    {
-
-        $this->eventUpdate($event);
-
-        return false;
-    }
-
-    protected function headerActions(): array
-    {
-        return [
-            CreateAction::make()
-                ->mountUsing(
-                    function (Form $form, array $arguments) {
-                        $form->fill([
-                            'allDay' => $arguments['allDay'] ?? false,
-                            'fra_dato' => $arguments['start'] ?? null,
-                            'til_dato' => $arguments['end'] ?? null
-                        ]);
-                    }
-                )
-        ];
-    }
-
-    /**
-     * Triggered when event's resize stops.
-     */
-    public function onEventResize(array $event, array $oldEvent, array $relatedEvents, array $startDelta, array $endDelta): bool
     {
         $this->eventUpdate($event);
 
@@ -188,7 +110,6 @@ class CalendarWidget extends FullCalendarWidget
 
     public function eventUpdate($event): void
     {
-
         $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];
 
         $tid              = Timesheet::find($event['id']);
@@ -207,5 +128,74 @@ class CalendarWidget extends FullCalendarWidget
             ->title('Tid endret')
             ->success()
             ->send();
+    }
+
+    /**
+     * Triggered when event's resize stops.
+     */
+    public function onEventResize(array $event, array $oldEvent, array $relatedEvents, array $startDelta, array $endDelta): bool
+    {
+        $this->eventUpdate($event);
+
+        return false;
+    }
+
+    protected function headerActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->mountUsing(
+                    function (Form $form, array $arguments) {
+                        if ($arguments) {
+                            if ($arguments['allDay'] ?? false) {
+                                $form->fill([
+                                    'allDay'        => $arguments['allDay'],
+                                    'fra_dato_date' => $arguments['start'] ?? null,
+                                    'til_dato_date' => $arguments['end'] ?? null
+                                ]);
+                            } else {
+                                $form->fill([
+                                    'allDay'        => $arguments['allDay'] ?? false,
+                                    'fra_dato_time' => $arguments['start'] ?? null,
+                                    'til_dato_time' => $arguments['end'] ?? null
+                                ]);
+                            }
+                        } else {
+                            $form->fill([
+                                'allDay'        => false,
+                                'fra_dato_time' => null,
+                                'til_dato_time' => null
+                            ]);
+                        }
+                    }
+                )
+                ->mutateFormDataUsing(
+                    function (array $data): array {
+                        return self::transformFormDataForSave($data);
+                    }
+                )
+        ];
+    }
+
+    protected function modalActions(): array
+    {
+        return [
+            EditAction::make()
+                ->mountUsing(
+                    function ($record, Form $form) {
+                        $form->fill(self::transformFormDataForFill($record->toArray()));
+                    }
+                ),
+            DeleteAction::make(),
+        ];
+    }
+
+    protected function viewAction(): Actions\ViewAction
+    {
+        return Actions\ViewAction::make()->mountUsing(
+            function ($record, Form $form) {
+                $form->fill(self::transformFormDataForFill($record->toArray()));
+            }
+        );
     }
 }

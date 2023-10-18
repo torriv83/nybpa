@@ -37,6 +37,8 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Slate,
             ])
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.5rem')
             ->navigationItems([
                 NavigationItem::make('Til Uloba siden')
                     ->url('https://uloba.no', shouldOpenInNewTab: true)

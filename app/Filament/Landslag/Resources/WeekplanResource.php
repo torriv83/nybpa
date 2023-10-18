@@ -4,19 +4,14 @@ namespace App\Filament\Landslag\Resources;
 
 use App\Filament\Landslag\Resources\WeekplanResource\Pages;
 use App\Filament\Landslag\Resources\WeekplanResource\RelationManagers;
-use App\Models\Exercise;
-use App\Models\TrainingProgram;
 use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
+use App\Traits\WeekplanSchema;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,6 +21,8 @@ use Filament\Tables\Table;
 
 class WeekplanResource extends Resource
 {
+    use WeekplanSchema;
+
     protected static ?string $model = Weekplan::class;
 
     protected static ?string $slug = 'weekplans';
@@ -67,333 +64,25 @@ class WeekplanResource extends Resource
                                     ->tabs([
                                         Tabs\Tab::make('Mandag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 1)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_1')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 1);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('1'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(1)]),
                                         Tabs\Tab::make('Tirsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 2)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_2')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 2);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('2'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(2)]),
                                         Tabs\Tab::make('Onsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 3)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_3')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 3);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('3'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(3)]),
                                         Tabs\Tab::make('Torsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 4)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_4')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 4);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('4'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(4)]),
                                         Tabs\Tab::make('Fredag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 5)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_5')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 5);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('5'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(5)]),
                                         Tabs\Tab::make('Lørdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 6)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_6')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 6);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('6'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(6)]),
                                         Tabs\Tab::make('Søndag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 7)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([
-                                                Repeater::make('exercises_7')
-                                                    ->relationship('weekplanExercises', function ($query) {
-                                                        $query->where('day', 7);
-                                                    })
-                                                    ->label('Økter')
-                                                    ->schema([
-                                                        Hidden::make('day')->default('7'),
-                                                        Select::make('exercise_id')
-                                                            ->options(Exercise::all()->pluck('name', 'id'))
-                                                            ->label('Øvelse')
-                                                            ->live(onBlur: true)
-                                                            ->required(),
-                                                        Select::make('training_program_id')
-                                                            ->label('Velg styrkeprogram')
-                                                            ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                                                            ->hidden(function ($get) {
-                                                                $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
-                                                                return $exerciseName !== 'Styrketrening';
-                                                            }),
-                                                        TimePicker::make('start_time')
-                                                            ->seconds(false)
-                                                            ->label('Start')
-                                                            ->required(),
-                                                        TimePicker::make('end_time')
-                                                            ->seconds(false)
-                                                            ->label('Slutt')
-                                                            ->required(),
-                                                        Select::make('intensity')->options([
-                                                            'green'    => 'Lett',
-                                                            'darkcyan' => 'Vedlikehold',
-                                                            'crimson'  => 'Tung',
-                                                        ])
-                                                            ->label('Hvor tung?')
-                                                            ->required(),
-                                                    ])
-                                                    ->defaultItems(0)
-                                                    ->grid(4)
-                                                    ->itemLabel(
-                                                        fn(array $state): ?string => Exercise::all()->where('id',
-                                                            $state['exercise_id'])->first()?->name
-                                                    )
-                                                    ->addActionLabel('Legg til økt')
-                                                    ->collapsible(),
-                                            ]),
+                                            ->schema([...self::getCommonFields(7)]),
                                     ]),
                             ]),
                     ]),

@@ -4,15 +4,10 @@ namespace App\Filament\Assistent\Widgets;
 
 use App\Models\Timesheet;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Traits\DateAndTimeHelper;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\CreateAction;
@@ -23,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UnavailableTable extends BaseWidget
 {
+    use DateAndTimeHelper;
     protected static ?string $heading         = 'Tider satt som ikke tilgjengelig';
     protected static ?string $pollingInterval = null;
     protected static ?int    $sort            = 3;
@@ -38,10 +34,38 @@ class UnavailableTable extends BaseWidget
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
             ])
             ->defaultSort('fra_dato')
+            ->headerActions([
+                CreateAction::make()
+                    ->label('Legg til tid du ikke kan jobbe')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        return self::transformFormDataForSave($data);
+                    })
+                    ->form([
+                        //Seksjon
+                        Section::make(fn() => Auth::user()->name)
+                            ->description('Velg om det gjelder hele dagen eller ikke')
+                            ->schema([
+                                Checkbox::make('allDay')
+                                    ->label('Hele dagen?')->live()
+                            ])->columns(),
+
+                        Section::make('Tid')
+                            ->schema([
+                                ...self::getCommonFields(false),
+                                Hidden::make('totalt')->default(0),
+                                Hidden::make('unavailable')->default(true),
+                                Hidden::make('user_id')->default(Auth::user()->id),
+                            ])->columns(),
+                    ]),
+            ])
             ->emptyStateHeading('Ingen tider registrert.')
             ->emptyStateDescription('')
             ->emptyStateActions([
-                CreateAction::make()->label('Legg til tid du ikke kan jobbe')
+                CreateAction::make()
+                    ->label('Legg til tid du ikke kan jobbe')
+                    ->mutateFormDataUsing(function (array $data): array {
+                        return self::transformFormDataForSave($data);
+                    })
                     ->after(function () {
                         $recipient = User::query()->role('admin')->get();
 
@@ -72,55 +96,12 @@ class UnavailableTable extends BaseWidget
                                     ->label('Hele dagen?')->live()
                             ])->columns(),
 
-                        //Seksjon
                         Section::make('Tid')
-                            ->description('Velg fra og til.')
                             ->schema([
-
-                                DateTimePicker::make('fra_dato')
-                                    ->displayFormat('d.m.Y')
-                                    ->seconds(false)
-                                    ->required()
-                                    ->minDate(Carbon::parse(now())->format('d.m.Y H:i'))
-                                    ->live()
-                                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('til_dato',
-                                        Carbon::parse($state)->addHour()->format('Y-m-d H:i')))
-                                    ->hidden(fn(Get $get): bool => $get('allDay')),
-                                DateTimePicker::make('til_dato')
-                                    ->displayFormat('d.m.Y')->seconds(false)
-                                    ->required()
-                                    ->hidden(fn(Get $get): bool => $get('allDay'))
-                                    ->afterOrEqual('fra_dato'),
-
-                                DatePicker::make('fra_dato')
-                                    ->displayFormat('d.m.Y')
-                                    ->required()
-                                    ->minDate(Carbon::parse(today())->format('d.m.Y'))
-                                    ->hidden(fn(Get $get): bool => !$get('allDay')),
-                                DatePicker::make('til_dato')
-                                    ->displayFormat('d.m.Y')
-                                    ->required()
-                                    ->hidden(fn(Get $get): bool => !$get('allDay'))
-                                    ->afterOrEqual('fra_dato'),
-
-                                RichEditor::make('description')
-                                    ->label('Begrunnelse (Valgfritt)')
-                                    ->disableToolbarButtons([
-                                        'attachFiles',
-                                        'blockquote',
-                                        'codeBlock',
-                                        'h2',
-                                        'h3',
-                                        'link',
-                                        'redo',
-                                        'strike',
-                                    ])
-                                    ->maxLength(255)->columnSpanFull(),
-
+                                ...self::getCommonFields(false),
                                 Hidden::make('totalt')->default(0),
                                 Hidden::make('unavailable')->default(true),
                                 Hidden::make('user_id')->default(Auth::user()->id),
-
                             ])->columns(),
                     ]),
             ]);

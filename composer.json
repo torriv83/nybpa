@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "althinect/filament-spatie-roles-permissions": "^2.0",
         "bezhansalleh/filament-panel-switch": "^1.0.0",
         "calebporzio/sushi": "^2.4",
@@ -22,13 +22,13 @@
         "rickdbcn/filament-email": "^1.0",
         "saade/filament-fullcalendar": "^v3.0.0-beta1",
         "sentry/sentry-laravel": "^3.4",
+        "spatie/laravel-ray": "^1.33",
         "stechstudio/filament-impersonate": "^3.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
         "beyondcode/laravel-query-detector": "^1.7",
         "fakerphp/faker": "^1.9.1",
-        "laradumps/laradumps": "^2.0",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",

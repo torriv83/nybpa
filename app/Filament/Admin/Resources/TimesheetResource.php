@@ -8,11 +8,11 @@ use App\Filament\Admin\Resources\TimesheetResource\Pages;
 use App\Filament\Admin\Resources\TimesheetResource\Widgets\HoursUsedEachMonth;
 use App\Models\Timesheet;
 use App\Models\User;
+use App\Traits\DateAndTimeHelper;
 use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Infolists;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Infolist;
@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TimesheetResource extends Resource
 {
+    use DateAndTimeHelper;
+
     /**
      * Innstillinger
      */
@@ -43,21 +45,8 @@ class TimesheetResource extends Resource
 
     protected static ?string $slug = 'timelister';
 
-    protected function getDefaultTableSortColumn(): ?string
-    {
-        return 'fra_dato';
-    }
-
-    protected function getDefaultTableSortDirection(): ?string
-    {
-
-        return 'desc';
-    }
-
-
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
 
@@ -76,7 +65,7 @@ class TimesheetResource extends Resource
                     ->label('Dato')
                     ->getStateUsing(function (Model $record) {
                         if ($record->unavailable == 1) {
-                            return Carbon::parse($record->fra_dato)->format('d.m.Y') . ' - ' . Carbon::parse($record->til_dato)->format('d.m.Y');
+                            return Carbon::parse($record->fra_dato)->format('d.m.Y').' - '.Carbon::parse($record->til_dato)->format('d.m.Y');
                         } else {
                             return Carbon::parse($record->fra_dato)->format('d.m.Y');
                         }
@@ -105,7 +94,8 @@ class TimesheetResource extends Resource
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
-                        if (strlen($state) <= $column->getCharacterLimit()) {
+                        if ($state === null || strlen($state) <= $column->getCharacterLimit()) {
+                            // Handle the case where $state is null, e.g., return null or throw an exception.
                             return null;
                         }
 
@@ -116,13 +106,12 @@ class TimesheetResource extends Resource
 
                 Tables\Columns\TextColumn::make('totalt')
                     ->getStateUsing(function (Model $record) {
-
-                        if ($record->allDay) {
+                        if ($record->unavailable) {
                             return '-';
                         } else {
                             $minutes = $record->totalt;
 
-                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                            return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
                         }
                     })
                     ->sortable()
@@ -130,11 +119,11 @@ class TimesheetResource extends Resource
                     ->summarize([
                         Sum::make()->formatStateUsing(function (string $state) {
                             $minutes = $state;
-                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                            return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
                         }),
                         Average::make()->formatStateUsing(function (string $state) {
-                            $minutes = $state;
-                            return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                            $minutes = (int) floatval($state);
+                            return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
                         })
                     ]),
 
@@ -192,7 +181,6 @@ class TimesheetResource extends Resource
                         Forms\Components\DatePicker::make('til_dato'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
-
                         return $query
                             ->when(
                                 $data['fra_dato'],
@@ -224,19 +212,17 @@ class TimesheetResource extends Resource
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
-
-                //Seksjon
+                // Section
                 Forms\Components\Section::make('Assistent')
                     ->description('Velg assistent og om han/hun er tilgjengelig eller ikke, og om det gjelder hele dagen.')
                     ->schema([
-
                         Forms\Components\Select::make('user_id')
                             ->label('Hvem')
                             ->options(User::query()->assistenter()->pluck('name', 'id'))
                             ->required()
+                            ->live()
                             ->columnSpan(2),
 
                         Forms\Components\Checkbox::make('unavailable')
@@ -247,80 +233,15 @@ class TimesheetResource extends Resource
 
                     ])->columns(),
 
-                //Seksjon
+                // Section
                 Forms\Components\Section::make('Tid')
                     ->description('Velg fra og til')
                     ->schema([
-                        Forms\Components\DateTimePicker::make('fra_dato')
-                            ->seconds(false)
-                            ->minutesStep(15)
-                            ->required()
-                            ->live()
-                            ->hidden(fn(Get $get): bool => $get('allDay'))
-                            ->afterStateUpdated(function (Set $set, ?string $state, Get $get) {
-                                $set('til_dato',
-                                    Carbon::parse($state)->addHour()->format('Y-m-d H:i:s'));
-
-                                $fra = Carbon::parse($state)->format('Y-m-d H:i:s');
-                                $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($get('til_dato')));
-
-                                $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($get('til_dato'));
-                                $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
-                                $set('Tid', $hours);
-
-                            }),
-                        Forms\Components\DateTimePicker::make('til_dato')
-                            ->seconds(false)
-                            ->minutesStep(15)
-                            ->required()
-                            ->live()
-                            ->hidden(fn(Get $get): bool => $get('allDay'))
-                            ->afterStateUpdated(function ($set, string $state, $get) {
-
-                                self::setTimes($get, $set, $state);
-                            }),
-
-                        Forms\Components\DatePicker::make('fra_datod')
-                            ->label('Fra dato')
-                            ->displayFormat('d.m.Y H:i')
-                            ->required()
-                            ->hidden(fn(Get $get): bool => !$get('allDay')),
-                        Forms\Components\DatePicker::make('til_datod')
-                            ->label('Til dato')
-                            ->displayFormat('d.m.Y H:i')
-                            ->required()
-                            ->live()
-                            ->hidden(fn(Get $get): bool => !$get('allDay'))
-                            ->afterStateUpdated(function ($set, string $state, $get) {
-
-                                self::setTimes($get, $set, $state);
-
-                                $set('til_dato', $state);
-                                $set('fra_dato', $get('fra_datod'));
-                            }),
-
-                        Forms\Components\RichEditor::make('description')
-                            ->label('Beskrivelse')
-                            ->disableToolbarButtons([
-                                'attachFiles',
-                                'blockquote',
-                                'codeBlock',
-                                'h2',
-                                'h3',
-                                'link',
-                                'redo',
-                                'strike',
-                            ])
-                            ->maxLength(191),
-
-                        Forms\Components\TextInput::make('Tid')
+                        ...self::getCommonFields(true),
+                        TextInput::make('totalt')
                             ->label('Total tid')
-                            ->disabled(),
-
-                        Forms\Components\Hidden::make('totalt'),
-                        Forms\Components\Hidden::make('fra_dato'),
-                        Forms\Components\Hidden::make('til_dato'),
-
+                            ->disabled()
+                            ->dehydrated(),
                     ])->columns(),
             ]);
     }
@@ -347,7 +268,7 @@ class TimesheetResource extends Resource
                         Infolists\Components\TextEntry::make('totalt')
                             ->formatStateUsing(function (string $state) {
                                 $minutes = $state;
-                                return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                                return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
                             }),
                         Infolists\Components\TextEntry::make('description')
                             ->html()
@@ -359,7 +280,6 @@ class TimesheetResource extends Resource
 
     public static function getRelations(): array
     {
-
         return [
             //
         ];
@@ -367,7 +287,6 @@ class TimesheetResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
@@ -376,7 +295,6 @@ class TimesheetResource extends Resource
 
     public static function getPages(): array
     {
-
         return [
             'index'  => Pages\ListTimesheets::route('/'),
             'create' => Pages\CreateTimesheet::route('/create'),
@@ -387,20 +305,19 @@ class TimesheetResource extends Resource
 
     public static function getWidgets(): array
     {
-
         return [
             HoursUsedEachMonth::class,
         ];
     }
 
-    public static function setTimes($get, $set, string $state): void
+    protected function getDefaultTableSortColumn(): ?string
     {
-        $fra = Carbon::parse($get('fra_dato'))->format('Y-m-d H:i:s');
-        $set('totalt', Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state));
+        return 'fra_dato';
+    }
 
-        $minutes = Carbon::createFromFormat('Y-m-d H:i:s', $fra)->diffInMinutes($state);
-        $hours   = sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
-        $set('Tid', $hours);
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
     }
 
 
