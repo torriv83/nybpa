@@ -107,8 +107,19 @@ trait DateAndTimeHelper
 
         if ($name === self::FRA_DATO_TIME) {
             $component->afterStateUpdated(function (Set $set, ?string $state, Get $get) use ($config) {
-                // Set 'til_dato_time' based on 'fra_dato_time'
-                $set(self::TIL_DATO_TIME, Carbon::parse($state)->addHour()->format('Y-m-d H:i'));
+                // Parse the new state and the previous 'til_dato_time'
+                $newFraDato = Carbon::parse($state);
+                $existingTilDato = Carbon::parse($get(self::TIL_DATO_TIME));
+
+                // Check if only the date part has changed
+                if ($newFraDato->format('Y-m-d') !== $existingTilDato->format('Y-m-d')) {
+                    // Only the date part has changed, so update the date part of 'til_dato_time' without changing the time part
+                    $updatedTilDato = $existingTilDato->setDate($newFraDato->year, $newFraDato->month, $newFraDato->day);
+                    $set(self::TIL_DATO_TIME, $updatedTilDato->format('Y-m-d H:i'));
+                } else {
+                    // The time part has changed, so update 'til_dato_time' to one hour later
+                    $set(self::TIL_DATO_TIME, $newFraDato->addHour()->format('Y-m-d H:i'));
+                }
 
                 // If isAdmin is true, also update 'totalt'
                 if ($config['isAdmin']) {
@@ -116,6 +127,47 @@ trait DateAndTimeHelper
                     $set('totalt', $formattedTime);
                 }
             });
+        }
+
+        self::applyComponentConfig($component, $config);
+
+        return [$component];
+    }
+
+    /**
+     * Generates a dynamic date picker component.
+     *
+     * @param  string  $name  The name of the date picker.
+     * @param  string  $label  The label for the date picker.
+     * @param  array  $config  The configuration options for the date picker. Default is an empty array.
+     * @return array Returns an array containing the dynamic date picker component.
+     */
+    public static function dynamicDatePicker(string $name, string $label, array $config = []): array
+    {
+        $component = DatePicker::make($name)
+            ->label($label)
+            ->native(false)
+            ->disabledDates(function (Get $get) {
+                $recordId = $get('id');
+                return self::getAllDisabledDates($get('user_id'), $recordId) ?? [];
+            })
+            ->suffixIcon('calendar')
+            ->displayFormat('d.m.Y')
+            ->minDate(fn($operation) => ($operation == 'edit' || $config['isAdmin'])
+                ? null
+                : Carbon::parse(today())->format('d.m.Y'))
+            ->live()
+            ->required();
+
+        // If the component name is 'til_dato_date', add the afterOrEqual validation
+        if ($name === self::TIL_DATO_DATE) {
+            $component->afterOrEqual(self::FRA_DATO_DATE);
+        }
+
+        if ($name === self::FRA_DATO_DATE) {
+            $component->afterStateUpdated(
+                fn(Set $set, ?string $state) => $set(self::TIL_DATO_DATE, Carbon::parse($state)->format('Y-m-d'))
+            );
         }
 
         self::applyComponentConfig($component, $config);
@@ -179,47 +231,6 @@ trait DateAndTimeHelper
         if (isset($config['afterOrEqual'])) {
             $component->afterOrEqual($config['afterOrEqual']);
         }
-    }
-
-    /**
-     * Generates a dynamic date picker component.
-     *
-     * @param  string  $name  The name of the date picker.
-     * @param  string  $label  The label for the date picker.
-     * @param  array  $config  The configuration options for the date picker. Default is an empty array.
-     * @return array Returns an array containing the dynamic date picker component.
-     */
-    public static function dynamicDatePicker(string $name, string $label, array $config = []): array
-    {
-        $component = DatePicker::make($name)
-            ->label($label)
-            ->native(false)
-            ->disabledDates(function (Get $get) {
-                $recordId = $get('id');
-                return self::getAllDisabledDates($get('user_id'), $recordId) ?? [];
-            })
-            ->suffixIcon('calendar')
-            ->displayFormat('d.m.Y')
-            ->minDate(fn($operation) => ($operation == 'edit' || $config['isAdmin'])
-                ? null
-                : Carbon::parse(today())->format('d.m.Y'))
-            ->live()
-            ->required();
-
-        // If the component name is 'til_dato_date', add the afterOrEqual validation
-        if ($name === self::TIL_DATO_DATE) {
-            $component->afterOrEqual(self::FRA_DATO_DATE);
-        }
-
-        if ($name === self::FRA_DATO_DATE) {
-            $component->afterStateUpdated(
-                fn(Set $set, ?string $state) => $set(self::TIL_DATO_DATE, Carbon::parse($state)->format('Y-m-d'))
-            );
-        }
-
-        self::applyComponentConfig($component, $config);
-
-        return [$component];
     }
 
     /**
