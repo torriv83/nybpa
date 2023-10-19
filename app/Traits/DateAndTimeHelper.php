@@ -77,7 +77,8 @@ trait DateAndTimeHelper
             ->suffixIcon('heroicon-o-clock')
             ->native(false)
             ->disabledDates(function (Get $get) {
-                return self::getAllDisabledDates($get('user_id')) ?? [];
+                $recordId = $get('id');
+                return self::getAllDisabledDates($get('user_id'), $recordId) ?? [];
             })
             ->formatStateUsing(
                 fn($state) => is_null($state)
@@ -122,11 +123,16 @@ trait DateAndTimeHelper
         return [$component];
     }
 
-    private static function getAllDisabledDates($user_id): array
+    private static function getAllDisabledDates($user_id, $recordId): array
     {
-        return Timesheet::whereYear('fra_dato', Carbon::now()->year)
-            ->where('user_id', '=', $user_id)
-            ->pluck('fra_dato')
+        $query = Timesheet::whereYear('fra_dato', Carbon::now()->year)
+            ->where('user_id', '=', $user_id);
+
+        if ($recordId) {
+            $query->where('id', '<>', $recordId);
+        }
+
+        return $query->pluck('fra_dato')
             ->unique()
             ->map(function ($date) {
                 return $date->format('Y-m-d');
@@ -189,7 +195,8 @@ trait DateAndTimeHelper
             ->label($label)
             ->native(false)
             ->disabledDates(function (Get $get) {
-                return self::getAllDisabledDates($get('user_id')) ?? [];
+                $recordId = $get('id');
+                return self::getAllDisabledDates($get('user_id'), $recordId) ?? [];
             })
             ->suffixIcon('calendar')
             ->displayFormat('d.m.Y')
