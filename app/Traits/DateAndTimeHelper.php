@@ -10,6 +10,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 trait DateAndTimeHelper
 {
@@ -105,24 +106,37 @@ trait DateAndTimeHelper
             });
         }
 
-        if ($name === self::FRA_DATO_TIME) {
-            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get) use ($config) {
+        if ($name === self::FRA_DATO_TIME)
+        {
+            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, $operation) use ($config)
+            {
                 // Parse the new state and the previous 'til_dato_time'
                 $newFraDato = Carbon::parse($state);
                 $existingTilDato = Carbon::parse($get(self::TIL_DATO_TIME));
 
                 // Check if only the date part has changed
-                if ($newFraDato->format('Y-m-d') !== $existingTilDato->format('Y-m-d')) {
+                if ($newFraDato->format('Y-m-d') !== $existingTilDato->format('Y-m-d'))
+                {
                     // Only the date part has changed, so update the date part of 'til_dato_time' without changing the time part
                     $updatedTilDato = $existingTilDato->setDate($newFraDato->year, $newFraDato->month, $newFraDato->day);
                     $set(self::TIL_DATO_TIME, $updatedTilDato->format('Y-m-d H:i'));
-                } else {
-                    // The time part has changed, so update 'til_dato_time' to one hour later
+                } elseif($operation == 'create')
+                {
                     $set(self::TIL_DATO_TIME, $newFraDato->addHour()->format('Y-m-d H:i'));
+                }else
+                {
+                    $totalt = $get('totalt');
+                    [$hours, $minutes] = explode(':', $totalt);
+                    $durationInMinutes = ($hours * 60) + $minutes;
+
+                    // Set the updated 'til_dato_time' by adding the duration to the new 'fra_dato_time'
+                    $updatedTilDato = $newFraDato->copy()->addMinutes($durationInMinutes);
+                    $set(self::TIL_DATO_TIME, $updatedTilDato->format('Y-m-d H:i'));
                 }
 
                 // If isAdmin is true, also update 'totalt'
-                if ($config['isAdmin']) {
+                if ($config['isAdmin'])
+                {
                     $formattedTime = self::calculateFormattedTimeDifference($state, $get(self::TIL_DATO_TIME));
                     $set('totalt', $formattedTime);
                 }
@@ -177,20 +191,24 @@ trait DateAndTimeHelper
 
     private static function getAllDisabledDates($user_id, $recordId): array
     {
-        $query = Timesheet::whereYear('fra_dato', Carbon::now()->year)
-            ->where('user_id', '=', $user_id);
+        $cacheKey = "disabled_dates:user_{$user_id}:record_{$recordId}";
+        return Cache::tags(['timesheet'])->remember($cacheKey, now()->addMonth(), function () use ($user_id, $recordId) {
+            $query = Timesheet::whereYear('fra_dato', Carbon::now()->year)
+                ->where('user_id', '=', $user_id);
 
-        if ($recordId) {
-            $query->where('id', '<>', $recordId);
-        }
+            if ($recordId) {
+                $query->where('id', '<>', $recordId);
+            }
 
-        return $query->pluck('fra_dato')
-            ->unique()
-            ->map(function ($date) {
-                return $date->format('Y-m-d');
-            })
-            ->toArray();
+            return $query->pluck('fra_dato')
+                ->unique()
+                ->map(function ($date) {
+                    return $date->format('Y-m-d');
+                })
+                ->toArray();
+        });
     }
+
 
     /**
      * Calculates the formatted time difference between two given timestamps.
