@@ -181,11 +181,18 @@ class CalendarWidget extends FullCalendarWidget
     {
         return [
             EditAction::make()
+                ->mutateFormDataUsing(
+                    function (array $data): array {
+                        return self::transformFormDataForSave($data);
+                    }
+                )
                 ->mountUsing(
                     function ($record, Form $form) {
                         $form->fill(self::transformFormDataForFill($record->toArray()));
                     }
-                ),
+                )->after(function (){
+                    $this->refreshRecords();
+                }),
             DeleteAction::make(),
         ];
     }
