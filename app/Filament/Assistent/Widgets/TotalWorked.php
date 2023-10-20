@@ -3,6 +3,7 @@
 namespace App\Filament\Assistent\Widgets;
 
 use App\Models\Timesheet;
+use App\Services\UserStatsService;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -13,6 +14,14 @@ class TotalWorked extends BaseWidget
     protected static ?string $pollingInterval = null;
     protected static ?int    $sort            = 2;
 
+    /**
+     * Retrieves the statistics related to the user.
+     *
+     * @uses \App\Models\Timesheet::scopethisMonth()
+     * @uses \App\Models\Timesheet::scopethisYear()
+     *
+     * @return array The array containing the user statistics.
+     */
     protected function getStats(): array
     {
 
@@ -22,11 +31,11 @@ class TotalWorked extends BaseWidget
         $nextWorkTime        = $timeSheet->inFuture('fra_dato')->where('user_id', Auth::user()->id)->where('unavailable', '=', 0)->first();
 
         $timeWorkedThisYearFormatted = $timeWorkedThisYear
-            ? (new \App\Services\UserStatsService)->minutesToTime($timeWorkedThisYear)
+            ? (new UserStatsService())->minutesToTime($timeWorkedThisYear)
             : 'Ingen timer registrert'; // Default text or value
 
         $timeWorkedThisMonthFormatted = $timeWorkedThisMonth
-            ? (new \App\Services\UserStatsService)->minutesToTime($timeWorkedThisMonth)
+            ? (new UserStatsService())->minutesToTime($timeWorkedThisMonth)
             : 'Ingen timer registrert'; // Default text or value
 
         $nextWorkTimeFormatted = $nextWorkTime

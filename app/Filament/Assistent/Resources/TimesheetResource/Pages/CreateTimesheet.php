@@ -4,14 +4,13 @@ namespace App\Filament\Assistent\Resources\TimesheetResource\Pages;
 
 use App\Filament\Assistent\Resources\TimesheetResource;
 use App\Models\User;
-use App\Traits\DateAndTimeHelper;
+use App\Transformers\FormDataTransformer;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateTimesheet extends CreateRecord
 {
-    use DateAndTimeHelper;
     protected static string $resource = TimesheetResource::class;
 
     protected function getRedirectUrl(): string
@@ -21,7 +20,7 @@ class CreateTimesheet extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return self::transformFormDataForSave($data);
+        return FormDataTransformer::transformFormDataForSave($data);
 
     }
     protected function afterCreate(): void

@@ -3,12 +3,12 @@
 namespace App\Filament\Assistent\Resources\TimesheetResource\Pages;
 
 use App\Filament\Assistent\Resources\TimesheetResource;
-use App\Traits\DateAndTimeHelper;
+use App\Transformers\FormDataTransformer;
 use Filament\Resources\Pages\EditRecord;
 
 class EditTimesheet extends EditRecord
 {
-    use DateAndTimeHelper;
+
     protected static string $resource = TimesheetResource::class;
 
     protected function getRedirectUrl(): string
@@ -19,13 +19,13 @@ class EditTimesheet extends EditRecord
     protected function mutateFormDataBeforeFill(array $data): array
     {
 
-        return self::transformFormDataForFill($data);
+        return FormDataTransformer::transformFormDataForFill($data);
     }
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
 
-        return self::transformFormDataForSave($data);
+        return FormDataTransformer::transformFormDataForSave($data);
     }
 
     protected function getHeaderActions(): array

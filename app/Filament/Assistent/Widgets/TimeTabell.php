@@ -3,6 +3,7 @@
 namespace App\Filament\Assistent\Widgets;
 
 use App\Models\Timesheet;
+use App\Services\UserStatsService;
 use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -29,9 +30,9 @@ class TimeTabell extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('totalt')->sortable()
-                    ->formatStateUsing(fn(string $state): string => (new \App\Services\UserStatsService)->minutesToTime($state))
+                    ->formatStateUsing(fn(string $state): string => (new UserStatsService())->minutesToTime($state))
                     ->summarize(Sum::make()->formatStateUsing(fn(string $state
-                    ): string => (new \App\Services\UserStatsService)->minutesToTime($state))),
+                    ): string => (new UserStatsService())->minutesToTime($state))),
 
             ])->filters([
                 Filter::make('Forrige måned')

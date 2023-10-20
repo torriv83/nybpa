@@ -28,6 +28,7 @@ class ManageEconomies extends ManageRecords
         return [
             EconomyResource\Widgets\StatsOverview::class,
             EconomyResource\Widgets\AccountsOverview::class,
+            EconomyResource\Widgets\YnabChart::class,
             EconomyResource\Widgets\YnabOverview::class,
         ];
     }

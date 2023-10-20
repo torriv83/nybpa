@@ -5,6 +5,7 @@ namespace App\Filament\Assistent\Widgets;
 use App\Models\Timesheet;
 use App\Models\User;
 use App\Traits\DateAndTimeHelper;
+use App\Transformers\FormDataTransformer;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
@@ -38,7 +39,7 @@ class UnavailableTable extends BaseWidget
                 CreateAction::make()
                     ->label('Legg til tid du ikke kan jobbe')
                     ->mutateFormDataUsing(function (array $data): array {
-                        return self::transformFormDataForSave($data);
+                        return FormDataTransformer::transformFormDataForSave($data);
                     })
                     ->form([
                         //Seksjon
@@ -64,7 +65,7 @@ class UnavailableTable extends BaseWidget
                 CreateAction::make()
                     ->label('Legg til tid du ikke kan jobbe')
                     ->mutateFormDataUsing(function (array $data): array {
-                        return self::transformFormDataForSave($data);
+                        return FormDataTransformer::transformFormDataForSave($data);
                     })
                     ->after(function () {
                         $recipient = User::query()->role('admin')->get();

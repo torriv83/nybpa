@@ -3,6 +3,7 @@
 namespace App\Filament\Privat\Resources;
 
 use App\Filament\Privat\Resources\EconomyResource\Widgets\StatsOverview;
+use App\Filament\Privat\Resources\EconomyResource\Widgets\YnabChart;
 use App\Filament\Privat\Resources\EconomyResource\Widgets\YnabOverview;
 use App\Models\Economy;
 use Filament\Forms;
@@ -77,6 +78,7 @@ class EconomyResource extends Resource
         return [
             StatsOverview::class,
             YnabOverview::class,
+            YnabChart::class,
         ];
     }
 }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\FilterableByDates;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +18,7 @@ class Timesheet extends Model
     use Notifiable;
     use SoftDeletes;
     use FilterableByDates;
+    use HasFactory;
 
     public $timestamps = true;
 
@@ -46,22 +49,10 @@ class Timesheet extends Model
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);
     }
 
-/*    public function setFraDatoAttribute($value)
-    {
-
-        $this->attributes['fra_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
-    }*/
-
-/*    public function setTilDatoAttribute($value)
-    {
-
-        $this->attributes['til_dato'] = Carbon::parse($value)->format('Y-m-d H:i:s');
-    }*/
-
     /**
      * @method static thisYear()
      */
-    public function scopethisYear($query)
+    public function scopethisYear($query): void
     {
 
         $query->whereYear('til_dato', '=', date('Y'));
@@ -70,7 +61,7 @@ class Timesheet extends Model
     /**
      * @method thisMonth()
      */
-    public function scopethisMonth($query)
+    public function scopethisMonth($query): void
     {
 
         $query->whereMonth('til_dato', '=', date('m'));
@@ -89,6 +80,11 @@ class Timesheet extends Model
 
     }
 
+    /**
+     * Retrieves the time used last year.
+     *
+     * @return Collection The time used last year grouped by month.
+     */
     public function timeUsedLastYear(): Collection
     {
 
@@ -99,5 +95,21 @@ class Timesheet extends Model
                 ->get()
                 ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
+    }
+
+    /**
+     * Scope a query to retrieve all disabled dates for a specific user in the current year,
+     * excluding a specific record if provided.
+     *
+     * @param  Builder  $query
+     * @param  int|null  $userId
+     * @param  int|null  $recordId
+     * @return Builder
+     */
+    public function scopeDisabledDates(Builder $query, ?int $userId, ?int $recordId): Builder
+    {
+        return $query->whereYear('fra_dato', Carbon::now()->year)
+            ->where('user_id', '=', $userId)
+            ->when($recordId, fn($query) => $query->where('id', '<>', $recordId));
     }
 }
