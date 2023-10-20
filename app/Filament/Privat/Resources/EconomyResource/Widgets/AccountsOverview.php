@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 class AccountsOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
+    protected int|string|array $columnSpan = '12';
 
     protected function getCards(): array
     {

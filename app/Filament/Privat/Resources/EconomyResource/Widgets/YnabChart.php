@@ -9,7 +9,8 @@ class YnabChart extends ChartWidget
 {
     protected static ?string $heading = 'YNAB Chart';
     protected static ?string $pollingInterval = null;
-    protected int | string | array $columnSpan = 9;
+    protected int | string | array $columnSpan = 12;
+    protected static ?string $maxHeight = '500px';
 
     protected static ?array $options = [
         'interaction' => [
@@ -25,7 +26,7 @@ class YnabChart extends ChartWidget
 
     protected function getData(): array
     {
-        $startMonth = now()->subMonths(11)->startOfMonth();
+        $startMonth = now()->subMonths(12)->startOfMonth();
         $endMonth = now()->endOfMonth();
 
         $ynab = Ynab::whereBetween('month', [$startMonth, $endMonth])
