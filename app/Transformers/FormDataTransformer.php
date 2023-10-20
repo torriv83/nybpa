@@ -30,7 +30,7 @@ class FormDataTransformer
             $data['til_dato'] = $data[Timesheet::TIL_DATO_TIME];
         }
 
-        if ($data['totalt']) {
+        if ($data['totalt'] ?? false) {
             $data['totalt'] = $data['unavailable'] ? 0 : DateTimeService::calculateTotalMinutes($data['totalt']);
         } else {
             $data['totalt'] = DateTimeService::calculateTotalMinutes(DateTimeService::calculateFormattedTimeDifference($data['fra_dato'], $data['til_dato']));
