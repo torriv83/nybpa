@@ -57,7 +57,7 @@ class Ansatte extends BaseWidget
             ])
             ->paginated([3, 4, 8, 12, 24, 36])
             ->recordUrl(
-                fn(Model $record): string => UserResource::getUrl('index'),//getUrl('view', ['record' => $record]),
+                fn(Model $record): string => UserResource::getUrl(),//getUrl('view', ['record' => $record]),
             )
             ->emptyStateHeading('Ingen ansatte er registrert')
             ->emptyStateDescription('Legg til en ansatt for å komme i gang.')

@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\TimesheetResource\Widgets;
 use App\Models\Timesheet;
 use App\Models\User;
 use App\Traits\DateAndTimeHelper;
+use App\Transformers\FormDataTransformer;
 use Carbon\Carbon;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Section;
@@ -171,7 +172,7 @@ class CalendarWidget extends FullCalendarWidget
                 )
                 ->mutateFormDataUsing(
                     function (array $data): array {
-                        return self::transformFormDataForSave($data);
+                        return FormDataTransformer::transformFormDataForSave($data);
                     }
                 )
         ];
@@ -183,12 +184,12 @@ class CalendarWidget extends FullCalendarWidget
             EditAction::make()
                 ->mutateFormDataUsing(
                     function (array $data): array {
-                        return self::transformFormDataForSave($data);
+                        return FormDataTransformer::transformFormDataForSave($data);
                     }
                 )
                 ->mountUsing(
                     function ($record, Form $form) {
-                        $form->fill(self::transformFormDataForFill($record->toArray()));
+                        $form->fill(FormDataTransformer::transformFormDataForFill($record->toArray()));
                     }
                 )->after(function (){
                     $this->refreshRecords();
@@ -201,7 +202,7 @@ class CalendarWidget extends FullCalendarWidget
     {
         return Actions\ViewAction::make()->mountUsing(
             function ($record, Form $form) {
-                $form->fill(self::transformFormDataForFill($record->toArray()));
+                $form->fill(FormDataTransformer::transformFormDataForFill($record->toArray()));
             }
         );
     }

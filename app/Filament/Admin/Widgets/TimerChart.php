@@ -28,6 +28,12 @@ class TimerChart extends ChartWidget
         $this->bpa = Settings::getUserBpa();
     }
 
+    /**
+     * Retrieves data for the chart.
+     * @uses Timesheet::timeUsedThisYear
+     * @uses Timesheet::timeUsedLastYear
+     * @return array
+     */
     protected function getData(): array
     {
         $timeSheet        = new Timesheet();
@@ -45,7 +51,7 @@ class TimerChart extends ChartWidget
         /* Dette året */
         $thisYearTimes = Pipeline::send($timeSheet)
             ->through([
-                function ($timeSheet) use ($timeUsedThisYear) {
+                function () use ($timeUsedThisYear) {
                     return $this->usedTime($timeUsedThisYear);
                 },
             ])

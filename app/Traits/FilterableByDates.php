@@ -62,10 +62,10 @@ trait FilterableByDates
 
     /**
      * @param $query
-     * @param $column
+     * @param  string  $column
      * @return mixed
      */
-    public function scopeInFuture($query, $column = 'created_at')
+    public function scopeInFuture($query, string $column = 'created_at'): mixed
     {
         return $query->where(function ($query) use ($column) {
             $currentDateTime = now();
