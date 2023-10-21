@@ -9,7 +9,7 @@ class YnabChart extends ChartWidget
 {
     protected static ?string $heading = 'YNAB Chart';
     protected static ?string $pollingInterval = null;
-    protected int | string | array $columnSpan = 12;
+    protected int|string|array $columnSpan = 12;
     protected static ?string $maxHeight = '500px';
 
     protected static ?array $options = [
@@ -32,7 +32,7 @@ class YnabChart extends ChartWidget
         $ynab = Ynab::whereBetween('month', [$startMonth, $endMonth])
             ->orderBy('month', 'asc')
             ->get()
-            ->groupBy(function($date) {
+            ->groupBy(function ($date) {
                 return date('M Y', strtotime($date->month));  // Group by abbreviated month name and year
             });
 
@@ -42,14 +42,15 @@ class YnabChart extends ChartWidget
         $activityData = [];
         $budgetedData = [];  // Initialize array for budgeted data
 
-        foreach ($ynab as $month => $items) {
+        foreach ($ynab as $month => $items)
+        {
             $incomeData[] = $items->sum('income') / 1000;
             $activityData[] = abs($items->sum('activity')) / 1000;
             $budgetedData[] = $items->sum('budgeted') / 1000;  // Sum and append budgeted data
         }
 
         $incomeMinusActivityData = array_map(
-            function($income, $activity) {
+            function ($income, $activity) {
                 return $income - $activity;
             },
             $incomeData,
