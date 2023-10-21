@@ -11,10 +11,10 @@ class ManageEconomies extends ManageRecords
 {
     protected static string $resource = EconomyResource::class;
 
-    public function getHeaderWidgetsColumns(): int|array
+/*    public function getHeaderWidgetsColumns(): int|array
     {
         return 12;
-    }
+    }*/
 
     protected function getHeaderActions(): array
     {

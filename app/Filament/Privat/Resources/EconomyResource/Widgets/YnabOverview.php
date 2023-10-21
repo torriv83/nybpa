@@ -21,7 +21,7 @@ class YnabOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = '12';
 
     public function table(Table $table): Table
     {

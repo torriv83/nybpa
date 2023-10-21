@@ -2,21 +2,25 @@
 
 namespace App\Filament\Landslag\Resources\TrainingProgramResource\RelationManagers;
 
+use App\Models\TrainingProgram;
 use App\Models\WorkoutExercise;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class WorkoutExercisesRelationManager extends RelationManager
 {
     protected static string $relationship = 'WorkoutExercises';
 
-    public static function getTitle(Model $ownerRecord,string $pageClass) : string{
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
         return 'Øvelser';
     }
 
@@ -47,7 +51,7 @@ class WorkoutExercisesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('exercise_name')
-                    ->description(fn (WorkoutExercise $record): string => $record->description ?? '')
+                    ->description(fn(WorkoutExercise $record): string => $record->description ?? '')
                     ->label('Øvelse'),
                 Tables\Columns\TextColumn::make('repetitions')->label('Reps'),
                 Tables\Columns\TextColumn::make('sets')->label('Set'),
@@ -60,19 +64,19 @@ class WorkoutExercisesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->label('Legg til øvelse i program')
-                    ->recordSelect(fn () => Select::make('recordId')->label('Øvelse')
+                    ->recordSelect(fn() => Select::make('recordId')->label('Øvelse')
                         ->options(WorkoutExercise::all()->pluck('exercise_name', 'id'))
                         ->searchable()
                         ->preload()
                         ->createOptionForm([
                             Forms\Components\TextInput::make('exercise_name')->label('Øvelse'),
                         ])
-                        ->createOptionUsing(function ($data){
+                        ->createOptionUsing(function ($data) {
                             $exercise = WorkoutExercise::create($data);
                             return $exercise->getKey();
                         })
                     )
-                    ->form(fn (AttachAction $action): array => [
+                    ->form(fn(AttachAction $action): array => [
                         $action->getRecordSelect(),
                         Forms\Components\TextInput::make('description'),
                         Forms\Components\TextInput::make('repetitions')->required(),
@@ -94,6 +98,43 @@ class WorkoutExercisesRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('movetoprogram')
+                        ->action(function (Collection $records, array $data) {
+                            $currentProgram = TrainingProgram::find($this->getOwnerRecord()->id);
+                            $newProgram     = TrainingProgram::find($data['program']);
+
+                            foreach ($records as $record) {
+                                // Build the pivot data array
+                                $pivotData = [
+                                    'repetitions' => $record->pivot_repetitions,
+                                    'sets'        => $record->pivot_sets,
+                                    'rest'        => $record->pivot_rest,
+                                    'description' => $record->pivot_description,
+                                ];
+
+                                // Detach the exercise from the current program
+                                $currentProgram->WorkoutExercises()->detach($record->id);
+
+                                // Attach the exercise to the new program with the same pivot data
+                                $newProgram->WorkoutExercises()->attach($record->id, $pivotData);
+                            }
+
+                            Notification::make()
+                                ->title('Øvelsen(e) har blitt flyttet til program: '.$newProgram->program_name)
+                                ->success()
+                                ->send();
+                        })
+                        ->form([
+                            Forms\Components\Select::make('program')
+                                ->options(TrainingProgram::all()
+                                    ->where('id', '!=', $this->getOwnerRecord()->id)
+                                    ->pluck('program_name', 'id'))
+                                ->label('Velg program'),
+                        ])
+                        ->requiresConfirmation()
+                        ->modalHeading('Flytt øvelse til nytt program')
+                        ->modalSubmitActionLabel('Flytt')
+                        ->deselectRecordsAfterCompletion()->modalWidth('lg'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
