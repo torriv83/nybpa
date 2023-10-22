@@ -73,18 +73,19 @@ class SessionsStats extends BaseWidget
 
         // Iterate through the days of the week starting with today
         for ($dayOffset = 0; $dayOffset < 7; $dayOffset++) {
-            $day       = $now->copy()->addDays($dayOffset)->dayOfWeek;
+            $day       = $now->copy()->addDays($dayOffset)->dayOfWeekIso;
             $exercises = WeekplanExercise::query()
+                ->where('weekplan_id', $this->record?->id)
                 ->where('day', $day)
                 ->with('exercise')
                 ->orderBy('start_time')
                 ->where(function ($query) use ($dayOffset, $now) {
                     if ($dayOffset == 0) {
-                        $query->where('start_time', '>', $now->format('H:i'));
+                        $query->where('start_time', '>', $now->format('H:i:s'));
                     }
                 })
                 ->get();
-
+            
             // If any exercises are found, return the first one
             if ($exercises->count() > 0) {
                 $exercise    = $exercises->first();
