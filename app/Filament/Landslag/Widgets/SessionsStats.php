@@ -81,20 +81,19 @@ class SessionsStats extends BaseWidget
     {
         $now         = Carbon::now();
         $nextSession = [];
+        
+        // Eager load exercises
+        $allExercises = WeekplanExercise::with('exercise')
+            ->orderBy('start_time')
+            ->get();
 
         // Iterate through the days of the week starting with today
         for ($dayOffset = 0; $dayOffset < 7; $dayOffset++) {
             $day       = $now->copy()->addDays($dayOffset)->dayOfWeekIso;
-            $exercises = WeekplanExercise::query()
-                ->where('day', $day)
-                ->with('exercise')
-                ->orderBy('start_time')
-                ->where(function ($query) use ($dayOffset, $now) {
-                    if ($dayOffset == 0) {
-                        $query->where('start_time', '>', $now->format('H:i:s'));
-                    }
-                })
-                ->get();
+            $exercises = $allExercises->filter(function ($exercise) use ($day, $dayOffset, $now) {
+                return $exercise->day == $day &&
+                    ($dayOffset != 0 || $exercise->start_time > $now->format('H:i:s'));
+            });
 
             // If any exercises are found, return the first one
             if ($exercises->count() > 0) {
