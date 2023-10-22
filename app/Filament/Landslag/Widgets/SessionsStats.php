@@ -31,7 +31,7 @@ class SessionsStats extends BaseWidget
                 return $query->where('id', $this->record->id);
             })
             ->when(!$this->record, function ($query) {
-                return $query->where('is_active', 1);
+                return $query->active();
             })
             ->get();
 
@@ -86,7 +86,6 @@ class SessionsStats extends BaseWidget
         for ($dayOffset = 0; $dayOffset < 7; $dayOffset++) {
             $day       = $now->copy()->addDays($dayOffset)->dayOfWeekIso;
             $exercises = WeekplanExercise::query()
-                ->where('weekplan_id', $this->record?->id)
                 ->where('day', $day)
                 ->with('exercise')
                 ->orderBy('start_time')
