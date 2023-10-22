@@ -99,6 +99,8 @@ class WorkoutExercisesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('movetoprogram')
+                        ->label('Flytt til et annet program')
+                        ->icon('heroicon-o-arrow-right')
                         ->action(function (Collection $records, array $data) {
                             $currentProgram = TrainingProgram::find($this->getOwnerRecord()->id);
                             $newProgram     = TrainingProgram::find($data['program']);
