@@ -17,6 +17,12 @@ class SessionsStats extends BaseWidget
 
     public ?Model $record = null;
 
+    /**
+     * Retrieves the statistics for the weekplans.
+     *
+     * @return array The statistics for the weekplans.
+     * @throws \Exception
+     */
     protected function getStats(): array
     {
         // Fetch all weekplans along with their exercises
@@ -66,6 +72,11 @@ class SessionsStats extends BaseWidget
         ];
     }
 
+    /**
+     * Retrieves the next session based on the current date and weekplan.
+     *
+     * @return array The next session information containing the session name, time range, and day offset.
+     */
     private function getNextSession(): array
     {
         $now         = Carbon::now();
@@ -85,7 +96,7 @@ class SessionsStats extends BaseWidget
                     }
                 })
                 ->get();
-            
+
             // If any exercises are found, return the first one
             if ($exercises->count() > 0) {
                 $exercise    = $exercises->first();
