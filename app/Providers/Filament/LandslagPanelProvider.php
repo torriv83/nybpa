@@ -42,8 +42,6 @@ class LandslagPanelProvider extends PanelProvider
                 TestResultsResource\Widgets\StyrkeChart::class,
                 TestResultsResource\Widgets\RheitChart::class,
                 Widgets\TreningsProgrammerTable::class,
-//                Widgets\AccountWidget::class,
-//                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

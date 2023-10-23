@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Landslag\Weekplan;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 
@@ -13,7 +14,7 @@ class ExerciseCell extends Component
     public        $day;
     public        $rowspan = 1;
 
-    public function render()
+    public function render(): View
     {
         $isDuplicate = false;
 
