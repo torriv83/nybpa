@@ -2,17 +2,19 @@
 
 namespace App\Http\Livewire\Landslag\Weekplan;
 
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 
 class ExerciseCell extends Component
 {
 
-    public static $exists = [];
+    public static $exists  = [];
     public        $exercise;
     public        $day;
-    public $rowspan = 1;
+    public        $rowspan = 1;
 
-    public function render()
+    public function render(): View
     {
         $isDuplicate = false;
 
@@ -26,5 +28,12 @@ class ExerciseCell extends Component
         }
 
         return view('livewire.landslag.weekplan.exercise-cell', ['isDuplicate' => $isDuplicate, 'rowspan' => $this->rowspan]);
+    }
+
+    public function isToday(): string
+    {
+        $isToday = $this->day == Carbon::now()->dayOfWeekIso;
+
+        return $isToday ? 'bg-slate-800' : '';
     }
 }
