@@ -18,10 +18,10 @@ class TableHeader extends Component
         7 => 'Søndag',
     ];
 
-    public function getDayStyles($day): string
+    public function getDayStyles($day): array
     {
-        $border = $day != 'Søndag' ? 'border-right: 1px solid #52525B;' : '';
-        $today  = $day == ucfirst(Carbon::today()->isoFormat('dddd')) ? 'background-color: grey;' : '';
-        return $border.' '.$today;
+        $data['border'] = $day != 'Søndag' ? 'border-right: 1px solid #52525B;' : '';
+        $data['today']  = $day == ucfirst(Carbon::today()->isoFormat('dddd'));
+        return $data;
     }
 }

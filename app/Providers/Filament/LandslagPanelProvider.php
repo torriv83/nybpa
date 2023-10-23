@@ -30,6 +30,7 @@ class LandslagPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Green,
             ])
+            ->viteTheme('resources/css/filament/landslag/theme.css')
             ->discoverResources(in: app_path('Filament/Landslag/Resources'), for: 'App\\Filament\\Landslag\\Resources')
             ->discoverPages(in: app_path('Filament/Landslag/Pages'), for: 'App\\Filament\\Landslag\\Pages')
             ->pages([

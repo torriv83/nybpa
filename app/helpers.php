@@ -1,12 +1,13 @@
 <?php
 
 /* Brukes til å sette itensitet farger på ukeplan på de forskjellige øktene */
+
 function getIntensityColorClass($intensity): string
 {
     return match ($intensity) {
-        'crimson' => 'background-color: #DC2626',
-        'darkcyan' => 'background-color: #008B8B',
-        'green' => 'background-color: green',
+        'crimson' => 'bg-red-600',
+        'darkcyan' => 'bg-cyan-600',
+        'green' => 'bg-green-600',
         default => '',
     };
 }
@@ -25,7 +26,7 @@ function generateRandomColors(int $count): array
     $colors = [];
 
     for ($i = 0; $i < $count; $i++) {
-        $colors[] = 'rgb(' . mt_rand(0, 255) . ', ' . mt_rand(0, 255) . ', ' . mt_rand(0, 255) . ')';
+        $colors[] = 'rgb('.mt_rand(0, 255).', '.mt_rand(0, 255).', '.mt_rand(0, 255).')';
     }
 
     return $colors;

@@ -3,7 +3,8 @@
     <tr>
         <th class="py-2 px-4 border-b dark:border-gray-700 rounded-l-md w-4" style="border-right: 1px solid #52525B;">Tid</th>
         @foreach($dager as $dag)
-            <th class="py-2 px-4 border-b dark:border-gray-700" style="{{ $this->getDayStyles($dag) }}">
+            <th class="py-2 px-4 border-b dark:border-gray-700 {{ $this->getDayStyles($dag)['today'] ? 'bg-yellow-200 text-gray-950' : ''}}"
+                style="{{ $this->getDayStyles($dag)['border']}}">
                 {{ $dag }}
             </th>
         @endforeach
