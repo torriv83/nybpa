@@ -3,8 +3,8 @@
         $borderR = $day != 7 ? 'border-right: 1px solid #52525B;' : '';
     @endphp
 
-    <td class="text-center py-2 px-2 border-t dark:border-gray-600 border-gray-500"
-        style="{{$borderR}} {{ $exercise !== null && isset($exercise['intensity']) ? getIntensityColorClass($exercise['intensity']) : '' }}"
+    <td class="text-center py-2 px-2 border-t dark:border-gray-600 border-gray-500 {{ $exercise !== null && isset($exercise['intensity']) ? getIntensityColorClass($exercise['intensity']) : '' }}"
+        style="{{$borderR}}"
         @if(isset($rowspan) && $rowspan > 1) rowspan="{{ $rowspan }}" @endif
     >
 

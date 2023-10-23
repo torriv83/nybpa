@@ -17,6 +17,12 @@ class SessionsStats extends BaseWidget
 
     public ?Model $record = null;
 
+    /**
+     * Retrieves the statistics for the weekplans.
+     *
+     * @return array The statistics for the weekplans.
+     * @throws \Exception
+     */
     protected function getStats(): array
     {
         // Fetch all weekplans along with their exercises
@@ -25,7 +31,7 @@ class SessionsStats extends BaseWidget
                 return $query->where('id', $this->record->id);
             })
             ->when(!$this->record, function ($query) {
-                return $query->where('is_active', 1);
+                return $query->active();
             })
             ->get();
 
@@ -66,24 +72,28 @@ class SessionsStats extends BaseWidget
         ];
     }
 
+    /**
+     * Retrieves the next session based on the current date and weekplan.
+     *
+     * @return array The next session information containing the session name, time range, and day offset.
+     */
     private function getNextSession(): array
     {
         $now         = Carbon::now();
         $nextSession = [];
+        
+        // Eager load exercises
+        $allExercises = WeekplanExercise::with('exercise')
+            ->orderBy('start_time')
+            ->get();
 
         // Iterate through the days of the week starting with today
         for ($dayOffset = 0; $dayOffset < 7; $dayOffset++) {
-            $day       = $now->copy()->addDays($dayOffset)->dayOfWeek;
-            $exercises = WeekplanExercise::query()
-                ->where('day', $day)
-                ->with('exercise')
-                ->orderBy('start_time')
-                ->where(function ($query) use ($dayOffset, $now) {
-                    if ($dayOffset == 0) {
-                        $query->where('start_time', '>', $now->format('H:i'));
-                    }
-                })
-                ->get();
+            $day       = $now->copy()->addDays($dayOffset)->dayOfWeekIso;
+            $exercises = $allExercises->filter(function ($exercise) use ($day, $dayOffset, $now) {
+                return $exercise->day == $day &&
+                    ($dayOffset != 0 || $exercise->start_time > $now->format('H:i:s'));
+            });
 
             // If any exercises are found, return the first one
             if ($exercises->count() > 0) {

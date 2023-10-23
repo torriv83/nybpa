@@ -15,7 +15,7 @@ class ViewWeekplan extends Page
 
     protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
-    public array $exercises;
+    public array    $exercises;
     public Weekplan $weekplan;
 
     public function getTitle(): string
@@ -35,21 +35,18 @@ class ViewWeekplan extends Page
             ? max($weekplanUpdatedAt, $latestExerciseUpdate)
             : $weekplanUpdatedAt;
 
-        return 'Sist oppdatert: ' . Carbon::parse($mostRecentUpdate)->diffForHumans();
+        return 'Sist oppdatert: '.Carbon::parse($mostRecentUpdate)->diffForHumans();
     }
 
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('edit')->url('./' . $this->weekplan->id . '/edit')->label('Endre'),
+            Action::make('edit')->url('./'.$this->weekplan->id.'/edit')->label('Endre'),
         ];
     }
 
     public function mount($record): void
     {
-        if (!is_numeric($record)) {
-            return; // Exit early if the record isn't a number
-        }
         $this->weekplan = Weekplan::with('weekplanExercises')->find($record);
     }
 

@@ -23,4 +23,15 @@ class Weekplan extends Model
         return $this->hasMany(WeekplanExercise::class);
     }
 
+    /**
+     * Retrieves a query scope that filters the query to include only active records.
+     *
+     * @param  mixed  $query  The query builder instance.
+     * @return mixed The modified query builder instance.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
 }
