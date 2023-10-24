@@ -23,19 +23,13 @@ class WeekplanResource extends Resource
 {
     use WeekplanSchema;
 
-    protected static ?string $model = Weekplan::class;
-
-    protected static ?string $slug = 'weekplans';
-
+    protected static ?string $model                = Weekplan::class;
+    protected static ?string $slug                 = 'weekplans';
     protected static ?string $recordTitleAttribute = 'name';
-
-    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
-
-    protected static ?string $navigationGroup = 'Ukeplan';
-
-    protected static ?string $modelLabel = 'Ukeplan';
-
-    protected static ?string $pluralModelLabel = 'Ukeplaner';
+    protected static ?string $navigationIcon       = 'heroicon-o-calendar-days';
+    protected static ?string $navigationGroup      = 'Ukeplan';
+    protected static ?string $modelLabel           = 'Ukeplan';
+    protected static ?string $pluralModelLabel     = 'Ukeplaner';
 
     public static function form(Form $form): Form
     {
@@ -64,25 +58,25 @@ class WeekplanResource extends Resource
                                     ->tabs([
                                         Tabs\Tab::make('Mandag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 1)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(1)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 1)]),
                                         Tabs\Tab::make('Tirsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 2)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(2)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 2)]),
                                         Tabs\Tab::make('Onsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 3)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(3)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 3)]),
                                         Tabs\Tab::make('Torsdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 4)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(4)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 4)]),
                                         Tabs\Tab::make('Fredag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 5)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(5)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 5)]),
                                         Tabs\Tab::make('Lørdag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 6)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(6)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 6)]),
                                         Tabs\Tab::make('Søndag')
                                             ->badge(fn($record) => WeekplanExercise::where('day', 7)->where('weekplan_id', $record?->id)->count())
-                                            ->schema([...self::getCommonFields(7)]),
+                                            ->schema([...self::getCommonFields(dayNumber: 7)]),
                                     ]),
                             ]),
                     ]),

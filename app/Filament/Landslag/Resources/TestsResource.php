@@ -16,14 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestsResource extends Resource
 {
-    protected static ?string $model = Tests::class;
-
-    protected static ?string $navigationIcon = 'icon-type-test';
-
-    protected static ?string $navigationGroup = 'Tester';
-
-    protected static ?string $modelLabel = 'Test';
-
+    protected static ?string $model            = Tests::class;
+    protected static ?string $navigationIcon   = 'icon-type-test';
+    protected static ?string $navigationGroup  = 'Tester';
+    protected static ?string $modelLabel       = 'Test';
     protected static ?string $pluralModelLabel = 'Type Tester';
 
     public static function form(Form $form): Form
@@ -57,9 +53,15 @@ class TestsResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('navn'),
-                Tables\Columns\ViewColumn::make('ovelser')->label('Øvelse : Type')->view('filament.resources.tests-resource.tests-type-column'),
-                Tables\Columns\TextColumn::make('updated_at')->since()->label('Sist oppdatert'),
-                Tables\Columns\TextColumn::make('created_at')->since()->label('Opprettet')
+                Tables\Columns\ViewColumn::make('ovelser')
+                    ->label('Øvelse : Type')
+                    ->view('filament.resources.tests-resource.tests-type-column'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->since()
+                    ->label('Sist oppdatert'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->since()
+                    ->label('Opprettet')
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

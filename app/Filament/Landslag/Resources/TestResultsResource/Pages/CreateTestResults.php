@@ -22,21 +22,19 @@ class CreateTestResults extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-
         return $this->getResource()::getUrl('index');
     }
 
     protected function getSteps(): array
     {
-
         return [
             Step::make('hvilken_test')
                 ->label('Hvilken test?')
                 ->description('Velg hvilken test du skal loggføre')
                 ->schema([
                     Select::make('testsID')
-                        ->options(function () {
-
+                        ->options(function ()
+                        {
                             return tests::all()->pluck('navn', 'id');
                         })->label('Test')->reactive(),
                     DateTimePicker::make('dato')->seconds(false),
@@ -46,18 +44,22 @@ class CreateTestResults extends CreateRecord
                 ->description('Legg inn resultater fra testen her')
                 ->schema([
                     Repeater::make('resultat')
-                        ->schema(function (Get $get): array {
-
+                        ->schema(function (Get $get): array
+                        {
                             $schema = [];
-                            if ($get('testsID')) {
+                            if ($get('testsID'))
+                            {
                                 $data = tests::where('id', '=', $get('testsID'))->get();
-                                foreach ($data[0]['ovelser'] as $o) {
-                                    if ($o['type'] == 'tid' || $o['type'] == 'kg') {
+                                foreach ($data[0]['ovelser'] as $o)
+                                {
+                                    if ($o['type'] == 'tid' || $o['type'] == 'kg')
+                                    {
                                         $schema[] = TextInput::make($o['navn'])
                                             ->regex('/^\d{1,3}(\.\d{1,2})?$/')
                                             // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
                                             ->required()->placeholder('00.00');
-                                    } else {
+                                    } else
+                                    {
                                         $schema[] = TextInput::make($o['navn'])
                                             ->required();
                                     }
