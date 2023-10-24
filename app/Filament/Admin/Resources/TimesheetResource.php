@@ -273,6 +273,9 @@ class TimesheetResource extends Resource
                         Infolists\Components\TextEntry::make('description')
                             ->html()
                             ->label('Beskrivelse')
+                            ->hidden(function ($record) {
+                                return $record->description == null || empty($record->description);
+                            })
                             ->columnSpanFull(),
                     ])->columns(3),
             ]);
