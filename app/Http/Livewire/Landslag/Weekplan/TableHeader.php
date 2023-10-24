@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Landslag\Weekplan;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 
@@ -23,5 +24,10 @@ class TableHeader extends Component
         $data['border'] = $day != 'Søndag' ? 'border-right: 1px solid #52525B;' : '';
         $data['today']  = $day == ucfirst(Carbon::today()->isoFormat('dddd'));
         return $data;
+    }
+
+    public function render(): View
+    {
+        return view('livewire.landslag.weekplan.table-header');
     }
 }

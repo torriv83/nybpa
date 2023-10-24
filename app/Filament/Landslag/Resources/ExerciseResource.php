@@ -15,19 +15,13 @@ use Filament\Tables\Table;
 
 class ExerciseResource extends Resource
 {
-    protected static ?string $model = Exercise::class;
-
-    protected static ?string $slug = 'exercises';
-
+    protected static ?string $model                = Exercise::class;
+    protected static ?string $slug                 = 'exercises';
     protected static ?string $recordTitleAttribute = 'name';
-
-    protected static ?string $navigationIcon = 'icon-exercise';
-
-    protected static ?string $navigationGroup = 'Ukeplan';
-
-    protected static ?string $modelLabel = 'Øvelse';
-
-    protected static ?string $pluralModelLabel = 'Øvelser';
+    protected static ?string $navigationIcon       = 'icon-exercise';
+    protected static ?string $navigationGroup      = 'Ukeplan';
+    protected static ?string $modelLabel           = 'Øvelse';
+    protected static ?string $pluralModelLabel     = 'Øvelser';
 
     public static function form(Form $form): Form
     {
@@ -80,9 +74,9 @@ class ExerciseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExercises::route('/'),
+            'index'  => Pages\ListExercises::route('/'),
             'create' => Pages\CreateExercise::route('/create'),
-            'edit' => Pages\EditExercise::route('/{record}/edit'),
+            'edit'   => Pages\EditExercise::route('/{record}/edit'),
         ];
     }
 

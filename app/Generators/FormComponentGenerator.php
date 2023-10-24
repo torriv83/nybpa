@@ -38,14 +38,18 @@ class FormComponentGenerator
      */
     public static function dynamicDateTimePicker(string $name, string $label, array $config = []): array
     {
+        // Create a new instance of the DateTimePicker component
         $component = DateTimePicker::make($name)
             ->label($label)
             ->timezone('Europe/Oslo')
             ->suffixIcon('heroicon-o-clock')
             ->native(false)
-            ->disabledDates(function (Get $get, dateTimeService $dateTimeService) {
+            ->disabledDates(function (Get $get, dateTimeService $dateTimeService)
+            {
+                // Get the record ID from the request parameters
                 $recordId = $get('id');
 
+                // Get the list of disabled dates for the user and record
                 return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId) ?? [];
             })
             ->formatStateUsing(
@@ -62,25 +66,38 @@ class FormComponentGenerator
             ->live();
 
         // If the component name is 'til_dato_time', add the afterOrEqual validation
-        if ($name === Timesheet::TIL_DATO_TIME) {
+        if ($name === Timesheet::TIL_DATO_TIME)
+        {
             $component->afterOrEqual(Timesheet::FRA_DATO_TIME);
         }
 
-        if ($name === Timesheet::TIL_DATO_TIME && $config['isAdmin']) {
-            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, dateTimeService $dateTimeService) {
+        // If the component name is 'til_dato_time' and the user is an admin, update the 'totalt' component state
+        if ($name === Timesheet::TIL_DATO_TIME && $config['isAdmin'])
+        {
+            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, dateTimeService $dateTimeService)
+            {
+                // Calculate the formatted time difference between 'FRA_DATO_TIME' and the current state
                 $formattedTime = $dateTimeService->calculateFormattedTimeDifference($get(Timesheet::FRA_DATO_TIME), $state);
+
+                // Set the 'totalt' component state to the calculated formatted time
                 $set('totalt', $formattedTime);
             });
         }
 
-        if ($name === Timesheet::FRA_DATO_TIME) {
-            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, $operation) use ($config) {
+        // If the component name is 'fra_dato_time', update the 'til_dato_time' component state
+        if ($name === Timesheet::FRA_DATO_TIME)
+        {
+            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, $operation) use ($config)
+            {
+                // Update the 'til_dato_time' component state based on the new 'fra_dato_time' state
                 DateTimeService::updateTilDatoTime($state, $get, $set, $operation, $config['isAdmin']);
             });
         }
 
+        // Apply additional configuration options to the component
         self::applyComponentConfig($component, $config);
 
+        // Return the generated dynamic date time picker component
         return [$component];
     }
 
@@ -94,11 +111,16 @@ class FormComponentGenerator
      */
     public static function dynamicDatePicker(string $name, string $label, array $config = []): array
     {
+        // Create a new DatePicker component with the given name
         $component = DatePicker::make($name)
             ->label($label)
             ->native(false)
-            ->disabledDates(function (Get $get, DateTimeService $dateTimeService) {
+            ->disabledDates(function (Get $get, DateTimeService $dateTimeService)
+            {
+                // Get the id from the request parameters
                 $recordId = $get('id');
+
+                // Get all disabled dates based on the user id and record id
                 return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId) ?? [];
             })
             ->suffixIcon('calendar')
@@ -110,18 +132,23 @@ class FormComponentGenerator
             ->required();
 
         // If the component name is 'til_dato_date', add the afterOrEqual validation
-        if ($name === Timesheet::TIL_DATO_DATE) {
+        if ($name === Timesheet::TIL_DATO_DATE)
+        {
             $component->afterOrEqual(Timesheet::FRA_DATO_DATE);
         }
 
-        if ($name === Timesheet::FRA_DATO_DATE) {
+        // If the component name is 'fra_dato_date', add the afterStateUpdated callback
+        if ($name === Timesheet::FRA_DATO_DATE)
+        {
             $component->afterStateUpdated(
                 fn(Set $set, ?string $state) => $set(Timesheet::TIL_DATO_DATE, Carbon::parse($state)->format('Y-m-d'))
             );
         }
 
+        // Apply the configuration options to the component
         self::applyComponentConfig($component, $config);
 
+        // Return the component wrapped in an array
         return [$component];
     }
 
@@ -135,16 +162,27 @@ class FormComponentGenerator
      */
     private static function applyComponentConfig(object $component, array $config): void
     {
-        if (isset($config['hidden'])) {
+        // Apply 'hidden' configuration option if provided
+        if (isset($config['hidden']))
+        {
             $component->hidden($config['hidden']);
         }
-        if (isset($config['minDate'])) {
+
+        // Apply 'minDate' configuration option if provided
+        if (isset($config['minDate']))
+        {
             $component->minDate($config['minDate']);
         }
-        if (isset($config['afterStateUpdated'])) {
+
+        // Apply 'afterStateUpdated' configuration option if provided
+        if (isset($config['afterStateUpdated']))
+        {
             $component->afterStateUpdated($config['afterStateUpdated']);
         }
-        if (isset($config['afterOrEqual'])) {
+
+        // Apply 'afterOrEqual' configuration option if provided
+        if (isset($config['afterOrEqual']))
+        {
             $component->afterOrEqual($config['afterOrEqual']);
         }
     }
@@ -157,21 +195,29 @@ class FormComponentGenerator
      */
     public static function dynamicRichEditor(string $name, string $richEditorLabel): array
     {
-        return [
-            RichEditor::make($name)
-                ->label($richEditorLabel)
-                ->disableToolbarButtons([
-                    'attachFiles',
-                    'blockquote',
-                    'codeBlock',
-                    'h2',
-                    'h3',
-                    'link',
-                    'redo',
-                    'strike',
-                ])
-                ->maxLength(255)
-        ];
+        // Create a new instance of the RichEditor class
+        $richEditor = RichEditor::make($name);
+
+        // Set the label for the rich editor
+        $richEditor->label($richEditorLabel);
+
+        // Disable specific toolbar buttons
+        $richEditor->disableToolbarButtons([
+            'attachFiles',
+            'blockquote',
+            'codeBlock',
+            'h2',
+            'h3',
+            'link',
+            'redo',
+            'strike',
+        ]);
+
+        // Set the maximum length for the editor content
+        $richEditor->maxLength(255);
+
+        // Return the rich editor configuration as an array
+        return [$richEditor];
     }
 
     /**
