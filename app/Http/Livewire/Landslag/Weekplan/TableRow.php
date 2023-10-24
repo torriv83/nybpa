@@ -6,6 +6,7 @@ use App\Models\Settings;
 use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -19,9 +20,14 @@ class TableRow extends Component
     public $exists = [];
     public $weekplanId;
 
-    public function mount()
+    public function mount(): void
     {
         $this->data = $this->getExercises();
+    }
+
+    public function render(): View
+    {
+        return view('livewire.landslag.weekplan.table-row');
     }
 
     /**
@@ -201,9 +207,10 @@ class TableRow extends Component
                         $trainingProgram = $exercise->trainingProgram;
 
                         // Calculate rowspan for the exercise based on its duration
-                        $fromTime = (date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + date('i', strtotime($exercise->start_time));
-                        $toTime = (date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + date('i', strtotime($exercise->end_time));
-                        $rowspan = ceil(($toTime - $fromTime) / $interval);
+                        $fromTime = (date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + date('i',
+                                strtotime($exercise->start_time));
+                        $toTime   = (date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + date('i', strtotime($exercise->end_time));
+                        $rowspan  = ceil(($toTime - $fromTime) / $interval);
 
                         $exerciseDataForDay = [
                             'day'        => $day,
