@@ -70,6 +70,7 @@ class UserResource extends Resource
                             ->maxLength(255)
                             ->label('Bekreft Passord'),
                         Select::make('roles')
+                            ->label('Rolle')
                             ->required()
                             ->multiple()
                             ->relationship('roles', 'name')
@@ -190,13 +191,14 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function () {
+        return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function ()
+        {
             $roles = ['Fast ansatt', 'Tilkalling'];
 
             // Check if any of the roles exist in the database
             $rolesExist = Role::whereIn('name', $roles)->exists();
 
-            return !$rolesExist ? static::getModel()::count() : static::getModel()::role($roles)->count();
+            return !$rolesExist ? app(static::getModel())->count() : app(static::getModel())->role($roles)->count();
         });
     }
 }
