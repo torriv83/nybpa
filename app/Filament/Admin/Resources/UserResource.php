@@ -198,7 +198,7 @@ class UserResource extends Resource
             // Check if any of the roles exist in the database
             $rolesExist = Role::whereIn('name', $roles)->exists();
 
-            return !$rolesExist ? static::getModel()::count() : static::getModel()::role($roles)->count();
+            return !$rolesExist ? app(static::getModel())->count() : app(static::getModel())->role($roles)->count();
         });
     }
 }
