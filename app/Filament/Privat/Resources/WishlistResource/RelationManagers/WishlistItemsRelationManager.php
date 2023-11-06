@@ -8,8 +8,10 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 class WishlistItemsRelationManager extends RelationManager
 {
@@ -47,20 +49,41 @@ class WishlistItemsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('hva'),
-                Tables\Columns\TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
+
+                Tables\Columns\TextColumn::make('url')
+                    ->formatStateUsing(fn() => 'Se her')
                     ->url(fn($record): string => $record->url, true),
-                Tables\Columns\TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()),
+
+                Tables\Columns\TextColumn::make('koster')
+                    ->money('nok', true)
+                    ->sortable()
+                    ->summarize(Sum::make()),
                 Tables\Columns\TextColumn::make('antall'),
+
                 SelectColumn::make('status')->options([
                     'Begynt å spare' => 'Begynt å spare',
                     'Spart'          => 'Spart',
                     'Kjøpt'          => 'Kjøpt',
                     'Venter'         => 'Venter',
-                ])->selectablePlaceholder(false),
-                Tables\Columns\TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
-                {
-                    return $record->koster * $record->antall;
-                }),
+                ])
+                    ->selectablePlaceholder(false)
+                    ->summarize(Summarizer::make()
+                        ->label('left')
+                        ->label('Gjenstår')
+                        ->using(function (Builder $query): string
+                        {
+                            $total      = $query->sum('koster');
+                            $doneSaving = $query->where('status', '=', 'Spart')->sum('koster');
+
+                            return $total - $doneSaving;
+                        })),
+
+                Tables\Columns\TextColumn::make('totalt')
+                    ->money('nok', true)
+                    ->getStateUsing(function (Model $record)
+                    {
+                        return $record->koster * $record->antall;
+                    }),
             ])
             ->filters([
                 //
