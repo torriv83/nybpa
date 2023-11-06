@@ -40,7 +40,6 @@ class WishlistResource extends Resource
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
                 TextInput::make('hva')->autofocus(),
@@ -51,18 +50,19 @@ class WishlistResource extends Resource
                     ->options([
                         'Venter'         => 'Venter',
                         'Begynt å spare' => 'Begynt å spare',
+                        'Spart'          => 'Spart',
                         'Kjøpt'          => 'Kjøpt',
                     ]),
-                Placeholder::make('totalt')->content(function ($record, $set) {
-
-                    $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item) {
+                Placeholder::make('totalt')->content(function ($record, $set)
+                {
+                    $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item)
+                    {
                         return $item->koster * $item->antall;
                     });
 
                     $totalt > 0 ? $set('koster', $totalt) : $set('koster', $record?->koster);
 
                     return $totalt > 0 ? $totalt : 0;
-
                 })->label('Totalt fra Liste'),
             ]);
     }
@@ -79,10 +79,12 @@ class WishlistResource extends Resource
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options([
                     'Begynt å spare' => 'Begynt å spare',
+                    'Spart'          => 'Spart',
                     'Kjøpt'          => 'Kjøpt',
                     'Venter'         => 'Venter',
                 ])->selectablePlaceholder(false),
-                TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
+                TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
+                {
                     return $record->koster * $record->antall;
                 }),
             ])

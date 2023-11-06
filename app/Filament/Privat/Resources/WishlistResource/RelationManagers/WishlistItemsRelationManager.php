@@ -6,6 +6,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,14 @@ class WishlistItemsRelationManager extends RelationManager
                     ->required()->numeric(),
                 Forms\Components\TextInput::make('antall')
                     ->required()->numeric(),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'Begynt å spare' => 'Begynt å spare',
+                        'Spart'          => 'Spart',
+                        'Kjøpt'          => 'Kjøpt',
+                        'Venter'         => 'Venter',
+                    ])
+                    ->required()
             ]);
     }
 
@@ -42,8 +51,14 @@ class WishlistItemsRelationManager extends RelationManager
                     ->url(fn($record): string => $record->url, true),
                 Tables\Columns\TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()),
                 Tables\Columns\TextColumn::make('antall'),
-                Tables\Columns\TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
-
+                SelectColumn::make('status')->options([
+                    'Begynt å spare' => 'Begynt å spare',
+                    'Spart'          => 'Spart',
+                    'Kjøpt'          => 'Kjøpt',
+                    'Venter'         => 'Venter',
+                ])->selectablePlaceholder(false),
+                Tables\Columns\TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
+                {
                     return $record->koster * $record->antall;
                 }),
             ])
@@ -52,26 +67,30 @@ class WishlistItemsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
+                    ->after(function (RelationManager $livewire, Model $record)
+                    {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
+                    ->after(function (RelationManager $livewire, Model $record)
+                    {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
                 Tables\Actions\DeleteAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
+                    ->after(function (RelationManager $livewire, Model $record)
+                    {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
+                    ->after(function (RelationManager $livewire, Model $record)
+                    {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
