@@ -73,7 +73,9 @@ class WishlistItemsRelationManager extends RelationManager
                         ->using(function (Builder $query): string
                         {
                             $total      = $query->sum('koster');
-                            $doneSaving = $query->where('status', '=', 'Spart')->sum('koster');
+                            $doneSaving = $query->where('status', '=', 'Spart')
+                                ->orWhere('status', '=', 'Kjøpt')
+                                ->sum('koster');
 
                             return $total - $doneSaving;
                         })),
