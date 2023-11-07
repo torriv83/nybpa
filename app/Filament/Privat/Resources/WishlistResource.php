@@ -104,19 +104,22 @@ class WishlistResource extends Resource
     {
         return $infolist
             ->schema([
-                Infolists\Components\TextEntry::make('hva'),
-                Infolists\Components\TextEntry::make('koster')->money('nok', true),
-                Infolists\Components\TextEntry::make('url')->formatStateUsing(fn() => 'Se her')->url(fn($record): string => $record->url,
-                    true),
-                Infolists\Components\TextEntry::make('antall'),
-                Infolists\Components\TextEntry::make('status'),
-                /* TODO Infolists\Components\TextEntry::make('totalt')->money('nok', true)->getStateUsing(function (Model $record) {
-                    return $record->koster * $record->antall;
-                }),*/
+                Infolists\Components\Section::make(fn($record) => $record->hva)
+                    ->schema([
+                        Infolists\Components\TextEntry::make('koster')->money('nok', true),
+                        Infolists\Components\TextEntry::make('url')->formatStateUsing(fn() => 'Se her')->url(fn($record): string => $record->url,
+                            true),
+                        Infolists\Components\TextEntry::make('antall'),
+                        Infolists\Components\TextEntry::make('status'),
+
+                    ])->columns(4),
+
                 Infolists\Components\RepeatableEntry::make('WishlistItems')->label('Deler i ønskelisten')
                     ->schema([
-                        Infolists\Components\TextEntry::make('hva')->url(fn($record): string => $record->url,
-                            true)->columnSpanFull(),
+                        Infolists\Components\TextEntry::make('hva')
+                            ->hiddenLabel()
+                            ->url(fn($record): string => $record->url, true)
+                            ->columnSpanFull(),
                         Infolists\Components\TextEntry::make('antall'),
                         Infolists\Components\TextEntry::make('koster')->money('nok', true),
                     ])->columnSpanFull()->columns()->grid()
