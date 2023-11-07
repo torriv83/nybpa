@@ -68,6 +68,7 @@ class WishlistItemsRelationManager extends RelationManager
                 ])
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
+                        ->money('nok', true)
                         ->label('left')
                         ->label('Gjenstår')
                         ->using(function (Builder $query): string
@@ -85,7 +86,16 @@ class WishlistItemsRelationManager extends RelationManager
                     ->getStateUsing(function (Model $record)
                     {
                         return $record->koster * $record->antall;
-                    }),
+                    })
+                    ->summarize(Summarizer::make()
+                        ->label('Totalt')
+                        ->money('nok', true)
+                        ->using(function (Builder $query): string
+                        {
+                            // Calculate the sum of the product of 'koster' and 'antall' directly in the query
+                            return $query->sum(\DB::raw('koster * antall'));
+                        }),
+                    )
             ])
             ->filters([
                 //
