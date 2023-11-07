@@ -60,12 +60,14 @@ class WishlistItemsRelationManager extends RelationManager
                     ->summarize(Sum::make()),
                 Tables\Columns\TextColumn::make('antall'),
 
-                SelectColumn::make('status')->options([
-                    'Begynt å spare' => 'Begynt å spare',
-                    'Spart'          => 'Spart',
-                    'Kjøpt'          => 'Kjøpt',
-                    'Venter'         => 'Venter',
-                ])
+                SelectColumn::make('status')
+                    ->options([
+                        'Begynt å spare' => 'Begynt å spare',
+                        'Spart'          => 'Spart',
+                        'Kjøpt'          => 'Kjøpt',
+                        'Venter'         => 'Venter',
+                    ])
+                    ->sortable()
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
                         ->money('nok', true)
