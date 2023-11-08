@@ -21,10 +21,12 @@ class RheitChart extends ChartWidget
 
     protected function getData(): array
     {
-        return Cache::tags(['testresult'])->remember('rheitChart', now()->addMonth(), function () {
+        return Cache::tags(['testresult'])->remember('rheitChart', now()->addMonth(), function ()
+        {
             $rheit = $this->fetchData();
 
-            if (!$rheit || $rheit->testResults->isEmpty()) {
+            if (!$rheit || $rheit->testResults->isEmpty())
+            {
                 return $this->getDefaultChartData();
             }
 
@@ -51,11 +53,13 @@ class RheitChart extends ChartWidget
         $dato       = [];
         $drop       = [];
 
-        foreach ($results as $v) {
+        foreach ($results as $v)
+        {
             $dato[] = $v->dato->format('d.m.y H:i');
 
-            foreach ($v->resultat[0] as $name => $result) {
-                $resultater[] = ['Runde: ' . $name => $result];
+            foreach ($v->resultat[0] as $name => $result)
+            {
+                $resultater[] = ['Runde: '.$name => $result];
                 $drop[]       = $result;
             }
 
@@ -72,9 +76,10 @@ class RheitChart extends ChartWidget
     protected function formatChartData($resultater, $dato): array
     {
         $finalResults = [];
-        $colors       = generateRandomColors(count(array_merge_recursive(...$resultater)));
+        $colors       = TestResult::generateRandomColors(count(array_merge_recursive(...$resultater)));
 
-        foreach (array_merge_recursive(...$resultater) as $name => $res) {
+        foreach (array_merge_recursive(...$resultater) as $name => $res)
+        {
             $randColor      = array_shift($colors);
             $res            = count($dato) > 1 ? $res : [$res];
             $type           = 'line';

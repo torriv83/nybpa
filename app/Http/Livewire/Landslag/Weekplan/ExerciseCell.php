@@ -18,11 +18,13 @@ class ExerciseCell extends Component
     {
         $isDuplicate = false;
 
-        if ($this->exercise !== null && isset($this->exercise['day']) && isset($this->exercise['exercise'])) {
+        if ($this->exercise !== null && isset($this->exercise['day']) && isset($this->exercise['exercise']))
+        {
             $exerciseId  = $this->exercise['day'].'-'.$this->exercise['exercise'];
             $isDuplicate = in_array($exerciseId, self::$exists);
 
-            if (!$isDuplicate) {
+            if (!$isDuplicate)
+            {
                 self::$exists[] = $exerciseId;
             }
         }
@@ -35,5 +37,16 @@ class ExerciseCell extends Component
         $isToday = $this->day == Carbon::now()->dayOfWeekIso;
 
         return $isToday ? 'bg-slate-800' : '';
+    }
+
+    function getIntensityColor($intensity): string
+    {
+        return match ($intensity)
+        {
+            'crimson' => 'bg-red-600',
+            'darkcyan' => 'bg-cyan-600',
+            'green' => 'bg-green-600',
+            default => '',
+        };
     }
 }

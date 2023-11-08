@@ -2,6 +2,7 @@
 
 namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
+use App\Filament\Privat\Resources\WishlistResource;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -34,12 +35,7 @@ class WishlistItemsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('antall')
                     ->required()->numeric(),
                 Forms\Components\Select::make('status')
-                    ->options([
-                        'Begynt å spare' => 'Begynt å spare',
-                        'Spart'          => 'Spart',
-                        'Kjøpt'          => 'Kjøpt',
-                        'Venter'         => 'Venter',
-                    ])
+                    ->options(WishlistResource::STATUS_OPTIONS)
                     ->required()
             ]);
     }
@@ -61,12 +57,7 @@ class WishlistItemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('antall'),
 
                 SelectColumn::make('status')
-                    ->options([
-                        'Begynt å spare' => 'Begynt å spare',
-                        'Spart'          => 'Spart',
-                        'Kjøpt'          => 'Kjøpt',
-                        'Venter'         => 'Venter',
-                    ])
+                    ->options(WishlistResource::STATUS_OPTIONS)
                     ->sortable()
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()

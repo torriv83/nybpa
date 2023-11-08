@@ -33,26 +33,24 @@ class WishlistResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Ønskelister';
 
-    protected function getTableReorderColumn(): ?string
-    {
-        return 'prioritet';
-    }
+    public const STATUS_OPTIONS = [
+        'Begynt å spare' => 'Begynt å spare',
+        'Spart'          => 'Spart',
+        'Kjøpt'          => 'Kjøpt',
+        'Venter'         => 'Venter',
+    ];
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('hva')->autofocus(),
-                TextInput::make('koster'),
-                TextInput::make('url'),
+                TextInput::make('koster')->type('number'),
+                TextInput::make('url')->type('url'),
                 TextInput::make('antall')->type('number'),
                 Select::make('status')
-                    ->options([
-                        'Venter'         => 'Venter',
-                        'Begynt å spare' => 'Begynt å spare',
-                        'Spart'          => 'Spart',
-                        'Kjøpt'          => 'Kjøpt',
-                    ]),
+                    ->options(self::STATUS_OPTIONS)
+                    ->placeholder('Velg status'),
                 Placeholder::make('totalt')->content(function ($record, $set)
                 {
                     $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item)
@@ -77,12 +75,8 @@ class WishlistResource extends Resource
                     ->url(fn($record) => $record->url, true),
                 TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()->money('nok', true)),
                 TextColumn::make('antall'),
-                SelectColumn::make('status')->options([
-                    'Begynt å spare' => 'Begynt å spare',
-                    'Spart'          => 'Spart',
-                    'Kjøpt'          => 'Kjøpt',
-                    'Venter'         => 'Venter',
-                ])->selectablePlaceholder(false),
+                SelectColumn::make('status')->options(WishlistResource::STATUS_OPTIONS)
+                    ->selectablePlaceholder(false),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
                 {
                     return $record->koster * $record->antall;

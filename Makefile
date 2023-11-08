@@ -4,6 +4,9 @@ debug:
 	echo $$SHELL
 	echo ./sail
 
+bash:
+	docker-compose exec laravel.test bash
+
 start:
 	sh vendor/bin/sail up -d
 

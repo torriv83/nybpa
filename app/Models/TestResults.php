@@ -29,4 +29,19 @@ class TestResults extends Model
     {
         return $this->belongsTo(Tests::class, 'testsID');
     }
+
+    public static function generateRandomColors(int $count): array
+    {
+        mt_srand(); // Seed the random number generator
+
+        $colors = [];
+
+        for ($i = 0; $i < $count; $i++)
+        {
+            $colors[] = 'rgb('.mt_rand(0, 255).', '.mt_rand(0, 255).', '.mt_rand(0, 255).')';
+        }
+
+        return $colors;
+    }
+
 }

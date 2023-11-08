@@ -71,17 +71,22 @@ class TableRow extends Component
         $exerciseData = $this->getDayData($this->weekplanId);
         $setting      = $this->getSettings();
 
-        if ($fixed) {
+        if ($fixed)
+        {
             $startTime = Carbon::createFromFormat('H:i:s', $setting->weekplan_from)->format('H:i'); // Start time in hours (24-hour format)
             $endTime   = Carbon::createFromFormat('H:i:s', $setting->weekplan_to)->format('H:i'); // End time in hours (24-hour format)
-        } else {
+        } else
+        {
             $earliestTime = PHP_INT_MAX;
             $latestTime   = 0;
 
             // Find the earliest and latest exercise times
-            foreach ($exerciseData as $item) {
-                foreach ($item['exercises'] as $exercise) {
-                    [$fromTime, $toTime] = array_map(function ($time) {
+            foreach ($exerciseData as $item)
+            {
+                foreach ($item['exercises'] as $exercise)
+                {
+                    [$fromTime, $toTime] = array_map(function ($time)
+                    {
                         return date('H', strtotime($time)) * self::MINUTES_IN_HOUR + date('i', strtotime($time));
                     }, [$exercise['from'], $exercise['to']]);
 
@@ -126,11 +131,13 @@ class TableRow extends Component
         $data = [];
 
         // Organize the data by day
-        foreach ($days as $dayIndex => $dayName) {
+        foreach ($days as $dayIndex => $dayName)
+        {
             $exercisesForDay = $weekplanExercises->where('day', $dayIndex);
             $exerciseData    = [];
 
-            foreach ($exercisesForDay as $exercise) {
+            foreach ($exercisesForDay as $exercise)
+            {
                 $exerciseData[] = [
                     'exercise'  => $exercise->exercise->name,
                     'from'      => $exercise->start_time,
@@ -158,9 +165,11 @@ class TableRow extends Component
     {
         $groupedExercises = [];
 
-        foreach (Weekplan::with('weekplanExercises')->find($weekplanId)->weekplanExercises as $weekplanExercise) {
+        foreach (Weekplan::with('weekplanExercises')->find($weekplanId)->weekplanExercises as $weekplanExercise)
+        {
             $day = $weekplanExercise->day;
-            if (!isset($groupedExercises[$day])) {
+            if (!isset($groupedExercises[$day]))
+            {
                 $groupedExercises[$day] = [];
             }
             $groupedExercises[$day][] = $weekplanExercise;
@@ -182,15 +191,19 @@ class TableRow extends Component
     {
         $data = [];
 
-        for ($time = $startTime; $time <= $endTime; $time++) {
-            for ($minute = 0; $minute < self::MINUTES_IN_HOUR; $minute += $interval) {
+        for ($time = $startTime; $time <= $endTime; $time++)
+        {
+            for ($minute = 0; $minute < self::MINUTES_IN_HOUR; $minute += $interval)
+            {
                 $row = [
                     'time'      => sprintf('%02d:%02d', $time, $minute),
                     'exercises' => [],
                 ];
 
-                foreach ($groupedExercises as $day => $exercisesForDay) {
-                    $filteredExercises = collect($exercisesForDay)->filter(function ($exercise) use ($time, $minute, $interval) {
+                foreach ($groupedExercises as $day => $exercisesForDay)
+                {
+                    $filteredExercises = collect($exercisesForDay)->filter(function ($exercise) use ($time, $minute, $interval)
+                    {
                         $from          = strtotime($exercise->start_time);
                         $to            = strtotime($exercise->end_time);
                         $fromTime      = (date('H', $from) * self::MINUTES_IN_HOUR) + date('i', $from);
@@ -202,7 +215,8 @@ class TableRow extends Component
                     });
 
                     $exerciseDataForDay = null;
-                    if ($filteredExercises->isNotEmpty()) {
+                    if ($filteredExercises->isNotEmpty())
+                    {
                         $exercise        = $filteredExercises->first();
                         $trainingProgram = $exercise->trainingProgram;
 
@@ -214,8 +228,9 @@ class TableRow extends Component
 
                         $exerciseDataForDay = [
                             'day'        => $day,
-                            'time'       => formatTime(Carbon::parse($exercise->start_time)->format('H:i'),
-                                Carbon::parse($exercise->end_time)->format('H:i')),
+                            'time'       => Carbon::parse($exercise->start_time)->format('H:i')
+                                .' - '.
+                                Carbon::parse($exercise->end_time)->format('H:i'),
                             'intensity'  => $exercise->intensity,
                             'exercise'   => $exercise->exercise->name,
                             'program'    => $trainingProgram ? $trainingProgram->program_name : null,
@@ -228,7 +243,8 @@ class TableRow extends Component
                 }
 
 
-                for ($day = 1; $day <= self::DAYS_IN_WEEK; $day++) {
+                for ($day = 1; $day <= self::DAYS_IN_WEEK; $day++)
+                {
                     $row['exercises'][$day] = $row['exercises'][$day] ?? [];
                 }
 

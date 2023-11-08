@@ -22,11 +22,12 @@ class StyrkeChart extends ChartWidget
 
     protected function getData(): array
     {
-
-        return Cache::tags(['testresult'])->remember('styrkeChart', now()->addMonth(), function () {
+        return Cache::tags(['testresult'])->remember('styrkeChart', now()->addMonth(), function ()
+        {
             $styrketest = $this->fetchData();
 
-            if (!$styrketest || $styrketest->testResults->isEmpty()) {
+            if (!$styrketest || $styrketest->testResults->isEmpty())
+            {
                 return $this->getDefaultChartData();
             }
 
@@ -35,7 +36,6 @@ class StyrkeChart extends ChartWidget
             $dato            = $transformedData['dato'];
 
             return $this->formatChartData($resultater, $dato);
-
         });
     }
 
@@ -46,16 +46,15 @@ class StyrkeChart extends ChartWidget
 
     protected function fetchData(int $numberOfResults = 6)
     {
-
         return Tests::with([
-            'testResults' => function ($query) use ($numberOfResults) {
+            'testResults' => function ($query) use ($numberOfResults)
+            {
                 return $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
-                    ->take($numberOfResults); // Take only the specified number of results
+                ->take($numberOfResults); // Take only the specified number of results
             }
         ])
             ->where('navn', '=', 'Styrketest')
             ->first();
-
     }
 
     protected function transformData(Collection $results): array
@@ -63,10 +62,12 @@ class StyrkeChart extends ChartWidget
         $resultater = [];
         $dato       = [];
 
-        foreach ($results as $v) {
+        foreach ($results as $v)
+        {
             $dato[] = $v->dato->format('d.m.y H:i');
 
-            foreach ($v->resultat[0] as $name => $result) {
+            foreach ($v->resultat[0] as $name => $result)
+            {
                 $resultater[$name][] = $result;
             }
         }
@@ -80,9 +81,10 @@ class StyrkeChart extends ChartWidget
     protected function formatChartData(array $resultater, array $dato): array
     {
         $finalResults = [];
-        $randColors   = generateRandomColors(count($resultater));
+        $randColors   = TestResult::generateRandomColors(count($resultater));
 
-        foreach ($resultater as $name => $res) {
+        foreach ($resultater as $name => $res)
+        {
             $randColor = array_shift($randColors);
             $res       = count($dato) > 1 ? $res : [$res];
 
@@ -120,8 +122,8 @@ class StyrkeChart extends ChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode'      => 'nearest',
-                    'intersect' => false,
+                    'mode'          => 'nearest',
+                    'intersect'     => false,
                     'displayColors' => false,
                 ],
             ],
