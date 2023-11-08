@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -77,15 +78,16 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * @param $query
-     * @return null
+     * @return Builder|null
      * @method assistenter()
      */
-    public function scopeAssistenter($query)
+    public function scopeAssistenter($query): null|Builder
     {
-        $rolesToCheck = ['Tilkalling', 'Fast ansatt'];
+        $rolesToCheck  = ['Tilkalling', 'Fast ansatt'];
         $existingRoles = Role::whereIn('name', $rolesToCheck)->pluck('name')->toArray();
 
-        if (!empty($existingRoles)) {
+        if (!empty($existingRoles))
+        {
             return $query->role($existingRoles);
         }
 
