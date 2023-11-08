@@ -15,6 +15,7 @@ class WishlistItem extends Model
         'koster',
         'url',
         'antall',
+        'status',
     ];
 
     public function wishlist(): BelongsTo

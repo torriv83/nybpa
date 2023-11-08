@@ -3,14 +3,17 @@
 namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
 use App\Filament\Privat\Resources\WishlistResource;
+use DB;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 
@@ -86,7 +89,7 @@ class WishlistItemsRelationManager extends RelationManager
                         ->using(function (Builder $query): string
                         {
                             // Calculate the sum of the product of 'koster' and 'antall' directly in the query
-                            return $query->sum(\DB::raw('koster * antall'));
+                            return $query->sum(DB::raw('koster * antall'));
                         }),
                     )
             ])
@@ -116,12 +119,29 @@ class WishlistItemsRelationManager extends RelationManager
                     }),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
-                    ->after(function (RelationManager $livewire, Model $record)
-                    {
-                        // Runs after the form fields are saved to the database.
-                        $livewire->dispatch('itemedited', $record->wishlist_id);
-                    }),
+                BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->after(function (RelationManager $livewire, Model $record)
+                        {
+                            // Runs after the form fields are saved to the database.
+                            $livewire->dispatch('itemedited', $record->wishlist_id);
+                        }),
+                    Tables\Actions\BulkAction::make('status')
+                        ->label('Endre status')
+                        ->deselectRecordsAfterCompletion()
+                        ->form([
+                            Forms\Components\Select::make('status')
+                                ->options(WishlistResource::STATUS_OPTIONS)
+                                ->required()
+                        ])
+                        ->action(function (array $data, Collection $records)
+                        {
+                            $records->each(function (Model $record) use ($data)
+                            {
+                                $record->update(['status' => $data['status']]);
+                            });
+                        })
+                ])
             ]);
     }
 }
