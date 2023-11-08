@@ -17,14 +17,12 @@ class TotalWorked extends BaseWidget
     /**
      * Retrieves the statistics related to the user.
      *
-     * @uses \App\Models\Timesheet::scopethisMonth()
-     * @uses \App\Models\Timesheet::scopethisYear()
-     *
      * @return array The array containing the user statistics.
+     * @uses Timesheet::scopethisYear
+     * @uses Timesheet::scopethisMonth
      */
     protected function getStats(): array
     {
-
         $timeSheet           = new Timesheet();
         $timeWorkedThisYear  = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->sum('totalt');
         $timeWorkedThisMonth = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->thisMonth()->sum('totalt');
@@ -39,7 +37,7 @@ class TotalWorked extends BaseWidget
             : 'Ingen timer registrert'; // Default text or value
 
         $nextWorkTimeFormatted = $nextWorkTime
-            ? Carbon::make($nextWorkTime->fra_dato)->format('H:i') . ' - ' . Carbon::make($nextWorkTime->til_dato)->format('H:i')
+            ? Carbon::make($nextWorkTime->fra_dato)->format('H:i').' - '.Carbon::make($nextWorkTime->til_dato)->format('H:i')
             : 'Ingen kommende arbeidstider'; // Default text or value
 
         $nextWorkTimeDescription = $nextWorkTime
@@ -52,6 +50,5 @@ class TotalWorked extends BaseWidget
             Stat::make('Timer jobbet denne mnd', $timeWorkedThisMonthFormatted),
             Stat::make('Timer jobbet i år', $timeWorkedThisYearFormatted),
         ];
-
     }
 }

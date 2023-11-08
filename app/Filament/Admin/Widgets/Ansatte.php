@@ -19,6 +19,11 @@ class Ansatte extends BaseWidget
 
     protected static ?int $sort = 7;
 
+    /**
+     * @param  Table  $table
+     * @return Table
+     * @uses User::scopeAssistenter()
+     */
     public function table(Table $table): Table
     {
         return $table
@@ -43,14 +48,16 @@ class Ansatte extends BaseWidget
                     ->label('Telefon')
                     ->default('12345678'),
                 Tables\Columns\TextColumn::make('Jobbet i år')
-                    ->getStateUsing(function (Model $record) {
-                        $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear' . $record->id, now()->addDay(), function () use ($record) {
+                    ->getStateUsing(function (Model $record)
+                    {
+                        $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record)
+                        {
                             return $record->timesheet()
                                 ->yearToDate('fra_dato')
                                 ->where('unavailable', '!=', 1)->sum('totalt');
                         });
 
-                        return sprintf('%02d', intdiv($minutes, 60)) . ':' . (sprintf('%02d', $minutes % 60));
+                        return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
                     })
                     ->label('Jobbet i år')
                     ->default('0'),
