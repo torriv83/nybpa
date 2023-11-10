@@ -7,6 +7,7 @@ use App\Filament\Privat\Resources\WishlistResource\Pages\EditWishlist;
 use App\Filament\Privat\Resources\WishlistResource\Pages\ListWishlists;
 use App\Filament\Privat\Resources\WishlistResource\RelationManagers\WishlistItemsRelationManager;
 use App\Models\Wishlist;
+use Exception;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -44,10 +45,20 @@ class WishlistResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('hva')->autofocus(),
-                TextInput::make('koster')->type('number'),
-                TextInput::make('url')->type('url'),
-                TextInput::make('antall')->type('number'),
+                TextInput::make('hva')
+                    ->required()
+                    ->autofocus(),
+                TextInput::make('koster')
+                    ->default(0)
+                    ->numeric()
+                    ->required(),
+                TextInput::make('url')
+                    ->type('url')
+                    ->required()
+                    ->default('https://example.com'),
+                TextInput::make('antall')
+                    ->numeric()
+                    ->required(),
                 Select::make('status')
                     ->options(self::STATUS_OPTIONS)
                     ->placeholder('Velg status'),
@@ -65,6 +76,9 @@ class WishlistResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
@@ -83,7 +97,9 @@ class WishlistResource extends Resource
                 }),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(self::STATUS_OPTIONS)
+                    ->placeholder('Velg status'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

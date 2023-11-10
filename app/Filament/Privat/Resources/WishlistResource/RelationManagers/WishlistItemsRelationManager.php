@@ -4,6 +4,7 @@ namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
 use App\Filament\Privat\Resources\WishlistResource;
 use DB;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -43,6 +44,9 @@ class WishlistItemsRelationManager extends RelationManager
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function table(Table $table): Table
     {
         return $table
@@ -94,7 +98,10 @@ class WishlistItemsRelationManager extends RelationManager
                     )
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->multiple()
+                    ->options(WishlistResource::STATUS_OPTIONS)
+                    ->placeholder('Velg status'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
