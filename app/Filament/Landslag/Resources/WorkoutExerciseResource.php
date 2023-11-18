@@ -5,6 +5,7 @@ namespace App\Filament\Landslag\Resources;
 use App\Filament\Landslag\Resources\WorkoutExerciseResource\Pages;
 use App\Filament\Landslag\Resources\WorkoutExerciseResource\RelationManagers;
 use App\Models\WorkoutExercise;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -32,6 +33,9 @@ class WorkoutExerciseResource extends Resource
             ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
@@ -40,7 +44,8 @@ class WorkoutExerciseResource extends Resource
                     ->label('Navn')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('IAntallProgrammer')
-                    ->getStateUsing(function (WorkoutExercise $record) {
+                    ->getStateUsing(function (WorkoutExercise $record)
+                    {
                         return $record->TrainingPrograms->count();
                     }),
                 Tables\Columns\TextColumn::make('created_at')->dateTime('d.m.y H:i')->label('Lagt til')
@@ -51,9 +56,9 @@ class WorkoutExerciseResource extends Resource
                     ->trueLabel('Med arkiverte øvelser')
                     ->falseLabel('Bare arkiverte øvelser')
                     ->queries(
-                        true: fn (Builder $query) => $query->withTrashed(),
-                        false: fn (Builder $query) => $query->onlyTrashed(),
-                        blank: fn (Builder $query) => $query->withoutTrashed(),
+                        true : fn(Builder $query) => $query->withTrashed(),
+                        false: fn(Builder $query) => $query->onlyTrashed(),
+                        blank: fn(Builder $query) => $query->withoutTrashed(),
                     )
             ])
             ->actions([

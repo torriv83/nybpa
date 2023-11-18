@@ -7,6 +7,7 @@ use App\Filament\Landslag\Resources\WeekplanResource\RelationManagers;
 use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use App\Traits\WeekplanSchema;
+use Exception;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
@@ -84,6 +85,9 @@ class WeekplanResource extends Resource
     }
 
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table
