@@ -26,7 +26,7 @@ git merge --no-edit $CURRENT_BRANCH
 
 # Step 3: Run npm build
 echo "Running npm build..."
-sh vendor/bin/sail npm run build
+sh bun run build
 
 if [ $? -ne 0 ]; then
   echo "Build failed. Aborting."
