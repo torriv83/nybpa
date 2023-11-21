@@ -9,7 +9,8 @@ class CreateWorkoutExercise extends CreateRecord
 {
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index');
+        return app($this->getResource())->getUrl('index');
     }
+
     protected static string $resource = WorkoutExerciseResource::class;
 }
