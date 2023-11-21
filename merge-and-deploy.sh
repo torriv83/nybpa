@@ -25,8 +25,8 @@ git checkout Staging
 git merge --no-edit $CURRENT_BRANCH
 
 # Step 3: Run npm build
-echo "Running npm build..."
-sh bun run build
+echo "Running bun build..."
+sh vendor/bin/sail bun run build
 
 if [ $? -ne 0 ]; then
   echo "Build failed. Aborting."
