@@ -3,6 +3,7 @@
 namespace App\Filament\Privat\Resources\EconomyResource\Widgets;
 
 use App\Models\Economy;
+use App\Traits\Economy as EconomyTrait;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Http;
@@ -10,6 +11,8 @@ use Illuminate\Support\Number;
 
 class StatsOverview extends BaseWidget
 {
+    use EconomyTrait;
+
     protected static ?string   $pollingInterval = null;
     protected int|string|array $columnSpan      = '12';
     protected                  $listeners       = ['updateStatsOverview' => '$refresh'];
@@ -93,23 +96,4 @@ class StatsOverview extends BaseWidget
         return Stat::make('Age of money', $aom);
     }
 
-    /**
-     * Format the given amount as a currency string.
-     *
-     * @param  float  $amount  The amount to format.
-     * @param  bool  $month  Whether to format as monthly currency.
-     * @return string The formatted currency string.
-     */
-    public static function formatCurrency(float $amount, bool $month = false): string
-    {
-        $string = ' kr';
-
-        if ($month)
-        {
-            $amount = $amount / 12;
-            $string = ' kr i måneden';
-        }
-
-        return number_format($amount, 0, ',', '.').$string;
-    }
 }

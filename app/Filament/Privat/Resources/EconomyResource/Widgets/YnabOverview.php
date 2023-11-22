@@ -3,7 +3,9 @@
 namespace App\Filament\Privat\Resources\EconomyResource\Widgets;
 
 use App\Models\Ynab;
+use App\Traits\Economy;
 use Carbon\Carbon;
+use Exception;
 use Filament\Forms;
 use Filament\Notifications\Notification;
 use Filament\Tables;
@@ -19,10 +21,15 @@ use Illuminate\Database\Query\Builder as sumBuilder;
 
 class YnabOverview extends BaseWidget
 {
+    use Economy;
+
     protected static ?string $pollingInterval = null;
 
     protected int|string|array $columnSpan = '12';
 
+    /**
+     * @throws Exception
+     */
     public function table(Table $table): Table
     {
         return $table
@@ -30,12 +37,12 @@ class YnabOverview extends BaseWidget
                 Ynab::query()
             )
             ->heading('Tall fra YNAB')
-            ->description(fn() => 'Sist oppdatert: ' . Ynab::latest('updated_at')->first()->updated_at->format('d.m.Y H:i:s'))
+            ->description(fn() => 'Sist oppdatert: '.Ynab::latest('updated_at')->first()->updated_at->format('d.m.Y H:i:s'))
             ->columns([
                 Tables\Columns\TextColumn::make('month')
                     ->label('Måned')
-                    ->formatStateUsing(function ($column): ?string {
-
+                    ->formatStateUsing(function ($column): ?string
+                    {
                         Carbon::setlocale(config('app.locale'));
 
                         return ucfirst(Carbon::parse($column->getState())->translatedFormat('F, Y'));
@@ -50,12 +57,12 @@ class YnabOverview extends BaseWidget
                     ->alignLeft()
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $query->sum('income') / 1000)
+                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('income')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float => $query->avg('income') / 1000)
+                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->avg('income')))
                         ->money('nok')
                     ),
 
@@ -66,12 +73,12 @@ class YnabOverview extends BaseWidget
                     ->alignLeft()
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $query->sum('activity') / 1000)
+                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('activity')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float => $query->avg('activity') / 1000)
+                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->avg('activity')))
                         ->money('nok')
                     ),
 
@@ -82,25 +89,29 @@ class YnabOverview extends BaseWidget
                     ->alignLeft()
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $query->sum('budgeted') / 1000)
+                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('budgeted')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float => $query->avg('budgeted') / 1000)
+                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->avg('budgeted')))
                         ->money('nok')
                     ),
 
                 Tables\Columns\TextColumn::make('inntektutgift')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Model $record)
+                    {
                         return ($record->income + $record->activity);
                     })
                     ->money('nok', true)
                     ->sortable()
-                    ->color(function ($record) {
-                        if (($record->income + $record->activity) < 0) {
+                    ->color(function ($record)
+                    {
+                        if (($record->income + $record->activity) < 0)
+                        {
                             return 'danger';
-                        } else {
+                        } else
+                        {
                             return 'success';
                         }
                     })
@@ -108,37 +119,45 @@ class YnabOverview extends BaseWidget
                     ->label('Inntekt - Utgift')
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $query->sum('income') / 1000 + $query->sum('activity') / 1000)
+                        ->using(fn(sumBuilder $query
+                        ): float => $this->divideYnab($query->sum('income')) + $this->divideYnab($query->sum('activity')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float => $query->avg('income') / 1000 + $query->avg('activity') / 1000)
+                        ->using(fn(sumBuilder $query
+                        ): float => $this->divideYnab($query->avg('income')) + $this->divideYnab($query->avg('activity')))
                         ->money('nok')
                     ),
 
                 Tables\Columns\TextColumn::make('Balanse')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Model $record)
+                    {
                         return ($record->income - $record->budgeted);
                     })
                     ->money('nok', true)
                     ->sortable()
-                    ->color(function ($record) {
-                        if (($record->income - $record->budgeted) < 0) {
+                    ->color(function ($record)
+                    {
+                        if (($record->income - $record->budgeted) < 0)
+                        {
                             return 'danger';
-                        } else {
+                        } else
+                        {
                             return 'success';
                         }
                     })
                     ->alignLeft()
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $query->sum('income') / 1000 - $query->sum('budgeted') / 1000)
+                        ->using(fn(sumBuilder $query
+                        ): float => $this->divideYnab($query->sum('income')) - $this->divideYnab($query->sum('budgeted')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float => $query->avg('income') / 1000 - $query->avg('budgeted') / 1000)
+                        ->using(fn(sumBuilder $query
+                        ): float => $this->divideYnab($query->avg('income')) - $this->divideYnab($query->avg('budgeted')))
                         ->money('nok')
                     ),
             ])
@@ -155,7 +174,8 @@ class YnabOverview extends BaseWidget
                         Forms\Components\DatePicker::make('fra'),
                         Forms\Components\DatePicker::make('til')->default(now()),
                     ])
-                    ->query(function (Builder $query, array $data): Builder {
+                    ->query(function (Builder $query, array $data): Builder
+                    {
                         return $query
                             ->when(
                                 $data['fra'],
