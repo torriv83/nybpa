@@ -16,7 +16,10 @@ stop:
 down:
 	sh vendor/bin/sail down
 
-deploy:
+set-permissions:
+	chmod +x merge-and-deploy.sh
+
+deploy: set-permissions
 	./merge-and-deploy.sh
 
 build:
