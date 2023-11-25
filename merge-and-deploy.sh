@@ -44,8 +44,8 @@ git checkout master
 git merge --no-edit Staging
 
 # Push Master to GitHub
-#echo "Pushing changes to GitHub..."
-#git push origin master
+echo "Pushing changes to GitHub..."
+git push origin master
 
 # Checkout back to the original branch
 echo "Switching back to $CURRENT_BRANCH..."
