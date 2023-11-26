@@ -10,6 +10,7 @@ use App\Models\Timesheet;
 use App\Models\User;
 use App\Traits\DateAndTimeHelper;
 use Carbon\Carbon;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -34,17 +35,15 @@ class TimesheetResource extends Resource
      * Innstillinger
      */
     protected static ?string $model = Timesheet::class;
-
     protected static ?string $navigationIcon = 'icon-schedule';
-
     protected static ?string $navigationGroup = 'Tider';
-
     protected static ?string $modelLabel = 'Timeliste';
-
     protected static ?string $pluralModelLabel = 'Timelister';
-
     protected static ?string $slug = 'timelister';
 
+    /**
+     * @throws Exception
+     */
     public static function table(Table $table): Table
     {
         return $table

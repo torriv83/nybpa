@@ -52,4 +52,3 @@ echo "Switching back to $CURRENT_BRANCH..."
 git checkout $CURRENT_BRANCH
 
 echo "Process completed successfully."
-echo "Remember to push to github."
