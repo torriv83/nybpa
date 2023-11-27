@@ -18,9 +18,11 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 class WishlistResource extends Resource
 {
@@ -90,7 +92,20 @@ class WishlistResource extends Resource
                 TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()->money('nok', true)),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options(WishlistResource::STATUS_OPTIONS)
-                    ->selectablePlaceholder(false),
+                    ->selectablePlaceholder(false)
+                    ->summarize(Summarizer::make()
+                        ->money('nok', true)
+                        ->label('left')
+                        ->label('Gjenstår')
+                        ->using(function (Builder $query): string
+                        {
+                            $total      = $query->sum('koster');
+                            $doneSaving = $query->where('status', '=', 'Spart')
+                                ->orWhere('status', '=', 'Kjøpt')
+                                ->sum('koster');
+
+                            return $total - $doneSaving;
+                        })),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
                 {
                     return $record->koster * $record->antall;
