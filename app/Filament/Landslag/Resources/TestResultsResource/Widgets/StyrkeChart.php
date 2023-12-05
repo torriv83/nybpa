@@ -2,6 +2,7 @@
 
 namespace App\Filament\Landslag\Resources\TestResultsResource\Widgets;
 
+use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Collection;
@@ -81,7 +82,7 @@ class StyrkeChart extends ChartWidget
     protected function formatChartData(array $resultater, array $dato): array
     {
         $finalResults = [];
-        $randColors   = TestResult::generateRandomColors(count($resultater));
+        $randColors   = TestResults::generateRandomColors(count($resultater));
 
         foreach ($resultater as $name => $res)
         {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Landslag\Resources\TestResultsResource\Widgets;
 
+use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Cache;
@@ -76,7 +77,7 @@ class RheitChart extends ChartWidget
     protected function formatChartData($resultater, $dato): array
     {
         $finalResults = [];
-        $colors       = TestResult::generateRandomColors(count(array_merge_recursive(...$resultater)));
+        $colors       = TestResults::generateRandomColors(count(array_merge_recursive(...$resultater)));
 
         foreach (array_merge_recursive(...$resultater) as $name => $res)
         {
