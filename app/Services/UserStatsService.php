@@ -130,11 +130,12 @@
          */
         public function getAverageHoursPerWeekDescription() : string
         {
+            $totalMinutesForYear = ($this->bpa * self::WEEKS_IN_YEAR) * self::MINUTES_IN_HOUR;
             $hoursUsedMinutes = $this->getHoursUsedInMinutes();
-            $weeksLeft        = Carbon::now()->floatDiffInWeeks(Carbon::now()->endOfYear());
-            $totalMinutes     = ($this->bpa * self::WEEKS_IN_YEAR) * self::MINUTES_IN_HOUR;
-            $hoursPerWeek     = self::HOURS_IN_DAY * self::DAYS_IN_WEEK;
-            $leftPerWeek      = (($totalMinutes - $hoursUsedMinutes) / self::MINUTES_IN_HOUR - ($hoursPerWeek * $weeksLeft)) / $weeksLeft;
+            $remainingMinutes = $totalMinutesForYear - $hoursUsedMinutes;
+            $weeksRemaining = Carbon::now()->floatDiffInWeeks(Carbon::now()->endOfYear());
+
+            $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / $weeksRemaining;
 
             return $this->calculateAvgPerWeek($leftPerWeek);
         }
@@ -156,11 +157,9 @@
          */
         private function calculateAvgPerWeek(float $leftPerWeek) : string
         {
-            $hours   = floor($leftPerWeek);
-            $minutes = floor(($leftPerWeek - $hours) * self::MINUTES_IN_HOUR);
-            $seconds = round((($leftPerWeek - $hours) * self::MINUTES_IN_HOUR - $minutes) * self::MINUTES_IN_HOUR);
-
-            return date('H:i', mktime($hours, $minutes, $seconds, 0, 0, 0));
+            $hours = (int) floor($leftPerWeek);
+            $minutes = (int) round(($leftPerWeek - $hours) * self::MINUTES_IN_HOUR);
+            return sprintf('%02d:%02d', $hours, $minutes);
         }
 
         /**
