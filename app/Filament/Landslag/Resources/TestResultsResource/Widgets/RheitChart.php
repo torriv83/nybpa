@@ -5,6 +5,8 @@ namespace App\Filament\Landslag\Resources\TestResultsResource\Widgets;
 use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class RheitChart extends ChartWidget
@@ -20,6 +22,11 @@ class RheitChart extends ChartWidget
         self::$options = $this->getChartOptions();
     }
 
+    /**
+     * Retrieves the data for the chart.
+     *
+     * @return array The formatted chart data.
+     */
     protected function getData(): array
     {
         return Cache::tags(['testresult'])->remember('rheitChart', now()->addMonth(), function ()
@@ -31,40 +38,59 @@ class RheitChart extends ChartWidget
                 return $this->getDefaultChartData();
             }
 
-            return $this->formatChartData(
-                $this->transformData($rheit->testResults)['resultater'],
-                $this->transformData($rheit->testResults)['dato']
-            );
+            $transformedData = $this->transformData($rheit->testResults);
+
+            return $this->prepareChartData($transformedData['resultater'], $transformedData['dato']);
         });
     }
 
+    /**
+     * Prepares the chart data for rendering.
+     *
+     * @param array $resultater The result data.
+     * @param array $dato The date data.
+     * @return array Returns an array of formatted chart data.
+     */
+    protected function prepareChartData(array $resultater, array $dato): array
+    {
+        return $this->formatChartData($resultater, $dato);
+    }
+
+    /**
+     * Retrieves the type of chart.
+     *
+     * @return string The type of chart.
+     */
     protected function getType(): string
     {
         return 'line';
     }
 
-    protected function fetchData()
+    /**
+     * Retrieves the data for the chart.
+     *
+     * @return Model|null The fetched data for the chart.
+     */
+    protected function fetchData(): ?Model
     {
         return Tests::with('testResults')->where('navn', '=', 'Rheit')->first();
     }
 
-    protected function transformData($results)
+    /**
+     * Transforms the given data into a specific format.
+     *
+     * @param Collection $results The input data to transform.
+     * @return array Returns an array with the transformed data.
+     */
+    protected function transformData(Collection $results): array
     {
         $resultater = [];
         $dato       = [];
-        $drop       = [];
 
-        foreach ($results as $v)
-        {
-            $dato[] = $v->dato->format('d.m.y H:i');
-
-            foreach ($v->resultat[0] as $name => $result)
-            {
-                $resultater[] = ['Runde: '.$name => $result];
-                $drop[]       = $result;
-            }
-
-            $finalDrop    = max($drop) - min($drop);
+        foreach ($results as $result) {
+            $dato[] = $result->dato->format('d.m.y H:i');
+            $this->transformResultat($resultater, $result->resultat[0]);
+            $finalDrop    = $this->calculateFinalDrop($result->resultat[0]);
             $resultater[] = ['Drop' => $finalDrop];
         }
 
@@ -74,6 +100,40 @@ class RheitChart extends ChartWidget
         ];
     }
 
+    /**
+     * Transforms the given result into a specific format and appends it to the input array.
+     *
+     * @param array &$resultater The array to which the transformed result should be appended.
+     * @param array $resultat The result to transform.
+     * @return array
+     */
+    protected function transformResultat(array &$resultater, array $resultat): array
+    {
+        foreach ($resultat as $name => $result) {
+            $resultater[] = ['Runde: ' . $name => $result];
+        }
+
+        return $resultater;
+    }
+
+    /**
+     * Calculates the final drop of an array of results.
+     *
+     * @param array $resultat The array of results.
+     * @return float Returns the final drop as a float.
+     */
+    protected function calculateFinalDrop(array $resultat): float
+    {
+        return max($resultat) - min($resultat);
+    }
+
+    /**
+     * Formats the chart data in a specific format.
+     *
+     * @param array $resultater The input data with results.
+     * @param array $dato The input data with dates.
+     * @return array Returns an array with the formatted chart data.
+     */
     protected function formatChartData($resultater, $dato): array
     {
         $finalResults = [];
@@ -100,6 +160,11 @@ class RheitChart extends ChartWidget
         ];
     }
 
+    /**
+     * Retrieves the default chart data.
+     *
+     * @return array Returns an array with the default chart data.
+     */
     protected function getDefaultChartData(): array
     {
         return [
@@ -113,6 +178,11 @@ class RheitChart extends ChartWidget
         ];
     }
 
+    /**
+     * Retrieves the options for the chart.
+     *
+     * @return array Returns an array with the chart options.
+     */
     private function getChartOptions(): array
     {
         return [
