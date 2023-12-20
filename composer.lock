@@ -8,18 +8,6 @@
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
-<<<<<<< HEAD
-            "version": "v2.2.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Althinect/filament-spatie-roles-permissions.git",
-                "reference": "8a134ee1ecfd61f0a543475d25c7e8c0099bb8c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/8a134ee1ecfd61f0a543475d25c7e8c0099bb8c3",
-                "reference": "8a134ee1ecfd61f0a543475d25c7e8c0099bb8c3",
-=======
             "version": "v2.2.9",
             "source": {
                 "type": "git",
@@ -30,7 +18,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/Althinect/filament-spatie-roles-permissions/zipball/963357fa5d4e7ed6bb9805b3f1372bc122b50a9e",
                 "reference": "963357fa5d4e7ed6bb9805b3f1372bc122b50a9e",
->>>>>>> devtest
                 "shasum": ""
             },
             "require": {
