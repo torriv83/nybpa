@@ -135,7 +135,13 @@
             $remainingMinutes = $totalMinutesForYear - $hoursUsedMinutes;
             $weeksRemaining = ceil(Carbon::now()->diffInDays(Carbon::now()->endOfYear()) / self::DAYS_IN_WEEK);
 
-            $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / $weeksRemaining;
+            if($weeksRemaining <= 1){
+                $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / 1;
+            }else{
+                $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / $weeksRemaining;
+            }
+
+
 
             return $this->calculateAvgPerWeek($leftPerWeek);
         }
