@@ -125,10 +125,10 @@ class UserResource extends Resource
                     ->datetime('d.m.Y H:i'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Opprettet')
-                    ->dateTime('d.m.Y H:i:s')->sortable(),
+                    ->dateTime('d. M Y, H:i')->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Sist oppdatert')
-                    ->dateTime('d.m.Y H:i:s')->sortable(),
+                    ->dateTime('d. M Y, H:i')->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
