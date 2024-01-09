@@ -27,12 +27,14 @@ it('calculates formatted time difference correctly', function () {
 });
 
 it('retrieves all disabled dates correctly', function () {
-    // Assuming you have a TimesheetFactory and UserFactory
+
+    $date = Carbon::now()->addWeek()->format('Y-m-d');
+
     Timesheet::factory()->create([
-        'fra_dato' => '2023-10-20',
+        'fra_dato' => $date,
         'user_id' => 1,
     ]);
 
     $disabledDates = DateTimeService::getAllDisabledDates(1, null);
-    expect($disabledDates)->toBe(['2023-10-20']);
+    expect($disabledDates)->toBe([$date]);
 });

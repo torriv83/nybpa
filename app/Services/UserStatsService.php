@@ -133,16 +133,16 @@
             $totalMinutesForYear = ($this->bpa * self::WEEKS_IN_YEAR) * self::MINUTES_IN_HOUR;
             $hoursUsedMinutes = $this->getHoursUsedInMinutes();
             $remainingMinutes = $totalMinutesForYear - $hoursUsedMinutes;
-            $weeksRemaining = ceil(Carbon::now()->diffInDays(Carbon::now()->endOfYear()) / self::DAYS_IN_WEEK);
 
-            if($weeksRemaining <= 1){
-                $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / 1;
-            }else{
-                $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / $weeksRemaining;
+            $daysInCurrentWeekRemaining = Carbon::now()->endOfWeek()->diffInDays();
+            $weeksRemaining = Carbon::now()->diffInDays(Carbon::now()->endOfYear()) / self::DAYS_IN_WEEK;
+
+            // in case we are at the last day of the week
+            if ($daysInCurrentWeekRemaining > 0) {
+                $weeksRemaining = $weeksRemaining - (1 - $daysInCurrentWeekRemaining / self::DAYS_IN_WEEK);
             }
 
-
-
+            $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / $weeksRemaining;
             return $this->calculateAvgPerWeek($leftPerWeek);
         }
 
