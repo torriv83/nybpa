@@ -5,12 +5,12 @@
     "src": "resources/css/app.css"
   },
   "resources/css/filament/landslag/theme.css": {
-    "file": "assets/theme-e94a22f8.css",
+    "file": "assets/theme-64717c01.css",
     "isEntry": true,
     "src": "resources/css/filament/landslag/theme.css"
   },
   "resources/js/app.js": {
-    "file": "assets/app-cfaa49ae.js",
+    "file": "assets/app-4f721a95.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

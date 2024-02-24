@@ -102,7 +102,7 @@ class CalendarWidget extends FullCalendarWidget
     /**
      * Triggered when dragging stops and the event has moved to a different day/time.
      */
-    public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta): bool
+    public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta, ?array $oldResource, ?array $newResource): bool
     {
         $this->eventUpdate($event);
 
