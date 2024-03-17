@@ -107,10 +107,10 @@ class TableRow extends Component
     /**
      * Retrieves the day data based on the given weekplan ID.
      *
-     * @param  int  $weekplanId  The ID of the weekplan.
-     * @return array The day data organized by day.
+     * @param int|null $weekplanId The ID of the weekplan.
+     * @return array|null The day data organized by day.
      */
-    public function getDayData(int $weekplanId): array
+    public function getDayData(int|null $weekplanId): array | null
     {
         // Fetch the related exercises from the WeekplanExercise model based on weekplan_id
         $weekplanExercises = WeekplanExercise::where('weekplan_id', $weekplanId)
@@ -161,11 +161,18 @@ class TableRow extends Component
      * @param  int  $weekplanId  The ID of the weekplan.
      * @return array The grouped exercises.
      */
-    private function groupExercisesByDay(int $weekplanId): array
+    private function groupExercisesByDay(int|null $weekplanId): array
     {
         $groupedExercises = [];
 
-        foreach (Weekplan::with('weekplanExercises')->find($weekplanId)->weekplanExercises as $weekplanExercise)
+        $weekplan = Weekplan::with('weekplanExercises')->find($weekplanId);
+
+        if ($weekplan === null) {
+            // handle the situation. you might decide to return from here.
+            return $groupedExercises;
+        }
+
+        foreach ($weekplan->weekplanExercises as $weekplanExercise)
         {
             $day = $weekplanExercise->day;
             if (!isset($groupedExercises[$day]))
