@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Support\Assets\Css;
 use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Gate::define('viewPulse', function (User $user) {
+            return $user->role('Admin');
+        });
+
         /* Filament Assets*/
         FilamentAsset::register([
             Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
