@@ -16,11 +16,11 @@ class ViewWeekplan extends Page
     protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
     public array    $exercises;
-    public Weekplan $weekplan;
+    public Weekplan | null $weekplan;
 
     public function getTitle(): string
     {
-        return $this->weekplan['name'];
+        return $this->weekplan['name'] ?? '';
     }
 
     public function getSubheading(): string
@@ -41,7 +41,7 @@ class ViewWeekplan extends Page
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('edit')->url('./'.$this->weekplan->id.'/edit')->label('Endre'),
+            Action::make('edit')->url('./'.$this->weekplan?->id.'/edit')->label('Endre'),
         ];
     }
 
