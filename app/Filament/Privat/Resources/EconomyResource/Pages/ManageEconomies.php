@@ -29,7 +29,7 @@ class ManageEconomies extends ManageRecords
                 ->form([
                     FileUpload::make('bankFile')
                         ->multiple(false)
-                        ->label('Bank CSV-fil')
+                        ->label('.CSV fil')
                         ->required()
                         ->disk('local')
                         ->directory('temporary'),
