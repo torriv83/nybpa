@@ -3,9 +3,13 @@
 namespace App\Filament\Privat\Resources\EconomyResource\Pages;
 
 use App\Filament\Privat\Resources\EconomyResource;
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageEconomies extends ManageRecords
 {
@@ -20,6 +24,29 @@ class ManageEconomies extends ManageRecords
     {
         return [
             CreateAction::make(),
+            Action::make('convertBankFile')
+                ->label('Konverter Bankfil')
+                ->form([
+                    FileUpload::make('bankFile')
+                        ->multiple(false)
+                        ->label('Bank CSV-fil')
+                        ->required()
+                        ->disk('local')
+                        ->directory('temporary'),
+                ])
+                ->action(function (array $data){
+
+                    // Tilgang til den opplastede filen
+                    $bankFile = $data['bankFile'];
+                    $fileName = 'ynab_format.csv';
+                    $pathToFile = Storage::path($bankFile);
+
+                    // Prosesser filen og generer YNAB-kompatibel fil
+                    return Excel::download(new YNABExport($pathToFile), $fileName, \Maatwebsite\Excel\Excel::CSV);
+                })->after(function ($data) {
+                    Storage::disk('local')->delete($data['bankFile']);
+                })
+                ->modalSubmitActionLabel('Konverter'),
         ];
     }
 
