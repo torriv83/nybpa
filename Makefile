@@ -38,7 +38,7 @@ install:
 update:
 	sh vendor/bin/sail composer update
 	bun update
-	git add composer.lock bun.lockb
+	git add -u
 	git commit -m "bun and composer update"
 
 clear-cache:
