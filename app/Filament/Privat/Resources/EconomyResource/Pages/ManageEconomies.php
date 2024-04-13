@@ -3,13 +3,18 @@
 namespace App\Filament\Privat\Resources\EconomyResource\Pages;
 
 use App\Filament\Privat\Resources\EconomyResource;
+use App\Filament\Privat\Resources\EconomyResource\Pages\Pipes\ReadFile;
+use App\Filament\Privat\Resources\EconomyResource\Pages\Pipes\TransformData;
+use App\Filament\Privat\Resources\EconomyResource\Pages\Pipes\TransformLines;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Resources\Pages\ManageRecords;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ManageEconomies extends ManageRecords
 {
@@ -26,6 +31,7 @@ class ManageEconomies extends ManageRecords
             CreateAction::make(),
             Action::make('convertBankFile')
                 ->label('Konverter Bankfil')
+                ->color('success')
                 ->form([
                     FileUpload::make('bankFile')
                         ->multiple(false)
@@ -35,19 +41,32 @@ class ManageEconomies extends ManageRecords
                         ->directory('temporary'),
                 ])
                 ->action(function (array $data){
-
-                    // Tilgang til den opplastede filen
-                    $bankFile = $data['bankFile'];
-                    $fileName = 'ynab_format.csv';
-                    $pathToFile = Storage::path($bankFile);
-
-                    // Prosesser filen og generer YNAB-kompatibel fil
-                    return Excel::download(new YNABExport($pathToFile), $fileName, \Maatwebsite\Excel\Excel::CSV);
+                    return $this->processBankFile($data);
                 })->after(function ($data) {
                     Storage::disk('local')->delete($data['bankFile']);
                 })
-                ->modalSubmitActionLabel('Konverter'),
+                ->modalSubmitActionLabel('Konverter og last ned'),
         ];
+    }
+
+    private function processBankFile(array $data): BinaryFileResponse
+    {
+        // Access the uploaded file
+        $bankFile = $data['bankFile'];
+        $fileName = 'ynab_format.csv';
+        $pathToFile = Storage::path($bankFile);
+
+        // Process the file through the pipeline
+        $processedContent = app(Pipeline::class)
+            ->send($pathToFile)
+            ->through([
+                TransformData::class,
+                TransformLines::class,
+            ])
+            ->thenReturn();
+
+        // Process the file and generate YNAB-compatible file
+        return Excel::download(new YNABExport($processedContent), $fileName, \Maatwebsite\Excel\Excel::CSV);
     }
 
     protected function getHeaderWidgets(): array
