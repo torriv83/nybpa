@@ -2,6 +2,7 @@
 
 namespace App\Filament\Privat\Resources\EconomyResource\Pages;
 
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -18,7 +19,7 @@ class YNABExport implements FromCollection, WithHeadings, WithMapping
         $this->transactions = $transactions;
     }
 
-    public function collection()
+    public function collection(): Collection
     {
         return collect($this->transactions);
     }

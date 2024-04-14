@@ -18,11 +18,11 @@ class TransformData
      * Handles a .CSV file containing transactions.
      *
      * @param string $pathToFile The path to the file containing transactions.
-     * @param \Closure $next The next middleware.
+     * @param Closure $next The next middleware.
      *
      * @return mixed The result of the next middleware.
      */
-    public function handle($pathToFile, Closure $next)
+    public function handle(string $pathToFile, Closure $next): mixed
     {
         $fileContents = $this->readFile($pathToFile);
         $lines = $this->parseFileContent($fileContents);
