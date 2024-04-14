@@ -20,7 +20,7 @@ class TransformLines
      *
      * @return mixed The result of the next Closure in the middleware stack.
      */
-    public function handle(array $transactions, Closure $next)
+    public function handle(array $transactions, Closure $next): mixed
     {
         $transformedTransactions = [];
 
