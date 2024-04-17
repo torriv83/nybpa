@@ -2,6 +2,7 @@
 
 namespace App\Filament\Privat\Widgets;
 
+use App\Filament\Privat\Resources\ResepterResource;
 use App\Filament\Privat\Resources\UtstyrResource;
 use App\Models\Resepter;
 use DB;
@@ -32,7 +33,8 @@ class ApotekStats extends BaseWidget
                 $reseptValidTo ? Carbon::parse($reseptValidTo)->diffForHumans([
                     'parts' => 2,
                     'join'  => ' og '
-                ]) : 'Ingen resepter'),
+                ]) : 'Ingen resepter')
+                ->description('Antall Resepter som er utgått: '. ResepterResource::getEloquentQuery()->where('validTo', '<', now())->count()),
         ];
     }
 }
