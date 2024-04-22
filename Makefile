@@ -23,7 +23,7 @@ deploy: set-permissions
 	./merge-and-deploy.sh
 
 build:
-	sh vendor/bin/sail bun run build
+	npm run build
 
 buildf:
 	sh vendor/bin/sail artisan filament:assets
@@ -33,13 +33,13 @@ test:
 
 install:
 	sh vendor/bin/sail composer install
-	sh vendor/bin/sail bun install
+	bun install
 
 update:
 	sh vendor/bin/sail composer update
-	bun update
+	sh vendor/bin/sail npm update
 	git add -u
-	git commit -m "bun and composer update"
+	git commit -m "npm and composer update"
 
 clear-cache:
 	sh vendor/bin/sail artisan cache:clear

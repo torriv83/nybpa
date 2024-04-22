@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class ResepterResource extends Resource
@@ -51,6 +52,22 @@ class ResepterResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('Navn på resept'),
                 Tables\Columns\TextColumn::make('validTo')->label('Gyldig til')->date('d.m.Y')->sortable(),
             ])
+            ->recordClasses(function (Model $record) {
+                return match (true) {
+                    $record->validTo < now() => 'border-x-2 border-x-red-600 dark:border-x-red-600',
+                    $record->validTo < now()->addMonth() => 'border-x-2 border-x-yellow-600 dark:border-x-yellow-600',
+                    default => 'border-x-2 border-x-green-600 dark:border-x-green-600',
+                };
+            })
+/*            ->recordClasses(function (Model $record){
+                if($record->validTo < now()){
+                    return 'border-s-2 border-red-600 dark:border-red-600';
+                }elseif($record->validTo > now()->addMonth()){
+                    return 'border-s-2 border-yellow-600 dark:border-yellow-600';
+                }else{
+                    return 'border-s-2 border-green-600 dark:border-green-600';
+                }
+            })*/
             ->filters([
                 //
             ])
