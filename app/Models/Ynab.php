@@ -30,7 +30,7 @@ class Ynab extends Model
         // Save to database
         foreach ($filteredData as $data)
         {
-            Ynab::updateOrCreate(['month' => $data['month']], $data);
+            Ynab::updateOrCreate(['month' => $data['month']], $data)->touch();
         }
     }
 
