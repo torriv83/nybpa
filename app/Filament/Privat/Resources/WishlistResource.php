@@ -93,7 +93,8 @@ class WishlistResource extends Resource
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options(WishlistResource::STATUS_OPTIONS)
                     ->selectablePlaceholder(false)
-                    ->summarize(Summarizer::make()
+                    ->summarize(
+                        Summarizer::make()
                         ->money('nok', true)
                         ->label('left')
                         ->label('Gjenstår')
@@ -105,7 +106,8 @@ class WishlistResource extends Resource
                                 ->sum('koster');
 
                             return $total - $doneSaving;
-                        })),
+                        })
+                    ),
                 TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
                 {
                     return $record->koster * $record->antall;
