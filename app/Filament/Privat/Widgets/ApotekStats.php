@@ -22,7 +22,7 @@ class ApotekStats extends BaseWidget
         $lastOrder = Carbon::parse(DB::table('filament_email_log')
             ->where('to', '=', 'svinesundparken@dittapotek.no')
             ->latest()
-            ->first()->created_at)->format('d. M. Y, H:i');
+            ->first()?->created_at)->format('d. M. Y, H:i');
 
         $reseptValidTo = Resepter::query()->orderBy('validTo')->first()?->validTo ?? null;
 
