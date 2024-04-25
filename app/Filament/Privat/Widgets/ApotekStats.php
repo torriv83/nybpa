@@ -24,7 +24,9 @@ class ApotekStats extends BaseWidget
             ->latest()
             ->first()?->created_at)->format('d. M. Y, H:i');
 
-        $reseptValidTo = Resepter::query()->orderBy('validTo')->first()?->validTo ?? null;
+        $reseptValidTo = Resepter::where('validTo', '>=', now()->toDateString())  // Sjekker at utløpsdatoen er i dag eller senere
+                            ->orderBy('validTo', 'asc')  // Sorterer etter utløpsdato i stigende rekkefølge
+                            ->first()?->validTo ?? null;  // Henter den første resepten i listen, som er den med nærmest utløpsdato
 
         return [
             Stat::make('Antall utstyr på lista', UtstyrResource::getEloquentQuery()->where('deleted_at', null)->count()),
