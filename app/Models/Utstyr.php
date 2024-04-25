@@ -25,18 +25,8 @@ class Utstyr extends Model
         'link',
     ];
 
-    protected static function boot()
-    {
-
-        parent::boot();
-        // static::addGlobalScope('unavailable', function (Builder $builder) {
-
-        //     $builder->where('unavailable', '=', 0);
-        // });
-    }
-
     public function kategori(): BelongsTo
     {
-        return $this->belongsTo(Kategori::class, 'kategoriID');
+        return $this->belongsTo(Kategori::class, 'kategori_id');
     }
 }

@@ -51,7 +51,6 @@ class SendWorkReminderEmail extends Command
             foreach ($reminderTimes as $label => $reminderTime) {
                 // Check if the current time is within a 1-minute window of the reminder time
                 if (now()->gte($reminderTime) && now()->lt($reminderTime->addMinutes(1))) {
-                    $this->info("Sending email ($label)");
                     $details = [
                         'date'      => Carbon::parse($timesheet->fra_dato)->format('d.m.Y'),
                         'time'      => Carbon::parse($timesheet->fra_dato)->format('H:i'),

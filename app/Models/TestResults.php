@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,14 +9,13 @@ use Illuminate\Notifications\Notifiable;
 
 class TestResults extends Model
 {
-    use HasFactory;
     use Notifiable;
     use SoftDeletes;
 
     protected $fillable = [
         'dato',
         'resultat',
-        'testsID',
+        'tests_id',
     ];
 
     protected $casts = [
@@ -27,7 +25,7 @@ class TestResults extends Model
 
     public function tests(): BelongsTo
     {
-        return $this->belongsTo(Tests::class, 'testsID');
+        return $this->belongsTo(Tests::class, 'tests_id');
     }
 
     public static function generateRandomColors(int $count): array

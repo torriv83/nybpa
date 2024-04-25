@@ -64,7 +64,7 @@ class VektChart extends ChartWidget
 
     protected function getTestResults(Tests $test): Collection
     {
-        return TestResults::where('testsID', '=', $test->id)
+        return TestResults::where('tests_id', '=', $test->id)
             ->orderBy('dato')
             ->get();
     }

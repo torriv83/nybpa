@@ -5,8 +5,8 @@ namespace App\Filament\Privat\Resources\UtstyrResource\Pages;
 use App\Filament\Privat\Resources\UtstyrResource;
 use App\Models\Kategori;
 use Filament\Actions;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Pages\ListRecords\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 class ListUtstyrs extends ListRecords
@@ -29,7 +29,7 @@ class ListUtstyrs extends ListRecords
         ];
 
         foreach ($categories as $category) {
-            $tabs[$category->kategori] = Tab::make()->modifyQueryUsing(fn(Builder $query) => $query->where('kategoriID', $category->id));
+            $tabs[$category->kategori] = Tab::make()->modifyQueryUsing(fn(Builder $query) => $query->where('kategori_id', $category->id));
         }
 
         return $tabs;

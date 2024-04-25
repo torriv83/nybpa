@@ -32,7 +32,7 @@ class CreateTestResults extends CreateRecord
                 ->label('Hvilken test?')
                 ->description('Velg hvilken test du skal loggføre')
                 ->schema([
-                    Select::make('testsID')
+                    Select::make('tests_id')
                         ->options(function ()
                         {
                             return tests::all()->pluck('navn', 'id');
@@ -47,9 +47,9 @@ class CreateTestResults extends CreateRecord
                         ->schema(function (Get $get): array
                         {
                             $schema = [];
-                            if ($get('testsID'))
+                            if ($get('tests_id'))
                             {
-                                $data = tests::where('id', '=', $get('testsID'))->get();
+                                $data = tests::where('id', '=', $get('tests_id'))->get();
                                 foreach ($data[0]['ovelser'] as $o)
                                 {
                                     if ($o['type'] == 'tid' || $o['type'] == 'kg')
@@ -68,7 +68,7 @@ class CreateTestResults extends CreateRecord
 
                             return $schema;
                         }),
-                    Hidden::make('testsID'),
+                    Hidden::make('tests_id'),
                 ]),
         ];
     }

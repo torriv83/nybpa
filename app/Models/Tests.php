@@ -29,6 +29,6 @@ class Tests extends Model
 
     public function testResults(): HasMany
     {
-        return $this->hasMany(TestResults::class, 'testsID');
+        return $this->hasMany(TestResults::class, 'tests_id');
     }
 }
