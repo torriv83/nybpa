@@ -89,7 +89,11 @@ class WishlistResource extends Resource
                 TextColumn::make('hva')->sortable(),
                 TextColumn::make('url')->formatStateUsing(fn() => 'Se her')
                     ->url(fn($record) => $record->url, true),
-                TextColumn::make('koster')->money('nok', true)->sortable()->summarize(Sum::make()->money('nok', true)),
+                TextColumn::make('koster')
+                    ->money('nok', true)
+                    ->sortable()
+                    ->summarize(Sum::make()
+                        ->money('NOK', divideBy: true)),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options(WishlistResource::STATUS_OPTIONS)
                     ->selectablePlaceholder(false)
@@ -108,10 +112,12 @@ class WishlistResource extends Resource
                             return $total - $doneSaving;
                         })
                     ),
-                TextColumn::make('totalt')->money('nok', true)->getStateUsing(function (Model $record)
-                {
-                    return $record->koster * $record->antall;
-                }),
+                TextColumn::make('totalt')
+                    ->money('nok', true)
+                    ->getStateUsing(function (Model $record)
+                    {
+                        return $record->koster * $record->antall;
+                    }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

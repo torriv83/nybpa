@@ -60,7 +60,7 @@ class WishlistItemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('koster')
                     ->money('nok', true)
                     ->sortable()
-                    ->summarize(Sum::make()),
+                    ->summarize(Sum::make()->money('nok', true)),
                 Tables\Columns\TextColumn::make('antall'),
 
                 SelectColumn::make('status')
@@ -69,18 +69,11 @@ class WishlistItemsRelationManager extends RelationManager
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
                         ->money('nok', true)
-                        ->label('left')
                         ->label('Gjenstår')
-                        ->using(function (Builder $query): string
-                        {
-                            $total      = $query->sum('koster');
-                            $doneSaving = $query->where('status', '=', 'Spart')
-                                ->orWhere('status', '=', 'Kjøpt')
-                                ->sum('koster');
-
-                            return $total - $doneSaving;
+                        ->using(function (Builder $query): string {
+                           return $query->whereNotIn('status', ['Spart', 'Kjøpt'])
+                               ->sum('koster');
                         })),
-
                 Tables\Columns\TextColumn::make('totalt')
                     ->money('nok', true)
                     ->getStateUsing(function (Model $record)
