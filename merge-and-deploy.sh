@@ -11,7 +11,7 @@ fi
 
 # Step 1: Run tests with PestPHP
 echo "Running tests..."
-sh vendor/bin/sail pest --parallel
+php artisan test --parallel
 
 # Check if tests passed
 if [ $? -ne 0 ]; then
@@ -19,14 +19,14 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# # Step 2: Merge current branch into Staging
+# Step 2: Merge current branch into Staging
 echo "Merging $CURRENT_BRANCH into Staging..."
 git checkout Staging
 git merge --no-edit $CURRENT_BRANCH
 
 # Step 3: Run npm build
-echo "Running bun build..."
-sh vendor/bin/sail npm run build
+echo "Running npm build..."
+npm run build
 
 if [ $? -ne 0 ]; then
   echo "Build failed. Aborting."
@@ -38,7 +38,7 @@ echo "Committing changes to Staging..."
 git add -A
 git commit -m "Build and tests passed."
 
-# # Step 5: Merge Staging into Master
+# Step 5: Merge Staging into Master
 echo "Merging Staging into Master..."
 git checkout master
 git merge --no-edit Staging

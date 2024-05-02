@@ -62,15 +62,31 @@ class BrukteTimerChart extends ChartWidget
     public function yearTimes($times): array
     {
 
-        $yearTimes = [];
+        $yearTimes = [
+            'januar' => '00.00',
+            'februar' => '00.00',
+            'mars' => '00.00',
+            'april' => '00.00',
+            'mai' => '00.00',
+            'juni' => '00.00',
+            'juli' => '00.00',
+            'august' => '00.00',
+            'september' => '00.00',
+            'oktober' => '00.00',
+            'november' => '00.00',
+            'desember' => '00.00',
+        ];
 
         foreach ($times as $key => $value) {
-
-            $yearTimes[$key] = sprintf('%02d', intdiv($value->sum('totalt'), 60)) . '.' . (sprintf('%02d', $value->sum('totalt') % 60));
-
+            if (array_key_exists($key, $yearTimes)) {
+                $totalMinutes = $value->sum('totalt');
+                $hours = intdiv($totalMinutes, 60);
+                $minutes = $totalMinutes % 60;
+                $yearTimes[$key] = sprintf('%02d', $hours) . '.' . sprintf('%02d', $minutes);
+            }
         }
 
         return $yearTimes;
-
+        
     }
 }

@@ -82,7 +82,7 @@ return [
     * When using Homestead with the VirtualBox provider, you can replace localhost with '10.0.2.2'
     * When using Homestead with the Parallels provider, you can replace localhost with '10.211.55.2'
     */
-    'host' => env('RAY_HOST', 'host.docker.internal'),
+    'host' => env('RAY_HOST', 'localhost'),
 
     /*
     * The port number used to communicate with the Ray app.
@@ -93,13 +93,13 @@ return [
      * Absolute base path for your sites or projects in Homestead,
      * Vagrant, Docker, or another remote development server.
      */
-    'remote_path' => env('RAY_REMOTE_PATH', '/var/www/html'),
+    'remote_path' => env('RAY_REMOTE_PATH', null),
 
     /*
      * Absolute base path for your sites or projects on your local
      * computer where your IDE or code editor is running on.
      */
-    'local_path' => env('RAY_LOCAL_PATH', '/home/torriv/websites/LaravelSites/example-app'),
+    'local_path' => env('RAY_LOCAL_PATH', null),
 
     /*
      * When this setting is enabled, the package will not try to format values sent to Ray.
