@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "watch": "vite build --watch"
+    "watch": "vite build --watch",
+    "update": "npm update && composer update"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
