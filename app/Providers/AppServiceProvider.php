@@ -19,6 +19,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /* BACKUP */
+        Gate::define('download-backup', function (User $user) {
+            return $user->role('Admin');
+        });
+        
+        Gate::define('delete-backup', function (User $user) {
+            return $user->role('Admin');
+        });
+
+        /* PULSE */
         Gate::define('viewPulse', function (User $user) {
             return $user->role('Admin');
         });
