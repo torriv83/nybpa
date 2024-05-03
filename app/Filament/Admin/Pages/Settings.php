@@ -104,7 +104,7 @@ class Settings extends Page implements HasForms
             Action::make('Lagre')->action('submit'),
             Action::make('Cache')->action('clearCache')
                 ->label('Tøm Cache')
-                ->color('gray'),
+            ->color('danger'),
         ];
     }
 

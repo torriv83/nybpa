@@ -22,6 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use RickDBCN\FilamentEmail\FilamentEmail;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
+use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -55,7 +56,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'Tider',
-                'Medisinsk',
                 'Diverse',
                 'Authentication',
             ])
@@ -85,6 +85,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->plugin(new FilamentEmail())
+            ->plugin(FilamentSpatieLaravelBackupPlugin::make()
+                ->usingPolingInterval('60s'))
             ->plugin(
                 FilamentFullCalendarPlugin::make()
                     ->selectable()
