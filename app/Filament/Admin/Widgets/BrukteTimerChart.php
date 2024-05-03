@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Models\Timesheet;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Cache;
 
@@ -62,20 +63,16 @@ class BrukteTimerChart extends ChartWidget
     public function yearTimes($times): array
     {
 
-        $yearTimes = [
-            'januar' => '00.00',
-            'februar' => '00.00',
-            'mars' => '00.00',
-            'april' => '00.00',
-            'mai' => '00.00',
-            'juni' => '00.00',
-            'juli' => '00.00',
-            'august' => '00.00',
-            'september' => '00.00',
-            'oktober' => '00.00',
-            'november' => '00.00',
-            'desember' => '00.00',
-        ];
+        // Create a period covering all months of the current year
+        $period = CarbonPeriod::create('first day of January this year', '1 month', 'last day of December this year');
+
+        $yearTimes = [];
+        foreach ($period as $dt) {
+
+            $monthName = $dt->isoFormat('MMMM');
+
+            $yearTimes[$monthName] = '00.00';
+        }
 
         foreach ($times as $key => $value) {
             if (array_key_exists($key, $yearTimes)) {
@@ -87,6 +84,6 @@ class BrukteTimerChart extends ChartWidget
         }
 
         return $yearTimes;
-        
+
     }
 }
