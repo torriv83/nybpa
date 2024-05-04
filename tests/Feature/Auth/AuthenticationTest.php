@@ -10,17 +10,16 @@ it('can render page login page', function () {
     $this->get('/admin/login')->assertSuccessful();
 });
 
-
 test('users can authenticate using the login screen', function () {
     auth()->logout();
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
 
-    livewire::test('Filament\Pages\Auth\Login')
-        ->set('email', $user->email)
-        ->set('password', 'password')
-        ->call('authenticate')
+    Livewire::test('Filament\Pages\Auth\Login')
+        ->set('data.email', $user->email) // Update to set the email field in the form
+        ->set('data.password', 'password') // Set the password field
+        ->call('authenticate') // Call the authenticate method
         ->assertSuccessful();
 });
 

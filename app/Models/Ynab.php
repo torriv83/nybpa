@@ -18,7 +18,7 @@ class Ynab extends Model
 
     public static function fetchData()
     {
-        $ynab     = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
+        $ynab     = 'https://api.ynab.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
         $token    = config('app.ynab');
         $products = Http::withToken($token)->get($ynab.'months')->json();
 

@@ -46,13 +46,19 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->activeIcon('heroicon-s-presentation-chart-line')
                     ->group('Eksterne Linker')
-                    ->sort(7),
+                    ->sort(6),
                 NavigationItem::make('Pulse')
                     ->url('/pulse', shouldOpenInNewTab: true)
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->activeIcon('heroicon-s-presentation-chart-line')
                     ->group('Eksterne Linker')
                     ->sort(7),
+                NavigationItem::make('Telescope')
+                    ->url('/telescope', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->activeIcon('heroicon-s-presentation-chart-line')
+                    ->group('Eksterne Linker')
+                    ->sort(8),
             ])
             ->navigationGroups([
                 'Tider',
