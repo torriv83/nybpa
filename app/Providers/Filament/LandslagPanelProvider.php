@@ -11,6 +11,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Hugomyb\FilamentErrorMailer\FilamentErrorMailerPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -36,6 +37,7 @@ class LandslagPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
+            ->plugin(FilamentErrorMailerPlugin::make())
             ->discoverWidgets(in: app_path('Filament/Landslag/Widgets'), for: 'App\\Filament\\Landslag\\Widgets')
             ->widgets([
                 TestResultsResource\Widgets\VektChart::class,

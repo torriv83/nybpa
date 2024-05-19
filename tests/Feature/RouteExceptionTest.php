@@ -31,11 +31,12 @@ $urls = [
     '/admin/users',
     '/admin/roles',
     '/admin/permissions',
+    '/admin/emails',
     // Add other URLs to test here
 ];
 
 foreach ($urls as $url) {
-    it("loads successfully for URL: {$url}", function () use ($url) {
+    test("loads successfully for URL: {$url}", function () use ($url) {
         $response = $this->get($url);
 
         // Assert that the response was successful

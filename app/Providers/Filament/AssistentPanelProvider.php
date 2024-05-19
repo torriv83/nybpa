@@ -12,6 +12,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
+use Hugomyb\FilamentErrorMailer\FilamentErrorMailerPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -33,6 +34,7 @@ class AssistentPanelProvider extends PanelProvider
             ->login()
             ->profile(EditProfile::class)
             ->passwordReset()
+            ->plugin(FilamentErrorMailerPlugin::make())
             ->navigationItems([
                 NavigationItem::make('Til Uloba siden')
                     ->url('https://uloba.no', shouldOpenInNewTab: true)
