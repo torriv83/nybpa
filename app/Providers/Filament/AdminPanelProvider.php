@@ -13,6 +13,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Hugomyb\FilamentErrorMailer\FilamentErrorMailerPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -89,6 +90,7 @@ class AdminPanelProvider extends PanelProvider
 //                AccountWidget::class,
 //                FilamentInfoWidget::class,
             ])
+            ->plugin(FilamentErrorMailerPlugin::make())
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->plugin(new FilamentEmail())
             ->plugin(FilamentSpatieLaravelBackupPlugin::make()

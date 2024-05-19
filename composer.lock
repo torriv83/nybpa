@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7de1f1d1845964412f4f1da4594d56a3",
+    "content-hash": "ade81968e9a1539a8dc282327ca19003",
     "packages": [
         {
             "name": "althinect/filament-spatie-roles-permissions",
@@ -2671,6 +2671,79 @@
                 "source": "https://github.com/hosmelq/laravel-pulse-schedule/tree/v0.2.2"
             },
             "time": "2024-02-17T14:58:20+00:00"
+        },
+        {
+            "name": "hugomyb/filament-error-mailer",
+            "version": "v3.1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hugomayo7/filament-error-mailer.git",
+                "reference": "4ac13b0c3153d26fded5f8f5d277b2eab3a6f7c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hugomayo7/filament-error-mailer/zipball/4ac13b0c3153d26fded5f8f5d277b2eab3a6f7c1",
+                "reference": "4ac13b0c3153d26fded5f8f5d277b2eab3a6f7c1",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^7.9",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.1",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Hugomyb\\FilamentErrorMailer\\FilamentErrorMailerServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentErrorMailer": "Hugomyb\\FilamentErrorMailer\\Facades\\FilamentErrorMailer"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hugomyb\\FilamentErrorMailer\\": "src/",
+                    "Hugomyb\\FilamentErrorMailer\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mayonobe Hugo",
+                    "email": "hugomayonobe@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Filament plugin for instant e-mail alerts on web errors, simplifying monitoring and application stability.",
+            "homepage": "https://github.com/hugomyb/filament-error-mailer",
+            "keywords": [
+                "filament-error-mailer",
+                "hugomyb",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/hugomyb/filament-error-mailer/issues",
+                "source": "https://github.com/hugomyb/filament-error-mailer"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/hugomyb",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-25T11:18:04+00:00"
         },
         {
             "name": "jean85/pretty-package-versions",

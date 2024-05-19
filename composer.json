@@ -17,6 +17,7 @@
     "filament/filament": "^v3.0.22",
     "guzzlehttp/guzzle": "^7.2",
     "hosmelq/laravel-pulse-schedule": "^0.2.2",
+    "hugomyb/filament-error-mailer": "^3.1",
     "laravel/framework": "^11.0",
     "laravel/pulse": "^1.0@beta",
     "laravel/sanctum": "^4.0",
