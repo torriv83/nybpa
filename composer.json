@@ -10,7 +10,7 @@
   "require": {
     "php": "^8.2",
     "althinect/filament-spatie-roles-permissions": "^2.0",
-    "bezhansalleh/filament-panel-switch": "^1.0.0",
+    "bezhansalleh/filament-panel-switch": "1.0.6",
     "calebporzio/sushi": "^2.4",
     "denniseilander/pulse-about-application": "^0.2.0",
     "doctrine/dbal": "^3.0",
