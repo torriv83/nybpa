@@ -41,9 +41,9 @@ class AppServiceProvider extends ServiceProvider
         /* PanelSwitcher */
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-                ->simple()
+                //->simple()
                 ->visible(fn(): bool => auth()->user()?->hasRole('Admin'))
-                ->renderHook('panels::user-menu.before');
+                ->renderHook('panels::user-menu.after');
         });
 
         /* Global Settings*/
