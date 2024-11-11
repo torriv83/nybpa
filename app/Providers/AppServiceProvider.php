@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('download-backup', function (User $user) {
             return $user->role('Admin');
         });
-        
+
         Gate::define('delete-backup', function (User $user) {
             return $user->role('Admin');
         });
