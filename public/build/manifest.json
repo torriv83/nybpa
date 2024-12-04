@@ -5,17 +5,17 @@
     "src": "resources/css/app.css"
   },
   "resources/css/filament/landslag/theme.css": {
-    "file": "assets/theme-72e23904.css",
+    "file": "assets/theme-42df106d.css",
     "isEntry": true,
     "src": "resources/css/filament/landslag/theme.css"
   },
   "resources/css/filament/privat/theme.css": {
-    "file": "assets/theme-5fd5369b.css",
+    "file": "assets/theme-3b17fbec.css",
     "isEntry": true,
     "src": "resources/css/filament/privat/theme.css"
   },
   "resources/js/app.js": {
-    "file": "assets/app-662c600f.js",
+    "file": "assets/app-a599eb9b.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

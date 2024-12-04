@@ -31,7 +31,7 @@ class TimesheetReminderEmail extends Mailable
     {
         return new Envelope(
             from   : new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
-            subject: 'Tid for å sende inn timeliste',
+            subject: 'Oversikt over timer jobbet',
         );
     }
 
