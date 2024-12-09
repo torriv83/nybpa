@@ -43,6 +43,7 @@ return [
 
     'mailers' => [
         'smtp' => [
+            'scheme' => 'smtp', //lagt til for å fikse en feil i versjon 7.2 i Symfony mailer
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'localhost'),
             'port' => env('MAIL_PORT', 1025),
