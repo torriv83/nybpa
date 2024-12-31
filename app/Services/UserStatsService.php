@@ -134,15 +134,15 @@
             $hoursUsedMinutes = $this->getHoursUsedInMinutes();
             $remainingMinutes = $totalMinutesForYear - $hoursUsedMinutes;
 
-            $daysInCurrentWeekRemaining = Carbon::now()->endOfWeek()->diffInDays();
-            $weeksRemaining = Carbon::now()->diffInDays(Carbon::now()->endOfYear()) / self::DAYS_IN_WEEK;
+            // Antall dager igjen i året
+            $daysRemainingInYear = Carbon::now()->diffInDays(Carbon::now()->endOfYear()) + 1;
 
-            // in case we are at the last day of the week
-            if ($daysInCurrentWeekRemaining > 0) {
-                $weeksRemaining = $weeksRemaining - (1 - $daysInCurrentWeekRemaining / self::DAYS_IN_WEEK);
-            }
+            // Beregn resterende uker (minimum 1 uke hvis på slutten av året)
+            $weeksRemaining = max(1, $daysRemainingInYear / self::DAYS_IN_WEEK);
 
+            // Beregn gjennomsnittlige timer per uke
             $leftPerWeek = ($remainingMinutes / self::MINUTES_IN_HOUR) / $weeksRemaining;
+
             return $this->calculateAvgPerWeek($leftPerWeek);
         }
 
