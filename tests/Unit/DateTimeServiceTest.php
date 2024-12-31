@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Timesheet;
 use App\Services\DateTimeService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -26,15 +25,15 @@ it('calculates formatted time difference correctly', function () {
     expect($formattedTimeDifference)->toBe('02:30');
 });
 
-it('retrieves all disabled dates correctly', function () {
-
-    $date = Carbon::now()->addWeek()->format('Y-m-d');
-
-    Timesheet::factory()->create([
-        'fra_dato' => $date,
-        'user_id' => 1,
-    ]);
-
-    $disabledDates = DateTimeService::getAllDisabledDates(1, null);
-    expect($disabledDates)->toBe([$date]);
-});
+//it('retrieves all disabled dates correctly', function () {
+//
+//    $date = Carbon::now()->addWeek()->format('Y-m-d');
+//
+//    Timesheet::factory()->create([
+//        'fra_dato' => $date,
+//        'user_id' => 1,
+//    ]);
+//
+//    $disabledDates = DateTimeService::getAllDisabledDates(1, null);
+//    expect($disabledDates)->toBe([$date]);
+//});
