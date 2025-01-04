@@ -34,6 +34,7 @@ class BrukteTimerChart extends ChartWidget
         $lastYear = Cache::tags(['timesheet'])->remember('lastYear', now()->addMonth(), function () {
             return Timesheet::lastYear('fra_dato')
                 ->orderByRaw('fra_dato ASC')
+                ->where('unavailable', '=', 0)
                 ->get()
                 ->groupBy(fn($val): string => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });

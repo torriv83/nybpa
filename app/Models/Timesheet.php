@@ -91,6 +91,7 @@ class Timesheet extends Model
         return Cache::tags(['timesheet'])->remember('timeUsedLastYear', now()->addMonth(), function () {
 
             return $this->lastYear('fra_dato')
+                ->where('unavailable', '=', 0)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
                 ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
