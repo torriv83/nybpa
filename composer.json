@@ -21,7 +21,6 @@
     "laravel/framework": "^11.0",
     "laravel/pulse": "^1.0@beta",
     "laravel/sanctum": "^4.0",
-    "laravel/telescope": "^5.0",
     "laravel/tinker": "^2.7",
     "livewire/livewire": "^3.0.0",
     "maatwebsite/excel": "^3.1",
