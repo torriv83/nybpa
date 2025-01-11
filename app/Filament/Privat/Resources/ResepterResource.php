@@ -40,8 +40,8 @@ class ResepterResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->label('Navn på resept')->autofocus(),
-                Forms\Components\DatePicker::make('validTo')->label('Gyldig til'),
+                Forms\Components\TextInput::make('name')->label('Navn på resept')->autofocus()->required(),
+                Forms\Components\DatePicker::make('validTo')->label('Gyldig til')->native(false)->required(),
             ]);
     }
 
