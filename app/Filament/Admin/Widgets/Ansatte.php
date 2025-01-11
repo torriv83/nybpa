@@ -49,7 +49,7 @@ class Ansatte extends BaseWidget
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon')
                     ->default('12345678'),
-                Tables\Columns\TextColumn::make('Jobbet i år')
+                Tables\Columns\TextColumn::make('jobbetiaar')
                     ->getStateUsing(function (Model $record)
                     {
                         $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record)
@@ -75,6 +75,7 @@ class Ansatte extends BaseWidget
                     ->label('Jobbet i år')
                     ->default('0'),
             ])
+            ->defaultSort('jobbetiaar', 'desc')
             ->paginated([3, 4, 8, 12, 24, 36])
             ->recordUrl(
                 fn(Model $record): string => UserResource::getUrl(),
