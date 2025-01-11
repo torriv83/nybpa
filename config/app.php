@@ -198,7 +198,6 @@ return [
         App\Providers\Filament\LandslagPanelProvider::class,
         App\Providers\Filament\PrivatPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\TelescopeServiceProvider::class,
 
     ],
 
