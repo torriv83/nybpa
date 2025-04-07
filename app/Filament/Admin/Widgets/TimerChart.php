@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Widgets;
 use App\Models\Settings;
 use App\Models\Timesheet;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\Pipeline;
 
@@ -92,21 +93,34 @@ class TimerChart extends ChartWidget
 
     public function usedTime($times, bool $prosent = false): array
     {
-        $sum   = 0;
+        // Opprett en periode som inkluderer alle måneder av inneværende år
+        $period = CarbonPeriod::create('first day of January this year', '1 month', 'last day of December this year');
+
+        $sum = 0; // Holder styr på totalen over tid
         $tider = [];
+
+        // Initialiser alle månedene med standardverdien 0
+        foreach ($period as $dt) {
+            $monthName = $dt->isoFormat('MMMM'); // Inkluder månedsnavn
+            $tider[$monthName] = 0; // Standard verdi for måneder uten data
+        }
+
+        // Behandle dataene fra $times og akkumuler summen
         foreach ($times as $key => $value) {
-            $number = count($value);
+            if (array_key_exists($key, $tider)) {
+                $number = count($value);
 
-            for ($i = 0; $i < $number; $i++) {
-                $sum += $value[$i]->totalt;
+                for ($i = 0; $i < $number; $i++) {
+                    $sum += $value[$i]->totalt; // Akkumulerer totalen
+                }
+
+                // Beregn prosenten eller setter verdien.
+                if ($prosent) {
+                    $tider[$key] = 100 - round($sum / (($this->bpa * 52) * 60) * 100, 1);
+                } else {
+                    $tider[$key] = round($sum / (($this->bpa * 52) * 60) * 100, 1);
+                }
             }
-
-            if ($prosent == 1) {
-                $tider[$key] = 100 - round($sum / (($this->bpa * 52) * 60) * 100, 1);
-            } else {
-                $tider[$key] = round($sum / (($this->bpa * 52) * 60) * 100, 1);
-            }
-
         }
 
         return $tider;
