@@ -1,5 +1,2 @@
 integrations:
-  forge:
-    bpa.tor.priv.no:
-      site-id: 2069512
-      server-id: 708955
+  forge: {}
