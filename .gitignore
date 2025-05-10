@@ -70,3 +70,4 @@ Homestead.json
 /Writerside/in.tree
 /Writerside/v.list
 /Writerside/writerside.cfg
+/.phpunit.cache/
