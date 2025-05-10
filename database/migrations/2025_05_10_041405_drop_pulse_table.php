@@ -20,6 +20,8 @@ return new class extends Migration {
         Schema::dropIfExists('pulse_slow_queries');
         Schema::dropIfExists('pulse_tables');
         Schema::dropIfExists('pulse_users');
+        Schema::dropIfExists('pulse_values');
+        Schema::dropIfExists('pulse_aggregates');
     }
 
     public function down(): void
