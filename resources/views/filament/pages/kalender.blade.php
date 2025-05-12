@@ -1,3 +1,3 @@
 <x-filament::page>
-hmms
+hmm
 </x-filament::page>
