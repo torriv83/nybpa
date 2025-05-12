@@ -71,3 +71,4 @@ Homestead.json
 /Writerside/v.list
 /Writerside/writerside.cfg
 /.phpunit.cache/
+/.nvmrc
