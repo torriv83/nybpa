@@ -144,8 +144,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth('full')
             //->sidebarFullyCollapsibleOnDesktop()
-            ->topNavigation()
-            ->databaseNotifications();
+            ->topNavigation();
+            //->databaseNotifications();
             //->spa();
     }
 }
