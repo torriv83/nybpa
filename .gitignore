@@ -72,3 +72,4 @@ Homestead.json
 /Writerside/writerside.cfg
 /.phpunit.cache/
 /.nvmrc
+"laradumps.yaml" 
