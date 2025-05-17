@@ -4,22 +4,23 @@ name: ci-cd
 
 steps:
   - name: prepare-environment
-    image: laravelsail/php83-composer
+    image: node:20-bullseye
     commands:
-      - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-      - apt-get install -y nodejs libpng-dev libicu-dev
-      - docker-php-ext-install intl gd
+      - apt-get update && apt-get install -y php-cli unzip git libzip-dev libpng-dev libonig-dev libxml2-dev zip curl
+      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
       - composer install --prefer-dist --no-interaction
       - npm ci
 
   - name: pint
     image: laravelsail/php83-composer
     commands:
+      - composer install --no-interaction
       - ./vendor/bin/pint --test
 
   - name: phpstan
     image: laravelsail/php83-composer
     commands:
+      - composer install --no-interaction
       - ./vendor/bin/phpstan analyse
 
   - name: pest-tests
@@ -29,13 +30,12 @@ steps:
       APP_KEY:
         from_secret: APP_KEY
     commands:
+      - composer install --no-interaction
       - php artisan test --parallel
 
   - name: build-assets
-    image: laravelsail/php83-composer
+    image: node:20
     commands:
-      - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-      - apt-get install -y nodejs
       - npm ci
       - npm run build
 
