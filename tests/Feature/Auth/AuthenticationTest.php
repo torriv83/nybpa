@@ -16,7 +16,6 @@ it('can render page login page', function () {
         ->assertSuccessful();
 })->group('feature');
 
-
 // ✅ Test 3
 test('users can not authenticate with invalid password', function () {
     auth()->logout();
