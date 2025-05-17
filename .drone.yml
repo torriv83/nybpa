@@ -11,6 +11,10 @@ steps:
       - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install pdo_mysql zip intl gd  # Installere PHP-utvidelser
       - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer  # Installerer Composer
+      # Installer Node.js og npm
+      - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -  # Installerer Node.js
+      - apt-get install -y nodejs  # Installerer npm
+      - npm --version  # Bekrefter at npm er installert
       - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts  # Installerer Composer-avhengigheter
       - npm ci  # Installerer npm-avhengigheter
 
