@@ -1,86 +1,86 @@
 kind: pipeline
 name: ci-cd
 type: docker
-
+#
 steps:
-  - name: prepare-environment
-    image: laravelsail/php83-composer
-    volumes:
-      - name: cache
-        path: /drone/cache
-    commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install intl gd
-      - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-      - apt-get install -y nodejs
-      - |
-        if [ -d /drone/cache/vendor ]; then
-          cp -R /drone/cache/vendor .
-        fi
-      - |
-        if [ -d /drone/cache/node_modules ]; then
-          cp -R /drone/cache/node_modules .
-        fi
-      - composer install --prefer-dist --no-interaction
-      - npm ci
-      - cp -R vendor /drone/cache/
-      - cp -R node_modules /drone/cache/
-
+#  - name: prepare-environment
+#    image: laravelsail/php83-composer
+#    volumes:
+#      - name: cache
+#        path: /drone/cache
+#    commands:
+#      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+#      - docker-php-ext-install intl gd
+#      - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+#      - apt-get install -y nodejs
+#      - |
+#        if [ -d /drone/cache/vendor ]; then
+#          cp -R /drone/cache/vendor .
+#        fi
+#      - |
+#        if [ -d /drone/cache/node_modules ]; then
+#          cp -R /drone/cache/node_modules .
+#        fi
+#      - composer install --prefer-dist --no-interaction
+#      - npm ci
+#      - cp -R vendor /drone/cache/
+#      - cp -R node_modules /drone/cache/
+#
   - name: pint
-    image: php:8.3
+    image: laravelsail/php83-composer
     commands:
-      - apt-get update && apt-get install -y unzip zip git curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - apt-get update && apt-get install -y libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev unzip zip curl git
       - docker-php-ext-install intl gd zip
-      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-      - composer install --no-interaction --prefer-dist
+      - composer install --no-interaction
       - ./vendor/bin/pint --test
 
-  - name: phpstan
-    image: laravelsail/php83-composer
-    commands:
-      - composer install --no-interaction
-      - ./vendor/bin/phpstan analyse
-
-  - name: pest-tests
-    image: laravelsail/php83-composer
-    environment:
-      APP_ENV: testing
-      APP_KEY:
-        from_secret: APP_KEY
-    commands:
-      - composer install --no-interaction
-      - php artisan test --parallel
-
-  - name: build-assets
-    image: laravelsail/php83-composer
-    commands:
-      - npm ci
-      - npm run build
-
-  - name: merge-to-master
-    image: alpine
-    depends_on:
-      - build-assets
-    environment:
-      GITEA_TOKEN:
-        from_secret: GITEA_TOKEN
-    commands:
-      - apk add git
-      - git config --global user.name "Tor Rivera"
-      - git config --global user.email "tor@trivera.net"
-      - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
-      - git fetch origin
-      - git checkout master || git checkout -b master
-      - git merge --no-edit devtest
-      - git push origin master
-
-volumes:
-  - name: composer-cache
-    temp: {}
-  - name: npm-cache
-    temp: {}
-
-trigger:
-  branch:
-    include:
-      - devtest
+#
+#  - name: phpstan
+#    image: laravelsail/php83-composer
+#    commands:
+#      - composer install --no-interaction
+#      - ./vendor/bin/phpstan analyse
+#
+#  - name: pest-tests
+#    image: laravelsail/php83-composer
+#    environment:
+#      APP_ENV: testing
+#      APP_KEY:
+#        from_secret: APP_KEY
+#    commands:
+#      - composer install --no-interaction
+#      - php artisan test --parallel
+#
+#  - name: build-assets
+#    image: laravelsail/php83-composer
+#    commands:
+#      - npm ci
+#      - npm run build
+#
+#  - name: merge-to-master
+#    image: alpine
+#    depends_on:
+#      - build-assets
+#    environment:
+#      GITEA_TOKEN:
+#        from_secret: GITEA_TOKEN
+#    commands:
+#      - apk add git
+#      - git config --global user.name "Tor Rivera"
+#      - git config --global user.email "tor@trivera.net"
+#      - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
+#      - git fetch origin
+#      - git checkout master || git checkout -b master
+#      - git merge --no-edit devtest
+#      - git push origin master
+#
+#volumes:
+#  - name: composer-cache
+#    temp: {}
+#  - name: npm-cache
+#    temp: {}
+#
+#trigger:
+#  branch:
+#    include:
+#      - devtest
