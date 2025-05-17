@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: php:8.3-cli  # Bruker php:8.3-cli for å sikre at vi bruker PHP 8.3
+      image: php:8.3-fpm  # Bruker php:8.3-fpm som grunnbilde for å sikre PHP 8.3
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
             ${{ runner.os }}-composer-
 
-      # Installer nødvendige verktøy og PHP-utvidelser
+      # Installer Node.js og nødvendige PHP-pakker
       - name: Install dependencies
         run: |
           apt-get update -yqq
@@ -40,7 +40,9 @@ jobs:
           apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
           docker-php-ext-install pdo_mysql zip intl gd  # Installer PHP-utvidelser
 
-          # Installer Node.js og bekreft versjon
+          # Installer Node.js v16.x og bekreft versjon
+          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+          apt-get install -y nodejs
           node --version  # Bekrefter at node er installert
           npm --version  # Bekrefter at npm er installert
 
