@@ -7,8 +7,8 @@ steps:
     image: laravelsail/php83-composer
     commands:
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
-      - apt-get install -y nodejs
-      - node -v && npm -v
+      - apt-get install -y nodejs libpng-dev libicu-dev
+      - docker-php-ext-install intl gd
       - composer install --prefer-dist --no-interaction
       - npm ci
 
