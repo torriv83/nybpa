@@ -1,26 +1,25 @@
 kind: pipeline
-type: docker
 name: ci-cd
+type: docker
 
 steps:
   - name: prepare-environment
-    image: node:20-bullseye
+    image: laravelsail/php83-composer
     commands:
-      - apt-get update && apt-get install -y php-cli unzip git libzip-dev libpng-dev libonig-dev libxml2-dev zip curl
-      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev
+      - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+      - apt-get install -y nodejs
       - composer install --prefer-dist --no-interaction
       - npm ci
 
   - name: pint
     image: laravelsail/php83-composer
     commands:
-      - composer install --no-interaction
       - ./vendor/bin/pint --test
 
   - name: phpstan
     image: laravelsail/php83-composer
     commands:
-      - composer install --no-interaction
       - ./vendor/bin/phpstan analyse
 
   - name: pest-tests
@@ -30,16 +29,15 @@ steps:
       APP_KEY:
         from_secret: APP_KEY
     commands:
-      - composer install --no-interaction
       - php artisan test --parallel
 
   - name: build-assets
-    image: node:20
+    image: laravelsail/php83-composer
     commands:
       - npm ci
       - npm run build
 
-  - name: merge-to-staging
+  - name: merge-to-master
     image: alpine
     depends_on:
       - build-assets
@@ -52,25 +50,8 @@ steps:
       - git config --global user.email "tor@trivera.net"
       - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
       - git fetch origin
-      - git checkout staging || git checkout -b staging
-      - git merge --no-edit devtest
-      - git push origin staging
-
-  - name: merge-to-master
-    image: alpine
-    depends_on:
-      - merge-to-staging
-    environment:
-      GITEA_TOKEN:
-        from_secret: GITEA_TOKEN
-    commands:
-      - apk add git
-      - git config --global user.name "Tor Rivera"
-      - git config --global user.email "tor@trivera.net"
-      - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
-      - git fetch origin
       - git checkout master || git checkout -b master
-      - git merge --no-edit staging
+      - git merge --no-edit devtest
       - git push origin master
 
 trigger:
