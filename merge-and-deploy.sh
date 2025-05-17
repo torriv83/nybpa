@@ -5,7 +5,7 @@ CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
 
 # Check if on Staging branch, if so exit
 if [ "$CURRENT_BRANCH" = "Staging" ]; then
-  echo "You areee already on the Staging branch. Merge manually if needed."
+  echo "You are already on the Staging branch. Merge manually if needed."
   exit 1
 fi
 
