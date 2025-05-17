@@ -2,42 +2,29 @@ name: Prepare and Build Project
 on:
   push:
     branches:
-      - devtest
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/vscode/devcontainers/php:0-8.3-node-16  # Offentlig bilde med både PHP 8.3 og Node.js
+      image: php:8.3-cli  # Bruker php:8.3-cli for å sikre at vi bruker PHP 8.3
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      # Installer Composer og Node-moduler og cache avhengigheter
-      - name: Cache Composer and Node Modules
-        uses: actions/cache@v2  # Cacher Composer og Node-moduler
-        with:
-          path: |
-            ~/.composer/cache
-            ./vendor
-            ~/.npm
-            ./node_modules
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-            ${{ runner.os }}-composer-
-
-      # Installer nødvendige PHP-utvidelser
-      - name: Install dependencies
+      # Installer PHP 8.3 og nødvendige avhengigheter
+      - name: Install PHP 8.3 and dependencies
         run: |
           apt-get update -yqq
           apt-get install -yqq apt-utils autoconf build-essential  # Installer nødvendige verktøy
           apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
           docker-php-ext-install pdo_mysql zip intl gd  # Installer PHP-utvidelser
 
-          # Verifisere PHP og Node.js versjoner
-          php -v  # Bekrefter at PHP 8.3 er installert
-          node --version  # Bekrefter at Node.js er installert
+          # Installer Node.js v16.x og bekreft versjon
+          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+          apt-get install -y nodejs
+          node --version  # Bekrefter at node er installert
           npm --version  # Bekrefter at npm er installert
 
           # Installer Composer
