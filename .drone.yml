@@ -52,8 +52,9 @@ steps:
 
   - name: pest-tests
     image: laravelsail/php83-composer
-#    depends_on:
+    depends_on:
 #      - phpstan
+      - build-assets
     environment:
       APP_ENV: testing
       APP_KEY:
