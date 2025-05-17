@@ -5,26 +5,21 @@ type: docker
 steps:
   - name: prepare-environment
     image: laravelsail/php83-composer
+    environment:
+      COMPOSER_CACHE_DIR: /cache/composer
+      NPM_CONFIG_CACHE: /cache/npm
     volumes:
-      - name: cache
-        path: /drone/cache
+      - name: composer-cache
+        path: /cache/composer
+      - name: npm-cache
+        path: /cache/npm
     commands:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install intl gd
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
-      - |
-        if [ -d /drone/cache/vendor ]; then
-          cp -R /drone/cache/vendor .
-        fi
-      - |
-        if [ -d /drone/cache/node_modules ]; then
-          cp -R /drone/cache/node_modules .
-        fi
       - composer install --prefer-dist --no-interaction
       - npm ci
-      - cp -R vendor /drone/cache/
-      - cp -R node_modules /drone/cache/
 
   - name: pint
     image: laravelsail/php83-composer
@@ -74,9 +69,10 @@ steps:
       - git push origin master
 
 volumes:
-  - name: cache
-    host:
-      path: /tmp/drone-cache
+  - name: composer-cache
+    temp: {}
+  - name: npm-cache
+    temp: {}
 
 trigger:
   branch:
