@@ -63,35 +63,34 @@ steps:
   - name: build-assets
     image: node:20
     depends_on:
-      - prepare-environment
+      - pint
+      - phpstan
+      - pest-tests
     commands:
       - npm ci
       - npm run build
 
-#  - name: merge-to-master
-#    image: alpine
-#    depends_on:
-#      - build-assets
-#    environment:
-#      GITEA_TOKEN:
-#        from_secret: GITEA_TOKEN
-#    commands:
-#      - apk add git
-#      - git config --global user.name "Tor Rivera"
-#      - git config --global user.email "tor@trivera.net"
-#      - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
-#      - git fetch origin
-#      - git checkout master || git checkout -b master
-#      - git merge --no-edit devtest
-#      - git push origin master
+  - name: merge-to-master
+    image: alpine
+    depends_on:
+      - build-assets
+    environment:
+      GITEA_TOKEN:
+        from_secret: GITEA_TOKEN
+    commands:
+      - apk add git
+      - git config --global user.name "Tor Rivera"
+      - git config --global user.email "tor@trivera.net"
+      - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
+      - git fetch origin
+      - git checkout master || git checkout -b master
+      - git merge --no-edit devtest
+      - git push origin master
 
   - name: rebuild-cache
     image: meltwater/drone-cache
     pull: true
     depends_on:
-      - pint
-      - phpstan
-      - pest-tests
       - build-assets
     settings:
       backend: filesystem
