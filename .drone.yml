@@ -9,14 +9,14 @@ steps:
       # Oppdatering og installering av nødvendige pakker
       - apt-get update -yqq
       - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install pdo_mysql zip intl gd  # Installere PHP-utvidelser
+      - docker-php-ext-install pdo_mysql zip intl gd  # Installerer nødvendige PHP-utvidelser
       - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer  # Installerer Composer
-      # Installer Node.js og npm
-      - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -  # Installerer Node.js
+      # Installer Node.js v16.x og npm
+      - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -  # Installerer Node.js v16.x
       - apt-get install -y nodejs  # Installerer npm
       - npm --version  # Bekrefter at npm er installert
-      - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts  # Installerer Composer-avhengigheter
-      - npm ci  # Installerer npm-avhengigheter
+      - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose  # Installerer PHP-avhengigheter
+      - npm ci --verbose  # Installerer npm-avhengigheter med verbose-modus for bedre feilsøking
 
   - name: build-assets
     image: node:20
@@ -30,16 +30,16 @@ steps:
     depends_on:
       - build-assets
     environment:
-      PHP_MEMORY_LIMIT: 512M
+      PHP_MEMORY_LIMIT: 1024M  # Øker PHP minnegrensen til 1 GB
     commands:
-      - ./vendor/bin/phpstan analyse --memory-limit=512M || true  # Kjør PHPStan
+      - ./vendor/bin/phpstan analyse --memory-limit=1024M || true  # Kjør PHPStan med økt minne
 
   - name: optimize-autoloader
     image: laravelsail/php83-composer
     depends_on:
       - phpstan
     commands:
-      - composer install --optimize-autoloader --no-dev  # Optimiserer autoloader
+      - composer install --optimize-autoloader --no-dev --verbose  # Optimiserer autoloader med verbose-modus
 
   - name: cache-configuration-routes-views
     image: laravelsail/php83-composer
