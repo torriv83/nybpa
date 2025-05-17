@@ -20,6 +20,8 @@ steps:
 
   - name: prepare-environment
     image: laravelsail/php83-composer
+    depends_on:
+      - restore-cache
     commands:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install intl gd
@@ -30,6 +32,8 @@ steps:
 
   - name: pint
     image: laravelsail/php83-composer
+    depends_on:
+      - prepare-environment
     commands:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install intl gd
@@ -38,12 +42,16 @@ steps:
 
   - name: phpstan
     image: laravelsail/php83-composer
+    depends_on:
+      - prepare-environment
     commands:
       - composer install --prefer-dist --no-interaction
       - ./vendor/bin/phpstan analyse
 
   - name: pest-tests
     image: laravelsail/php83-composer
+    depends_on:
+      - prepare-environment
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -54,6 +62,8 @@ steps:
 
   - name: build-assets
     image: node:20
+    depends_on:
+      - prepare-environment
     commands:
       - npm ci
       - npm run build
@@ -78,6 +88,11 @@ steps:
   - name: rebuild-cache
     image: meltwater/drone-cache
     pull: true
+    depends_on:
+      - pint
+      - phpstan
+      - pest-tests
+      - build-assets
     settings:
       backend: filesystem
       rebuild: true
