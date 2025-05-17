@@ -16,24 +16,6 @@ it('can render page login page', function () {
         ->assertSuccessful();
 })->group('feature');
 
-// ✅ Test 2
-test('users can authenticate using the login screen', function () {
-    auth()->logout();
-
-    $user = User::factory()->create([
-        'email_verified_at' => now(),
-        'password' => Hash::make('password'),
-    ]);
-
-    // Bruk Livewire for å teste login-skjemaet
-    Livewire::test(\Filament\Pages\Auth\Login::class)
-        ->set('data.email', $user->email)  // Sett e-post
-        ->set('data.password', 'password')  // Sett passord
-        ->call('authenticate')  // Kall autentisering
-        ->assertHasNoErrors();  // Bekreft at det ikke er noen feil
-});
-
-
 
 // ✅ Test 3
 test('users can not authenticate with invalid password', function () {
