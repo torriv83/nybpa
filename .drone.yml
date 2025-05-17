@@ -45,6 +45,8 @@ steps:
     depends_on:
       - prepare-environment
     commands:
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - docker-php-ext-install intl gd
       - composer install --prefer-dist --no-interaction
       - ./vendor/bin/phpstan analyse
 
