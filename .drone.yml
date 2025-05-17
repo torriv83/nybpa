@@ -65,7 +65,7 @@ steps:
       DB_CONNECTION: sqlite
       DB_DATABASE: ":memory:"
     commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev pkg-config libsqlite3-dev
       - docker-php-ext-install intl gd pdo pdo_sqlite
       - composer install --prefer-dist --no-interaction
       - php artisan test --parallel
