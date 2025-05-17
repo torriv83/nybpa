@@ -27,11 +27,10 @@ steps:
 #      - cp -R node_modules /drone/cache/
 #
   - name: pint
-    image: php:8.3
+    image: laravelsail/php83-composer
     commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install intl gd zip
-      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - apt-get update && apt-get install -y libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev unzip zip curl git
+      - docker-php-ext-install intl gd
       - composer install --no-interaction
       - ./vendor/bin/pint --test
 
