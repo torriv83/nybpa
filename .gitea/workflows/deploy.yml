@@ -2,13 +2,13 @@ name: Prepare and Build Project
 on:
   push:
     branches:
-      - master
+      - devtest
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: php:8.3-cli  # Bruker php:8.3-cli for å sikre at vi bruker PHP 8.3
+      image: rocketchat/php-node:php8.3-node16  # Bruker et eksisterende Docker-bilde med både PHP 8.3 og Node.js 16
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
             ${{ runner.os }}-composer-
 
-      # Installer nødvendige verktøy og PHP-utvidelser
+      # Installer nødvendige PHP-utvidelser (hvis de ikke er forhåndsinstallert)
       - name: Install dependencies
         run: |
           apt-get update -yqq
@@ -35,10 +35,9 @@ jobs:
           apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
           docker-php-ext-install pdo_mysql zip intl gd  # Installer PHP-utvidelser
 
-          # Installer Node.js v16.x og bekreft versjon
-          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-          apt-get install -y nodejs
-          node --version  # Bekrefter at node er installert
+          # Verifisere PHP og Node.js versjoner
+          php -v  # Bekrefter at PHP 8.3 er installert
+          node --version  # Bekrefter at Node.js er installert
           npm --version  # Bekrefter at npm er installert
 
           # Installer Composer
