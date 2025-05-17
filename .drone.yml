@@ -15,6 +15,8 @@ steps:
 
   - name: build-assets
     image: node:20
+    depends_on:
+      - prepare-environment  # Ensure composer install is done first
     commands:
       - npm ci
       - npm run build
@@ -22,7 +24,7 @@ steps:
   - name: phpstan
     image: laravelsail/php83-composer
     depends_on:
-      - build-assets
+      - build-assets  # Ensure assets are built before running phpstan
     environment:
       PHP_MEMORY_LIMIT: 512M
     commands:
@@ -53,6 +55,8 @@ steps:
 
   - name: pest-tests
     image: laravelsail/php83-composer
+    depends_on:
+      - optimize  # Ensure optimize has finished before testing
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -67,7 +71,7 @@ steps:
     image: meltwater/drone-cache
     pull: true
     depends_on:
-      - pest-tests
+      - pest-tests  # Ensure tests are completed before rebuilding cache
     settings:
       backend: filesystem
       rebuild: true
