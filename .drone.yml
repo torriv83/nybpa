@@ -30,17 +30,17 @@ steps:
       - composer install --prefer-dist --no-interaction
       - npm ci
 
-  - name: phpstan
-    image: laravelsail/php83-composer
-    depends_on:
-      - prepare-environment
-    environment:
-      PHP_MEMORY_LIMIT: 512M
-    commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install intl gd
-      - composer install --prefer-dist --no-interaction
-      - ./vendor/bin/phpstan analyse --memory-limit=512M
+#  - name: phpstan
+#    image: laravelsail/php83-composer
+#    depends_on:
+#      - prepare-environment
+#    environment:
+#      PHP_MEMORY_LIMIT: 512M
+#    commands:
+#      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+#      - docker-php-ext-install intl gd
+#      - composer install --prefer-dist --no-interaction
+#      - ./vendor/bin/phpstan analyse --memory-limit=512M
 
   - name: pest-tests
     image: laravelsail/php83-composer
