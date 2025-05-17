@@ -1,46 +1,94 @@
-name: Prepare and Build Project
-on:
-  push:
-    branches:
-      - devtest
+pipelines:
+  default:
+    - step:
+        name: Prepare Environment
+        image: php:8.4
+        caches:
+          - composer
+          - node_modules
+        commands:
+          # Installere nødvendige systempakker og PHP-utvidelser
+          - apt-get update -yqq
+          - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
+          - docker-php-ext-install pdo_mysql zip intl gd
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
+          # Installer Composer
+          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-      - name: Install dependencies
-        run: |
-          apt-get update -yqq
-          apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
-          docker-php-ext-install pdo_mysql zip intl gd
-          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-          apt-get install -y nodejs
-          npm --version
-          composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose
-          npm ci --verbose
+          # Installer Node.js v16.x og npm
+          - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+          - apt-get install -y nodejs
+          - npm --version  # Bekrefter at npm er installert
 
-      - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyse --memory-limit=1024M || true
+          # Installer PHP og Node-avhengigheter
+          - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose
+          - npm ci --verbose  # Installerer npm-avhengigheter
 
-      - name: Build frontend assets
-        run: npm run build
+    - step:
+        name: Build Frontend Assets
+        image: node:20
+        caches:
+          - node_modules
+        commands:
+          - npm run build  # Bygg frontend-ressurser (FilamentPHP eller andre Vue/React-komponenter)
 
-      - name: Run tests
-        run: php artisan test --parallel
+    - step:
+        name: PHPStan Analysis
+        image: laravelsail/php83-composer
+        environment:
+          PHP_MEMORY_LIMIT: 1024M  # Øker PHP minnegrensen til 1 GB
+        caches:
+          - composer
+        commands:
+          - ./vendor/bin/phpstan analyse --memory-limit=1024M || true  # Kjør PHPStan med økt minne
 
-      - name: Cache configuration, routes, and views
-        run: |
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
+    - step:
+        name: Optimize Autoloader
+        image: laravelsail/php83-composer
+        caches:
+          - composer
+        commands:
+          - composer install --optimize-autoloader --no-dev --verbose  # Optimiserer autoloader
 
-      - name: Optimize
-        run: php artisan optimize
+    - step:
+        name: Cache Configuration, Routes, and Views
+        image: laravelsail/php83-composer
+        caches:
+          - composer
+        commands:
+          - php artisan config:cache
+          - php artisan route:cache
+          - php artisan view:cache  # Cache-konfigurasjon, ruter og visninger
 
-      - name: Deploy to server
-        run: |
-          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /var/www/your-app && git pull origin master && composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan optimize"
+    - step:
+        name: Optimize
+        image: laravelsail/php83-composer
+        caches:
+          - composer
+        commands:
+          - php artisan optimize  # Kjører Laravel-optimalisering
+
+    - step:
+        name: Pest Tests
+        image: laravelsail/php83-composer
+        environment:
+          APP_ENV: testing
+          APP_KEY:
+            from_secret: APP_KEY
+          APP_DEBUG: true
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+        caches:
+          - composer
+        commands:
+          - php artisan test --parallel  # Kjør tester
+
+#    - step:
+#        name: Deploy to server
+#        image: alpine:latest
+#        commands:
+#          - apk add --no-cache openssh-client
+#          - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+#          - chmod 600 ~/.ssh/id_rsa
+#          - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+#          - ssh $SERVER_USER@$SERVER_IP "cd /var/www/your-app && git pull origin master && composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan optimize"
