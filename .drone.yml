@@ -23,40 +23,30 @@ steps:
     depends_on:
       - restore-cache
     commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install intl gd
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev pkg-config libsqlite3-dev
+      - docker-php-ext-install intl gd pdo pdo_sqlite
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
       - composer install --prefer-dist --no-interaction
       - npm ci
+      - npm run build
 
-#  - name: phpstan
-#    image: laravelsail/php83-composer
-#    depends_on:
-#      - prepare-environment
-#    environment:
-#      PHP_MEMORY_LIMIT: 512M
-#    commands:
-#      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-#      - docker-php-ext-install intl gd
-#      - composer install --prefer-dist --no-interaction
-#      - ./vendor/bin/phpstan analyse --memory-limit=512M
-
-  - name: build-assets
-    image: node:20
+  - name: phpstan
+    image: laravelsail/php83-composer
     depends_on:
       - prepare-environment
-    #      - phpstan
-    #     - pest-tests
+    environment:
+      PHP_MEMORY_LIMIT: 512M
     commands:
-      - npm ci
-      - npm run build
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - docker-php-ext-install intl gd
+      - composer install --prefer-dist --no-interaction
+      - ./vendor/bin/phpstan analyse --memory-limit=512M
 
   - name: pest-tests
     image: laravelsail/php83-composer
     depends_on:
-      - prepare-environment
-      - build-assets
+      - phpstan
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -69,13 +59,12 @@ steps:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev pkg-config libsqlite3-dev
       - docker-php-ext-install intl gd pdo pdo_sqlite
       - composer install --prefer-dist --no-interaction
-      - echo "APP_KEY=$APP_KEY"
       - php artisan test --parallel
 
 #  - name: merge-to-master
 #    image: alpine
 #    depends_on:
-#      - build-assets
+#      - pest-tests
 #    environment:
 #      GITEA_TOKEN:
 #        from_secret: GITEA_TOKEN
@@ -93,7 +82,7 @@ steps:
     image: meltwater/drone-cache
     pull: true
     depends_on:
-      - build-assets
+      - merge-to-master
     settings:
       backend: filesystem
       rebuild: true
