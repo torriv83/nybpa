@@ -3,28 +3,30 @@ name: ci-cd
 type: docker
 
 steps:
-  - name: prepare-environment
-    image: laravelsail/php83-composer
+  - name: restore-cache
+    image: meltwater/drone-cache
+    pull: true
+    settings:
+      backend: filesystem
+      restore: true
+      cache_key: composer-npm-cache
+      archive_format: gzip
+      mount:
+        - vendor
+        - node_modules
     volumes:
       - name: cache
-        path: /drone/cache
+        path: /tmp/cache
+
+  - name: prepare-environment
+    image: laravelsail/php83-composer
     commands:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install intl gd
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
-      - |
-        if [ -d /drone/cache/vendor ]; then
-          cp -R /drone/cache/vendor .
-        fi
-      - |
-        if [ -d /drone/cache/node_modules ]; then
-          cp -R /drone/cache/node_modules .
-        fi
       - composer install --prefer-dist --no-interaction
       - npm ci
-      - cp -R vendor /drone/cache/
-      - cp -R node_modules /drone/cache/
 
   - name: pint
     image: laravelsail/php83-composer
@@ -73,10 +75,24 @@ steps:
       - git merge --no-edit devtest
       - git push origin master
 
+  - name: rebuild-cache
+    image: meltwater/drone-cache
+    pull: true
+    settings:
+      backend: filesystem
+      rebuild: true
+      cache_key: composer-npm-cache
+      archive_format: gzip
+      mount:
+        - vendor
+        - node_modules
+    volumes:
+      - name: cache
+        path: /tmp/cache
+
 volumes:
   - name: cache
-    host:
-      path: /tmp/drone-cache
+    temp: {}
 
 trigger:
   branch:
