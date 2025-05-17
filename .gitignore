@@ -73,3 +73,5 @@ Homestead.json
 /.phpunit.cache/
 /.nvmrc
 "laradumps.yaml" 
+"laradumps.yaml" 
+/laradumps.yaml
