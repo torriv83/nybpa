@@ -8,8 +8,9 @@ steps:
     commands:
       # Oppdatering og installering av nødvendige pakker
       - apt-get update -yqq
-      - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install pdo_mysql zip intl gd  # Installerer nødvendige PHP-utvidelser
+      - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
+      # Installer PHP-utvidelsene
+      - docker-php-ext-install pdo_mysql zip intl gd  # Installerer nødvendige PHP-utvidelser (intl og gd)
       - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer  # Installerer Composer
       # Installer Node.js v16.x og npm
       - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -  # Installerer Node.js v16.x
