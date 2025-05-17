@@ -2,23 +2,18 @@ name: Prepare and Build Project
 on:
   push:
     branches:
-      - devtest
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: php:8.3-fpm  # Bruker php:8.3-fpm som grunnbilde for å sikre PHP 8.3
+      image: php:8.3-cli  # Bruker php:8.3-cli for å sikre at vi bruker PHP 8.3
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      # Aktiverer Runner Tool Cache
-      - name: Set up Runner Tool Cache
-        run: |
-          echo "RUNNER_TOOL_CACHE=/toolcache" >> $GITHUB_ENV
-
-      # Installer nødvendige avhengigheter og cache avhengigheter
+      # Installer Composer og Node-moduler og cache avhengigheter
       - name: Cache Composer and Node Modules
         uses: actions/cache@v2  # Cacher Composer og Node-moduler
         with:
@@ -32,7 +27,7 @@ jobs:
             ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
             ${{ runner.os }}-composer-
 
-      # Installer Node.js og nødvendige PHP-pakker
+      # Installer nødvendige verktøy og PHP-utvidelser
       - name: Install dependencies
         run: |
           apt-get update -yqq
