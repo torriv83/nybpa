@@ -1,0 +1,27 @@
+pipelines:
+  default:
+    - step:
+        name: Prepare Environment
+        image: php:8.4
+        caches:
+          - composer
+          - node_modules
+        commands:
+          # Oppdatering og installering av nødvendige pakker
+          - apt-get update -yqq
+          - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
+          # Installerer nødvendige PHP-utvidelser
+          - docker-php-ext-install pdo_mysql zip intl gd
+          # Aktiver PHP-utvidelsene
+          - echo "extension=intl.so" >> /usr/local/etc/php/conf.d/40-intl.ini
+          - echo "extension=gd.so" >> /usr/local/etc/php/conf.d/40-gd.ini
+          - echo "extension=zip.so" >> /usr/local/etc/php/conf.d/40-zip.ini
+          # Installer Composer
+          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          # Installer Node.js v16.x og npm
+          - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+          - apt-get install -y nodejs
+          - npm --version  # Bekrefter at npm er installert
+          # Installer PHP og Node-avhengigheter
+          - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose  # Installerer PHP-avhengigheter
+          - npm ci --verbose  # Installerer npm-avhengigheter med verbose-modus for bedre feilsøking
