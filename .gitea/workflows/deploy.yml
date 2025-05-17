@@ -2,13 +2,13 @@ name: Prepare and Build Project
 on:
   push:
     branches:
-      - devtest
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: php:8.4-cli  # Bruker php:8.4-cli for å få tilgang til docker-php-ext-install
+      image: php:8.4-cli  # Bruker php:8.4-cli som grunnbilde som støtter docker-php-ext-install
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -20,15 +20,16 @@ jobs:
           apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
           docker-php-ext-install pdo_mysql zip intl gd  # Installerer PHP-utvidelser
 
-          # Installer Node.js v16.x
+          # Installer Node.js v16.x (denne gangen med spesifik installasjon)
           curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
           apt-get install -y nodejs
+          node --version  # Bekrefter at node er installert
           npm --version  # Bekrefter at npm er installert
 
           # Installer Composer
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose
-          npm ci --verbose
+          npm ci --verbose  # Installerer npm-avhengigheter
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan analyse --memory-limit=1024M || true
