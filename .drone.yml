@@ -81,8 +81,8 @@ steps:
   - name: rebuild-cache
     image: meltwater/drone-cache
     pull: true
-    depends_on:
-      - merge-to-master
+#    depends_on:
+#      - merge-to-master
     settings:
       backend: filesystem
       rebuild: true
