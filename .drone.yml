@@ -23,13 +23,12 @@ steps:
     depends_on:
       - restore-cache
     commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev pkg-config libsqlite3-dev
-      - docker-php-ext-install intl gd pdo pdo_sqlite
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - docker-php-ext-install intl gd
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
       - composer install --prefer-dist --no-interaction
       - npm ci
-      - npm run build
 
   - name: phpstan
     image: laravelsail/php83-composer
@@ -45,6 +44,8 @@ steps:
 
   - name: pest-tests
     image: laravelsail/php83-composer
+    depends_on:
+      - prepare-environment
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -59,10 +60,18 @@ steps:
       - composer install --prefer-dist --no-interaction
       - php artisan test --parallel
 
+  - name: build-assets
+    image: node:20
+    depends_on:
+      - pest-tests
+    commands:
+      - npm ci
+      - npm run build
+
 #  - name: merge-to-master
 #    image: alpine
 #    depends_on:
-#      - pest-tests
+#      - build-assets
 #    environment:
 #      GITEA_TOKEN:
 #        from_secret: GITEA_TOKEN
@@ -80,8 +89,7 @@ steps:
     image: meltwater/drone-cache
     pull: true
     depends_on:
-#      - merge-to-master
-      - pest-tests
+      - build-assets
     settings:
       backend: filesystem
       rebuild: true
