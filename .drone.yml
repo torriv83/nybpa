@@ -6,7 +6,8 @@ steps:
   - name: prepare-environment
     image: laravelsail/php83-composer
     commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev
+      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - docker-php-ext-install intl gd
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
       - composer install --prefer-dist --no-interaction
