@@ -64,7 +64,7 @@ steps:
   - name: build-assets
     image: node:20
     depends_on:
-      - phpstan
+#      - phpstan
       - pest-tests
     commands:
       - npm ci
