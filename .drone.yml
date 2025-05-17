@@ -45,6 +45,7 @@ steps:
   - name: build-assets
     image: node:20
     depends_on:
+      - prepare-environment
     #      - phpstan
     #     - pest-tests
     commands:
