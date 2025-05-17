@@ -13,11 +13,12 @@ class UserStats extends BaseWidget
     private UserStatsService $userStatsService;
 
     protected static ?string $pollingInterval = null;
-    protected static ?int    $sort            = 1;
+
+    protected static ?int $sort = 1;
 
     public function __construct()
     {
-        $this->userStatsService = new UserStatsService();
+        $this->userStatsService = new UserStatsService;
     }
 
     protected function getStats(): array
@@ -35,10 +36,10 @@ class UserStats extends BaseWidget
                 ->description($this->userStatsService->getHoursUsedThisMonthDescription()),
 
             Stat::make('Timer igjen', $this->userStatsService->getRemainingHours())
-                ->description($this->userStatsService->getAverageHoursPerWeekDescription() .' i uka igjen')
+                ->description($this->userStatsService->getAverageHoursPerWeekDescription().' i uka igjen')
                 ->color('success'),
 
-            Stat::make('Timer brukt denne uka', $this->userStatsService->getHoursUsedThisWeek())
+            Stat::make('Timer brukt denne uka', $this->userStatsService->getHoursUsedThisWeek()),
 
         ];
     }

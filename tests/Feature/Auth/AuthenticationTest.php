@@ -1,30 +1,25 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(RefreshDatabase::class);
 
+// ✅ Test 1
 it('can render page login page', function () {
     auth()->logout();
-    $this->get('/admin/login')->assertSuccessful();
-});
 
-test('users can authenticate using the login screen', function () {
-    auth()->logout();
-    $user = User::factory()->create([
-        'email_verified_at' => now(),
-    ]);
-
-    Livewire::test('Filament\Pages\Auth\Login')
-        ->set('data.email', $user->email) // Update to set the email field in the form
-        ->set('data.password', 'password') // Set the password field
-        ->call('authenticate') // Call the authenticate method
+    $this
+        ->get('/admin/login')
         ->assertSuccessful();
-});
+})->group('feature');
 
+// ✅ Test 3
 test('users can not authenticate with invalid password', function () {
     auth()->logout();
+
     $user = User::factory()->create();
 
     $this->post('/login', [

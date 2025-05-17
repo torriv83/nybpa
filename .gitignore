@@ -1,8 +1,10 @@
 ### Laravel ###
 /vendor/
-node_modules/
+/node_modules/
 npm-debug.log
 yarn-error.log
+/public/build/
+/public/mix-manifest.json
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -23,6 +25,12 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
+### PhpStorm / IDE ###
+.idea/
+/.phpstorm.meta.php
+/_ide_helper.php
+/_ide_helper_models.php
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -31,45 +39,18 @@ Homestead.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-# Local History for Visual Studio Code
 .history/
-
-# Built Visual Studio Code Extensions
 *.vsix
 
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
-.vscode/launch.json
-.idea/*
-/_ide_helper.php
-/.phpstorm.meta.php
-/_ide_helper_models.php
+### Misc config and temp files
 /config/querydetector.php
-/docker-compose.yml
-/node_modules/
 /phpunit.xml.bak
-/docker/mysql/create-testing-database.sh
-/docker/pgsql/create-testing-database.sql
-/docker/8.0/Dockerfile
-/docker/8.1/Dockerfile
-/docker/8.2/Dockerfile
-/docker/8.0/php.ini
-/docker/8.1/php.ini
-/docker/8.2/php.ini
-/docker/8.0/start-container
-/docker/8.1/start-container
-/docker/8.2/start-container
-/docker/8.0/supervisord.conf
-/docker/8.1/supervisord.conf
-/docker/8.2/supervisord.conf
-/Writerside/cfg/buildprofiles.xml
-/Writerside/c.list
-/Writerside/topics/CACHE_TAGS.md
-/Writerside/in.tree
-/Writerside/v.list
-/Writerside/writerside.cfg
 /.phpunit.cache/
 /.nvmrc
-"laradumps.yaml" 
+/laradumps.yaml
+
+### Docker
+/docker/
+
+### Writerside
+/Writerside/

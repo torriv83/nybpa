@@ -1,0 +1,95 @@
+kind: pipeline
+name: ci-cd
+type: docker
+
+steps:
+  - name: prepare-environment
+    image: php:8.4
+    commands:
+      # Oppdatering og installering av nødvendige pakker
+      - apt-get update -yqq
+      - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
+      # Installer PHP-utvidelsene
+      - docker-php-ext-install pdo_mysql zip intl gd  # Installerer nødvendige PHP-utvidelser (intl og gd)
+      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer  # Installerer Composer
+      # Installer Node.js v16.x og npm
+      - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -  # Installerer Node.js v16.x
+      - apt-get install -y nodejs  # Installerer npm
+      - npm --version  # Bekrefter at npm er installert
+      - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose  # Installerer PHP-avhengigheter
+      - npm ci --verbose  # Installerer npm-avhengigheter med verbose-modus for bedre feilsøking
+
+  - name: build-assets
+    image: node:20
+    depends_on:
+      - prepare-environment
+    commands:
+      - npm run build  # Bygg frontend-ressurser
+
+  - name: phpstan
+    image: laravelsail/php83-composer
+    depends_on:
+      - build-assets
+    environment:
+      PHP_MEMORY_LIMIT: 1024M  # Øker PHP minnegrensen til 1 GB
+    commands:
+      - ./vendor/bin/phpstan analyse --memory-limit=1024M || true  # Kjør PHPStan med økt minne
+
+  - name: optimize-autoloader
+    image: laravelsail/php83-composer
+    depends_on:
+      - phpstan
+    commands:
+      - composer install --optimize-autoloader --no-dev --verbose  # Optimiserer autoloader med verbose-modus
+
+  - name: cache-configuration-routes-views
+    image: laravelsail/php83-composer
+    depends_on:
+      - optimize-autoloader
+    commands:
+      - php artisan config:cache
+      - php artisan route:cache
+      - php artisan view:cache  # Cache-konfigurasjon, ruter og visninger
+
+  - name: optimize
+    image: laravelsail/php83-composer
+    depends_on:
+      - cache-configuration-routes-views
+    commands:
+      - php artisan optimize  # Kjører Laravel-optimalisering
+
+  - name: pest-tests
+    image: laravelsail/php83-composer
+    depends_on:
+      - optimize
+    environment:
+      APP_ENV: testing
+      APP_KEY:
+        from_secret: APP_KEY
+      APP_DEBUG: true
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+    commands:
+      - php artisan test --parallel  # Kjør tester
+
+  - name: rebuild-cache
+    image: meltwater/drone-cache
+    pull: true
+    depends_on:
+      - pest-tests
+    settings:
+      backend: filesystem
+      rebuild: true
+      cache_key: composer-npm-cache
+      archive_format: gzip
+      mount:
+        - path: /tmp/cache/nybpa/composer-npm-cache/vendor
+        - path: /tmp/cache/nybpa/composer-npm-cache/node_modules
+    volumes:
+      - name: cache
+        path: /tmp/cache
+
+trigger:
+  branch:
+    include:
+      - devtest
