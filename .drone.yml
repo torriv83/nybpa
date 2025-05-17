@@ -16,6 +16,7 @@ steps:
   - name: pint
     image: laravelsail/php83-composer
     commands:
+      - composer install --no-interaction
       - ./vendor/bin/pint --test
 
   - name: phpstan
