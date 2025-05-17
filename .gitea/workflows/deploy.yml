@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: rocketchat/php-node:php8.3-node16  # Bruker et eksisterende Docker-bilde med både PHP 8.3 og Node.js 16
+      image: mcr.microsoft.com/vscode/devcontainers/php:0-8.3-node-16  # Offentlig bilde med både PHP 8.3 og Node.js
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
             ${{ runner.os }}-composer-
 
-      # Installer nødvendige PHP-utvidelser (hvis de ikke er forhåndsinstallert)
+      # Installer nødvendige PHP-utvidelser
       - name: Install dependencies
         run: |
           apt-get update -yqq
