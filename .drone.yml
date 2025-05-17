@@ -21,8 +21,8 @@ steps:
       cache_key: composer-npm-cache
       archive_format: gzip
       mount:
-        - vendor
-        - node_modules
+        - path: /tmp/cache/nybpa/composer-npm-cache/vendor
+        - path: /tmp/cache/nybpa/composer-npm-cache/node_modules
     volumes:
       - name: cache
         path: /tmp/cache
@@ -88,8 +88,8 @@ steps:
       cache_key: composer-npm-cache
       archive_format: gzip
       mount:
-        - vendor
-        - node_modules
+        - path: /tmp/cache/nybpa/composer-npm-cache/vendor
+        - path: /tmp/cache/nybpa/composer-npm-cache/node_modules
     volumes:
       - name: cache
         path: /tmp/cache
@@ -102,4 +102,3 @@ trigger:
   branch:
     include:
       - devtest
-      -
