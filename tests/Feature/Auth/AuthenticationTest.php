@@ -20,19 +20,20 @@ it('can render page login page', function () {
 test('users can authenticate using the login screen', function () {
     auth()->logout();
 
-    // Lag en bruker med bekreftet e-post
     $user = User::factory()->create([
         'email_verified_at' => now(),
         'password' => Hash::make('password'),
     ]);
 
-    // Autentiser og test
+    // Logg verdiene som sendes til Livewire-komponenten for å feilsøke
     Livewire::test(\Filament\Pages\Auth\Login::class)
         ->set('data.email', $user->email)
-        ->set('data.password', 'password') // Sørg for at passordet er korrekt
+        ->set('data.password', 'password')
         ->call('authenticate')
-        ->assertHasNoErrors();
+        ->assertHasNoErrors()
+        ->assertSee($user->email); // Sjekk om e-posten faktisk er satt
 });
+
 
 // ✅ Test 3
 test('users can not authenticate with invalid password', function () {
