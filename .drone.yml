@@ -22,11 +22,12 @@ steps:
       - npm ci
 
   - name: pint
-    image: laravelsail/php83-composer
+    image: php:8.3
     commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
-      - docker-php-ext-install intl gd
-      - composer install --no-interaction
+      - apt-get update && apt-get install -y unzip zip git curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
+      - docker-php-ext-install intl gd zip
+      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - composer install --no-interaction --prefer-dist
       - ./vendor/bin/pint --test
 
   - name: phpstan
