@@ -18,11 +18,15 @@ jobs:
           apt-get update -yqq
           apt-get install -yqq apt-utils autoconf build-essential  # Installer nødvendige verktøy
           apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
-          docker-php-ext-install pdo_mysql zip intl gd  # Installer PHP-utvidelser
-          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          docker-php-ext-install pdo_mysql zip intl gd  # Installerer PHP-utvidelser
+
+          # Installer Node.js v16.x
           curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
           apt-get install -y nodejs
           npm --version  # Bekrefter at npm er installert
+
+          # Installer Composer
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose
           npm ci --verbose
 
