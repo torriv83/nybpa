@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: php:8.4-fpm  # Bruker PHP Docker-bilde som støtter docker-php-ext-install
+      image: php:8.4-cli  # Bruker php:8.4-cli for å få tilgang til docker-php-ext-install
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
