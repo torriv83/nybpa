@@ -45,8 +45,6 @@ steps:
 
   - name: pest-tests
     image: laravelsail/php83-composer
-    depends_on:
-      - phpstan
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -81,8 +79,9 @@ steps:
   - name: rebuild-cache
     image: meltwater/drone-cache
     pull: true
-#    depends_on:
+    depends_on:
 #      - merge-to-master
+      - pest-tests
     settings:
       backend: filesystem
       rebuild: true
