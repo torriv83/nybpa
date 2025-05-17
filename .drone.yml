@@ -63,7 +63,6 @@ steps:
   - name: build-assets
     image: node:20
     depends_on:
-      - pint
       - phpstan
       - pest-tests
     commands:
