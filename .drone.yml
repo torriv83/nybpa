@@ -30,10 +30,18 @@ steps:
       - composer install --prefer-dist --no-interaction
       - npm ci
 
+  - name: build-assets
+    image: node:20
+    depends_on:
+      - prepare-environment
+    commands:
+      - npm ci
+      - npm run build
+
   - name: phpstan
     image: laravelsail/php83-composer
     depends_on:
-      - prepare-environment
+      - build-assets
     environment:
       PHP_MEMORY_LIMIT: 512M
     commands:
@@ -45,7 +53,7 @@ steps:
   - name: pest-tests
     image: laravelsail/php83-composer
     depends_on:
-      - prepare-environment
+      - phpstan
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -60,18 +68,10 @@ steps:
       - composer install --prefer-dist --no-interaction
       - php artisan test --parallel
 
-  - name: build-assets
-    image: node:20
-    depends_on:
-      - pest-tests
-    commands:
-      - npm ci
-      - npm run build
-
 #  - name: merge-to-master
 #    image: alpine
 #    depends_on:
-#      - build-assets
+#      - pest-tests
 #    environment:
 #      GITEA_TOKEN:
 #        from_secret: GITEA_TOKEN
