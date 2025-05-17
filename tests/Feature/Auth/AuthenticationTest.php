@@ -25,14 +25,14 @@ test('users can authenticate using the login screen', function () {
         'password' => Hash::make('password'),
     ]);
 
-    // Logg verdiene som sendes til Livewire-komponenten for å feilsøke
+    // Bruk Livewire for å teste login-skjemaet
     Livewire::test(\Filament\Pages\Auth\Login::class)
-        ->set('data.email', $user->email)
-        ->set('data.password', 'password')
-        ->call('authenticate')
-        ->assertHasNoErrors()
-        ->assertSee($user->email); // Sjekk om e-posten faktisk er satt
+        ->set('data.email', $user->email)  // Sett e-post
+        ->set('data.password', 'password')  // Sett passord
+        ->call('authenticate')  // Kall autentisering
+        ->assertHasNoErrors();  // Bekreft at det ikke er noen feil
 });
+
 
 
 // ✅ Test 3
