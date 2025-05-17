@@ -5,23 +5,39 @@ type: docker
 steps:
   - name: prepare-environment
     image: laravelsail/php83-composer
+    volumes:
+      - name: cache
+        path: /drone/cache
     commands:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install intl gd
       - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
       - apt-get install -y nodejs
+      - |
+        if [ -d /drone/cache/vendor ]; then
+          cp -R /drone/cache/vendor .
+        fi
+      - |
+        if [ -d /drone/cache/node_modules ]; then
+          cp -R /drone/cache/node_modules .
+        fi
       - composer install --prefer-dist --no-interaction
       - npm ci
+      - cp -R vendor /drone/cache/
+      - cp -R node_modules /drone/cache/
 
   - name: pint
     image: laravelsail/php83-composer
     commands:
+      - apt-get update && apt-get install -y libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev unzip zip curl git
+      - docker-php-ext-install intl gd
       - composer install --no-interaction
       - ./vendor/bin/pint --test
 
   - name: phpstan
     image: laravelsail/php83-composer
     commands:
+      - composer install --no-interaction
       - ./vendor/bin/phpstan analyse
 
   - name: pest-tests
@@ -31,6 +47,7 @@ steps:
       APP_KEY:
         from_secret: APP_KEY
     commands:
+      - composer install --no-interaction
       - php artisan test --parallel
 
   - name: build-assets
@@ -55,6 +72,11 @@ steps:
       - git checkout master || git checkout -b master
       - git merge --no-edit devtest
       - git push origin master
+
+volumes:
+  - name: cache
+    host:
+      path: /tmp/drone-cache
 
 trigger:
   branch:
