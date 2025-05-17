@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: php:8.4-cli  # Bruker php:8.4-cli som grunnbilde som støtter docker-php-ext-install og lar deg installere PHP-utvidelser
+      image: node:16-bullseye  # Bruker node:16-bullseye som inneholder både Node.js og PHP
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -19,14 +19,12 @@ jobs:
           apt-get install -yqq apt-utils autoconf build-essential  # Installer nødvendige verktøy
           apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
 
-          # Installer Node.js v16.x
-          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-          apt-get install -y nodejs
+          # Installer PHP
+          apt-get install -y php php-cli php-mbstring php-xml php-curl php-zip php-mysqli php-intl
+
+          # Installer Node.js og bekreft versjon
           node --version  # Bekrefter at node er installert
           npm --version  # Bekrefter at npm er installert
-
-          # Installer PHP-utvidelser
-          docker-php-ext-install pdo_mysql zip intl gd  # Installerer nødvendige PHP-utvidelser
 
           # Installer Composer
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
