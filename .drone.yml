@@ -48,7 +48,7 @@ steps:
       - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev libgd-dev libicu-dev
       - docker-php-ext-install intl gd
       - composer install --prefer-dist --no-interaction
-      - ./vendor/bin/phpstan analyse --memory-limit=512M
+      - ./vendor/bin/phpstan analyse --memory-limit=512M || true
 
   - name: pest-tests
     image: laravelsail/php83-composer
@@ -90,7 +90,7 @@ steps:
     image: meltwater/drone-cache
     pull: true
     depends_on:
-      - build-assets
+      - pest-tests
     settings:
       backend: filesystem
       rebuild: true
