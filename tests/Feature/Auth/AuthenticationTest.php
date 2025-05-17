@@ -20,13 +20,16 @@ it('can render page login page', function () {
 test('users can authenticate using the login screen', function () {
     auth()->logout();
 
+    // Lag en bruker med bekreftet e-post
     $user = User::factory()->create([
         'email_verified_at' => now(),
+        'password' => Hash::make('password'),
     ]);
 
+    // Autentiser og test
     Livewire::test(\Filament\Pages\Auth\Login::class)
         ->set('data.email', $user->email)
-        ->set('data.password', 'password')
+        ->set('data.password', 'password') // Sørg for at passordet er korrekt
         ->call('authenticate')
         ->assertHasNoErrors();
 });
