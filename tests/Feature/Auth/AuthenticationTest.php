@@ -6,9 +6,8 @@ use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
-uses(Tests\TestCase::class)->in(__DIR__);
 
-// ✅ Test 1: Login-siden rendres riktig
+// ✅ Test 1
 it('can render page login page', function () {
     auth()->logout();
 
@@ -17,7 +16,7 @@ it('can render page login page', function () {
         ->assertSuccessful();
 })->group('feature');
 
-// ✅ Test 2: Brukere kan autentisere seg
+// ✅ Test 2
 test('users can authenticate using the login screen', function () {
     auth()->logout();
 
@@ -29,10 +28,10 @@ test('users can authenticate using the login screen', function () {
         ->set('data.email', $user->email)
         ->set('data.password', 'password')
         ->call('authenticate')
-        ->assertHasNoErrors(); // Bytt til assertSuccessful() om nødvendig
+        ->assertHasNoErrors();
 });
 
-// ✅ Test 3: Feil passord hindrer innlogging
+// ✅ Test 3
 test('users can not authenticate with invalid password', function () {
     auth()->logout();
 
