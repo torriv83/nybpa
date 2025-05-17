@@ -1,27 +1,46 @@
-pipelines:
-  default:
-    - step:
-        name: Prepare Environment
-        image: php:8.4
-        caches:
-          - composer
-          - node_modules
-        commands:
-          # Oppdatering og installering av nødvendige pakker
-          - apt-get update -yqq
-          - apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
-          # Installerer nødvendige PHP-utvidelser
-          - docker-php-ext-install pdo_mysql zip intl gd
-          # Aktiver PHP-utvidelsene
-          - echo "extension=intl.so" >> /usr/local/etc/php/conf.d/40-intl.ini
-          - echo "extension=gd.so" >> /usr/local/etc/php/conf.d/40-gd.ini
-          - echo "extension=zip.so" >> /usr/local/etc/php/conf.d/40-zip.ini
-          # Installer Composer
-          - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-          # Installer Node.js v16.x og npm
-          - curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-          - apt-get install -y nodejs
-          - npm --version  # Bekrefter at npm er installert
-          # Installer PHP og Node-avhengigheter
-          - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose  # Installerer PHP-avhengigheter
-          - npm ci --verbose  # Installerer npm-avhengigheter med verbose-modus for bedre feilsøking
+name: Prepare and Build Project
+on:
+  push:
+    branches:
+      - devtest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          apt-get update -yqq
+          apt-get install -yqq git libpq-dev libzip-dev curl libpng-dev libonig-dev libxml2-dev libicu-dev libgd-dev
+          docker-php-ext-install pdo_mysql zip intl gd
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+          apt-get install -y nodejs
+          npm --version
+          composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --verbose
+          npm ci --verbose
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyse --memory-limit=1024M || true
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Run tests
+        run: php artisan test --parallel
+
+      - name: Cache configuration, routes, and views
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+
+      - name: Optimize
+        run: php artisan optimize
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /var/www/your-app && git pull origin master && composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan optimize"
