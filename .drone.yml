@@ -42,10 +42,20 @@ steps:
 #      - composer install --prefer-dist --no-interaction
 #      - ./vendor/bin/phpstan analyse --memory-limit=512M
 
+  - name: build-assets
+    image: node:20
+    depends_on:
+    #      - phpstan
+    #     - pest-tests
+    commands:
+      - npm ci
+      - npm run build
+
   - name: pest-tests
     image: laravelsail/php83-composer
     depends_on:
       - prepare-environment
+      - build-assets
     environment:
       APP_ENV: testing
       APP_KEY:
@@ -60,15 +70,6 @@ steps:
       - composer install --prefer-dist --no-interaction
       - echo "APP_KEY=$APP_KEY"
       - php artisan test --parallel
-
-  - name: build-assets
-    image: node:20
-    depends_on:
-#      - phpstan
-      - pest-tests
-    commands:
-      - npm ci
-      - npm run build
 
 #  - name: merge-to-master
 #    image: alpine
