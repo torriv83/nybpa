@@ -1,8 +1,17 @@
 kind: pipeline
 name: ci-cd
 type: docker
-##start
+
 steps:
+  - name: prepare-cache
+    image: alpine
+    commands:
+      - mkdir -p /tmp/cache/nybpa/composer-npm-cache/vendor
+      - mkdir -p /tmp/cache/nybpa/composer-npm-cache/node_modules
+    volumes:
+      - name: cache
+        path: /tmp/cache
+
   - name: restore-cache
     image: meltwater/drone-cache
     pull: true
@@ -53,7 +62,6 @@ steps:
   - name: pest-tests
     image: laravelsail/php83-composer
     depends_on:
-#      - phpstan
       - build-assets
     environment:
       APP_ENV: testing
@@ -68,23 +76,6 @@ steps:
       - docker-php-ext-install intl gd pdo pdo_sqlite
       - composer install --prefer-dist --no-interaction
       - php artisan test --parallel
-
-#  - name: merge-to-master
-#    image: alpine
-#    depends_on:
-#      - pest-tests
-#    environment:
-#      GITEA_TOKEN:
-#        from_secret: GITEA_TOKEN
-#    commands:
-#      - apk add git
-#      - git config --global user.name "Tor Rivera"
-#      - git config --global user.email "tor@trivera.net"
-#      - git remote set-url origin https://oauth2:$GITEA_TOKEN@gitea.torriv.synology.me/torriv/nybpa.git
-#      - git fetch origin
-#      - git checkout master || git checkout -b master
-#      - git merge --no-edit devtest
-#      - git push origin master
 
   - name: rebuild-cache
     image: meltwater/drone-cache
@@ -111,3 +102,4 @@ trigger:
   branch:
     include:
       - devtest
+      -
