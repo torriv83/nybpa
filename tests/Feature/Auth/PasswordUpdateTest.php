@@ -1,26 +1,24 @@
 <?php
 
-
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 it('can render page', function () {
-/*    // Create the role (if it doesn't already exist)
-    $role = Role::create(['name' => 'Admin']);
+    /*    // Create the role (if it doesn't already exist)
+        $role = Role::create(['name' => 'Admin']);
 
-    // Create the user
-    $user = User::factory()->create([
-        'email'             => fake()->name . '@trivera.net',
-        'email_verified_at' => now(),
-    ]);
+        // Create the user
+        $user = User::factory()->create([
+            'email'             => fake()->name . '@trivera.net',
+            'email_verified_at' => now(),
+        ]);
 
-    // Assign the role to the user
-    $user->assignRole('Admin');
+        // Assign the role to the user
+        $user->assignRole('Admin');
 
-    $this->actingAs($user);*/
+        $this->actingAs($user);*/
 
     $this->get('admin/profile/')->assertSuccessful();
 });
-
 
 /*test('password can be updated', function () {
 

@@ -60,8 +60,8 @@ class UtstyrResource extends Resource
                 Tables\Columns\TextColumn::make('kategori.kategori')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('artikkelnummer'),
                 Tables\Columns\TextColumn::make('link')
-                    ->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record): ?string => $record->link, true),
+                    ->formatStateUsing(fn () => 'Se her')
+                    ->url(fn ($record): ?string => $record->link, true),
             ])->striped()
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -94,7 +94,7 @@ class UtstyrResource extends Resource
                     ->requiresConfirmation()
                     ->modalHeading('Bestill utstyr')
                     ->modalDescription('Sikker på at du har valgt alt du trenger?')
-                    ->modalContent(fn($records) => view('filament.pages.modalUtstyr',
+                    ->modalContent(fn ($records) => view('filament.pages.modalUtstyr',
                         ['records' => $records]))
                     ->modalSubmitActionLabel('Ja, bestill utstyr!')
                     ->deselectRecordsAfterCompletion()->modalWidth('lg'),
@@ -117,10 +117,10 @@ class UtstyrResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListUtstyrs::route('/'),
+            'index' => ListUtstyrs::route('/'),
             'create' => CreateUtstyr::route('/create'),
-            'view'   => ViewUtstyr::route('/{record}'),
-            'edit'   => EditUtstyr::route('/{record}/edit'),
+            'view' => ViewUtstyr::route('/{record}'),
+            'edit' => EditUtstyr::route('/{record}/edit'),
         ];
     }
 

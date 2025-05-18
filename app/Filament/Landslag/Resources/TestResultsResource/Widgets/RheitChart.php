@@ -29,12 +29,10 @@ class RheitChart extends ChartWidget
      */
     protected function getData(): array
     {
-        return Cache::tags(['testresult'])->remember('rheitChart', now()->addMonth(), function ()
-        {
+        return Cache::tags(['testresult'])->remember('rheitChart', now()->addMonth(), function () {
             $rheit = $this->fetchData();
 
-            if (!$rheit || $rheit->testResults->isEmpty())
-            {
+            if (! $rheit || $rheit->testResults->isEmpty()) {
                 return $this->getDefaultChartData();
             }
 
@@ -47,8 +45,8 @@ class RheitChart extends ChartWidget
     /**
      * Prepares the chart data for rendering.
      *
-     * @param array $resultater The result data.
-     * @param array $dato The date data.
+     * @param  array  $resultater  The result data.
+     * @param  array  $dato  The date data.
      * @return array Returns an array of formatted chart data.
      */
     protected function prepareChartData(array $resultater, array $dato): array
@@ -79,38 +77,37 @@ class RheitChart extends ChartWidget
     /**
      * Transforms the given data into a specific format.
      *
-     * @param Collection $results The input data to transform.
+     * @param  Collection  $results  The input data to transform.
      * @return array Returns an array with the transformed data.
      */
     protected function transformData(Collection $results): array
     {
         $resultater = [];
-        $dato       = [];
+        $dato = [];
 
         foreach ($results as $result) {
             $dato[] = $result->dato->format('d.m.y H:i');
             $this->transformResultat($resultater, $result->resultat[0]);
-            $finalDrop    = $this->calculateFinalDrop($result->resultat[0]);
+            $finalDrop = $this->calculateFinalDrop($result->resultat[0]);
             $resultater[] = ['Drop' => $finalDrop];
         }
 
         return [
             'resultater' => $resultater,
-            'dato'       => $dato,
+            'dato' => $dato,
         ];
     }
 
     /**
      * Transforms the given result into a specific format and appends it to the input array.
      *
-     * @param array &$resultater The array to which the transformed result should be appended.
-     * @param array $resultat The result to transform.
-     * @return array
+     * @param  array  &$resultater  The array to which the transformed result should be appended.
+     * @param  array  $resultat  The result to transform.
      */
     protected function transformResultat(array &$resultater, array $resultat): array
     {
         foreach ($resultat as $name => $result) {
-            $resultater[] = ['Runde: ' . $name => $result];
+            $resultater[] = ['Runde: '.$name => $result];
         }
 
         return $resultater;
@@ -119,7 +116,7 @@ class RheitChart extends ChartWidget
     /**
      * Calculates the final drop of an array of results.
      *
-     * @param array $resultat The array of results.
+     * @param  array  $resultat  The array of results.
      * @return float Returns the final drop as a float.
      */
     protected function calculateFinalDrop(array $resultat): float
@@ -130,33 +127,32 @@ class RheitChart extends ChartWidget
     /**
      * Formats the chart data in a specific format.
      *
-     * @param array $resultater The input data with results.
-     * @param array $dato The input data with dates.
+     * @param  array  $resultater  The input data with results.
+     * @param  array  $dato  The input data with dates.
      * @return array Returns an array with the formatted chart data.
      */
     protected function formatChartData($resultater, $dato): array
     {
         $finalResults = [];
-        $colors       = TestResults::generateRandomColors(count(array_merge_recursive(...$resultater)));
+        $colors = TestResults::generateRandomColors(count(array_merge_recursive(...$resultater)));
 
-        foreach (array_merge_recursive(...$resultater) as $name => $res)
-        {
-            $randColor      = array_shift($colors);
-            $res            = count($dato) > 1 ? $res : [$res];
-            $type           = 'line';
+        foreach (array_merge_recursive(...$resultater) as $name => $res) {
+            $randColor = array_shift($colors);
+            $res = count($dato) > 1 ? $res : [$res];
+            $type = 'line';
             $finalResults[] = [
-                'type'            => $type,
-                'label'           => $name,
-                'data'            => $res,
+                'type' => $type,
+                'label' => $name,
+                'data' => $res,
                 'backgroundColor' => $randColor,
-                'borderColor'     => $randColor,
-                'borderWidth'     => 1,
+                'borderColor' => $randColor,
+                'borderWidth' => 1,
             ];
         }
 
         return [
             'datasets' => $finalResults,
-            'labels'   => $dato,
+            'labels' => $dato,
         ];
     }
 
@@ -171,10 +167,10 @@ class RheitChart extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Rheit',
-                    'data'  => [],
+                    'data' => [],
                 ],
             ],
-            'labels'   => [],
+            'labels' => [],
         ];
     }
 
@@ -188,26 +184,26 @@ class RheitChart extends ChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode'      => 'index',
+                    'mode' => 'index',
                     'intersect' => false,
                 ],
             ],
-            'scales'  => [
+            'scales' => [
                 'x' => [
                     'display' => true,
-                    'title'   => [
+                    'title' => [
                         'display' => true,
-                        'text'    => 'Dato',
+                        'text' => 'Dato',
                     ],
                 ],
                 'y' => [
-                    'display'     => true,
+                    'display' => true,
                     'beginAtZero' => false,
-                    'title'       => [
+                    'title' => [
                         'display' => true,
-                        'text'    => 'sekunder',
+                        'text' => 'sekunder',
                     ],
-                    'ticks'       => [
+                    'ticks' => [
                         'stepSize' => 0.2,
                     ],
                 ],

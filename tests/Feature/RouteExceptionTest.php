@@ -20,7 +20,7 @@ $urls = [
     '/privat/utstyrs',
     '/admin',
     '/admin/kalender',
-//    '/admin/timelister',
+    //    '/admin/timelister',
     '/privat/kategoris',
     '/privat/economies',
     '/privat/wishlists',

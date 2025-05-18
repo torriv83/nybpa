@@ -36,7 +36,7 @@ class SendTimesheetReminderEmail extends Command
     {
         // Get the current month
         $currentMonth = now()->format('m');
-        $currentYear  = now()->format('Y');
+        $currentYear = now()->format('Y');
 
         // Get all assistants (update with your logic to retrieve assistants)
         $assistants = User::permission('Assistent')->get();

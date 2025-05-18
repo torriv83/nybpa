@@ -20,4 +20,3 @@ it('get a response of 200', function () {
 
     expect($response['data'])->toBeArray();
 });
-

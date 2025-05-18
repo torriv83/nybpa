@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait FilterableByDates
 {
-
     /**
      * Scope a query to only include records created today.
      *
@@ -63,7 +62,6 @@ trait FilterableByDates
      *
      * @param  Builder  $query  The query builder instance.
      * @param  string  $column  [optional] The column to filter on. Default is 'created_at'.
-     *
      * @return Builder The modified query builder instance.
      */
     public function scopeYearToDate(Builder $query, string $column = 'created_at'): Builder
@@ -98,24 +96,16 @@ trait FilterableByDates
         return $query->whereBetween($column, [Carbon::now()->firstOfYear()->subYear(), Carbon::now()->lastOfYear()->subYear()]);
     }
 
-    /**
-     * @param $query
-     * @param  string  $column
-     * @return mixed
-     */
     public function scopeInFuture($query, string $column = 'created_at'): mixed
     {
-        return $query->where(function ($query) use ($column)
-        {
+        return $query->where(function ($query) use ($column) {
             $currentDateTime = now();
             $currentDateOnly = $currentDateTime->format('Y-m-d');
 
             $query->where($column, '>', $currentDateTime)
-                ->orWhere(function ($query) use ($column, $currentDateOnly, $currentDateTime)
-                {
+                ->orWhere(function ($query) use ($column, $currentDateOnly, $currentDateTime) {
                     $query->whereDate($column, '=', $currentDateOnly)
-                        ->where(function ($query) use ($column, $currentDateTime)
-                        {
+                        ->where(function ($query) use ($column, $currentDateTime) {
                             $query->whereTime($column, '>', '00:00:00')
                                 ->whereTime($column, '>', $currentDateTime->format('H:i:s'))
                                 ->orWhereTime($column, '=', '00:00:00');
@@ -123,6 +113,4 @@ trait FilterableByDates
                 });
         });
     }
-
-
 }

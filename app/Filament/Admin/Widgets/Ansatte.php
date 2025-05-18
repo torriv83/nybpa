@@ -22,8 +22,6 @@ class Ansatte extends BaseWidget
     protected static ?int $sort = 7;
 
     /**
-     * @param  Table  $table
-     * @return Table
      * @uses User::scopeAssistenter()
      */
     public function table(Table $table): Table
@@ -45,15 +43,13 @@ class Ansatte extends BaseWidget
                 Tables\Columns\TextColumn::make('email')
                     ->label('E-post')
                     ->limit(10)
-                    ->tooltip(fn(Model $record): string => "$record->email"),
+                    ->tooltip(fn (Model $record): string => "$record->email"),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon')
                     ->default('12345678'),
                 Tables\Columns\TextColumn::make('jobbetiaar')
-                    ->getStateUsing(function (Model $record)
-                    {
-                        $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record)
-                        {
+                    ->getStateUsing(function (Model $record) {
+                        $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record) {
                             return $record->timesheet()
                                 ->yearToDate('fra_dato')
                                 ->where('unavailable', '!=', 1)->sum('totalt');
@@ -78,7 +74,7 @@ class Ansatte extends BaseWidget
             ->defaultSort('jobbetiaar', 'desc')
             ->paginated([3, 4, 8, 12, 24, 36])
             ->recordUrl(
-                fn(Model $record): string => UserResource::getUrl(),
+                fn (Model $record): string => UserResource::getUrl(),
             )
             ->emptyStateHeading('Ingen ansatte er registrert')
             ->emptyStateDescription('Legg til en ansatt for å komme i gang.')
@@ -90,5 +86,4 @@ class Ansatte extends BaseWidget
                     ->button(),
             ]);
     }
-
 }

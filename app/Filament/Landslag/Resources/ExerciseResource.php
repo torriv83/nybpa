@@ -3,7 +3,6 @@
 namespace App\Filament\Landslag\Resources;
 
 use App\Filament\Landslag\Resources\ExerciseResource\Pages;
-use App\Filament\Landslag\Resources\ExerciseResource\RelationManagers;
 use App\Models\Exercise;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
@@ -15,13 +14,19 @@ use Filament\Tables\Table;
 
 class ExerciseResource extends Resource
 {
-    protected static ?string $model                = Exercise::class;
-    protected static ?string $slug                 = 'exercises';
+    protected static ?string $model = Exercise::class;
+
+    protected static ?string $slug = 'exercises';
+
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?string $navigationIcon       = 'icon-exercise';
-    protected static ?string $navigationGroup      = 'Ukeplan';
-    protected static ?string $modelLabel           = 'Øvelse';
-    protected static ?string $pluralModelLabel     = 'Øvelser';
+
+    protected static ?string $navigationIcon = 'icon-exercise';
+
+    protected static ?string $navigationGroup = 'Ukeplan';
+
+    protected static ?string $modelLabel = 'Øvelse';
+
+    protected static ?string $pluralModelLabel = 'Øvelser';
 
     public static function form(Form $form): Form
     {
@@ -32,11 +37,11 @@ class ExerciseResource extends Resource
 
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Exercise $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Exercise $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Exercise $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Exercise $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
             ]);
     }
 
@@ -48,7 +53,7 @@ class ExerciseResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')->label('Opprettet')->since(),
-                TextColumn::make('updated_at')->label('Sist oppdatert')->since()
+                TextColumn::make('updated_at')->label('Sist oppdatert')->since(),
             ])
             ->filters([
                 //
@@ -74,9 +79,9 @@ class ExerciseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListExercises::route('/'),
+            'index' => Pages\ListExercises::route('/'),
             'create' => Pages\CreateExercise::route('/create'),
-            'edit'   => Pages\EditExercise::route('/{record}/edit'),
+            'edit' => Pages\EditExercise::route('/{record}/edit'),
         ];
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor J. Rivera.
  * Date: 13.04.2024
@@ -15,9 +16,8 @@ class TransformLines
     /**
      * Transforms an array of transactions into a standardized format.
      *
-     * @param array $transactions The array of transactions to be transformed.
-     * @param Closure $next The next Closure in the middleware stack.
-     *
+     * @param  array  $transactions  The array of transactions to be transformed.
+     * @param  Closure  $next  The next Closure in the middleware stack.
      * @return mixed The result of the next Closure in the middleware stack.
      */
     public function handle(array $transactions, Closure $next): mixed
@@ -25,16 +25,16 @@ class TransformLines
         $transformedTransactions = [];
 
         foreach ($transactions as $transaction) {
-            if($transaction[0] == 'Reservert'){
+            if ($transaction[0] == 'Reservert') {
                 $dato = today()->format('Y/m/d');
-            }else{
+            } else {
                 $dato = $transaction[0];
             }
 
             $transformedData = [
-                'Date'   => $dato,
-                'Payee'  => $transaction[5],
-                'Memo'   => '',
+                'Date' => $dato,
+                'Payee' => $transaction[5],
+                'Memo' => '',
                 'Amount' => str_replace(',', '.', $transaction[1]),
             ];
 

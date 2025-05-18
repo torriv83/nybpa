@@ -51,7 +51,7 @@ class WorkoutExercisesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('exercise_name')
-                    ->description(fn(WorkoutExercise $record): string => $record->description ?? '')
+                    ->description(fn (WorkoutExercise $record): string => $record->description ?? '')
                     ->label('Øvelse'),
                 Tables\Columns\TextColumn::make('repetitions')->label('Reps'),
                 Tables\Columns\TextColumn::make('sets')->label('Set'),
@@ -64,7 +64,7 @@ class WorkoutExercisesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->label('Legg til øvelse i program')
-                    ->recordSelect(fn() => Select::make('recordId')->label('Øvelse')
+                    ->recordSelect(fn () => Select::make('recordId')->label('Øvelse')
                         ->options(WorkoutExercise::all()->pluck('exercise_name', 'id'))
                         ->searchable()
                         ->preload()
@@ -73,10 +73,11 @@ class WorkoutExercisesRelationManager extends RelationManager
                         ])
                         ->createOptionUsing(function ($data) {
                             $exercise = WorkoutExercise::create($data);
+
                             return $exercise->getKey();
                         })
                     )
-                    ->form(fn(AttachAction $action): array => [
+                    ->form(fn (AttachAction $action): array => [
                         $action->getRecordSelect(),
                         Forms\Components\TextInput::make('description'),
                         Forms\Components\TextInput::make('repetitions')->required(),
@@ -87,14 +88,14 @@ class WorkoutExercisesRelationManager extends RelationManager
                             ->displayFormat('i:s')
                             ->format('H:i:s')
                             ->required(),
-                        Forms\Components\Hidden::make('id')
-                    ])
+                        Forms\Components\Hidden::make('id'),
+                    ]),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make()->label('Fjern fra program'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-                //Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -103,14 +104,14 @@ class WorkoutExercisesRelationManager extends RelationManager
                         ->icon('heroicon-o-arrow-right')
                         ->action(function (Collection $records, array $data) {
                             $currentProgram = TrainingProgram::find($this->getOwnerRecord()->id);
-                            $newProgram     = TrainingProgram::find($data['program']);
+                            $newProgram = TrainingProgram::find($data['program']);
 
                             foreach ($records as $record) {
                                 // Build the pivot data array
                                 $pivotData = [
                                     'repetitions' => $record->pivot_repetitions,
-                                    'sets'        => $record->pivot_sets,
-                                    'rest'        => $record->pivot_rest,
+                                    'sets' => $record->pivot_sets,
+                                    'rest' => $record->pivot_rest,
                                     'description' => $record->pivot_description,
                                 ];
 

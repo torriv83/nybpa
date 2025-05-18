@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor Rivera.
  * Date: 20.10.2023
@@ -20,7 +21,6 @@ use Illuminate\Support\Carbon;
 
 class FormComponentGenerator
 {
-
     protected DateTimeService $dateTimeService;
 
     public function __construct(DateTimeService $dateTimeService)
@@ -44,8 +44,7 @@ class FormComponentGenerator
             ->timezone('Europe/Oslo')
             ->suffixIcon('heroicon-o-clock')
             ->native(false)
-            ->disabledDates(function (Get $get, dateTimeService $dateTimeService)
-            {
+            ->disabledDates(function (Get $get, dateTimeService $dateTimeService) {
                 // Get the record ID from the request parameters
                 $recordId = $get('id');
 
@@ -53,11 +52,11 @@ class FormComponentGenerator
                 return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId) ?? [];
             })
             ->formatStateUsing(
-                fn($state) => is_null($state)
+                fn ($state) => is_null($state)
                     ? Carbon::now()->minute(floor(Carbon::now()->minute / 15) * 15)->second(0)->format('Y-m-d H:i')
                     : $state
             )
-            ->minDate(fn($operation) => ($operation == 'edit' || $config['isAdmin'])
+            ->minDate(fn ($operation) => ($operation == 'edit' || $config['isAdmin'])
                 ? null
                 : Carbon::parse(today())->format('d.m.Y H:i'))
             ->minutesStep(Timesheet::MINUTES_STEP)
@@ -66,16 +65,13 @@ class FormComponentGenerator
             ->live();
 
         // If the component name is 'til_dato_time', add the afterOrEqual validation
-        if ($name === Timesheet::TIL_DATO_TIME)
-        {
+        if ($name === Timesheet::TIL_DATO_TIME) {
             $component->afterOrEqual(Timesheet::FRA_DATO_TIME);
         }
 
         // If the component name is 'til_dato_time' and the user is an admin, update the 'totalt' component state
-        if ($name === Timesheet::TIL_DATO_TIME && $config['isAdmin'])
-        {
-            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, dateTimeService $dateTimeService)
-            {
+        if ($name === Timesheet::TIL_DATO_TIME && $config['isAdmin']) {
+            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, dateTimeService $dateTimeService) {
                 // Calculate the formatted time difference between 'FRA_DATO_TIME' and the current state
                 $formattedTime = $dateTimeService->calculateFormattedTimeDifference($get(Timesheet::FRA_DATO_TIME), $state);
 
@@ -85,10 +81,8 @@ class FormComponentGenerator
         }
 
         // If the component name is 'fra_dato_time', update the 'til_dato_time' component state
-        if ($name === Timesheet::FRA_DATO_TIME)
-        {
-            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, $operation) use ($config)
-            {
+        if ($name === Timesheet::FRA_DATO_TIME) {
+            $component->afterStateUpdated(function (Set $set, ?string $state, Get $get, $operation) use ($config) {
                 // Update the 'til_dato_time' component state based on the new 'fra_dato_time' state
                 DateTimeService::updateTilDatoTime($state, $get, $set, $operation, $config['isAdmin']);
             });
@@ -115,8 +109,7 @@ class FormComponentGenerator
         $component = DatePicker::make($name)
             ->label($label)
             ->native(false)
-            ->disabledDates(function (Get $get, DateTimeService $dateTimeService)
-            {
+            ->disabledDates(function (Get $get, DateTimeService $dateTimeService) {
                 // Get the id from the request parameters
                 $recordId = $get('id');
 
@@ -125,23 +118,21 @@ class FormComponentGenerator
             })
             ->suffixIcon('calendar')
             ->displayFormat('d.m.Y')
-            ->minDate(fn($operation) => ($operation == 'edit' || $config['isAdmin'])
+            ->minDate(fn ($operation) => ($operation == 'edit' || $config['isAdmin'])
                 ? null
                 : Carbon::parse(today())->format('d.m.Y'))
             ->live()
             ->required();
 
         // If the component name is 'til_dato_date', add the afterOrEqual validation
-        if ($name === Timesheet::TIL_DATO_DATE)
-        {
+        if ($name === Timesheet::TIL_DATO_DATE) {
             $component->afterOrEqual(Timesheet::FRA_DATO_DATE);
         }
 
         // If the component name is 'fra_dato_date', add the afterStateUpdated callback
-        if ($name === Timesheet::FRA_DATO_DATE)
-        {
+        if ($name === Timesheet::FRA_DATO_DATE) {
             $component->afterStateUpdated(
-                fn(Set $set, ?string $state) => $set(Timesheet::TIL_DATO_DATE, Carbon::parse($state)->format('Y-m-d'))
+                fn (Set $set, ?string $state) => $set(Timesheet::TIL_DATO_DATE, Carbon::parse($state)->format('Y-m-d'))
             );
         }
 
@@ -157,32 +148,28 @@ class FormComponentGenerator
      *
      * @param  object  $component  The component to apply the configuration to.
      * @param  array  $config  The configuration options to apply.
-     * @return void
+     *
      * @throws None
      */
     private static function applyComponentConfig(object $component, array $config): void
     {
         // Apply 'hidden' configuration option if provided
-        if (isset($config['hidden']))
-        {
+        if (isset($config['hidden'])) {
             $component->hidden($config['hidden']);
         }
 
         // Apply 'minDate' configuration option if provided
-        if (isset($config['minDate']))
-        {
+        if (isset($config['minDate'])) {
             $component->minDate($config['minDate']);
         }
 
         // Apply 'afterStateUpdated' configuration option if provided
-        if (isset($config['afterStateUpdated']))
-        {
+        if (isset($config['afterStateUpdated'])) {
             $component->afterStateUpdated($config['afterStateUpdated']);
         }
 
         // Apply 'afterOrEqual' configuration option if provided
-        if (isset($config['afterOrEqual']))
-        {
+        if (isset($config['afterOrEqual'])) {
             $component->afterOrEqual($config['afterOrEqual']);
         }
     }
@@ -230,7 +217,7 @@ class FormComponentGenerator
     public static function dynamicHidden(string $name, mixed $default): array
     {
         return [
-            Hidden::make($name)->default($default)
+            Hidden::make($name)->default($default),
         ];
     }
 }

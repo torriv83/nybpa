@@ -13,9 +13,11 @@ class StatsOverview extends BaseWidget
 {
     use EconomyTrait;
 
-    protected static ?string   $pollingInterval = null;
-    protected int|string|array $columnSpan      = '12';
-    protected                  $listeners       = ['updateStatsOverview' => '$refresh'];
+    protected static ?string $pollingInterval = null;
+
+    protected int|string|array $columnSpan = '12';
+
+    protected $listeners = ['updateStatsOverview' => '$refresh'];
 
     protected function getStats(): array
     {
@@ -23,14 +25,12 @@ class StatsOverview extends BaseWidget
 
         $cards = [];
 
-        if ($economy !== null)
-        {
+        if ($economy !== null) {
             $cards[] = $this->createBeforeTaxCard($economy);
             $cards[] = $this->createAfterTaxCard($economy);
             $cards[] = $this->createTaxPercentageCard($economy);
             $cards[] = $this->createAgeOfMoneyCard();
-        } else
-        {
+        } else {
             // Handle the case when the economy record is not found
             // You can add an appropriate error card or take any other action
             $cards[] = Stat::make('Error', 'Economy record not found');
@@ -87,13 +87,12 @@ class StatsOverview extends BaseWidget
      */
     private function createAgeOfMoneyCard(): Stat
     {
-        $ynab     = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
-        $token    = config('app.ynab');
+        $ynab = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
+        $token = config('app.ynab');
         $response = Http::withToken($token)->get($ynab.'months/'.'current');
 
         $aom = $response['data']['month']['age_of_money'];
 
         return Stat::make('Age of money', $aom);
     }
-
 }

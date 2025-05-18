@@ -43,7 +43,7 @@ class PrivatPanelProvider extends PanelProvider
                 StatsOverview::class,
                 AccountsOverview::class,
             ])
-            ->plugin(new FilamentEmail())
+            ->plugin(new FilamentEmail)
             ->plugin(FilamentErrorMailerPlugin::make())
             ->middleware([
                 EncryptCookies::class,

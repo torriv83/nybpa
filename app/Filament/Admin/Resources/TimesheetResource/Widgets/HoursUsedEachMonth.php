@@ -14,12 +14,11 @@ use Illuminate\Support\Facades\DB;
 
 class HoursUsedEachMonth extends BaseWidget
 {
-
     protected static ?string $pollingInterval = null;
 
     protected int|string|array $columnSpan = 'full';
-    protected static ?string   $heading    = '';
 
+    protected static ?string $heading = '';
 
     public function table(Table $table): Table
     {
@@ -46,15 +45,14 @@ class HoursUsedEachMonth extends BaseWidget
                             }),
                         Tables\Columns\TextColumn::make('Totalt')
                             ->formatStateUsing(function ($state) {
-                                return Cache::tags(['timesheet'])->remember('Totalt-' . $state, now()->addMonth(), function () use ($state) {
+                                return Cache::tags(['timesheet'])->remember('Totalt-'.$state, now()->addMonth(), function () use ($state) {
                                     return $state / 60;
                                 });
                             }),
-                    ])
-                ])
+                    ]),
+                ]),
             ])
             ->paginated([1, 3, 6, 9, 12])
             ->contentGrid(['md' => 12]);
     }
-
 }

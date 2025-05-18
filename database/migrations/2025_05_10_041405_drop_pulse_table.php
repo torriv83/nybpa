@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor J. Rivera.
  * Date: 10.05.2025
@@ -9,7 +10,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::dropIfExists('pulse_entries');

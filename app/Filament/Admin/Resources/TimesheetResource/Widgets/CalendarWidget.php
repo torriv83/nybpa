@@ -80,21 +80,22 @@ class CalendarWidget extends FullCalendarWidget
         });
 
         return $schedules->map(function ($item) {
-            $color          = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
+            $color = $item->unavailable ? 'rgba(255, 0, 0, 0.2)' : '';
             $item->til_dato = $item->allDay ? Carbon::parse($item->til_dato)->addDay() : $item->til_dato;
+
             return [
-                'id'              => $item->id,
-                'title'           => Str::limit($item->user->name, 15),
-                'start'           => $item->fra_dato,
-                'end'             => $item->til_dato,
-                'allDay'          => $item->allDay,
-                'description'     => $item->description,
-                'heleDagen'       => $item->allDay,
-                'assistentID'     => $item->user_id,
-                'unavailable'     => $item->unavailable,
-                'totalt'          => $item->totalt,
+                'id' => $item->id,
+                'title' => Str::limit($item->user->name, 15),
+                'start' => $item->fra_dato,
+                'end' => $item->til_dato,
+                'allDay' => $item->allDay,
+                'description' => $item->description,
+                'heleDagen' => $item->allDay,
+                'assistentID' => $item->user_id,
+                'unavailable' => $item->unavailable,
+                'totalt' => $item->totalt,
                 'backgroundColor' => $color,
-                'borderColor'     => $color,
+                'borderColor' => $color,
             ];
         })->toArray();
     }
@@ -113,13 +114,13 @@ class CalendarWidget extends FullCalendarWidget
     {
         $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];
 
-        $tid              = Timesheet::find($event['id']);
-        $tid->fra_dato    = $event['start'];
-        $tid->til_dato    = $slutter;
+        $tid = Timesheet::find($event['id']);
+        $tid->fra_dato = $event['start'];
+        $tid->til_dato = $slutter;
         $tid->description = $event['extendedProps']['description'];
-        $tid->user_id     = $event['extendedProps']['assistentID'];
-        $tid->allDay      = $event['extendedProps']['heleDagen'];
-        $tid->totalt      = Carbon::parse($event['start'])->diffInMinutes($event['end']);
+        $tid->user_id = $event['extendedProps']['assistentID'];
+        $tid->allDay = $event['extendedProps']['heleDagen'];
+        $tid->totalt = Carbon::parse($event['start'])->diffInMinutes($event['end']);
 
         if ($tid->save()) {
             Cache::tags(['timesheet'])->flush();
@@ -150,22 +151,22 @@ class CalendarWidget extends FullCalendarWidget
                         if ($arguments) {
                             if ($arguments['allDay'] ?? false) {
                                 $form->fill([
-                                    'allDay'        => $arguments['allDay'],
+                                    'allDay' => $arguments['allDay'],
                                     'fra_dato_date' => $arguments['start'] ?? null,
-                                    'til_dato_date' => $arguments['end'] ?? null
+                                    'til_dato_date' => $arguments['end'] ?? null,
                                 ]);
                             } else {
                                 $form->fill([
-                                    'allDay'        => $arguments['allDay'] ?? false,
+                                    'allDay' => $arguments['allDay'] ?? false,
                                     'fra_dato_time' => $arguments['start'] ?? null,
-                                    'til_dato_time' => $arguments['end'] ?? null
+                                    'til_dato_time' => $arguments['end'] ?? null,
                                 ]);
                             }
                         } else {
                             $form->fill([
-                                'allDay'        => false,
+                                'allDay' => false,
                                 'fra_dato_time' => null,
-                                'til_dato_time' => null
+                                'til_dato_time' => null,
                             ]);
                         }
                     }
@@ -174,7 +175,7 @@ class CalendarWidget extends FullCalendarWidget
                     function (array $data): array {
                         return FormDataTransformer::transformFormDataForSave($data);
                     }
-                )
+                ),
         ];
     }
 
@@ -191,7 +192,7 @@ class CalendarWidget extends FullCalendarWidget
                     function ($record, Form $form) {
                         $form->fill(FormDataTransformer::transformFormDataForFill($record->toArray()));
                     }
-                )->after(function (){
+                )->after(function () {
                     $this->refreshRecords();
                 }),
             DeleteAction::make(),

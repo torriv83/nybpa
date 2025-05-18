@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by ${USER}.
  * Date: 27.08.2023
@@ -34,7 +35,7 @@ class sendMessageMail extends Mailable
             replyTo: [
                 new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
             ],
-            subject: 'Ny melding fra '. Role::findByName('admin')->users->first()->name,
+            subject: 'Ny melding fra '.Role::findByName('admin')->users->first()->name,
         );
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor Rivera.
  * Date: 15.10.2023
@@ -17,7 +18,6 @@ use Filament\Forms\Components\TimePicker;
 
 trait WeekplanSchema
 {
-
     /**
      * Generates a common fields array for a given day number.
      *
@@ -29,8 +29,7 @@ trait WeekplanSchema
         return [
             // Create a Repeater field with the day number as part of the field name
             Repeater::make('exercises_'.$dayNumber)
-                ->relationship('weekplanExercises', function ($query) use ($dayNumber)
-                {
+                ->relationship('weekplanExercises', function ($query) use ($dayNumber) {
                     $query->where('day', $dayNumber);
                 })
                 ->label('Økter')
@@ -49,9 +48,9 @@ trait WeekplanSchema
                     Select::make('training_program_id')
                         ->label('Velg styrkeprogram')
                         ->options(TrainingProgram::all()->pluck('program_name', 'id'))
-                        ->hidden(function ($get)
-                        {
+                        ->hidden(function ($get) {
                             $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
+
                             return $exerciseName !== 'Styrketrening';
                         }),
 
@@ -69,9 +68,9 @@ trait WeekplanSchema
 
                     // Create a Select field for the intensity
                     Select::make('intensity')->options([
-                        'green'    => 'Lett',
+                        'green' => 'Lett',
                         'darkcyan' => 'Vedlikehold',
-                        'crimson'  => 'Tung',
+                        'crimson' => 'Tung',
                     ])
                         ->label('Hvor tung?')
                         ->required(),
@@ -79,11 +78,10 @@ trait WeekplanSchema
                 ->defaultItems(0)
                 ->grid(4)
                 ->itemLabel(
-                    fn(array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                    fn (array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
                 )
                 ->addActionLabel('Legg til økt')
                 ->collapsible(),
         ];
     }
-
 }

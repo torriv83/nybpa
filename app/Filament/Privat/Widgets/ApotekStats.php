@@ -12,7 +12,6 @@ use Illuminate\Support\Carbon;
 
 class ApotekStats extends BaseWidget
 {
-
     protected int|string|array $columnSpan = '12';
 
     protected static ?string $pollingInterval = null;
@@ -25,8 +24,8 @@ class ApotekStats extends BaseWidget
             ->first()?->created_at)->format('d. M. Y, H:i');
 
         $reseptValidTo = Resepter::where('validTo', '>=', now()->toDateString())  // Sjekker at utløpsdatoen er i dag eller senere
-                            ->orderBy('validTo', 'asc')  // Sorterer etter utløpsdato i stigende rekkefølge
-                            ->first()?->validTo ?? null;  // Henter den første resepten i listen, som er den med nærmest utløpsdato
+            ->orderBy('validTo', 'asc')  // Sorterer etter utløpsdato i stigende rekkefølge
+            ->first()?->validTo ?? null;  // Henter den første resepten i listen, som er den med nærmest utløpsdato
 
         return [
             Stat::make('Antall utstyr på lista', UtstyrResource::getEloquentQuery()->where('deleted_at', null)->count()),
@@ -34,9 +33,9 @@ class ApotekStats extends BaseWidget
             Stat::make('Neste resept går ut',
                 $reseptValidTo ? Carbon::parse($reseptValidTo)->diffForHumans([
                     'parts' => 2,
-                    'join'  => ' og '
+                    'join' => ' og ',
                 ]) : 'Ingen resepter')
-                ->description('Antall Resepter som er utgått: '. ResepterResource::getEloquentQuery()->where('validTo', '<', now())->count()),
+                ->description('Antall Resepter som er utgått: '.ResepterResource::getEloquentQuery()->where('validTo', '<', now())->count()),
         ];
     }
 }

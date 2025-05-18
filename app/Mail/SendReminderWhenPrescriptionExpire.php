@@ -16,6 +16,7 @@ class SendReminderWhenPrescriptionExpire extends Mailable
     use Queueable, SerializesModels;
 
     public $expiringPrescriptions;
+
     public $expiredPrescriptions;
 
     /**

@@ -3,7 +3,6 @@
 namespace App\Filament\Privat\Resources;
 
 use App\Filament\Privat\Resources\ResepterResource\Pages;
-use App\Filament\Privat\Resources\ResepterResource\RelationManagers;
 use App\Models\Resepter;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -26,7 +25,6 @@ class ResepterResource extends Resource
     protected static ?string $pluralModelLabel = 'Resepter';
 
     protected static ?int $navigationSort = 3;
-
 
     public static function getNavigationBadge(): ?string
     {
@@ -52,7 +50,7 @@ class ResepterResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('Navn på resept'),
                 Tables\Columns\TextColumn::make('validTo')->label('Gyldig til')->date('d.m.Y')->sortable(),
             ])
-            ->recordClasses(fn(Model $record) => match (true) {
+            ->recordClasses(fn (Model $record) => match (true) {
                 $record->validTo < now() => '!border-x-2 !border-x-red-600 !dark:border-x-red-600',
                 $record->validTo < now()->addMonth() => '!border-x-2 !border-x-yellow-600 !dark:border-x-yellow-600',
                 default => '!border-x-2 !border-x-green-600 !dark:border-x-green-600',

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 it('checks the common fields for non-admin', function () {
-    $helperUser = new DateAndTimeHelperTestingClass();
+    $helperUser = new DateAndTimeHelperTestingClass;
     $commonFields = $helperUser->getCommonFields(false);
 
     $foundFraDatoTime = false;
@@ -26,7 +26,7 @@ it('checks the common fields for non-admin', function () {
 });
 
 it('checks the common fields for admin', function () {
-    $helperUser = new DateAndTimeHelperTestingClass();
+    $helperUser = new DateAndTimeHelperTestingClass;
     $commonFields = $helperUser->getCommonFields(true);
 
     $foundFraDatoTime = false;

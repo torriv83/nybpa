@@ -24,12 +24,12 @@ class ListUtstyrs extends ListRecords
     {
 
         $categories = Kategori::all();
-        $tabs       = [
+        $tabs = [
             'alle' => Tab::make(),
         ];
 
         foreach ($categories as $category) {
-            $tabs[$category->kategori] = Tab::make()->modifyQueryUsing(fn(Builder $query) => $query->where('kategori_id', $category->id));
+            $tabs[$category->kategori] = Tab::make()->modifyQueryUsing(fn (Builder $query) => $query->where('kategori_id', $category->id));
         }
 
         return $tabs;

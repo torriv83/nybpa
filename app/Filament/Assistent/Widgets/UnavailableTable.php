@@ -20,9 +20,12 @@ use Illuminate\Support\Facades\Auth;
 class UnavailableTable extends BaseWidget
 {
     use DateAndTimeHelper;
-    protected static ?string $heading         = 'Tider satt som ikke tilgjengelig';
+
+    protected static ?string $heading = 'Tider satt som ikke tilgjengelig';
+
     protected static ?string $pollingInterval = null;
-    protected static ?int    $sort            = 3;
+
+    protected static ?int $sort = 3;
 
     public function table(Table $table): Table
     {
@@ -42,12 +45,12 @@ class UnavailableTable extends BaseWidget
                         return FormDataTransformer::transformFormDataForSave($data);
                     })
                     ->form([
-                        //Seksjon
-                        Section::make(fn() => Auth::user()->name)
+                        // Seksjon
+                        Section::make(fn () => Auth::user()->name)
                             ->description('Velg om det gjelder hele dagen eller ikke')
                             ->schema([
                                 Checkbox::make('allDay')
-                                    ->label('Hele dagen?')->live()
+                                    ->label('Hele dagen?')->live(),
                             ])->columns(),
 
                         Section::make('Tid')
@@ -71,17 +74,17 @@ class UnavailableTable extends BaseWidget
                         $recipient = User::query()->role('admin')->get();
 
                         Notification::make()
-                            ->title(auth()->user()->name . ' Har lagt til en tid han/hun ikke kan jobbe.')
+                            ->title(auth()->user()->name.' Har lagt til en tid han/hun ikke kan jobbe.')
                             ->actions([
                                 Action::make('view')
                                     ->url((route('filament.admin.resources.timelister.index', [
                                         'tableFilters' => [
                                             'Ikke tilgjengelig' => [
-                                                'isActive' => true
+                                                'isActive' => true,
                                             ],
-                                            'assistent'         => [
-                                                'value' => auth()->user()->id
-                                            ]
+                                            'assistent' => [
+                                                'value' => auth()->user()->id,
+                                            ],
                                         ],
                                     ])))
                                     ->button(),
@@ -89,12 +92,12 @@ class UnavailableTable extends BaseWidget
                             ->sendToDatabase($recipient);
                     })
                     ->form([
-                        //Seksjon
-                        Section::make(fn() => Auth::user()->name)
+                        // Seksjon
+                        Section::make(fn () => Auth::user()->name)
                             ->description('Velg om det gjelder hele dagen eller ikke')
                             ->schema([
                                 Checkbox::make('allDay')
-                                    ->label('Hele dagen?')->live()
+                                    ->label('Hele dagen?')->live(),
                             ])->columns(),
 
                         Section::make('Tid')

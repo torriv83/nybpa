@@ -19,10 +19,10 @@ class ManageEconomies extends ManageRecords
 {
     protected static string $resource = EconomyResource::class;
 
-/*    public function getHeaderWidgetsColumns(): int|array
-    {
-        return 12;
-    }*/
+    /*    public function getHeaderWidgetsColumns(): int|array
+        {
+            return 12;
+        }*/
 
     protected function getHeaderActions(): array
     {
@@ -39,7 +39,7 @@ class ManageEconomies extends ManageRecords
                         ->disk('local')
                         ->directory('temporary'),
                 ])
-                ->action(function (array $data){
+                ->action(function (array $data) {
                     return $this->processBankFile($data);
                 })->after(function ($data) {
                     Storage::disk('local')->delete($data['bankFile']);

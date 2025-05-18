@@ -23,22 +23,23 @@ class CreateTimesheet extends CreateRecord
         return FormDataTransformer::transformFormDataForSave($data);
 
     }
+
     protected function afterCreate(): void
     {
         $recipient = User::query()->role('admin')->get();
 
         Notification::make()
-            ->title(auth()->user()->name . ' Har lagt til en tid han/hun ikke kan jobbe.')
+            ->title(auth()->user()->name.' Har lagt til en tid han/hun ikke kan jobbe.')
             ->actions([
                 Action::make('se')
                     ->url(route('filament.admin.resources.timelister.index', [
                         'tableFilters' => [
                             'Ikke tilgjengelig' => [
-                                'isActive' => true
+                                'isActive' => true,
                             ],
-                            'assistent'         => [
-                                'value' => auth()->user()->id
-                            ]
+                            'assistent' => [
+                                'value' => auth()->user()->id,
+                            ],
                         ],
                     ]))
                     ->button(),

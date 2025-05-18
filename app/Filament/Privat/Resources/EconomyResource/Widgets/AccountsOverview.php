@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 class AccountsOverview extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
+
     protected int|string|array $columnSpan = '12';
 
     protected function getCards(): array
@@ -17,21 +18,21 @@ class AccountsOverview extends BaseWidget
 
         $cards = collect();
 
-        $ynab     = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
-        $token    = config('app.ynab');
-        $response = Http::withToken($token)->get($ynab . 'accounts/');
+        $ynab = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
+        $token = config('app.ynab');
+        $response = Http::withToken($token)->get($ynab.'accounts/');
         $accounts = $response['data']['accounts'];
 
-        //Inkluder kun bruks og spare kontoer
+        // Inkluder kun bruks og spare kontoer
         $filteredAccounts = collect($accounts)->filter(function ($account) {
             return $account['type'] === 'checking' || $account['type'] === 'savings';
         });
 
         $filteredAccounts->each(function ($account) use ($cards) {
             $cards->push(
-                Stat::make($account['name'], number_format(($account['cleared_balance'] / 1000), 0, ',', '.') . ' kr')
-                    ->description('Sist avstemt: ' . Carbon::make($account['last_reconciled_at'])->diffForHumans() .
-                        ', Balanse: ' . number_format(($account['balance'] / 1000), 0, ',', '.'))
+                Stat::make($account['name'], number_format(($account['cleared_balance'] / 1000), 0, ',', '.').' kr')
+                    ->description('Sist avstemt: '.Carbon::make($account['last_reconciled_at'])->diffForHumans().
+                        ', Balanse: '.number_format(($account['balance'] / 1000), 0, ',', '.'))
             );
         });
 

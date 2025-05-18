@@ -23,18 +23,16 @@ class StyrkeChart extends ChartWidget
 
     protected function getData(): array
     {
-        return Cache::tags(['testresult'])->remember('styrkeChart', now()->addMonth(), function ()
-        {
+        return Cache::tags(['testresult'])->remember('styrkeChart', now()->addMonth(), function () {
             $styrketest = $this->fetchData();
 
-            if (!$styrketest || $styrketest->testResults->isEmpty())
-            {
+            if (! $styrketest || $styrketest->testResults->isEmpty()) {
                 return $this->getDefaultChartData();
             }
 
             $transformedData = $this->transformData($styrketest->testResults);
-            $resultater      = $transformedData['resultater'];
-            $dato            = $transformedData['dato'];
+            $resultater = $transformedData['resultater'];
+            $dato = $transformedData['dato'];
 
             return $this->formatChartData($resultater, $dato);
         });
@@ -48,11 +46,10 @@ class StyrkeChart extends ChartWidget
     protected function fetchData(int $numberOfResults = 6)
     {
         return Tests::with([
-            'testResults' => function ($query) use ($numberOfResults)
-            {
+            'testResults' => function ($query) use ($numberOfResults) {
                 return $query->orderBy('dato', 'desc') // Order by date in descending order to get the latest results
-                ->take($numberOfResults); // Take only the specified number of results
-            }
+                    ->take($numberOfResults); // Take only the specified number of results
+            },
         ])
             ->where('navn', '=', 'Styrketest')
             ->first();
@@ -61,47 +58,44 @@ class StyrkeChart extends ChartWidget
     protected function transformData(Collection $results): array
     {
         $resultater = [];
-        $dato       = [];
+        $dato = [];
 
-        foreach ($results as $v)
-        {
+        foreach ($results as $v) {
             $dato[] = $v->dato->format('d.m.y H:i');
 
-            foreach ($v->resultat[0] as $name => $result)
-            {
+            foreach ($v->resultat[0] as $name => $result) {
                 $resultater[$name][] = $result;
             }
         }
 
         return [
             'resultater' => $resultater,
-            'dato'       => $dato,
+            'dato' => $dato,
         ];
     }
 
     protected function formatChartData(array $resultater, array $dato): array
     {
         $finalResults = [];
-        $randColors   = TestResults::generateRandomColors(count($resultater));
+        $randColors = TestResults::generateRandomColors(count($resultater));
 
-        foreach ($resultater as $name => $res)
-        {
+        foreach ($resultater as $name => $res) {
             $randColor = array_shift($randColors);
-            $res       = count($dato) > 1 ? $res : [$res];
+            $res = count($dato) > 1 ? $res : [$res];
 
             $finalResults[] = [
-                'type'            => 'line',
-                'label'           => $name,
-                'data'            => $res,
+                'type' => 'line',
+                'label' => $name,
+                'data' => $res,
                 'backgroundColor' => $randColor,
-                'borderColor'     => $randColor,
-                'borderWidth'     => 2,
+                'borderColor' => $randColor,
+                'borderWidth' => 2,
             ];
         }
 
         return [
             'datasets' => $finalResults,
-            'labels'   => $dato,
+            'labels' => $dato,
         ];
     }
 
@@ -111,10 +105,10 @@ class StyrkeChart extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Styrke',
-                    'data'  => [],
+                    'data' => [],
                 ],
             ],
-            'labels'   => [],
+            'labels' => [],
         ];
     }
 
@@ -123,8 +117,8 @@ class StyrkeChart extends ChartWidget
         return [
             'plugins' => [
                 'tooltip' => [
-                    'mode'          => 'nearest',
-                    'intersect'     => false,
+                    'mode' => 'nearest',
+                    'intersect' => false,
                     'displayColors' => false,
                 ],
             ],

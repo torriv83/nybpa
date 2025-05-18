@@ -46,7 +46,7 @@ class AssistentPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Assistent/Resources'), for: 'App\\Filament\\Assistent\\Resources')
             ->discoverPages(in: app_path('Filament/Assistent/Pages'), for: 'App\\Filament\\Assistent\\Pages')
             ->pages([
-                //Pages\Dashboard::class,
+                // Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Assistent/Widgets'), for: 'App\\Filament\\Assistent\\Widgets')
             ->widgets([
@@ -54,7 +54,7 @@ class AssistentPanelProvider extends PanelProvider
                 AssistentWidget\TotalWorked::class,
                 AssistentWidget\UpcomingWorkTabell::class,
                 AssistentWidget\TimeTabell::class,
-                //Widgets\FilamentInfoWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

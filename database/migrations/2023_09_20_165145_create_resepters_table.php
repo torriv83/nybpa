@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by ${USER}.
  * Date: 20.09.2023
@@ -10,7 +11,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('resepters', function (Blueprint $table) {

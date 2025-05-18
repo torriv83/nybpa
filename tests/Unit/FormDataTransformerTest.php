@@ -11,17 +11,17 @@ it('transforms form data for save with allDay true', function () {
     // Mock DateTimeService
     $mockedDateTimeService = Mockery::mock(DateTimeService::class);
     $mockedDateTimeService->shouldReceive('calculateTotalMinutes')
-    ->andReturn(300);  // Assume the total minutes to be 300 for simplicity
+        ->andReturn(300);  // Assume the total minutes to be 300 for simplicity
 
     // Swap the DateTimeService instance in the container with the mock
     $this->instance(DateTimeService::class, $mockedDateTimeService);
 
     $inputData = [
-    'allDay' => true,
-    Timesheet::FRA_DATO_DATE => '2023-10-20',
-    Timesheet::TIL_DATO_DATE => '2023-10-21',
-    'totalt' => '5:00',
-    'unavailable' => false,
+        'allDay' => true,
+        Timesheet::FRA_DATO_DATE => '2023-10-20',
+        Timesheet::TIL_DATO_DATE => '2023-10-21',
+        'totalt' => '5:00',
+        'unavailable' => false,
     ];
 
     $transformedData = FormDataTransformer::transformFormDataForSave($inputData);
@@ -108,4 +108,3 @@ it('transforms form data for save with unavailable true', function () {
     // Assertions
     expect($transformedData['totalt'])->toBe(0);
 });
-

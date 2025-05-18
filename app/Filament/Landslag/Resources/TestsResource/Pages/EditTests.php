@@ -14,6 +14,7 @@ class EditTests extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -25,7 +25,7 @@ class VektChart extends ChartWidget
     {
         return Cache::tags(['testresult'])->remember('vektChart', now()->addMonth(), function () {
             $weights = [];
-            $dates   = [];
+            $dates = [];
 
             try {
                 $tests = $this->getTests();
@@ -33,7 +33,7 @@ class VektChart extends ChartWidget
                     $results = $this->getTestResults($tests->first());
                     foreach ($results as $result) {
                         $weights[] = $result->resultat[0]['Vekt'];
-                        $dates[]   = $result->dato->format('d.m.y H:i');
+                        $dates[] = $result->dato->format('d.m.y H:i');
                     }
                 }
             } catch (\Exception $e) {
@@ -44,10 +44,10 @@ class VektChart extends ChartWidget
                 'datasets' => [
                     [
                         'label' => 'Vekt',
-                        'data'  => $weights,
+                        'data' => $weights,
                     ],
                 ],
-                'labels'   => $dates,
+                'labels' => $dates,
             ];
         });
     }
@@ -77,7 +77,7 @@ class VektChart extends ChartWidget
                     'display' => false,
                 ],
             ],
-            'scales'  => $this->getChartScales(),
+            'scales' => $this->getChartScales(),
         ];
     }
 
@@ -86,16 +86,16 @@ class VektChart extends ChartWidget
         return [
             'x' => [
                 'display' => true,
-                'title'   => [
+                'title' => [
                     'display' => true,
-                    'text'    => 'Dato',
+                    'text' => 'Dato',
                 ],
             ],
             'y' => [
                 'display' => true,
-                'title'   => [
+                'title' => [
                     'display' => true,
-                    'text'    => 'Kg',
+                    'text' => 'Kg',
                 ],
             ],
         ];

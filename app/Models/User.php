@@ -65,7 +65,6 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-
     public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);
@@ -77,22 +76,17 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * @param $query
-     * @return Builder|null
      * @method assistenter()
      */
-    public function scopeAssistenter($query): null|Builder
+    public function scopeAssistenter($query): ?Builder
     {
-        $rolesToCheck  = ['Tilkalling', 'Fast ansatt'];
+        $rolesToCheck = ['Tilkalling', 'Fast ansatt'];
         $existingRoles = Role::whereIn('name', $rolesToCheck)->pluck('name')->toArray();
 
-        if (!empty($existingRoles))
-        {
+        if (! empty($existingRoles)) {
             return $query->role($existingRoles);
         }
 
         return null;
     }
-
-
 }

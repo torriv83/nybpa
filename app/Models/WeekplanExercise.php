@@ -42,5 +42,4 @@ class WeekplanExercise extends Model
     {
         return $this->belongsTo(TrainingProgram::class);
     }
-
 }

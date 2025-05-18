@@ -24,10 +24,10 @@ class BrukteTimerChart extends ChartWidget
     protected function getData(): array
     {
 
-        $timesheet = new Timesheet();
+        $timesheet = new Timesheet;
 
         /* Dette året */
-        $thisYear      = $timesheet->TimeUsedThisYear();
+        $thisYear = $timesheet->TimeUsedThisYear();
         $thisYearTimes = $this->yearTimes($thisYear);
 
         /* Forrige år */
@@ -36,7 +36,7 @@ class BrukteTimerChart extends ChartWidget
                 ->orderByRaw('fra_dato ASC')
                 ->where('unavailable', '=', 0)
                 ->get()
-                ->groupBy(fn($val): string => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn ($val): string => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
 
         $lastYearTimes = $this->yearTimes($lastYear);
@@ -44,17 +44,17 @@ class BrukteTimerChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label'           => Carbon::now()->format('Y'),
-                    'data'            => $thisYearTimes,
-                    'tension'         => 0.4,
-                    'fill'            => 'origin',
+                    'label' => Carbon::now()->format('Y'),
+                    'data' => $thisYearTimes,
+                    'tension' => 0.4,
+                    'fill' => 'origin',
                     'backgroundColor' => 'rgba(255,153,0,0.6)',
                 ],
                 [
-                    'label'           => Carbon::now()->subYear()->format('Y'),
-                    'data'            => $lastYearTimes,
-                    'tension'         => 0.4,
-                    'fill'            => 'origin',
+                    'label' => Carbon::now()->subYear()->format('Y'),
+                    'data' => $lastYearTimes,
+                    'tension' => 0.4,
+                    'fill' => 'origin',
                     'backgroundColor' => 'rgba(153,255,51,0.3)',
                 ],
             ],
@@ -80,7 +80,7 @@ class BrukteTimerChart extends ChartWidget
                 $totalMinutes = $value->sum('totalt');
                 $hours = intdiv($totalMinutes, 60);
                 $minutes = $totalMinutes % 60;
-                $yearTimes[$key] = sprintf('%02d', $hours) . '.' . sprintf('%02d', $minutes);
+                $yearTimes[$key] = sprintf('%02d', $hours).'.'.sprintf('%02d', $minutes);
             }
         }
 

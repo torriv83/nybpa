@@ -29,20 +29,18 @@ class TimerIUka extends BaseWidget
             )
             ->columns([
                 TextColumn::make('Uke')
-                    ->formatStateUsing(fn(string $state): ?string => __(Carbon::parse($state)->week()))
+                    ->formatStateUsing(fn (string $state): ?string => __(Carbon::parse($state)->week()))
                     ->label('Uke')
                     ->sortable(),
                 TextColumn::make('Totalt')
-                    ->formatStateUsing(fn(string $state): string => __(date('H:i', mktime(0, $state))))
+                    ->formatStateUsing(fn (string $state): string => __(date('H:i', mktime(0, $state))))
                     ->label('Totalt')
                     ->sortable(),
                 TextColumn::make('Gjennomsnitt')
-                    ->formatStateUsing(fn(string $state): string => __(date('H:i', mktime(0, (int) floatval($state)))))
+                    ->formatStateUsing(fn (string $state): string => __(date('H:i', mktime(0, (int) floatval($state)))))
                     ->sortable(),
                 TextColumn::make('Antall')
                     ->sortable(),
             ])->paginated([3, 4, 8, 12, 24, 36])->defaultSort('Uke', 'desc');
     }
-
 }
-
