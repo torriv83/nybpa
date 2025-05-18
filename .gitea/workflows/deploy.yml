@@ -34,21 +34,16 @@ jobs:
           php artisan optimize
           php artisan filament:optimize
 
+      - name: Run Pint (Laravel code style)
+        run: ./vendor/bin/pint --test
+
+      - name: Run Larastan (PHPStan)
+        run: ./vendor/bin/phpstan analyse
+
       - name: Run tests
         run: |
           php artisan config:clear
           php artisan test --parallel
-
-      - name: Commit built assets and Laravel cache
-        run: |
-          git config --global user.name "CI Bot"
-          git config --global user.email "ci@nybpa.no"
-          git add public/build
-          git commit -m "🚀 Auto-commit: bygde frontend-assets og cache-filer" || echo "Ingenting å committe"
-          git push origin HEAD:master
-        env:
-          GIT_AUTHOR_NAME: CI Bot
-          GIT_AUTHOR_EMAIL: ci@nybpa.no
 
       - name: Notify Discord – success
         if: success()
@@ -69,20 +64,3 @@ jobs:
                $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-
-#
-#      # Cache-konfigurasjon, ruter og visninger
-#      - name: Cache configuration, routes, and views
-#        run: |
-#          php artisan config:cache
-#          php artisan route:cache
-#          php artisan view:cache
-#
-#      # Optimaliser Laravel
-#      - name: Optimize
-#        run: php artisan optimize
-#
-#      # Deploy til server
-#      - name: Deploy to server
-#        run: |
-#          ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /var/www/your-app && git pull origin master && composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan optimize"

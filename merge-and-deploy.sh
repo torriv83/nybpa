@@ -1,45 +1,54 @@
-kind: pipeline
-name: ci-cd
-type: docker
+#!/bin/bash
 
-steps:
-  - name: prepare-environment
-    image: laravelsail/php83-composer
-    commands:
-      - apt-get update && apt-get install -y unzip git zip curl libzip-dev libpng-dev libonig-dev libxml2-dev
-      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-      - composer install --prefer-dist --no-interaction
-      - npm ci
+# Save current branch
+CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
 
-  - name: pint
-    image: laravelsail/php83-composer
-    commands:
-      - composer install --no-interaction
-      - ./vendor/bin/pint --test
+# Check if on Staging branch, if so exit
+if [ "$CURRENT_BRANCH" = "Staging" ]; then
+  echo "You are already on the Staging branch. Merge manually if needed."
+  exit 1
+fi
 
-  - name: phpstan
-    image: laravelsail/php83-composer
-    commands:
-      - composer install --no-interaction
-      - ./vendor/bin/phpstan analyse
+# Step 1: Run tests with PestPHP
+echo "Running tests..."
+php artisan test --parallel
 
-  - name: pest-tests
-    image: laravelsail/php83-composer
-    environment:
-      APP_ENV: testing
-      APP_KEY:
-        from_secret: APP_KEY
-    commands:
-      - composer install --no-interaction
-      - php artisan test --parallel
+# Check if tests passed
+if [ $? -ne 0 ]; then
+  echo "Tests failed. Aborting."
+  exit 1
+fi
 
-  - name: build-assets
-    image: node:20
-    commands:
-      - npm ci
-      - npm run build
+# Step 2: Merge current branch into Staging
+echo "Merging $CURRENT_BRANCH into Staging..."
+git checkout Staging
+git merge --no-edit $CURRENT_BRANCH
 
-trigger:
-  branch:
-    include:
-      - devtest
+# Step 3: Run npm build
+echo "Running npm build..."
+npm run build
+
+if [ $? -ne 0 ]; then
+  echo "Build failed. Aborting."
+  exit 1
+fi
+
+# Step 4: Commit changes
+echo "Committing changes to Staging..."
+git add -A
+git commit -m "Build and tests passed."
+
+# Step 5: Merge Staging into Master
+echo "Merging Staging into Master..."
+git checkout master
+git merge --no-edit Staging
+
+# Push Master to GitHub
+echo "Pushing changes to GitHub..."
+git push origin master
+
+# Checkout back to the original branch
+echo "Switching back to $CURRENT_BRANCH..."
+git checkout $CURRENT_BRANCH
+
+echo "Process completed successfully."
