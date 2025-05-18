@@ -5,7 +5,7 @@ on:
     branches: [devtest]
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,9 +17,7 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, redis
 
       - name: Install Composer dependencies
-        run: |
-          composer install --optimize-autoloader -v
-          echo "Composer install fullført"
+        run: composer install --optimize-autoloader -v
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -31,17 +29,33 @@ jobs:
           npm ci
           npm run build
 
+      - name: Cache Laravel config, routes, views, filament
+        run: |
+          php artisan optimize
+          php artisan filament:optimize
+
       - name: Run tests
         run: |
           php artisan config:clear
           php artisan test --parallel
+
+      - name: Commit built assets and Laravel cache
+        run: |
+          git config --global user.name "CI Bot"
+          git config --global user.email "ci@nybpa.no"
+          git add public/build
+          git commit -m "🚀 Auto-commit: bygde frontend-assets og cache-filer" || echo "Ingenting å committe"
+          git push origin HEAD:master
+        env:
+          GIT_AUTHOR_NAME: CI Bot
+          GIT_AUTHOR_EMAIL: ci@nybpa.no
 
       - name: Notify Discord – success
         if: success()
         run: |
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d '{"content":"✅ CI-kjøring for *nybpa* fullført uten feil!"}' \
+               -d '{"content":"✅ CI-kjøring for *nybpa* fullført og pushet til `master`!"}' \
                $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -51,7 +65,7 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d '{"content":"❌ CI-kjøring for *nybpa* feilet. Undersøk loggene."}' \
+               -d '{"content":"❌ CI feilet for *nybpa*. Sjekk loggene!"}' \
                $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
