@@ -1,45 +1,31 @@
 #!/bin/bash
 
-# 👤 Konfigurer hvem som lager taggen
+# 👤 Konfigurer hvem som gjør merge
 git config user.name "CI Bot"
 git config user.email "ci@torriv.local"
 
-# 👉 Start på devtest
+# 👉 Sjekk at vi er på devtest
 CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
 
 if [ "$CURRENT_BRANCH" != "devtest" ]; then
-  echo "You must be on 'devtest' branch to deploy."
+  echo "❌ Du må være på 'devtest'-branchen for å deploye."
   exit 1
 fi
 
 # ✅ Kjør tester
-echo "✅ Running tests..."
-php artisan test --parallel || { echo "❌ Tests failed. Aborting."; exit 1; }
+echo "✅ Kjører tester..."
+php artisan test --parallel || { echo "❌ Tester feilet. Avbryter."; exit 1; }
 
-# 💬 Finn siste tag fra devtest
-echo "🔍 Finding latest devtest tag..."
-LATEST_TAG=$(git for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags/v* | head -n1)
-
-if [ -z "$LATEST_TAG" ]; then
-  echo "❌ Ingen tidligere tag funnet på devtest. Aborting."
-  exit 1
-fi
-
-# 🔀 Merge til master med samme commit-melding
-echo "🔀 Merging devtest into master..."
+# 🔀 Merge devtest → master med samme commit-melding
+echo "🔀 Merger devtest inn i master..."
 git checkout master
 COMMIT_MSG=$(git log devtest -1 --pretty=%B)
 git merge devtest --no-ff -m "$COMMIT_MSG"
 
-# 🏷️ Flytt taggen til master sin HEAD
-echo "🏷️ Tagging master with $LATEST_TAG"
-git tag -f "$LATEST_TAG"
-
-# ☁️ Push både master og tag
-echo "☁️ Pushing master + tag to origin..."
+# ☁️ Push master
+echo "☁️ Pusher master til origin..."
 git push origin master
-git push origin --force "$LATEST_TAG"
 
-# ↩️ Tilbake til devtest
+# 🔁 Gå tilbake til devtest
 git checkout devtest
-echo "🚀 Deploy complete. You're back on devtest."
+echo "🚀 Deploy fullført. Du er tilbake på devtest."
