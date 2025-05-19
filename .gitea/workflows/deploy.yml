@@ -153,4 +153,4 @@ jobs:
           git config user.email "ci@torriv.local"
           VERSION=$(date +'%Y.%m.%d')-build.$(git rev-list --count HEAD)
           git tag v$VERSION
-          git push https://torriv83:${GITEA_TOKEN}@gitea.torriv.synology.me/torriv83/nybpa.git v$VERSION
+          git push https://torriv83:${GITEA_TOKEN}@gitea.torriv.synology.me/torriv/nybpa.git v$VERSION
