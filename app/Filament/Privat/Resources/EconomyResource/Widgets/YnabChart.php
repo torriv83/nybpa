@@ -20,22 +20,22 @@ class YnabChart extends ChartWidget
     {
         return RawJs::make(<<<'JS'
     {
-        {
-            {
-                false,
+        scales: {
+            y: {
+                beginAtZero: false,
                 ticks: {
-                    (value) => 'kr ' + (value * 1000).toLocaleString('en-US').replace(/,/g, ' '),
+                    callback: (value) => 'kr ' + (value * 1000).toLocaleString('en-US').replace(/,/g, ' '),
                 },
             },
         },
-        {
-            false,
+        interaction: {
+            intersect: false,
             mode: 'index',
         },
-        {
-            {
-                {
-                    (context) => {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: (context) => {
                         var value = context.parsed.y * 1000;
                         return context.dataset.label + ': kr ' + value.toLocaleString('en-US').replace(/,/g, ' ');
                     }
