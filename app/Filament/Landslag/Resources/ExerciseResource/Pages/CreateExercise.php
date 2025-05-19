@@ -11,5 +11,6 @@ class CreateExercise extends CreateRecord
     {
         return $this->getResource()::getUrl('index');
     }
+
     protected static string $resource = ExerciseResource::class;
 }

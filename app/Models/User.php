@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -31,7 +32,7 @@ class User extends Authenticatable implements FilamentUser
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -49,7 +50,7 @@ class User extends Authenticatable implements FilamentUser
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -65,7 +66,6 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-
     public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);
@@ -77,22 +77,18 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * @param $query
-     * @return Builder|null
      * @method assistenter()
      */
-    public function scopeAssistenter($query): null|Builder
+    #[Scope]
+    protected function assistenter($query): ?Builder
     {
-        $rolesToCheck  = ['Tilkalling', 'Fast ansatt'];
+        $rolesToCheck = ['Tilkalling', 'Fast ansatt'];
         $existingRoles = Role::whereIn('name', $rolesToCheck)->pluck('name')->toArray();
 
-        if (!empty($existingRoles))
-        {
+        if (! empty($existingRoles)) {
             return $query->role($existingRoles);
         }
 
         return null;
     }
-
-
 }

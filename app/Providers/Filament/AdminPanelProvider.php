@@ -57,16 +57,16 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Innstillinger')
-                    ->url(fn() => route('filament.admin.pages.innstillinger'))
+                    ->url(fn () => route('filament.admin.pages.innstillinger'))
                     ->icon('heroicon-o-cog-6-tooth'),
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
-                //Pages\Dashboard::class,
+                // Pages\Dashboard::class,
             ])
             ->discoverWidgets(in : app_path('Filament/Admin/Widgets'),
-                              for: 'App\\Filament\\Admin\\Widgets')
+                for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 Widgets\Ansatte::class,
                 Widgets\AnsattKanIkkeJobbe::class,
@@ -75,12 +75,12 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\TimerChart::class,
                 Widgets\TimerIUka::class,
                 Widgets\UserStats::class,
-//                AccountWidget::class,
-//                FilamentInfoWidget::class,
+                //                AccountWidget::class,
+                //                FilamentInfoWidget::class,
             ])
             ->plugin(FilamentErrorMailerPlugin::make())
             ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
-            ->plugin(new FilamentEmail())
+            ->plugin(new FilamentEmail)
             ->plugin(FilamentSpatieLaravelBackupPlugin::make()
                 ->usingPolingInterval('60s'))
             ->plugin(
@@ -123,7 +123,7 @@ class AdminPanelProvider extends PanelProvider
                         'slotDuration' => '00:15:00',
                         'slotMinTime' => '08:00:00',
                         'slotMaxTime' => '23:00:00',
-                        'navLinks' => 'true'
+                        'navLinks' => 'true',
 
                     ])
             )
@@ -143,9 +143,9 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->maxContentWidth('full')
-            //->sidebarFullyCollapsibleOnDesktop()
+            // ->sidebarFullyCollapsibleOnDesktop()
             ->topNavigation();
-            //->databaseNotifications();
-            //->spa();
+        // ->databaseNotifications();
+        // ->spa();
     }
 }

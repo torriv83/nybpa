@@ -7,7 +7,6 @@ use App\Generators\FormComponentGenerator;
 
 trait DateAndTimeHelper
 {
-
     /**
      * Retrieves the common fields for a specific user role.
      *
@@ -21,13 +20,13 @@ trait DateAndTimeHelper
 
         // Configuration for the date time picker
         $dateTimePickerConfig = [
-            'hidden'  => fn($get) => $get('allDay'), // Callback function to determine if the picker is hidden
+            'hidden' => fn ($get) => $get('allDay'), // Callback function to determine if the picker is hidden
             'isAdmin' => $isAdmin, // Indicates whether the user is an admin or not
         ];
 
         // Configuration for the date picker
         $datePickerConfig = [
-            'hidden'  => fn($get) => !$get('allDay'), // Callback function to determine if the picker is hidden
+            'hidden' => fn ($get) => ! $get('allDay'), // Callback function to determine if the picker is hidden
             'isAdmin' => $isAdmin, // Indicates whether the user is an admin or not
         ];
 
@@ -49,5 +48,4 @@ trait DateAndTimeHelper
             FormComponentGenerator::dynamicHidden('unavailable', true)
         );
     }
-
 }

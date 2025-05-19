@@ -16,10 +16,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TestsResource extends Resource
 {
-    protected static ?string $model            = Tests::class;
-    protected static ?string $navigationIcon   = 'icon-type-test';
-    protected static ?string $navigationGroup  = 'Tester';
-    protected static ?string $modelLabel       = 'Test';
+    protected static ?string $model = Tests::class;
+
+    protected static ?string $navigationIcon = 'icon-type-test';
+
+    protected static ?string $navigationGroup = 'Tester';
+
+    protected static ?string $modelLabel = 'Test';
+
     protected static ?string $pluralModelLabel = 'Type Tester';
 
     public static function form(Form $form): Form
@@ -36,14 +40,14 @@ class TestsResource extends Resource
                             Forms\Components\TextInput::make('navn')->required(),
                             Forms\Components\Select::make('type')
                                 ->options([
-                                    'kg'   => 'Kg',
-                                    'tid'  => 'Tid',
+                                    'kg' => 'Kg',
+                                    'tid' => 'Tid',
                                     'watt' => 'Watt',
-                                    'rep'  => 'Repetisjoner',
+                                    'rep' => 'Repetisjoner',
                                 ])
                                 ->required(),
-                        ])->columns()
-                ])
+                        ])->columns(),
+                ]),
 
             ]);
     }
@@ -61,7 +65,7 @@ class TestsResource extends Resource
                     ->label('Sist oppdatert'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
-                    ->label('Opprettet')
+                    ->label('Opprettet'),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -76,7 +80,6 @@ class TestsResource extends Resource
             ]);
     }
 
-
     public static function getRelations(): array
     {
         return [
@@ -87,9 +90,9 @@ class TestsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListTests::route('/'),
+            'index' => ListTests::route('/'),
             'create' => CreateTests::route('/create'),
-            'edit'   => EditTests::route('/{record}/edit'),
+            'edit' => EditTests::route('/{record}/edit'),
         ];
     }
 

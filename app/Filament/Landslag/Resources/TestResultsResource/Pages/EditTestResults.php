@@ -22,9 +22,13 @@ class EditTestResults extends EditRecord
         return [
             Actions\DeleteAction::make()
                 ->label('Slett')
-                ->after(function(){Cache::tags(['testresult'])->flush();}),
+                ->after(function () {
+                    Cache::tags(['testresult'])->flush();
+                }),
             Actions\ForceDeleteAction::make()
-                ->after(function(){Cache::tags(['testresult'])->flush();}),
+                ->after(function () {
+                    Cache::tags(['testresult'])->flush();
+                }),
             Actions\RestoreAction::make(),
         ];
     }

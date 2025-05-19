@@ -3,6 +3,7 @@
 namespace App\Filament\Assistent\Widgets;
 
 use App\Models\Timesheet;
+use App\Services\UserStatsService;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -11,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class UpcomingWorkTabell extends BaseWidget
 {
+    protected static ?string $heading = 'Kommende arbeidstider';
 
-    protected static ?string $heading         = 'Kommende arbeidstider';
     protected static ?string $pollingInterval = null;
-    protected static ?int    $sort            = 5;
+
+    protected static ?int $sort = 5;
 
     public function table(Table $table): Table
     {
@@ -27,10 +29,9 @@ class UpcomingWorkTabell extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i'),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i'),
                 TextColumn::make('totalt')
-                    ->formatStateUsing(fn(string $state): string => (new \App\Services\UserStatsService)->minutesToTime($state))
-                    ->summarize(Sum::make()->formatStateUsing(fn(string $state
-                    ): string => (new \App\Services\UserStatsService)->minutesToTime($state))),
-
+                    ->formatStateUsing(fn (string $state): string => (new UserStatsService)->minutesToTime($state))
+                    ->summarize(Sum::make()->formatStateUsing(fn (string $state
+                    ): string => (new UserStatsService)->minutesToTime($state))),
 
             ])
             ->emptyStateHeading('Ingen kommende arbeidstider.');

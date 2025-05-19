@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as sumBuilder;
 
-//use permission;
+// use permission;
 
 class YnabOverview extends BaseWidget
 {
@@ -39,12 +39,11 @@ class YnabOverview extends BaseWidget
                 Ynab::query()
             )
             ->heading('Tall fra YNAB')
-            ->description(fn() => 'Sist oppdatert: '.Ynab::latest('updated_at')->first()->updated_at->format('d.m.Y H:i:s'))
+            ->description(fn () => 'Sist oppdatert: '.Ynab::latest('updated_at')->first()->updated_at->format('d.m.Y H:i:s'))
             ->columns([
                 Tables\Columns\TextColumn::make('month')
                     ->label('Måned')
-                    ->formatStateUsing(function ($column): ?string
-                    {
+                    ->formatStateUsing(function ($column): ?string {
                         Carbon::setlocale(config('app.locale'));
 
                         return ucfirst(Carbon::parse($column->getState())->translatedFormat('F, Y'));
@@ -58,13 +57,13 @@ class YnabOverview extends BaseWidget
                     ->sortable()
                     ->alignLeft()
                     ->summarize(Sum::make()->money('NOK', divideBy: 1000))
-/*                    ->summarize(Summarizer::make()
-                        ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('income')))
-                        ->money('nok')
-                    )*/
+                    /*                    ->summarize(Summarizer::make()
+                                            ->label('Sum')
+                                            ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('income')))
+                                            ->money('nok')
+                                        )*/
                     ->summarize(Average::make()->money('NOK', divideBy: 1000))
-                    /*->summarize(Summarizer::make()
+                /*->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
                         ->using(fn(sumBuilder $query): float => $this->divideYnab($query->avg('income')))
                         ->money('nok')
@@ -77,12 +76,12 @@ class YnabOverview extends BaseWidget
                     ->alignLeft()
                     ->summarize(Sum::make()->money('NOK', divideBy: 1000))
                     ->summarize(Average::make()->money('NOK', divideBy: 1000))
-                    /*->summarize(Summarizer::make()
+                /*->summarize(Summarizer::make()
                         ->label('Sum')
                         ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('activity')))
                         ->money('nok')
                     )*/
-                    /*->summarize(Summarizer::make()
+                /*->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
                         ->using(fn(sumBuilder $query): float => $this->divideYnab($query->avg('activity')))
                         ->money('nok')
@@ -95,29 +94,27 @@ class YnabOverview extends BaseWidget
                     ->alignLeft()
                     ->summarize(Sum::make()->money('NOK', divideBy: 1000))
                     ->summarize(Average::make()->money('NOK', divideBy: 1000))
-                    /*->summarize(Summarizer::make()
+                /*->summarize(Summarizer::make()
                         ->label('Sum')
                         ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('budgeted')))
                         ->money('nok')
                     )*/
-                    /*->summarize(Summarizer::make()
+                /*->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
                         ->using(fn(sumBuilder $query): float => $this->divideYnab($query->avg('budgeted')))
                         ->money('nok')
                     )*/,
 
                 Tables\Columns\TextColumn::make('inntektutgift')
-                    ->getStateUsing(function (Model $record){
-                        return ($record->income + $record->activity);
+                    ->getStateUsing(function (Model $record) {
+                        return $record->income + $record->activity;
                     })
                     ->money('nok', true)
                     ->sortable()
-                    ->color(function ($record){
-                        if (($record->income + $record->activity) < 0)
-                        {
+                    ->color(function ($record) {
+                        if (((int) $record->income + (int) $record->activity) < 0) {
                             return 'danger';
-                        } else
-                        {
+                        } else {
                             return 'success';
                         }
                     })
@@ -125,43 +122,37 @@ class YnabOverview extends BaseWidget
                     ->label('Inntekt - Utgift')
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float =>
-                            $this->divideYnab($query->sum('income')) + $this->divideYnab($query->sum('activity')))
+                        ->using(fn (sumBuilder $query): float => $this->divideYnab($query->sum('income')) + $this->divideYnab($query->sum('activity')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float =>
-                            $this->divideYnab($query->avg('income')) + $this->divideYnab($query->avg('activity')))
+                        ->using(fn (sumBuilder $query): float => $this->divideYnab($query->avg('income')) + $this->divideYnab($query->avg('activity')))
                         ->money('nok')
                     ),
 
                 Tables\Columns\TextColumn::make('Balanse')
-                    ->getStateUsing(function (Model $record){
-                        return ($record->income - $record->budgeted);
+                    ->getStateUsing(function (Model $record) {
+                        return $record->income - $record->budgeted;
                     })
                     ->money('nok', true)
                     ->sortable()
-                    ->color(function ($record){
-                        if (($record->income - $record->budgeted) < 0)
-                        {
+                    ->color(function ($record) {
+                        if (($record->income - $record->budgeted) < 0) {
                             return 'danger';
-                        } else
-                        {
+                        } else {
                             return 'success';
                         }
                     })
                     ->alignLeft()
                     ->summarize(Summarizer::make()
                         ->label('Sum')
-                        ->using(fn(sumBuilder $query): float =>
-                            $this->divideYnab($query->sum('income')) - $this->divideYnab($query->sum('budgeted')))
+                        ->using(fn (sumBuilder $query): float => $this->divideYnab($query->sum('income')) - $this->divideYnab($query->sum('budgeted')))
                         ->money('nok')
                     )
                     ->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
-                        ->using(fn(sumBuilder $query): float =>
-                            $this->divideYnab($query->avg('income')) - $this->divideYnab($query->avg('budgeted')))
+                        ->using(fn (sumBuilder $query): float => $this->divideYnab($query->avg('income')) - $this->divideYnab($query->avg('budgeted')))
                         ->money('nok')
                     ),
             ])
@@ -178,26 +169,25 @@ class YnabOverview extends BaseWidget
                         Forms\Components\DatePicker::make('fra'),
                         Forms\Components\DatePicker::make('til')->default(now()),
                     ])
-                    ->query(function (Builder $query, array $data): Builder
-                    {
+                    ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
                                 $data['fra'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('month', '>=', $date),
                             )
                             ->when(
                                 $data['til'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('month', '<=', $date),
                             );
                     }),
                 Tables\Filters\Filter::make('last3months')->label('Siste 3 måneder')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('month', '>=', Carbon::now()->subMonths(3))),
                 Tables\Filters\Filter::make('last6months')->label('Siste 6 måneder')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('month', '>=', Carbon::now()->subMonths(6))),
                 Tables\Filters\Filter::make('lastyear')->label('Siste år')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('month', '>=', Carbon::now()->subMonths(12)))->default(),
             ]);
     }
@@ -210,5 +200,4 @@ class YnabOverview extends BaseWidget
             ->success()
             ->send();
     }
-
 }

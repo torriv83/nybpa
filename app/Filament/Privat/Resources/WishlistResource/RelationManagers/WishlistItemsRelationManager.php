@@ -40,7 +40,7 @@ class WishlistItemsRelationManager extends RelationManager
                     ->required()->numeric(),
                 Forms\Components\Select::make('status')
                     ->options(WishlistResource::STATUS_OPTIONS)
-                    ->required()
+                    ->required(),
             ]);
     }
 
@@ -54,8 +54,8 @@ class WishlistItemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('hva'),
 
                 Tables\Columns\TextColumn::make('url')
-                    ->formatStateUsing(fn() => 'Se her')
-                    ->url(fn($record): string => $record->url, true),
+                    ->formatStateUsing(fn () => 'Se her')
+                    ->url(fn ($record): string => $record->url, true),
 
                 Tables\Columns\TextColumn::make('koster')
                     ->money('nok', true)
@@ -71,24 +71,22 @@ class WishlistItemsRelationManager extends RelationManager
                         ->money('nok', true)
                         ->label('Gjenstår')
                         ->using(function (Builder $query): string {
-                           return $query->whereNotIn('status', ['Spart', 'Kjøpt'])
-                               ->sum('koster');
+                            return $query->whereNotIn('status', ['Spart', 'Kjøpt'])
+                                ->sum('koster');
                         })),
                 Tables\Columns\TextColumn::make('totalt')
                     ->money('nok', true)
-                    ->getStateUsing(function (Model $record)
-                    {
+                    ->getStateUsing(function (Model $record) {
                         return $record->koster * $record->antall;
                     })
                     ->summarize(Summarizer::make()
                         ->label('Totalt')
                         ->money('nok', true)
-                        ->using(function (Builder $query): string
-                        {
+                        ->using(function (Builder $query): string {
                             // Calculate the sum of the product of 'koster' and 'antall' directly in the query
                             return $query->sum(DB::raw('koster * antall'));
                         }),
-                    )
+                    ),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -98,22 +96,19 @@ class WishlistItemsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->after(function (RelationManager $livewire, Model $record)
-                    {
+                    ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->after(function (RelationManager $livewire, Model $record)
-                    {
+                    ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
                 Tables\Actions\DeleteAction::make()
-                    ->after(function (RelationManager $livewire, Model $record)
-                    {
+                    ->after(function (RelationManager $livewire, Model $record) {
                         // Runs after the form fields are saved to the database.
                         $livewire->dispatch('itemedited', $record->wishlist_id);
                     }),
@@ -121,9 +116,7 @@ class WishlistItemsRelationManager extends RelationManager
             ->bulkActions([
                 BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->after(function (RelationManager $livewire, Model $record)
-                        {
-                            // Runs after the form fields are saved to the database.
+                        ->after(function (RelationManager $livewire, Model $record) {
                             $livewire->dispatch('itemedited', $record->wishlist_id);
                         }),
                     Tables\Actions\BulkAction::make('status')
@@ -132,16 +125,14 @@ class WishlistItemsRelationManager extends RelationManager
                         ->form([
                             Forms\Components\Select::make('status')
                                 ->options(WishlistResource::STATUS_OPTIONS)
-                                ->required()
+                                ->required(),
                         ])
-                        ->action(function (array $data, Collection $records)
-                        {
-                            $records->each(function (Model $record) use ($data)
-                            {
+                        ->action(function (array $data, Collection $records) {
+                            $records->each(function (Model $record) use ($data) {
                                 $record->update(['status' => $data['status']]);
                             });
-                        })
-                ])
+                        }),
+                ]),
             ]);
     }
 }

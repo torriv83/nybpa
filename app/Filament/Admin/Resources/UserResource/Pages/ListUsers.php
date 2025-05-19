@@ -24,8 +24,8 @@ class ListUsers extends ListRecords
             Action::make('Send melding til ansatte')
                 ->form([
                     Select::make('assistent')->multiple()
-                        ->options(User::all()->filter(fn($value) => $value->id != Auth::User()->id)->pluck('name',
-                        'email')),
+                        ->options(User::all()->filter(fn ($value) => $value->id != Auth::User()->id)->pluck('name',
+                            'email')),
                     MarkdownEditor::make('body')->required(),
                 ])
                 ->action(function (array $data) {

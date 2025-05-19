@@ -33,20 +33,20 @@ class AppServiceProvider extends ServiceProvider
             return $user->role('Admin');
         });
 
-        /* Filament Assets*/
+        /* Filament Assets */
         FilamentAsset::register([
-            Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
+            Css::make('custom-stylesheet', __DIR__.'/../../resources/css/custom.css'),
         ]);
 
         /* PanelSwitcher */
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-                //->simple()
-                ->visible(fn(): bool => auth()->user()?->hasRole('Admin'))
+                // ->simple()
+                ->visible(fn (): bool => auth()->user()?->hasRole('Admin'))
                 ->renderHook('panels::user-menu.after');
         });
 
-        /* Global Settings*/
+        /* Global Settings */
         DateTimePicker::configureUsing(function (DateTimePicker $dateTimePicker): void {
             $dateTimePicker
                 ->displayFormat('d.m.Y H:i');

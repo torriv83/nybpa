@@ -33,9 +33,8 @@ class CreateTestResults extends CreateRecord
                 ->description('Velg hvilken test du skal loggføre')
                 ->schema([
                     Select::make('tests_id')
-                        ->options(function ()
-                        {
-                            return tests::all()->pluck('navn', 'id');
+                        ->options(function () {
+                            return tests::pluck('navn', 'id');
                         })->label('Test')->reactive(),
                     DateTimePicker::make('dato')->seconds(false),
                 ]),
@@ -44,22 +43,17 @@ class CreateTestResults extends CreateRecord
                 ->description('Legg inn resultater fra testen her')
                 ->schema([
                     Repeater::make('resultat')
-                        ->schema(function (Get $get): array
-                        {
+                        ->schema(function (Get $get): array {
                             $schema = [];
-                            if ($get('tests_id'))
-                            {
+                            if ($get('tests_id')) {
                                 $data = tests::where('id', '=', $get('tests_id'))->get();
-                                foreach ($data[0]['ovelser'] as $o)
-                                {
-                                    if ($o['type'] == 'tid' || $o['type'] == 'kg')
-                                    {
+                                foreach ($data[0]['ovelser'] as $o) {
+                                    if ($o['type'] == 'tid' || $o['type'] == 'kg') {
                                         $schema[] = TextInput::make($o['navn'])
                                             ->regex('/^\d{1,3}(\.\d{1,2})?$/')
                                             // ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0[00].[00]'))
                                             ->required()->placeholder('00.00');
-                                    } else
-                                    {
+                                    } else {
                                         $schema[] = TextInput::make($o['navn'])
                                             ->required();
                                     }

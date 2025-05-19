@@ -3,6 +3,7 @@
 namespace App\Filament\Privat\Resources\KategoriResource\Pages;
 
 use App\Filament\Privat\Resources\KategoriResource;
+use Exception;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Cache;
@@ -12,7 +13,7 @@ class EditKategori extends EditRecord
     protected static string $resource = KategoriResource::class;
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getHeaderActions(): array
     {

@@ -10,13 +10,15 @@ use Livewire\Component;
 class ExerciseModal extends Component
 {
     public $programId;
+
     public $programName;
+
     public $programDetails;
 
     public function mount($programId = null, $programName = null): void
     {
-        $this->programId      = $programId;
-        $this->programName    = $programName;
+        $this->programId = $programId;
+        $this->programName = $programName;
         $this->programDetails = $this->getProgram($programId);
     }
 

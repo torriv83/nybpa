@@ -35,10 +35,15 @@ class TimesheetResource extends Resource
      * Innstillinger
      */
     protected static ?string $model = Timesheet::class;
+
     protected static ?string $navigationIcon = 'icon-schedule';
+
     protected static ?string $navigationGroup = 'Tider';
+
     protected static ?string $modelLabel = 'Timeliste';
+
     protected static ?string $pluralModelLabel = 'Timelister';
+
     protected static ?string $slug = 'timelister';
 
     /**
@@ -89,7 +94,7 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('Beskrivelse')
                     ->limit(20)
-                    ->getStateUsing(fn(Model $record) => !is_null($record->description) ? strip_tags($record->description) : '')
+                    ->getStateUsing(fn (Model $record) => ! is_null($record->description) ? strip_tags($record->description) : '')
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -118,12 +123,14 @@ class TimesheetResource extends Resource
                     ->summarize([
                         Sum::make()->formatStateUsing(function (string $state) {
                             $minutes = $state;
-                            return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+
+                            return sprintf('%02d', intdiv((int) $minutes, 60)).':'.sprintf('%02d', (int) $minutes % 60);
                         }),
                         Average::make()->formatStateUsing(function (string $state) {
                             $minutes = (int) floatval($state);
+
                             return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
-                        })
+                        }),
                     ]),
 
                 Tables\Columns\IconColumn::make('unavailable')
@@ -150,27 +157,30 @@ class TimesheetResource extends Resource
 
             ])->defaultSort('fra_dato', 'desc')
 
-            //Filtre
+            // Filtre
             ->filters([
 
                 Tables\Filters\TrashedFilter::make(),
 
                 Tables\Filters\Filter::make('Tilgjengelig')
-                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '0'))->default(),
+                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '0'))->default(),
 
                 Tables\Filters\Filter::make('Ikke tilgjengelig')
-                    ->query(fn(Builder $query): Builder => $query->where('unavailable', '1')),
+                    ->query(fn (Builder $query): Builder => $query->where('unavailable', '1')),
 
                 Tables\Filters\SelectFilter::make('assistent')
-                    ->relationship('user', 'name', fn(Builder $query) => $query->permission('Assistent')),
+                    ->relationship('user', 'name',
+                        fn (Builder $query) => $query->whereHas('permissions', fn (Builder $query) => $query->where('name', 'Assistent')
+                        )
+                    ),
 
                 Tables\Filters\Filter::make('Forrige måned')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->subMonth()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->subMonth()->startOfMonth())),
 
                 Tables\Filters\Filter::make('Denne måneden')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
 
@@ -183,16 +193,16 @@ class TimesheetResource extends Resource
                         return $query
                             ->when(
                                 $data['fra_dato'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('til_dato', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('til_dato', '>=', $date),
                             )
                             ->when(
                                 $data['til_dato'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('fra_dato', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('fra_dato', '<=', $date),
                             );
                     }),
             ])
 
-            //Actions
+            // Actions
             ->actions([
                 Tables\Actions\ViewAction::make()->label('Se'),
                 Tables\Actions\EditAction::make()->label('Endre'),
@@ -267,7 +277,8 @@ class TimesheetResource extends Resource
                         Infolists\Components\TextEntry::make('totalt')
                             ->formatStateUsing(function (string $state) {
                                 $minutes = $state;
-                                return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+
+                                return sprintf('%02d', intdiv((int) $minutes, 60)).':'.(sprintf('%02d', (int) $minutes % 60));
                             }),
                         Infolists\Components\TextEntry::make('description')
                             ->html()
@@ -298,10 +309,10 @@ class TimesheetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTimesheets::route('/'),
+            'index' => Pages\ListTimesheets::route('/'),
             'create' => Pages\CreateTimesheet::route('/create'),
             // 'view'   => Pages\ViewTimesheet::route('/{record}'),
-            'edit'   => Pages\EditTimesheet::route('/{record}/edit'),
+            'edit' => Pages\EditTimesheet::route('/{record}/edit'),
         ];
     }
 
@@ -321,6 +332,4 @@ class TimesheetResource extends Resource
     {
         return 'desc';
     }
-
-
 }

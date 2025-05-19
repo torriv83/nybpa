@@ -30,7 +30,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Hvem')
-                    ->tooltip(fn(Model $record): string => strip_tags("$record->description")),
+                    ->tooltip(fn (Model $record): string => strip_tags("$record->description")),
                 /* TODO trenger jeg denne? */
                 /* Tables\Columns\TextColumn::make('fra_dato')
                     ->date('d.m.Y')
@@ -45,7 +45,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
                     })
                     ->sortable()
                     ->label('Fra')
-                    ->tooltip(fn(Model $record): string => strip_tags("$record->description")),
+                    ->tooltip(fn (Model $record): string => strip_tags("$record->description")),
                 Tables\Columns\TextColumn::make('til_dato')
                     ->getStateUsing(function (Model $record) {
                         if ($record->allDay == 1) {
@@ -55,13 +55,13 @@ class AnsattKanIkkeJobbe extends BaseWidget
                         }
                     })
                     ->sortable()
-                    ->tooltip(fn(Model $record): string => strip_tags("$record->description"))
+                    ->tooltip(fn (Model $record): string => strip_tags("$record->description"))
                     ->label('Til'),
                 IconColumn::make('allDay')
                     ->label('Hele dagen?')
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
+                    ->falseIcon('heroicon-o-x-circle'),
             ])
             ->defaultSort('fra_dato')
             ->emptyStateHeading('Alle kan jobbe!')

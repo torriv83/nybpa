@@ -23,7 +23,8 @@ class SendReminderWhenPrescriptionExpire extends Command
      */
     protected $description = 'Send a reminder when prescription expire';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 

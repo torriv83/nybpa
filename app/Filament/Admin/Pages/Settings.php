@@ -32,24 +32,29 @@ class Settings extends Page implements HasForms
 
     public Setting $settings;
 
-    public int|null $user_id;
+    public ?int $user_id;
+
     public bool $weekplan_timespan;
+
     public string $weekplan_from;
+
     public string $weekplan_to;
+
     public string $apotek_epost;
+
     public int $bpa_hours_per_week;
 
     public function mount(): void
     {
 
-        $this->settings = Setting::getUserSettings(Auth::id()) ?? new Setting();
+        $this->settings = Setting::getUserSettings(Auth::id()) ?? new Setting;
 
         $this->form->fill([
-            'weekplan_timespan'  => $this->settings->weekplan_timespan,
-            'weekplan_from'      => $this->settings->weekplan_from,
-            'weekplan_to'        => $this->settings->weekplan_to,
+            'weekplan_timespan' => $this->settings->weekplan_timespan,
+            'weekplan_from' => $this->settings->weekplan_from,
+            'weekplan_to' => $this->settings->weekplan_to,
             'bpa_hours_per_week' => $this->settings->bpa_hours_per_week,
-            'apotek_epost'       => $this->settings->apotek_epost,
+            'apotek_epost' => $this->settings->apotek_epost,
         ]);
     }
 
@@ -82,7 +87,7 @@ class Settings extends Page implements HasForms
                                 ->required()
                                 ->live(),
                             Forms\Components\Hidden::make('user_id')
-                                ->formatStateUsing(fn() => Auth::id()),
+                                ->formatStateUsing(fn () => Auth::id()),
                             TimePicker::make('weekplan_from')->seconds(false)
                                 ->format('H:i:s')
                                 ->label('Vis tid fra')
@@ -104,7 +109,7 @@ class Settings extends Page implements HasForms
             Action::make('Lagre')->action('submit'),
             Action::make('Cache')->action('clearCache')
                 ->label('Tøm Cache')
-            ->color('danger'),
+                ->color('danger'),
         ];
     }
 
@@ -117,7 +122,7 @@ class Settings extends Page implements HasForms
             ->success()
             ->send();
 
-        Cache::tags(['settings'])->forget('user-settings-' . Auth::id());
+        Cache::tags(['settings'])->forget('user-settings-'.Auth::id());
 
     }
 

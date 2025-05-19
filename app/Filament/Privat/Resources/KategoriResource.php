@@ -7,6 +7,7 @@ use App\Filament\Privat\Resources\KategoriResource\Pages\EditKategori;
 use App\Filament\Privat\Resources\KategoriResource\Pages\ListKategoris;
 use App\Filament\Privat\Resources\KategoriResource\Pages\ViewKategori;
 use App\Models\Kategori;
+use Exception;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -52,7 +53,7 @@ class KategoriResource extends Resource
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function table(Table $table): Table
     {

@@ -27,6 +27,7 @@ class Settings extends Model
     {
         $userId = Auth::id();
         $setting = self::getUserSettings($userId);
+
         return $setting['bpa_hours_per_week'] ?? 1;
     }
 
@@ -34,9 +35,9 @@ class Settings extends Model
     {
         $userId = Auth::id();
         $setting = self::getUserSettings($userId);
+
         return $setting['apotek_epost'];
     }
-
 
     public static function getUserSettings($userId)
     {
@@ -44,5 +45,4 @@ class Settings extends Model
             return self::where('user_id', '=', $userId)->first();
         });
     }
-
 }

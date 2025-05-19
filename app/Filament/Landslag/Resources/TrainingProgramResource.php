@@ -17,11 +17,15 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TrainingProgramResource extends Resource
 {
-    protected static ?string $model           = TrainingProgram::class;
+    protected static ?string $model = TrainingProgram::class;
+
     protected static ?string $navigationGroup = 'Treningsprogram';
-    protected static ?string $label           = 'Treningsprogram';
-    protected static ?string $pluralLabel     = 'Treningsprogrammer';
-    protected static ?string $navigationIcon  = 'heroicon-o-calendar-days';
+
+    protected static ?string $label = 'Treningsprogram';
+
+    protected static ?string $pluralLabel = 'Treningsprogrammer';
+
+    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
     public static function form(Form $form): Form
     {
@@ -41,7 +45,7 @@ class TrainingProgramResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('program_name')
                     ->label('Program Navn')
-                    ->description(fn(TrainingProgram $record): string => $record->description ?? '')
+                    ->description(fn (TrainingProgram $record): string => $record->description ?? '')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('workout_exercises_count')
                     ->counts('WorkoutExercises')
@@ -69,7 +73,7 @@ class TrainingProgramResource extends Resource
                         true: fn (Builder $query) => $query->withTrashed(),
                         false: fn (Builder $query) => $query->onlyTrashed(),
                         blank: fn (Builder $query) => $query->withoutTrashed(),
-                    )
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -79,7 +83,7 @@ class TrainingProgramResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()->label('Arkiver'),
-                    Tables\Actions\ForceDeleteBulkAction::make()
+                    Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -95,17 +99,17 @@ class TrainingProgramResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\WorkoutExercisesRelationManager::class
+            RelationManagers\WorkoutExercisesRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTrainingPrograms::route('/'),
+            'index' => Pages\ListTrainingPrograms::route('/'),
             'create' => Pages\CreateTrainingProgram::route('/create'),
-            'edit'   => Pages\EditTrainingProgram::route('/{record}/edit'),
-            'view'   => Pages\ViewTrainingProgram::route('/{record}'),
+            'edit' => Pages\EditTrainingProgram::route('/{record}/edit'),
+            'view' => Pages\ViewTrainingProgram::route('/{record}'),
         ];
     }
 }

@@ -20,7 +20,7 @@ class TestResults extends Model
 
     protected $casts = [
         'resultat' => 'array',
-        'dato'     => 'datetime',
+        'dato' => 'datetime',
     ];
 
     public function tests(): BelongsTo
@@ -34,12 +34,10 @@ class TestResults extends Model
 
         $colors = [];
 
-        for ($i = 0; $i < $count; $i++)
-        {
+        for ($i = 0; $i < $count; $i++) {
             $colors[] = 'rgb('.mt_rand(0, 255).', '.mt_rand(0, 255).', '.mt_rand(0, 255).')';
         }
 
         return $colors;
     }
-
 }

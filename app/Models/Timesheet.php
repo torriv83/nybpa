@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Cache;
 
 class Timesheet extends Model
 {
-    use Notifiable;
-    use SoftDeletes;
     use FilterableByDates;
     use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     public $timestamps = true;
 
@@ -40,7 +40,7 @@ class Timesheet extends Model
 
     protected $attributes = [
         'unavailable' => '0',
-        'allDay'      => '0',
+        'allDay' => '0',
     ];
 
     public function user(): BelongsTo
@@ -75,7 +75,7 @@ class Timesheet extends Model
                 ->where('unavailable', '!=', 1)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
 
     }
@@ -94,23 +94,18 @@ class Timesheet extends Model
                 ->where('unavailable', '=', 0)
                 ->orderByRaw('fra_dato ASC')
                 ->get()
-                ->groupBy(fn($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
+                ->groupBy(fn ($val) => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
         });
     }
 
     /**
      * Scope a query to retrieve all disabled dates for a specific user in the current year,
      * excluding a specific record if provided.
-     *
-     * @param  Builder  $query
-     * @param  int|null  $userId
-     * @param  int|null  $recordId
-     * @return Builder
      */
     public function scopeDisabledDates(Builder $query, ?int $userId, ?int $recordId): Builder
     {
         return $query->whereYear('fra_dato', Carbon::now()->year)
             ->where('user_id', '=', $userId)
-            ->when($recordId, fn($query) => $query->where('id', '<>', $recordId));
+            ->when($recordId, fn ($query) => $query->where('id', '<>', $recordId));
     }
 }

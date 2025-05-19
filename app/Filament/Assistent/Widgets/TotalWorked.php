@@ -12,28 +12,30 @@ use Illuminate\Support\Facades\Auth;
 class TotalWorked extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
-    protected static ?int    $sort            = 2;
+
+    protected static ?int $sort = 2;
 
     /**
      * Retrieves the statistics related to the user.
      *
      * @return array The array containing the user statistics.
+     *
      * @uses Timesheet::scopethisYear
      * @uses Timesheet::scopethisMonth
      */
     protected function getStats(): array
     {
-        $timeSheet           = new Timesheet();
-        $timeWorkedThisYear  = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->sum('totalt');
+        $timeSheet = new Timesheet;
+        $timeWorkedThisYear = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->sum('totalt');
         $timeWorkedThisMonth = $timeSheet->where('user_id', Auth::user()->id)->where('unavailable', 0)->thisYear()->thisMonth()->sum('totalt');
-        $nextWorkTime        = $timeSheet->inFuture('fra_dato')->where('user_id', Auth::user()->id)->where('unavailable', '=', 0)->first();
+        $nextWorkTime = $timeSheet->inFuture('fra_dato')->where('user_id', Auth::user()->id)->where('unavailable', '=', 0)->first();
 
         $timeWorkedThisYearFormatted = $timeWorkedThisYear
-            ? (new UserStatsService())->minutesToTime($timeWorkedThisYear)
+            ? (new UserStatsService)->minutesToTime($timeWorkedThisYear)
             : 'Ingen timer registrert'; // Default text or value
 
         $timeWorkedThisMonthFormatted = $timeWorkedThisMonth
-            ? (new UserStatsService())->minutesToTime($timeWorkedThisMonth)
+            ? (new UserStatsService)->minutesToTime($timeWorkedThisMonth)
             : 'Ingen timer registrert'; // Default text or value
 
         $nextWorkTimeFormatted = $nextWorkTime

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor J. Rivera.
  * Date: 22.11.2023
@@ -10,18 +11,13 @@ namespace App\Traits;
 
 trait Economy
 {
-
     /**
      * Divide the given value by 1000.
-     *
-     * @param  mixed  $value
-     * @return float|int
      */
     public function divideYnab(mixed $value): float|int
     {
         return $value / 1000;
     }
-
 
     /**
      * Format the given amount as a currency string.
@@ -34,13 +30,11 @@ trait Economy
     {
         $string = ' kr';
 
-        if ($month)
-        {
+        if ($month) {
             $amount = $amount / 12;
             $string = ' kr i måneden';
         }
 
         return number_format($amount, 0, ',', '.').$string;
     }
-
 }

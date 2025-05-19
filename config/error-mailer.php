@@ -5,7 +5,7 @@ return [
         'recipient' => ['webmaster@riveraconsulting.no'],
         'bcc' => [],
         'cc' => [],
-        'subject' => 'An error was occured - ' . env('APP_NAME'),
+        'subject' => 'An error was occured - '.env('APP_NAME'),
     ],
 
     'disabledOn' => [

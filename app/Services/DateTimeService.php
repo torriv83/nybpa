@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor Rivera.
  * Date: 20.10.2023
@@ -17,7 +18,6 @@ use Illuminate\Support\Facades\Cache;
 
 class DateTimeService
 {
-
     /**
      * Calculates the total number of minutes from a given time string.
      *
@@ -27,8 +27,9 @@ class DateTimeService
     public static function calculateTotalMinutes(string $time): int
     {
         if (preg_match('/(\d+):(\d+)/', $time, $matches)) {
-            $hours   = intval($matches[1]);
+            $hours = intval($matches[1]);
             $minutes = intval($matches[2]);
+
             return $hours * 60 + $minutes;
         }
 
@@ -45,8 +46,8 @@ class DateTimeService
     public static function calculateFormattedTimeDifference(string $startTime, string $endTime): string
     {
         $fromDate = Carbon::parse($startTime);
-        $toDate   = Carbon::parse($endTime);
-        $minutes  = $fromDate->diffInMinutes($toDate);
+        $toDate = Carbon::parse($endTime);
+        $minutes = $fromDate->diffInMinutes($toDate);
 
         // Format minutes to hh:mm
         return sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
@@ -57,17 +58,19 @@ class DateTimeService
      *
      * @param  int|null  $userId  The ID of the user.
      * @param  int|null  $recordId  The ID of the record.
-     * @uses Timesheet::scopeDisabledDates
      * @return array An array of disabled dates.
+     *
+     * @uses Timesheet::scopeDisabledDates
      */
     public static function getAllDisabledDates(?int $userId, ?int $recordId): array
     {
         $cacheKey = "disabled_dates:user_$userId:record_$recordId";
+
         return Cache::tags(['timesheet'])->remember($cacheKey, now()->addMonth(), function () use ($userId, $recordId) {
             return Timesheet::disabledDates($userId, $recordId)
                 ->pluck('fra_dato')
                 ->unique()
-                ->map(fn($date) => $date->format('Y-m-d'))
+                ->map(fn ($date) => $date->format('Y-m-d'))
                 ->toArray();
         });
     }
@@ -75,17 +78,16 @@ class DateTimeService
     /**
      * Updates the 'til_dato_time' based on the given state, Get and Set objects, operation, and isAdmin flag.
      *
-     * @param string|null $state The new state to parse.
-     * @param Get $get The Get object to retrieve values.
-     * @param Set $set The Set object to update values.
-     * @param mixed $operation The operation to perform.
-     * @param bool  $isAdmin Flag indicating if the user is an admin.
-     * @return void
+     * @param  string|null  $state  The new state to parse.
+     * @param  Get  $get  The Get object to retrieve values.
+     * @param  Set  $set  The Set object to update values.
+     * @param  mixed  $operation  The operation to perform.
+     * @param  bool  $isAdmin  Flag indicating if the user is an admin.
      */
     public static function updateTilDatoTime(?string $state, Get $get, Set $set, mixed $operation, bool $isAdmin): void
     {
         // Parse the new state and the previous 'til_dato_time'
-        $newFraDato      = Carbon::parse($state);
+        $newFraDato = Carbon::parse($state);
         $existingTilDato = Carbon::parse($get(TimesheetConstants::TIL_DATO_TIME));
 
         // Check if only the date part has changed
@@ -98,7 +100,7 @@ class DateTimeService
         } else {
             $totalt = $get('totalt');
             [$hours, $minutes] = explode(':', $totalt);
-            $durationInMinutes = ($hours * 60) + $minutes;
+            $durationInMinutes = ((int) $hours * 60) + (int) $minutes;
 
             // Set the updated 'til_dato_time' by adding the duration to the new 'fra_dato_time'
             $updatedTilDato = $newFraDato->copy()->addMinutes($durationInMinutes);
@@ -107,7 +109,7 @@ class DateTimeService
 
         // If isAdmin is true, also update 'totalt'
         if ($isAdmin) {
-            $formattedTime = (new DateTimeService())->calculateFormattedTimeDifference($state, $get(TimesheetConstants::TIL_DATO_TIME));
+            $formattedTime = (new DateTimeService)->calculateFormattedTimeDifference($state, $get(TimesheetConstants::TIL_DATO_TIME));
             $set('totalt', $formattedTime);
         }
     }

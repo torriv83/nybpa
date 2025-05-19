@@ -10,11 +10,9 @@ use Filament\Resources\Pages\Page;
 
 class ViewTrainingProgram extends Page
 {
-
     protected static string $resource = TrainingProgramResource::class;
 
     protected static string $view = 'filament.resources.training-program-resource.pages.view-treningsprogram';
-
 
     protected function getViewData(): array
     {
@@ -32,13 +30,13 @@ class ViewTrainingProgram extends Page
     public function getSubheading(): string
     {
         $dynamicSubheading = $this->record['updated_at'];
-        $formattedDate     = '';
+        $formattedDate = '';
 
         if ($dynamicSubheading) {
             $formattedDate = Carbon::parse($dynamicSubheading)->diffForHumans();
         }
 
-        return 'Sist oppdatert: ' . $formattedDate;
+        return 'Sist oppdatert: '.$formattedDate;
     }
 
     protected function getHeaderActions(): array

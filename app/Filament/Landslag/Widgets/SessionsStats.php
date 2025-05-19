@@ -6,13 +6,13 @@ use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Exception;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Database\Eloquent\Model;
 
 class SessionsStats extends BaseWidget
 {
-
     protected static ?string $pollingInterval = null;
 
     public ?Model $record = null;
@@ -21,7 +21,8 @@ class SessionsStats extends BaseWidget
      * Retrieves the statistics for the weekplans.
      *
      * @return array The statistics for the weekplans.
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     protected function getStats(): array
     {
@@ -30,18 +31,18 @@ class SessionsStats extends BaseWidget
             ->when($this->record, function ($query) {
                 return $query->where('id', $this->record->id);
             })
-            ->when(!$this->record, function ($query) {
+            ->when(! $this->record, function ($query) {
                 return $query->active();
             })
             ->get();
 
         $statistics = [
-            'okter'       => 0,
-            'timer'       => 0,
+            'okter' => 0,
+            'timer' => 0,
             'intensities' => [
-                'crimson'  => 0,
+                'crimson' => 0,
                 'darkcyan' => 0,
-                'green'    => 0,
+                'green' => 0,
             ],
         ];
 
@@ -62,7 +63,6 @@ class SessionsStats extends BaseWidget
             default => ucfirst(Carbon::now()->addDays($nextSession['day'])->locale('nb_NO')->isoFormat('dddd')).' ',
         };
 
-
         return [
             Stat::make('Antall økter', $statistics['okter']),
             Stat::make('Antall timer', CarbonInterval::seconds($statistics['timer'])->cascade()->forHumans()),
@@ -79,9 +79,9 @@ class SessionsStats extends BaseWidget
      */
     private function getNextSession(): array
     {
-        $now         = Carbon::now();
+        $now = Carbon::now();
         $nextSession = [];
-        
+
         // Eager load exercises
         $allExercises = WeekplanExercise::with('exercise')
             ->orderBy('start_time')
@@ -89,7 +89,7 @@ class SessionsStats extends BaseWidget
 
         // Iterate through the days of the week starting with today
         for ($dayOffset = 0; $dayOffset < 7; $dayOffset++) {
-            $day       = $now->copy()->addDays($dayOffset)->dayOfWeekIso;
+            $day = $now->copy()->addDays($dayOffset)->dayOfWeekIso;
             $exercises = $allExercises->filter(function ($exercise) use ($day, $dayOffset, $now) {
                 return $exercise->day == $day &&
                     ($dayOffset != 0 || $exercise->start_time > $now->format('H:i:s'));
@@ -97,11 +97,11 @@ class SessionsStats extends BaseWidget
 
             // If any exercises are found, return the first one
             if ($exercises->count() > 0) {
-                $exercise    = $exercises->first();
+                $exercise = $exercises->first();
                 $nextSession = [
                     'session' => $exercise->exercise->name,
-                    'time'    => Carbon::parse($exercise->start_time)->format('H:i').'-'.Carbon::parse($exercise->end_time)->format('H:i'),
-                    'day'     => $dayOffset
+                    'time' => Carbon::parse($exercise->start_time)->format('H:i').'-'.Carbon::parse($exercise->end_time)->format('H:i'),
+                    'day' => $dayOffset,
                 ];
                 break;
             }
@@ -109,5 +109,4 @@ class SessionsStats extends BaseWidget
 
         return $nextSession;
     }
-
 }

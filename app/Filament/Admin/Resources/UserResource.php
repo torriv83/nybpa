@@ -59,11 +59,11 @@ class UserResource extends Resource
                         TextInput::make('password')
                             ->same('passwordConfirmation')
                             ->password()
-                            ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
-                            ->dehydrated(fn(?string $state): bool => filled($state))
-                            ->required(fn(string $operation): bool => $operation === 'create')
+                            ->dehydrateStateUsing(fn (string $state): string => Hash::make($state))
+                            ->dehydrated(fn (?string $state): bool => filled($state))
+                            ->required(fn (string $operation): bool => $operation === 'create')
                             ->maxLength(255)
-                            ->required(fn($record): string => $record === null)
+                            ->required(fn ($record): string|bool => $record === null)
                             ->label('Passord'),
                         TextInput::make('passwordConfirmation')
                             ->password()
@@ -75,7 +75,7 @@ class UserResource extends Resource
                             ->required()
                             ->multiple()
                             ->relationship('roles', 'name')
-                            ->preload()
+                            ->preload(),
                     ])->columns(3),
 
                 Section::make('Personlig data')
@@ -133,9 +133,9 @@ class UserResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\Filter::make('verified')
-                    ->query(fn(Builder $query): Builder => $query->whereNotNull('email_verified_at')),
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('email_verified_at')),
                 Tables\Filters\Filter::make('unverified')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('email_verified_at')),
+                    ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->slideOver(),
@@ -186,23 +186,22 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListUsers::route('/'),
+            'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            //'view'   => Pages\ViewUser::route('/{record}'),
-            'edit'   => Pages\EditUser::route('/{record}/edit'),
+            // 'view'   => Pages\ViewUser::route('/{record}'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function ()
-        {
+        return Cache::tags(['bruker'])->remember('UserNavigationBadge', now()->addMonth(), function () {
             $roles = ['Fast ansatt', 'Tilkalling'];
 
             // Check if any of the roles exist in the database
             $rolesExist = Role::whereIn('name', $roles)->exists();
 
-            return !$rolesExist ? app(static::getModel())->count() : app(static::getModel())->role($roles)->count();
+            return ! $rolesExist ? app(static::getModel())->count() : app(static::getModel())->role($roles)->count();
         });
     }
 }

@@ -20,7 +20,7 @@ class Kalender extends Page
     protected function getFooterWidgets(): array
     {
         return [
-            CalendarWidget::class
+            CalendarWidget::class,
         ];
     }
 }

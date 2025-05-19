@@ -20,9 +20,12 @@ class NesteArbeidstider extends BaseWidget
     {
         return $table
             ->query(
-                Timesheet::query()->inFuture('fra_dato')->whereDoesntHave('user', function ($query) {
-                    $query->role('admin');
-                })->where('unavailable', '=', 0)
+                Timesheet::query()
+                    ->inFuture('fra_dato')
+                    ->whereDoesntHave('user', fn ($query) => $query->whereHas('roles', fn ($query) => $query->where('name', 'admin')
+                    )
+                    )
+                    ->where('unavailable', '=', 0)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')

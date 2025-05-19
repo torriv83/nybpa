@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Team;
+use App\Models\User;
+
 return [
 
     'preload_roles' => true,
@@ -7,16 +10,16 @@ return [
     'preload_permissions' => true,
 
     'navigation_section_group' => 'Authentication',
-    //'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
+    // 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
 
-    'team_model'                    => \App\Models\Team::class,
+    'team_model' => Team::class,
 
     /*
      * Set to false to remove from navigation
      */
     'should_register_on_navigation' => [
         'permissions' => true,
-        'roles'       => true,
+        'roles' => true,
     ],
 
     'guard_names' => [
@@ -36,18 +39,18 @@ return [
             'api',
         ],
 
-        'permission_affixes'                         => [
+        'permission_affixes' => [
 
             /*
              * Permissions Aligned with Policies.
              * DO NOT change the keys unless the genericPolicy.stub is published and altered accordingly
              */
-            'viewAnyPermission'     => 'view-any',
-            'viewPermission'        => 'view',
-            'createPermission'      => 'create',
-            'updatePermission'      => 'update',
-            'deletePermission'      => 'delete',
-            'restorePermission'     => 'restore',
+            'viewAnyPermission' => 'view-any',
+            'viewPermission' => 'view',
+            'createPermission' => 'create',
+            'updatePermission' => 'update',
+            'deletePermission' => 'delete',
+            'restorePermission' => 'restore',
             'forceDeletePermission' => 'force-delete',
 
             /*
@@ -67,7 +70,7 @@ return [
          *
          * Note: If you are changing the "permission_name" , It's recommended to run with --clean to avoid duplications
          */
-        'permission_name'                            => 'return $permissionAffix . \' \' . $modelName;',
+        'permission_name' => 'return $permissionAffix . \' \' . $modelName;',
 
         /*
          * Permissions will be generated for the models associated with the respective Filament Resources
@@ -77,37 +80,37 @@ return [
         /*
          * Include directories which consists of models.
          */
-        'model_directories'                          => [
+        'model_directories' => [
             app_path('Models'),
-            //app_path('Domains/Forum')
+            // app_path('Domains/Forum')
         ],
 
         /*
          * Define custom_models in snake-case
          */
-        'custom_models'                              => [
+        'custom_models' => [
             //
         ],
 
         /*
          * Define excluded_models in snake-case
          */
-        'excluded_models'                            => [
+        'excluded_models' => [
             //
         ],
 
         'excluded_policy_models' => [
-            \App\Models\User::class,
+            User::class,
         ],
 
         /*
          * Define any other permission here
          */
-        'custom_permissions'     => [
-            //'view-log'
+        'custom_permissions' => [
+            // 'view-log'
         ],
 
-        'user_model' => \App\Models\User::class,
+        'user_model' => User::class,
 
         'policies_namespace' => 'App\Policies',
     ],

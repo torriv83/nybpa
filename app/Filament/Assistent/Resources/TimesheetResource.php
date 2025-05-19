@@ -3,7 +3,6 @@
 namespace App\Filament\Assistent\Resources;
 
 use App\Filament\Assistent\Resources\TimesheetResource\Pages;
-use App\Filament\Assistent\Resources\TimesheetResource\RelationManagers;
 use App\Models\Timesheet;
 use App\Services\UserStatsService;
 use App\Traits\DateAndTimeHelper;
@@ -36,12 +35,12 @@ class TimesheetResource extends Resource
     {
         return $form
             ->schema([
-                //Seksjon
-                Section::make(fn() => Auth::user()->name)
+                // Seksjon
+                Section::make(fn () => Auth::user()->name)
                     ->description('Velg om det gjelder hele dagen eller ikke')
                     ->schema([
                         Checkbox::make('allDay')
-                            ->label('Hele dagen?')->live()
+                            ->label('Hele dagen?')->live(),
                     ])->columns(),
 
                 Section::make('Tid')
@@ -76,9 +75,9 @@ class TimesheetResource extends Resource
                         }
                     })
                     ->summarize(Sum::make()
-                        ->formatStateUsing(fn(
+                        ->formatStateUsing(fn (
                             string $state
-                        ): string => (new UserStatsService())->minutesToTime($state))),
+                        ): string => (new UserStatsService)->minutesToTime($state))),
                 Tables\Columns\IconColumn::make('unavailable')
                     ->label('Satt som borte?')
                     ->boolean(),
@@ -109,12 +108,12 @@ class TimesheetResource extends Resource
                     }),
             ])
             ->bulkActions([
-//                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-//                ]),
+                //                Tables\Actions\BulkActionGroup::make([
+                //                    Tables\Actions\DeleteBulkAction::make(),
+                //                ]),
             ])
             ->emptyStateActions([
-                //Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
             ]);
     }
 
@@ -128,9 +127,9 @@ class TimesheetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListTimesheets::route('/'),
+            'index' => Pages\ListTimesheets::route('/'),
             'create' => Pages\CreateTimesheet::route('/create'),
-            'edit'   => Pages\EditTimesheet::route('/{record}/edit'),
+            'edit' => Pages\EditTimesheet::route('/{record}/edit'),
         ];
     }
 }

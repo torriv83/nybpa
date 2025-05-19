@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Tor Rivera.
  * Date: 20.10.2023
@@ -50,15 +51,15 @@ class FormDataTransformer
         if ($data['allDay']) {
             $data[Timesheet::FRA_DATO_DATE] = $data['fra_dato'];
             $data[Timesheet::TIL_DATO_DATE] = $data['til_dato'];
-            $data['totalt']            = 0;
+            $data['totalt'] = 0;
         } else {
             $timezone = 'Europe/Oslo';
 
             $fra_dato = Carbon::parse($data['fra_dato'])->setTimezone($timezone)->format('Y-m-d H:i');
             $til_dato = Carbon::parse($data['til_dato'])->setTimezone($timezone)->format('Y-m-d H:i');
 
-            $minutes        = $data['totalt'];
-            $formattedTime  = sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
+            $minutes = $data['totalt'];
+            $formattedTime = sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
             $data['totalt'] = $formattedTime;
 
             $data[Timesheet::FRA_DATO_TIME] = $fra_dato;

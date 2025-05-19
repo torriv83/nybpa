@@ -25,5 +25,4 @@ class CreateResepter extends CreateRecord
     {
         Cache::tags(['medisinsk'])->flush();
     }
-
 }

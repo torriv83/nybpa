@@ -31,13 +31,13 @@ class TimerChart extends ChartWidget
 
     /**
      * Retrieves data for the chart.
+     *
      * @uses Timesheet::timeUsedThisYear
      * @uses Timesheet::timeUsedLastYear
-     * @return array
      */
     protected function getData(): array
     {
-        $timeSheet        = new Timesheet();
+        $timeSheet = new Timesheet;
         $timeUsedThisYear = $timeSheet->timeUsedThisYear();
 
         /* Forrige år */
@@ -47,7 +47,7 @@ class TimerChart extends ChartWidget
                     return $this->usedTime($timeSheet->timeUsedLastYear());
                 },
             ])
-            ->then(fn($timeSheet): string => $timeSheet);
+            ->then(fn ($timeSheet): string => $timeSheet);
 
         /* Dette året */
         $thisYearTimes = Pipeline::send($timeSheet)
@@ -56,7 +56,7 @@ class TimerChart extends ChartWidget
                     return $this->usedTime($timeUsedThisYear);
                 },
             ])
-            ->then(fn($timeSheet): string => $timeSheet);
+            ->then(fn ($timeSheet): string => $timeSheet);
 
         /* Gjenstår */
         $thisYearLeft = $this->usedTime($timeUsedThisYear, true);
@@ -65,26 +65,26 @@ class TimerChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label'           => Carbon::now()->subYear()->format('Y'),
-                    'data'            => $lastYearTimes,
+                    'label' => Carbon::now()->subYear()->format('Y'),
+                    'data' => $lastYearTimes,
                     'backgroundColor' => 'rgba(201, 203, 207, 0.2)',
-                    'borderColor'     => 'rgb(201, 203, 207)',
-                    'borderWidth'     => 1,
+                    'borderColor' => 'rgb(201, 203, 207)',
+                    'borderWidth' => 1,
                 ],
                 [
-                    'label'           => Carbon::now()->format('Y'),
-                    'data'            => $thisYearTimes,
+                    'label' => Carbon::now()->format('Y'),
+                    'data' => $thisYearTimes,
                     'backgroundColor' => 'rgba(54, 162, 235, 0.2)',
-                    'borderColor'     => 'rgb(54, 162, 235)',
-                    'borderWidth'     => 1,
+                    'borderColor' => 'rgb(54, 162, 235)',
+                    'borderWidth' => 1,
                 ],
                 [
-                    'type'            => 'line',
-                    'label'           => 'Gjenstår',
-                    'data'            => $thisYearLeft,
+                    'type' => 'line',
+                    'label' => 'Gjenstår',
+                    'data' => $thisYearLeft,
                     'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
-                    'borderColor'     => 'rgb(255, 99, 132)',
-                    'borderWidth'     => 1,
+                    'borderColor' => 'rgb(255, 99, 132)',
+                    'borderWidth' => 1,
                 ],
             ],
 

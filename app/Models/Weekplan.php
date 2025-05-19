@@ -2,10 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Weekplan
+ *
+ * Representerer en ukeplan som kan inneholde flere øvelser knyttet til den.
+ * Bruker Laravel Eloquent for å interagere med databasen.
+ *
+ *
+ * @property int $id Primærnøkkel for ukeplanen.
+ * @property string $name Navn på ukeplanen.
+ * @property \Illuminate\Support\Carbon|null $deleted_at Angir om ukeplanen er mykt slettet.
+ * @property \Illuminate\Support\Carbon|null $created_at Tidspunkt for opprettelse av registrering.
+ * @property \Illuminate\Support\Carbon|null $updated_at Tidspunkt for oppdatering av registrering.
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Weekplan active() Henter kun aktive ukeplaner.
+ */
 class Weekplan extends Model
 {
     use SoftDeletes;
@@ -18,6 +34,9 @@ class Weekplan extends Model
         //
     ];
 
+    /**
+     * Relasjon til `WeekplanExercise` for å hente alle øvelsene knyttet til en ukeplan.
+     */
     public function weekplanExercises(): HasMany
     {
         return $this->hasMany(WeekplanExercise::class);
@@ -29,9 +48,9 @@ class Weekplan extends Model
      * @param  mixed  $query  The query builder instance.
      * @return mixed The modified query builder instance.
      */
-    public function scopeActive($query)
+    #[Scope]
+    protected function active($query): mixed
     {
         return $query->where('is_active', 1);
     }
-
 }

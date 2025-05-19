@@ -15,8 +15,9 @@ class ViewWeekplan extends Page
 
     protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
-    public array    $exercises;
-    public Weekplan | null $weekplan;
+    public array $exercises;
+
+    public ?Weekplan $weekplan;
 
     public function getTitle(): string
     {

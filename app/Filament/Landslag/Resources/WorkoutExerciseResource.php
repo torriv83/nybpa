@@ -3,7 +3,6 @@
 namespace App\Filament\Landslag\Resources;
 
 use App\Filament\Landslag\Resources\WorkoutExerciseResource\Pages;
-use App\Filament\Landslag\Resources\WorkoutExerciseResource\RelationManagers;
 use App\Models\WorkoutExercise;
 use Exception;
 use Filament\Forms;
@@ -17,11 +16,15 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class WorkoutExerciseResource extends Resource
 {
-    protected static ?string $model           = WorkoutExercise::class;
+    protected static ?string $model = WorkoutExercise::class;
+
     protected static ?string $navigationGroup = 'Treningsprogram';
-    protected static ?string $label           = 'Øvelse';
-    protected static ?string $pluralLabel     = 'Øvelser';
-    protected static ?string $navigationIcon  = 'icon-exercise';
+
+    protected static ?string $label = 'Øvelse';
+
+    protected static ?string $pluralLabel = 'Øvelser';
+
+    protected static ?string $navigationIcon = 'icon-exercise';
 
     public static function form(Form $form): Form
     {
@@ -29,7 +32,7 @@ class WorkoutExerciseResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('exercise_name')
                     ->label('Navn')
-                    ->required()
+                    ->required(),
             ]);
     }
 
@@ -44,11 +47,10 @@ class WorkoutExerciseResource extends Resource
                     ->label('Navn')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('IAntallProgrammer')
-                    ->getStateUsing(function (WorkoutExercise $record)
-                    {
+                    ->getStateUsing(function (WorkoutExercise $record) {
                         return $record->TrainingPrograms->count();
                     }),
-                Tables\Columns\TextColumn::make('created_at')->dateTime('d.m.y H:i')->label('Lagt til')
+                Tables\Columns\TextColumn::make('created_at')->dateTime('d.m.y H:i')->label('Lagt til'),
             ])->reorderable()
             ->filters([
                 TernaryFilter::make('arkivert')
@@ -56,10 +58,10 @@ class WorkoutExerciseResource extends Resource
                     ->trueLabel('Med arkiverte øvelser')
                     ->falseLabel('Bare arkiverte øvelser')
                     ->queries(
-                        true : fn(Builder $query) => $query->withTrashed(),
-                        false: fn(Builder $query) => $query->onlyTrashed(),
-                        blank: fn(Builder $query) => $query->withoutTrashed(),
-                    )
+                        true : fn (Builder $query) => $query->withTrashed(),
+                        false: fn (Builder $query) => $query->onlyTrashed(),
+                        blank: fn (Builder $query) => $query->withoutTrashed(),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -91,9 +93,9 @@ class WorkoutExerciseResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListWorkoutExercises::route('/'),
+            'index' => Pages\ListWorkoutExercises::route('/'),
             'create' => Pages\CreateWorkoutExercise::route('/create'),
-            'edit'   => Pages\EditWorkoutExercise::route('/{record}/edit'),
+            'edit' => Pages\EditWorkoutExercise::route('/{record}/edit'),
         ];
     }
 }

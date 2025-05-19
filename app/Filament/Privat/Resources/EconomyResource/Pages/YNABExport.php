@@ -34,4 +34,3 @@ class YNABExport implements FromCollection, WithHeadings, WithMapping
         return $row;
     }
 }
-

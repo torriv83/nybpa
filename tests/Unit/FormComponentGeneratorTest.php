@@ -84,11 +84,12 @@ it('tests the dynamicDatePicker method', function () {
         ->native(false)
         ->disabledDates(function (Get $get, DateTimeService $dateTimeService) {
             $recordId = $get('id');
+
             return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId) ?? [];
         })
         ->suffixIcon('calendar')
         ->displayFormat('d.m.Y')
-        ->minDate(fn($operation) => ($operation == 'edit' || $config['isAdmin'])
+        ->minDate(fn ($operation) => ($operation == 'edit' || $config['isAdmin'])
             ? null
             : Carbon::parse(today())->format('d.m.Y'))
         ->live()

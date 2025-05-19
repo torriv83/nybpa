@@ -7,6 +7,7 @@ use App\Filament\Landslag\Resources\TestResultsResource\Pages\EditTestResults;
 use App\Filament\Landslag\Resources\TestResultsResource\Pages\ListTestResults;
 use App\Models\TestResults;
 use App\Models\Tests;
+use Exception;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -27,7 +28,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-//use App\Filament\Resources\TestResultsResource\RelationManagers;
+// use App\Filament\Resources\TestResultsResource\RelationManagers;
 
 class TestResultsResource extends Resource
 {
@@ -52,7 +53,7 @@ class TestResultsResource extends Resource
                         ->schema([
                             Select::make('tests_id')
                                 ->options(function () {
-                                    return tests::all()->pluck('navn', 'id');
+                                    return tests::pluck('navn', 'id');
                                 })->label('Test')->reactive(),
                             DateTimePicker::make('dato')->seconds(false),
                         ]),
@@ -87,7 +88,7 @@ class TestResultsResource extends Resource
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function table(Table $table): Table
     {
@@ -100,7 +101,7 @@ class TestResultsResource extends Resource
             ])
             ->filters([
                 TrashedFilter::make(),
-                SelectFilter::make('Test')->relationship('tests', 'navn')
+                SelectFilter::make('Test')->relationship('tests', 'navn'),
             ])
             ->actions([
                 EditAction::make(),
@@ -122,9 +123,9 @@ class TestResultsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListTestResults::route('/'),
+            'index' => ListTestResults::route('/'),
             'create' => CreateTestResults::route('/create'),
-            'edit'   => EditTestResults::route('/{record}/edit'),
+            'edit' => EditTestResults::route('/{record}/edit'),
             // 'view' => Pages\ViewTestResults::route('/{record}'),
         ];
     }

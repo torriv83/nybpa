@@ -15,10 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 class TimeTabell extends BaseWidget
 {
+    protected static ?string $heading = 'Time tabell';
 
-    protected static ?string $heading         = 'Time tabell';
     protected static ?string $pollingInterval = null;
-    protected static ?int    $sort            = 4;
+
+    protected static ?int $sort = 4;
 
     public function table(Table $table): Table
     {
@@ -30,18 +31,18 @@ class TimeTabell extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('totalt')->sortable()
-                    ->formatStateUsing(fn(string $state): string => (new UserStatsService())->minutesToTime($state))
-                    ->summarize(Sum::make()->formatStateUsing(fn(string $state
-                    ): string => (new UserStatsService())->minutesToTime($state))),
+                    ->formatStateUsing(fn (string $state): string => (new UserStatsService)->minutesToTime($state))
+                    ->summarize(Sum::make()->formatStateUsing(fn (string $state
+                    ): string => (new UserStatsService)->minutesToTime($state))),
 
             ])->filters([
                 Filter::make('Forrige måned')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->subMonth()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->subMonth()->startOfMonth())),
 
                 Filter::make('Denne måneden')
-                    ->query(fn(Builder $query): Builder => $query
+                    ->query(fn (Builder $query): Builder => $query
                         ->where('fra_dato', '<=', Carbon::now()->endOfMonth())
                         ->where('til_dato', '>=', Carbon::now()->startOfMonth()))->default(),
             ])

@@ -25,7 +25,7 @@ it('calculates formatted time difference correctly', function () {
     expect($formattedTimeDifference)->toBe('02:30');
 });
 
-//it('retrieves all disabled dates correctly', function () {
+// it('retrieves all disabled dates correctly', function () {
 //
 //    $date = Carbon::now()->addWeek()->format('Y-m-d');
 //
@@ -36,4 +36,4 @@ it('calculates formatted time difference correctly', function () {
 //
 //    $disabledDates = DateTimeService::getAllDisabledDates(1, null);
 //    expect($disabledDates)->toBe([$date]);
-//});
+// });

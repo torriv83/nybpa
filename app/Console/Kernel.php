@@ -2,12 +2,12 @@
 
 namespace App\Console;
 
+use App\Models\Ynab;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-
     protected $commands = [
         Commands\SendWorkReminderEmail::class,
     ];
@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('timesheets:delete-old')->daily();
         $schedule->command('email:send-timesheet-reminder')->lastDayOfMonth('12:00');
         $schedule->call(function () {
-            \App\Models\Ynab::fetchData();
+            Ynab::fetchData();
         })->everySixHours();
         $schedule->command('email:send-prescription-reminder')->daily();
     }
@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
     }

@@ -25,7 +25,6 @@ class SendWorkReminderEmail extends Command
      */
     protected $description = 'Send an email reminder an hour before work time';
 
-
     public function __construct()
     {
         parent::__construct();
@@ -43,17 +42,17 @@ class SendWorkReminderEmail extends Command
 
             // Define the reminder times
             $reminderTimes = [
-                '1_day_before'   => $workTime->clone()->subDay(),
+                '1_day_before' => $workTime->clone()->subDay(),
                 '3_hours_before' => $workTime->clone()->subHours(3),
-                '1_hour_before'  => $workTime->clone()->subHour(),
+                '1_hour_before' => $workTime->clone()->subHour(),
             ];
 
             foreach ($reminderTimes as $label => $reminderTime) {
                 // Check if the current time is within a 1-minute window of the reminder time
                 if (now()->gte($reminderTime) && now()->lt($reminderTime->addMinutes(1))) {
                     $details = [
-                        'date'      => Carbon::parse($timesheet->fra_dato)->format('d.m.Y'),
-                        'time'      => Carbon::parse($timesheet->fra_dato)->format('H:i'),
+                        'date' => Carbon::parse($timesheet->fra_dato)->format('d.m.Y'),
+                        'time' => Carbon::parse($timesheet->fra_dato)->format('H:i'),
                         'assistent' => $timesheet->user->name,
                     ];
 
@@ -64,5 +63,4 @@ class SendWorkReminderEmail extends Command
             }
         }
     }
-
 }
