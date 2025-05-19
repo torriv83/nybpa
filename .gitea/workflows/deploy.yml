@@ -143,3 +143,15 @@ jobs:
         with:
           path: node_modules
           key: npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Sett versjonstag etter vellykket devtest-kjøring
+        if: success()
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci@torriv.local"
+          VERSION=$(date +'%Y.%m.%d')-build.${GITEA_RUN_NUMBER}
+          git tag v$VERSION
+          git push https://torriv83:${GITEA_TOKEN}@gitea.torriv.synology.me/torriv83/nybpa.git v$VERSION
+
