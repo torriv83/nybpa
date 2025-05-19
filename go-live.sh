@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Save current branch
+# 👤 Konfigurer hvem som lager taggen
+git config user.name "CI Bot"
+git config user.email "ci@torriv.local"
+
+# 👉 Start på devtest
 CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
 
 if [ "$CURRENT_BRANCH" != "devtest" ]; then
@@ -8,20 +12,34 @@ if [ "$CURRENT_BRANCH" != "devtest" ]; then
   exit 1
 fi
 
-# Run tests
+# ✅ Kjør tester
 echo "✅ Running tests..."
 php artisan test --parallel || { echo "❌ Tests failed. Aborting."; exit 1; }
 
-# Merge devtest into master with same commit message
+# 💬 Finn siste tag fra devtest
+echo "🔍 Finding latest devtest tag..."
+LATEST_TAG=$(git tag --list 'v*' --merged devtest | sort -V | tail -n1)
+
+if [ -z "$LATEST_TAG" ]; then
+  echo "❌ Ingen tidligere tag funnet på devtest. Aborting."
+  exit 1
+fi
+
+# 🔀 Merge til master med samme commit-melding
 echo "🔀 Merging devtest into master..."
 git checkout master
 COMMIT_MSG=$(git log devtest -1 --pretty=%B)
 git merge devtest --no-ff -m "$COMMIT_MSG"
 
-# Push to origin
-echo "☁️ Pushing master to origin..."
-git push origin master
+# 🏷️ Legg til samme tag på master sin HEAD
+echo "🏷️ Tagging master with $LATEST_TAG"
+git tag "$LATEST_TAG"
 
-# Return to devtest
+# ☁️ Push både master og tag
+echo "☁️ Pushing master + tag to origin..."
+git push origin master
+git push origin "$LATEST_TAG"
+
+# ↩️ Tilbake til devtest
 git checkout devtest
-echo "🚀 Deploy triggered. You're back on devtest."
+echo "🚀 Deploy complete. You're back on devtest."

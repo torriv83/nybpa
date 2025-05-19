@@ -1,3 +1,4 @@
+#file: noinspection YAMLSchemaValidation
 name: Deploy Laravel Application
 
 on:
@@ -6,23 +7,85 @@ on:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    container:
+      image: torriv/ci-laravel:php8.4-node22-v2
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
+
     steps:
       - uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, redis
+          fetch-depth: 0
+
+      - name: Cache Composer dependencies
+        id: cache-composer
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-
+
+      - name: Cache NPM dependencies
+        id: cache-npm
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            npm-
+
+      - name: Cache Laravel bootstrap/cache
+        id: cache-bootstrap
+        uses: actions/cache@v3
+        with:
+          path: bootstrap/cache
+          key: bootstrap-${{ hashFiles('bootstrap/cache/*.php') }}
+          restore-keys: |
+            bootstrap-
+
+      - name: Save Laravel bootstrap/cache
+        if: steps.cache-bootstrap.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: bootstrap/cache
+          key: bootstrap-${{ hashFiles('bootstrap/cache/*.php') }}
+
+      - name: Cache public build assets
+        id: cache-public-build
+        uses: actions/cache@v3
+        with:
+          path: public/build
+          key: public-build-${{ hashFiles('resources/**/*') }}
+          restore-keys: |
+            public-build-
+
+      - name: Save public build assets
+        if: steps.cache-public-build.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: public/build
+          key: public-build-${{ hashFiles('resources/**/*') }}
+
+      - name: Cache PHPUnit result cache
+        id: cache-phpunit
+        uses: actions/cache@v3
+        with:
+          path: tests/.phpunit.result.cache
+          key: phpunit-${{ hashFiles('phpunit.xml') }}
+          restore-keys: |
+            phpunit-
+
+      - name: Save PHPUnit result cache
+        if: steps.cache-phpunit.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: tests/.phpunit.result.cache
+          key: phpunit-${{ hashFiles('phpunit.xml') }}
 
       - name: Install Composer dependencies
-        run: composer install --optimize-autoloader -v
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
+        continue-on-error: true
+        run: composer install --no-interaction --optimize-autoloader
 
       - name: Install NPM dependencies and build assets
         run: |
@@ -54,7 +117,7 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d '{"content":"✅ CI-kjøring for *nybpa* fullført og pushet til `master`!"}' \
+               -d '{"content":"✅ CI-kjøring for *nybpa* fullført!"}' \
                $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
@@ -68,3 +131,28 @@ jobs:
                $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Save Composer dependencies
+        if: steps.cache-composer.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Save NPM dependencies
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+
+      - name: Sett versjonstag etter vellykket devtest-kjøring
+        if: success()
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci@torriv.local"
+          VERSION=$(date +'%Y.%m.%d-%H%M%S')-build.$(git rev-list --count HEAD)
+          git tag v$VERSION
+          git push https://torriv83:${GITEA_TOKEN}@gitea.torriv.synology.me/torriv/nybpa.git v$VERSION
