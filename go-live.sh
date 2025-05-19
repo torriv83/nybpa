@@ -31,14 +31,14 @@ git checkout master
 COMMIT_MSG=$(git log devtest -1 --pretty=%B)
 git merge devtest --no-ff -m "$COMMIT_MSG"
 
-# 🏷️ Legg til samme tag på master sin HEAD
+# 🏷️ Flytt taggen til master sin HEAD
 echo "🏷️ Tagging master with $LATEST_TAG"
-git tag "$LATEST_TAG"
+git tag -f "$LATEST_TAG"
 
 # ☁️ Push både master og tag
 echo "☁️ Pushing master + tag to origin..."
 git push origin master
-git push origin "$LATEST_TAG"
+git push origin --force "$LATEST_TAG"
 
 # ↩️ Tilbake til devtest
 git checkout devtest
