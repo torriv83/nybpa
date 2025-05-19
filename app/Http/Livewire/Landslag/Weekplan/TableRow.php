@@ -16,11 +16,11 @@ class TableRow extends Component
 
     public const MINUTES_IN_HOUR = 60;
 
-    public $data;
+    public array $data;
 
-    public $exists = [];
+    public array $exists = [];
 
-    public $weekplanId;
+    public int|string|null $weekplanId;
 
     public function mount(): void
     {
@@ -83,7 +83,7 @@ class TableRow extends Component
             foreach ($exerciseData as $item) {
                 foreach ($item['exercises'] as $exercise) {
                     [$fromTime, $toTime] = array_map(function ($time) {
-                        return date('H', strtotime($time)) * self::MINUTES_IN_HOUR + date('i', strtotime($time));
+                        return (int) date('H', strtotime($time)) * self::MINUTES_IN_HOUR + (int) date('i', strtotime($time));
                     }, [$exercise['from'], $exercise['to']]);
 
                     $earliestTime = min($earliestTime, $fromTime);
@@ -201,8 +201,8 @@ class TableRow extends Component
                     $filteredExercises = collect($exercisesForDay)->filter(function ($exercise) use ($time, $minute, $interval) {
                         $from = strtotime($exercise->start_time);
                         $to = strtotime($exercise->end_time);
-                        $fromTime = (date('H', $from) * self::MINUTES_IN_HOUR) + date('i', $from);
-                        $toTime = (date('H', $to) * self::MINUTES_IN_HOUR) + date('i', $to);
+                        $fromTime = ((int) date('H', $from) * self::MINUTES_IN_HOUR) + (int) date('i', $from);
+                        $toTime = ((int) date('H', $to) * self::MINUTES_IN_HOUR) + (int) date('i', $to);
                         $intervalSlots = max(($toTime - $fromTime) / $interval, 1);
                         $currentTime = ($time * self::MINUTES_IN_HOUR) + $minute;
 
@@ -215,9 +215,10 @@ class TableRow extends Component
                         $trainingProgram = $exercise->trainingProgram;
 
                         // Calculate rowspan for the exercise based on its duration
-                        $fromTime = (date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + date('i',
+                        $fromTime = ((int) date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + (int) date('i',
                             strtotime($exercise->start_time));
-                        $toTime = (date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + date('i', strtotime($exercise->end_time));
+                        $toTime = ((int) date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + (int) date('i',
+                            strtotime($exercise->end_time));
                         $rowspan = ceil(($toTime - $fromTime) / $interval);
 
                         $exerciseDataForDay = [
