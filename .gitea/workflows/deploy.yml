@@ -144,13 +144,20 @@ jobs:
           path: node_modules
           key: npm-${{ hashFiles('package-lock.json') }}
 
-      - name: Sett versjonstag etter vellykket devtest-kjøring
+      - name: Lag tag og push commit + tag til origin
         if: success()
         env:
           GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
         run: |
           git config user.name "CI Bot"
           git config user.email "ci@torriv.local"
+
           VERSION=$(date +'%Y.%m.%d')-build.$(git rev-list --count HEAD)
-          git tag v$VERSION
-          git push https://torriv83:${GITEA_TOKEN}@gitea.torriv.synology.me/torriv/nybpa.git v$VERSION
+          TAG="v$VERSION"
+
+          echo "🏷 Lager lokal tag: $TAG"
+          git tag "$TAG"
+
+          echo "☁️ Pusher tag og eventuelle commits"
+          git push origin HEAD
+          git push origin "$TAG"
