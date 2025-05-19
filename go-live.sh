@@ -18,7 +18,7 @@ php artisan test --parallel || { echo "❌ Tests failed. Aborting."; exit 1; }
 
 # 💬 Finn siste tag fra devtest
 echo "🔍 Finding latest devtest tag..."
-LATEST_TAG=$(git tag --list 'v*' --merged devtest | sort -V | tail -n1)
+LATEST_TAG=$(git for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags/v* | head -n1)
 
 if [ -z "$LATEST_TAG" ]; then
   echo "❌ Ingen tidligere tag funnet på devtest. Aborting."
