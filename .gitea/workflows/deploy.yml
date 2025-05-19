@@ -2,7 +2,7 @@ name: Deploy Laravel Application
 
 on:
   push:
-    branches: [devtest]
+    branches: [ devtest ]
 
 jobs:
   ci:
@@ -39,6 +39,10 @@ jobs:
 
       - name: Run Larastan (PHPStan)
         run: ./vendor/bin/phpstan analyse
+
+      - name: Inject APP_KEY into .env.testing
+        run: |
+          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env.testing
 
       - name: Run tests
         run: |

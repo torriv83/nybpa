@@ -6,6 +6,7 @@ use App\Models\Weekplan;
 use App\Models\WeekplanExercise;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Exception;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ class SessionsStats extends BaseWidget
      *
      * @return array The statistics for the weekplans.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getStats(): array
     {

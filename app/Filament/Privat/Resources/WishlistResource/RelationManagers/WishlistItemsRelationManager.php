@@ -117,7 +117,6 @@ class WishlistItemsRelationManager extends RelationManager
                 BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
                         ->after(function (RelationManager $livewire, Model $record) {
-                            // Runs after the form fields are saved to the database.
                             $livewire->dispatch('itemedited', $record->wishlist_id);
                         }),
                     Tables\Actions\BulkAction::make('status')

@@ -48,11 +48,13 @@ class Ansatte extends BaseWidget
                     ->label('Telefon')
                     ->default('12345678'),
                 Tables\Columns\TextColumn::make('jobbetiaar')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (\App\Models\User $record) {
                         $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record) {
-                            return $record->timesheet()
+                            return \App\Models\Timesheet::query()
+                                ->whereBelongsTo($record)
                                 ->yearToDate('fra_dato')
-                                ->where('unavailable', '!=', 1)->sum('totalt');
+                                ->where('unavailable', '!=', 1)
+                                ->sum('totalt');
                         });
 
                         return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
@@ -67,7 +69,6 @@ class Ansatte extends BaseWidget
                             ->addSelect(['total_work_time' => $totalWorkTimeSubquery])
                             ->orderBy('total_work_time', $direction);
                     })
-
                     ->label('Jobbet i år')
                     ->default('0'),
             ])

@@ -148,8 +148,6 @@ class FormComponentGenerator
      *
      * @param  object  $component  The component to apply the configuration to.
      * @param  array  $config  The configuration options to apply.
-     *
-     * @throws None
      */
     private static function applyComponentConfig(object $component, array $config): void
     {

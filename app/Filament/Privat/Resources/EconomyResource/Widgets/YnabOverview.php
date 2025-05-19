@@ -57,11 +57,11 @@ class YnabOverview extends BaseWidget
                     ->sortable()
                     ->alignLeft()
                     ->summarize(Sum::make()->money('NOK', divideBy: 1000))
-/*                    ->summarize(Summarizer::make()
-                        ->label('Sum')
-                        ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('income')))
-                        ->money('nok')
-                    )*/
+                    /*                    ->summarize(Summarizer::make()
+                                            ->label('Sum')
+                                            ->using(fn(sumBuilder $query): float => $this->divideYnab($query->sum('income')))
+                                            ->money('nok')
+                                        )*/
                     ->summarize(Average::make()->money('NOK', divideBy: 1000))
                 /*->summarize(Summarizer::make()
                         ->label('Gjennomsnitt')
@@ -112,7 +112,7 @@ class YnabOverview extends BaseWidget
                     ->money('nok', true)
                     ->sortable()
                     ->color(function ($record) {
-                        if (($record->income + $record->activity) < 0) {
+                        if (((int) $record->income + (int) $record->activity) < 0) {
                             return 'danger';
                         } else {
                             return 'success';

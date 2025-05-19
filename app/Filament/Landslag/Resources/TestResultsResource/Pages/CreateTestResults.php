@@ -34,7 +34,7 @@ class CreateTestResults extends CreateRecord
                 ->schema([
                     Select::make('tests_id')
                         ->options(function () {
-                            return tests::all()->pluck('navn', 'id');
+                            return tests::pluck('navn', 'id');
                         })->label('Test')->reactive(),
                     DateTimePicker::make('dato')->seconds(false),
                 ]),

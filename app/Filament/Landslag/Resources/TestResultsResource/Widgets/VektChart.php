@@ -4,6 +4,7 @@ namespace App\Filament\Landslag\Resources\TestResultsResource\Widgets;
 
 use App\Models\TestResults;
 use App\Models\Tests;
+use Exception;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -36,7 +37,7 @@ class VektChart extends ChartWidget
                         $dates[] = $result->dato->format('d.m.y H:i');
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Handle the exception, log, or display an error message
             }
 

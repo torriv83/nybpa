@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -33,8 +34,11 @@ class SendReminderWhenPrescriptionExpire extends Mailable
      */
     public function envelope(): Envelope
     {
+        /** @var User|null $admin */
+        $admin = Role::findByName('admin')->users->first();
+
         return new Envelope(
-            from   : new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
+            from   : new Address($admin->email, $admin->name),
             subject: 'Resept går snart ut.',
         );
     }

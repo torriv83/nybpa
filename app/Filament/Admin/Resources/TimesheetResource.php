@@ -124,7 +124,7 @@ class TimesheetResource extends Resource
                         Sum::make()->formatStateUsing(function (string $state) {
                             $minutes = $state;
 
-                            return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                            return sprintf('%02d', intdiv((int) $minutes, 60)).':'.sprintf('%02d', (int) $minutes % 60);
                         }),
                         Average::make()->formatStateUsing(function (string $state) {
                             $minutes = (int) floatval($state);
@@ -169,7 +169,10 @@ class TimesheetResource extends Resource
                     ->query(fn (Builder $query): Builder => $query->where('unavailable', '1')),
 
                 Tables\Filters\SelectFilter::make('assistent')
-                    ->relationship('user', 'name', fn (Builder $query) => $query->permission('Assistent')),
+                    ->relationship('user', 'name',
+                        fn (Builder $query) => $query->whereHas('permissions', fn (Builder $query) => $query->where('name', 'Assistent')
+                        )
+                    ),
 
                 Tables\Filters\Filter::make('Forrige måned')
                     ->query(fn (Builder $query): Builder => $query
@@ -275,7 +278,7 @@ class TimesheetResource extends Resource
                             ->formatStateUsing(function (string $state) {
                                 $minutes = $state;
 
-                                return sprintf('%02d', intdiv($minutes, 60)).':'.(sprintf('%02d', $minutes % 60));
+                                return sprintf('%02d', intdiv((int) $minutes, 60)).':'.(sprintf('%02d', (int) $minutes % 60));
                             }),
                         Infolists\Components\TextEntry::make('description')
                             ->html()

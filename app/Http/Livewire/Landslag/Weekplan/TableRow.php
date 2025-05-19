@@ -66,8 +66,6 @@ class TableRow extends Component
      *
      * @param  int  $fixed  (optional) Whether to use the fixed time range. Defaults to 0.
      * @return array An array containing the start time, end time, and interval.
-     *
-     * @throws Some_Exception_Class A description of the exception that can be thrown.
      */
     private function calculateTimeRange(int $fixed = 0): array
     {

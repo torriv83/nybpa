@@ -58,10 +58,9 @@ class DateTimeService
      *
      * @param  int|null  $userId  The ID of the user.
      * @param  int|null  $recordId  The ID of the record.
+     * @return array An array of disabled dates.
      *
      * @uses Timesheet::scopeDisabledDates
-     *
-     * @return array An array of disabled dates.
      */
     public static function getAllDisabledDates(?int $userId, ?int $recordId): array
     {
@@ -101,7 +100,7 @@ class DateTimeService
         } else {
             $totalt = $get('totalt');
             [$hours, $minutes] = explode(':', $totalt);
-            $durationInMinutes = ($hours * 60) + $minutes;
+            $durationInMinutes = ((int) $hours * 60) + (int) $minutes;
 
             // Set the updated 'til_dato_time' by adding the duration to the new 'fra_dato_time'
             $updatedTilDato = $newFraDato->copy()->addMinutes($durationInMinutes);

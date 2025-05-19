@@ -7,6 +7,7 @@ use App\Filament\Landslag\Resources\TestResultsResource\Pages\EditTestResults;
 use App\Filament\Landslag\Resources\TestResultsResource\Pages\ListTestResults;
 use App\Models\TestResults;
 use App\Models\Tests;
+use Exception;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
@@ -52,7 +53,7 @@ class TestResultsResource extends Resource
                         ->schema([
                             Select::make('tests_id')
                                 ->options(function () {
-                                    return tests::all()->pluck('navn', 'id');
+                                    return tests::pluck('navn', 'id');
                                 })->label('Test')->reactive(),
                             DateTimePicker::make('dato')->seconds(false),
                         ]),
@@ -87,7 +88,7 @@ class TestResultsResource extends Resource
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function table(Table $table): Table
     {

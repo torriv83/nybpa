@@ -2,14 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class WishlistItem
+ *
+ * Representerer et enkelt element i en ønskeliste.
+ *
+ * @property int $id Primærnøkkel for wishlist-item.
+ * @property int $wishlist_id ID tilknyttet ønskelisten (foreign key).
+ * @property string $hva Navn/beskrivelse av wishlist-element.
+ * @property string $url URL til wishlist-elementet.
+ * @property float $koster Kostnad for elementet.
+ * @property int $antall Antall ønsket av elementet.
+ * @property string $status Status for elementet (f.eks. "kjøpt", "ønsket").
+ * @property \Illuminate\Support\Carbon|null $created_at Tidspunkt da elementet ble opprettet.
+ * @property \Illuminate\Support\Carbon|null $updated_at Tidspunkt da elementet ble sist oppdatert.
+ *
+ * @mixin \Eloquent
+ */
 class WishlistItem extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'hva',
         'koster',

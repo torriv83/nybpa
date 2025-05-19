@@ -9,6 +9,7 @@ use App\Filament\Privat\Resources\UtstyrResource\Pages\ViewUtstyr;
 use App\Mail\BestillUtstyr as Bestilling;
 use App\Models\Settings;
 use App\Models\Utstyr;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -47,7 +48,7 @@ class UtstyrResource extends Resource
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function table(Table $table): Table
     {

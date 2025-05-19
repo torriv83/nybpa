@@ -30,12 +30,15 @@ class sendMessageMail extends Mailable
 
     public function envelope(): Envelope
     {
+        /** @var \App\Models\User|null $admin */
+        $admin = Role::findByName('admin')->users->first();
+
         return new Envelope(
-            from: new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
+            from   : new Address($admin?->email, $admin?->name),
             replyTo: [
-                new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
+                new Address($admin?->email, $admin?->name),
             ],
-            subject: 'Ny melding fra '.Role::findByName('admin')->users->first()->name,
+            subject: 'Ny melding fra '.($admin?->name ?? 'Ukjent'),
         );
     }
 

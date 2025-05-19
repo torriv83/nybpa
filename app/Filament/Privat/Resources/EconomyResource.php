@@ -6,6 +6,7 @@ use App\Filament\Privat\Resources\EconomyResource\Widgets\StatsOverview;
 use App\Filament\Privat\Resources\EconomyResource\Widgets\YnabChart;
 use App\Filament\Privat\Resources\EconomyResource\Widgets\YnabOverview;
 use App\Models\Economy;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -39,7 +40,7 @@ class EconomyResource extends Resource
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function table(Table $table): Table
     {

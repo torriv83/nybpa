@@ -100,7 +100,7 @@ class WishlistResource extends Resource
                             ->money('nok', true)
                             ->label('left')
                             ->label('Gjenstår')
-                            ->using(function (Builder $query): string {
+                            ->using(function (Builder $query): float {
                                 $total = $query->sum('koster');
                                 $doneSaving = $query->where('status', '=', 'Spart')
                                     ->orWhere('status', '=', 'Kjøpt')

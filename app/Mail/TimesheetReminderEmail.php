@@ -2,9 +2,11 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -29,8 +31,11 @@ class TimesheetReminderEmail extends Mailable
      */
     public function envelope(): Envelope
     {
+        /** @var User|null $admin */
+        $admin = Role::findByName('admin')->users->first();
+
         return new Envelope(
-            from   : new Address(Role::findByName('admin')->users->first()->email, Role::findByName('admin')->users->first()->name),
+            from   : new Address($admin?->email ?? '', $admin?->name ?? ''),
             subject: 'Oversikt over timer jobbet',
         );
     }
@@ -48,7 +53,7 @@ class TimesheetReminderEmail extends Mailable
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {

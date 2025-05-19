@@ -39,7 +39,7 @@ trait WeekplanSchema
 
                     // Create a Select field for the exercise id
                     Select::make('exercise_id')
-                        ->options(Exercise::all()->pluck('name', 'id'))
+                        ->options(Exercise::pluck('name', 'id'))
                         ->label('Øvelse')
                         ->live(onBlur: true)
                         ->required(),
@@ -47,7 +47,7 @@ trait WeekplanSchema
                     // Create a Select field for the training program id
                     Select::make('training_program_id')
                         ->label('Velg styrkeprogram')
-                        ->options(TrainingProgram::all()->pluck('program_name', 'id'))
+                        ->options(TrainingProgram::pluck('program_name', 'id'))
                         ->hidden(function ($get) {
                             $exerciseName = Exercise::find($get('exercise_id'))->name ?? null;
 
@@ -78,7 +78,7 @@ trait WeekplanSchema
                 ->defaultItems(0)
                 ->grid(4)
                 ->itemLabel(
-                    fn (array $state): ?string => Exercise::all()->where('id', $state['exercise_id'])->first()?->name
+                    fn (array $state): ?string => Exercise::where('id', $state['exercise_id'])->first()?->name
                 )
                 ->addActionLabel('Legg til økt')
                 ->collapsible(),

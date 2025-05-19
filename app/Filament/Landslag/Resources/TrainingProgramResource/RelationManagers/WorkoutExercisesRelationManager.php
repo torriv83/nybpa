@@ -65,7 +65,7 @@ class WorkoutExercisesRelationManager extends RelationManager
                 Tables\Actions\AttachAction::make()
                     ->label('Legg til øvelse i program')
                     ->recordSelect(fn () => Select::make('recordId')->label('Øvelse')
-                        ->options(WorkoutExercise::all()->pluck('exercise_name', 'id'))
+                        ->options(WorkoutExercise::pluck('exercise_name', 'id'))
                         ->searchable()
                         ->preload()
                         ->createOptionForm([
@@ -129,8 +129,7 @@ class WorkoutExercisesRelationManager extends RelationManager
                         })
                         ->form([
                             Forms\Components\Select::make('program')
-                                ->options(TrainingProgram::all()
-                                    ->where('id', '!=', $this->getOwnerRecord()->id)
+                                ->options(TrainingProgram::where('id', '!=', $this->getOwnerRecord()->id)
                                     ->pluck('program_name', 'id'))
                                 ->label('Velg program'),
                         ])
