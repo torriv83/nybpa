@@ -49,7 +49,7 @@ class SendTimesheetReminderEmail extends Command
                 ->whereNull('deleted_at')
                 ->whereMonth('fra_dato', $currentMonth)
                 ->whereYear('fra_dato', $currentYear)
-                ->orderBy('fra_dato', 'asc')
+                ->orderBy('fra_dato')
                 ->get();
 
             // If the assistant has not worked this month, skip to the next assistant

@@ -36,7 +36,7 @@ class NesteArbeidstider extends BaseWidget
                 Tables\Columns\TextColumn::make('til_dato')
                     ->dateTime('d.m.Y, H:i')
                     ->label('Til'),
-            ])->defaultSort('fra_dato', 'asc')
+            ])->defaultSort('fra_dato')
             ->emptyStateHeading('Ingen kommende arbeid')
             ->emptyStateDescription('Legg til arbeid under.')
             ->emptyStateActions([

@@ -53,7 +53,7 @@ JS
         $endMonth = now()->endOfMonth();
 
         $ynab = Ynab::whereBetween('month', [$startMonth, $endMonth])
-            ->orderBy('month', 'asc')
+            ->orderBy('month')
             ->get()
             ->groupBy(function ($date) {
                 return date('M Y', strtotime($date->month));  // Group by abbreviated month name and year

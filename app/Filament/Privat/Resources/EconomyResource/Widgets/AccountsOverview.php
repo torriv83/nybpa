@@ -4,6 +4,7 @@ namespace App\Filament\Privat\Resources\EconomyResource\Widgets;
 
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -13,6 +14,9 @@ class AccountsOverview extends BaseWidget
 
     protected int|string|array $columnSpan = '12';
 
+    /**
+     * @throws ConnectionException
+     */
     protected function getCards(): array
     {
 

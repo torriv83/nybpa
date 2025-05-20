@@ -87,7 +87,7 @@ class AdminPanelProvider extends PanelProvider
                 FilamentFullCalendarPlugin::make()
                     ->selectable()
                     ->editable()
-                    ->plugins(['dayGrid', 'timeGrid', 'rrule', 'interaction', 'list'], true)
+                    ->plugins(['dayGrid', 'timeGrid', 'rrule', 'interaction', 'list'])
                     ->config([
                         'headerToolbar' => [
                             'left' => 'prev,next,today',

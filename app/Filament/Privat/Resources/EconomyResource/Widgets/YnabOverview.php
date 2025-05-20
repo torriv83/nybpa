@@ -16,7 +16,6 @@ use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as sumBuilder;
 
 // use permission;
@@ -106,7 +105,7 @@ class YnabOverview extends BaseWidget
                     )*/,
 
                 Tables\Columns\TextColumn::make('inntektutgift')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Ynab $record) {
                         return $record->income + $record->activity;
                     })
                     ->money('nok', true)
@@ -132,7 +131,7 @@ class YnabOverview extends BaseWidget
                     ),
 
                 Tables\Columns\TextColumn::make('Balanse')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Ynab $record) {
                         return $record->income - $record->budgeted;
                     })
                     ->money('nok', true)
