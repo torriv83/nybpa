@@ -14,7 +14,7 @@ fi
 
 # ✅ Kjør tester
 echo "✅ Kjører tester..."
-"C:\Users\Tor Rivera\.config\herd\bin\php83\php.exe"" artisan test --parallel || { echo "❌ Tester feilet. Avbryter."; exit 1; }
+"C:\Users\Tor Rivera\.config\herd\bin\php83\php.exe" artisan test --parallel || { echo "❌ Tester feilet. Avbryter."; exit 1; }
 
 # 🔀 Merge devtest → master med samme commit-melding
 echo "🔀 Merger devtest inn i master..."
