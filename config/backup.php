@@ -207,12 +207,12 @@ return [
      */
     'notifications' => [
         'notifications' => [
-            BackupHasFailedNotification::class => ['mail'],
-            UnhealthyBackupWasFoundNotification::class => ['mail'],
-            CleanupHasFailedNotification::class => ['mail'],
-            BackupWasSuccessfulNotification::class => ['mail'],
-            HealthyBackupWasFoundNotification::class => ['mail'],
-            CleanupWasSuccessfulNotification::class => ['mail'],
+            BackupHasFailedNotification::class => ['discord', 'mail'],
+            UnhealthyBackupWasFoundNotification::class => ['discord'],
+            CleanupHasFailedNotification::class => ['discord', 'mail'],
+            BackupWasSuccessfulNotification::class => ['discord'],
+            HealthyBackupWasFoundNotification::class => ['discord'],
+            CleanupWasSuccessfulNotification::class => ['discord'],
         ],
 
         /*
@@ -244,7 +244,7 @@ return [
         ],
 
         'discord' => [
-            'webhook_url' => '',
+            'webhook_url' => 'https://discord.com/api/webhooks/1289647332836773888/Hmi_WEvbhlrUSb5qH68El8VsJShXfghUKL8snD1qGU8Qk2xGq1fJCqFxMazJZ03Qkzf-',
 
             /*
              * If this is an empty string, the name field on the webhook will be used.
@@ -266,7 +266,7 @@ return [
     'monitor_backups' => [
         [
             'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['local'],
+            'disks' => ['sftp'],
             'health_checks' => [
                 MaximumAgeInDays::class => 1,
                 MaximumStorageInMegabytes::class => 5000,
