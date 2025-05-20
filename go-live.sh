@@ -1,5 +1,4 @@
 #!/bin/bash
-export PATH="/c/Users/Tor Rivera/.config/herd/bin/php83:$PATH"
 
 # 👤 Konfigurer hvem som gjør merge
 git config user.name "CI Bot"
