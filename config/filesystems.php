@@ -44,6 +44,18 @@ return [
             'throw' => false,
         ],
 
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_HOST'),
+            'username' => env('SFTP_USERNAME'),
+            'password' => env('SFTP_PASSWORD'),
+            'port' => (int) env('SFTP_PORT', 285),
+            'root' => '/Laravel/'.config('app.name'),
+            'timeout' => 30,
+            'directory_visibility' => 'private',
+            'visibility' => 'private',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
