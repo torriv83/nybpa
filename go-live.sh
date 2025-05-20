@@ -1,4 +1,5 @@
 #!/bin/bash
+export PATH="/c/Users/Tor Rivera/.config/herd/bin/php83:$PATH"
 
 # 👤 Konfigurer hvem som gjør merge
 git config user.name "CI Bot"
@@ -14,7 +15,7 @@ fi
 
 # ✅ Kjør tester
 echo "✅ Kjører tester..."
-cmd //c "C:\\Users\\Tor Rivera\\.config\\herd\\bin\\php83\\php.exe artisan test --parallel" || { echo "❌ Tester feilet. Avbryter."; exit 1; }
+php artisan test --parallel || { echo "❌ Tester feilet. Avbryter."; exit 1; }
 
 # 🔀 Merge devtest → master med samme commit-melding
 echo "🔀 Merger devtest inn i master..."
