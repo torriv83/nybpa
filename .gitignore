@@ -55,3 +55,4 @@ Homestead.json
 ### Writerside
 /Writerside/
 .env.testing
+/.output.txt

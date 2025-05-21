@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Created by ${USER}.
- * Date: 27.08.2023
- * Time: 07.26
- * Company: Rivera Consulting
- */
-
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -15,6 +8,7 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
 class sendMessageMail extends Mailable
@@ -30,15 +24,24 @@ class sendMessageMail extends Mailable
 
     public function envelope(): Envelope
     {
-        /** @var \App\Models\User|null $admin */
+        // Sjekk om admin-bruker finnes
         $admin = Role::findByName('admin')->users->first();
 
+        // Hvis ingen admin-bruker finnes, logg en advarsel og send en standard fra-adresse
+        if (! $admin) {
+            Log::warning('Ingen admin-bruker funnet. Sender e-post med standard fra-adresse.');
+            $admin = (object) [
+                'email' => 'default@example.com',  // Standard e-postadresse
+                'name' => 'Ukjent',              // Standard navn
+            ];
+        }
+
         return new Envelope(
-            from   : new Address($admin?->email, $admin?->name),
+            from   : new Address($admin->email, $admin->name),
             replyTo: [
-                new Address($admin?->email, $admin?->name),
+                new Address($admin->email, $admin->name),
             ],
-            subject: 'Ny melding fra '.($admin?->name ?? 'Ukjent'),
+            subject: 'Ny melding fra '.($admin->name ?? 'Ukjent'),
         );
     }
 

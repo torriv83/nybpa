@@ -244,7 +244,7 @@ return [
         ],
 
         'discord' => [
-            'webhook_url' => 'https://discord.com/api/webhooks/1289647332836773888/Hmi_WEvbhlrUSb5qH68El8VsJShXfghUKL8snD1qGU8Qk2xGq1fJCqFxMazJZ03Qkzf-',
+            'webhook_url' => env('DISCORD_WEBHOOK'),
 
             /*
              * If this is an empty string, the name field on the webhook will be used.
