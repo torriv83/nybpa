@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
-class sendMessageMail extends Mailable
+class SendMessageMail extends Mailable
 {
     use Queueable, SerializesModels;
 

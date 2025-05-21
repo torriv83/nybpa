@@ -3,6 +3,7 @@
 namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
 use App\Filament\Privat\Resources\WishlistResource;
+use App\Models\Wishlist;
 use DB;
 use Exception;
 use Filament\Forms;
@@ -64,7 +65,7 @@ class WishlistItemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('antall'),
 
                 SelectColumn::make('status')
-                    ->options(WishlistResource::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->sortable()
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
@@ -91,7 +92,7 @@ class WishlistItemsRelationManager extends RelationManager
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->multiple()
-                    ->options(WishlistResource::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->placeholder('Velg status'),
             ])
             ->headerActions([
@@ -124,7 +125,7 @@ class WishlistItemsRelationManager extends RelationManager
                         ->deselectRecordsAfterCompletion()
                         ->form([
                             Forms\Components\Select::make('status')
-                                ->options(WishlistResource::STATUS_OPTIONS)
+                                ->options(Wishlist::STATUS_OPTIONS)
                                 ->required(),
                         ])
                         ->action(function (array $data, Collection $records) {

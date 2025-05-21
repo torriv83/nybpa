@@ -36,13 +36,6 @@ class WishlistResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Ønskelister';
 
-    public const STATUS_OPTIONS = [
-        'Begynt å spare' => 'Begynt å spare',
-        'Spart' => 'Spart',
-        'Kjøpt' => 'Kjøpt',
-        'Venter' => 'Venter',
-    ];
-
     public static function form(Form $form): Form
     {
         return $form
@@ -62,7 +55,7 @@ class WishlistResource extends Resource
                     ->numeric()
                     ->required(),
                 Select::make('status')
-                    ->options(self::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->placeholder('Velg status'),
                 Placeholder::make('totalt')->content(function ($record, $set) {
                     $totalt = $record?->find($record['id'])->wishlistitems->sum(function ($item) {
@@ -93,7 +86,7 @@ class WishlistResource extends Resource
                     ->summarize(Sum::make()
                         ->money('NOK', divideBy: true)),
                 TextColumn::make('antall'),
-                SelectColumn::make('status')->options(WishlistResource::STATUS_OPTIONS)
+                SelectColumn::make('status')->options(Wishlist::STATUS_OPTIONS)
                     ->selectablePlaceholder(false)
                     ->summarize(
                         Summarizer::make()
@@ -117,7 +110,7 @@ class WishlistResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->options(self::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->placeholder('Velg status'),
             ])
             ->actions([

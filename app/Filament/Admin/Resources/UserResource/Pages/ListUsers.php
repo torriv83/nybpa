@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\UserResource\Pages;
 
 use App\Filament\Admin\Resources\UserResource;
-use App\Mail\sendMessageMail;
+use App\Mail\SendMessageMail;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -31,7 +31,7 @@ class ListUsers extends ListRecords
                 ->action(function (array $data) {
                     Mail::to('tor@trivera.net')
                         ->bcc($data['assistent'])
-                        ->send(clone new sendMessageMail(
+                        ->send(clone new SendMessageMail(
                             body: $data['body'],
                         ));
                 }),

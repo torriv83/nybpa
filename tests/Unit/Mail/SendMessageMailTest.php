@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Mail;
 
-use App\Mail\sendMessageMail;
+use App\Mail\SendMessageMail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Mail\Mailables\Address;
@@ -33,7 +33,7 @@ class SendMessageMailTest extends TestCase
     public function it_has_correct_body_property()
     {
         $body = 'Test message body';
-        $mail = new sendMessageMail($body);
+        $mail = new SendMessageMail($body);
 
         $this->assertEquals($body, $mail->body);
     }
@@ -41,7 +41,7 @@ class SendMessageMailTest extends TestCase
     #[Test]
     public function it_has_correct_envelope()
     {
-        $mail = new sendMessageMail('Test message');
+        $mail = new SendMessageMail('Test message');
         $envelope = $mail->envelope();
 
         $this->assertInstanceOf(Envelope::class, $envelope);
@@ -69,7 +69,7 @@ class SendMessageMailTest extends TestCase
         // Clear role cache
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $mail = new sendMessageMail('Test message');
+        $mail = new SendMessageMail('Test message');
         $envelope = $mail->envelope();
 
         $this->assertInstanceOf(Envelope::class, $envelope);
@@ -79,7 +79,7 @@ class SendMessageMailTest extends TestCase
     #[Test]
     public function it_has_correct_content()
     {
-        $mail = new sendMessageMail('Test message');
+        $mail = new SendMessageMail('Test message');
         $content = $mail->content();
 
         $this->assertInstanceOf(Content::class, $content);
@@ -89,7 +89,7 @@ class SendMessageMailTest extends TestCase
     #[Test]
     public function it_has_no_attachments()
     {
-        $mail = new sendMessageMail('Test message');
+        $mail = new SendMessageMail('Test message');
         $attachments = $mail->attachments();
 
         $this->assertIsArray($attachments);
@@ -100,7 +100,7 @@ class SendMessageMailTest extends TestCase
     public function it_renders_with_body()
     {
         $body = 'This is a test message body';
-        $mail = new sendMessageMail($body);
+        $mail = new SendMessageMail($body);
 
         // This test will fail if the view doesn't exist or can't be rendered with the given data
         $rendered = $mail->render();
