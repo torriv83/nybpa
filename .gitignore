@@ -56,3 +56,4 @@ Homestead.json
 /Writerside/
 .env.testing
 /.output.txt
+"laradumps.yaml" 
