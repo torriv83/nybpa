@@ -84,7 +84,7 @@ class WishlistResource extends Resource
                     ->money('nok', true)
                     ->sortable()
                     ->summarize(Sum::make()
-                        ->money('NOK', divideBy: true)),
+                        ->money('NOK', true)),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options(Wishlist::STATUS_OPTIONS)
                     ->selectablePlaceholder(false)
