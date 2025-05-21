@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class WishlistItem extends Model
 {
     protected $fillable = [
+        'wishlist_id',
         'hva',
         'koster',
         'url',

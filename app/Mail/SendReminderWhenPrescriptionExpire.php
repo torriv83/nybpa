@@ -10,23 +10,30 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role;
 
 class SendReminderWhenPrescriptionExpire extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $expiringPrescriptions;
+    public Collection $expiringPrescriptions;
 
-    public $expiredPrescriptions;
+    public Collection $expiredPrescriptions;
 
     /**
      * Create a new message instance.
      */
     public function __construct($expiringPrescriptions, $expiredPrescriptions)
     {
-        $this->expiringPrescriptions = $expiringPrescriptions;
-        $this->expiredPrescriptions = $expiredPrescriptions;
+        // Konverterer array til objekt for konsistens
+        $this->expiringPrescriptions = collect($expiringPrescriptions)->map(function ($prescription) {
+            return is_array($prescription) ? (object) $prescription : $prescription;
+        });
+
+        $this->expiredPrescriptions = collect($expiredPrescriptions)->map(function ($prescription) {
+            return is_array($prescription) ? (object) $prescription : $prescription;
+        });
     }
 
     /**
@@ -46,10 +53,14 @@ class SendReminderWhenPrescriptionExpire extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content(): Content
+    public function content()
     {
         return new Content(
             markdown: 'emails.prescription_expiry',
+            with: [
+                'expiringPrescriptions' => $this->expiringPrescriptions,
+                'expiredPrescriptions' => $this->expiredPrescriptions,
+            ]
         );
     }
 
