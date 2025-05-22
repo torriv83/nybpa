@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
-class SendReminderWhenPrescriptionExpire extends Command
+class SendReminderWhenPrescriptionExpireCommand extends Command
 {
     /**
      * The name and signature of the console command.

@@ -1,47 +1,87 @@
 <?php
 
-use App\Models\User;
-use Spatie\Permission\Models\Role;
-
+/**
+ * Route Exception Test
+ *
+ * This test ensures that all routes in the application load successfully.
+ *
+ * How to find all routes:
+ * - Run 'php artisan route:list' to get a complete list of all routes in the application
+ * - Add new routes to the appropriate dataset below
+ */
 uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
-beforeEach(function () {
-    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+// Group routes by section for better organization
+dataset('adminRoutes', [
+    'dashboard' => '/admin',
+    'calendar' => '/admin/kalender',
+    'settings' => '/admin/innstillinger',
+    'users' => '/admin/users',
+    'roles' => '/admin/roles',
+    'permissions' => '/admin/permissions',
+    'emails' => '/admin/emails',
+    'backups' => '/admin/backups',
+    // Auth and profile routes are typically not tested in this way
+    // 'profile' => '/admin/profile',
+]);
 
-    $this->role = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+dataset('privatRoutes', [
+    'equipment' => '/privat/utstyrs',
+    'categories' => '/privat/kategoris',
+    'economies' => '/privat/economies',
+    'wishlists' => '/privat/wishlists',
+    'recipes' => '/privat/resepters',
+    'emails' => '/privat/emails',
+    // Auth and profile routes are typically not tested in this way
+    // 'dashboard' => '/privat',
+]);
 
-    $this->user = User::factory()->create([
-        'email' => 'test+'.uniqid().'@trivera.net',
-        'email_verified_at' => now(),
-    ]);
+dataset('landslagRoutes', [
+    'exercises' => '/landslag/exercises',
+    'test-results' => '/landslag/test-results',
+    'tests' => '/landslag/tests',
+    'weekplans' => '/landslag/weekplans',
+    'training-programs' => '/landslag/training-programs',
+    'workout-exercises' => '/landslag/workout-exercises',
+    // Auth and profile routes are typically not tested in this way
+    // 'dashboard' => '/landslag',
+]);
 
-    $this->user->assignRole('Admin');
-});
+dataset('assistentRoutes', [
+    'dashboard' => '/assistent',
+    'timesheets' => '/assistent/timesheets',
+    // Auth and profile routes are typically not tested in this way
+    // 'profile' => '/assistent/profile',
+]);
 
-$urls = [
-    '/privat/utstyrs',
-    '/admin',
-    '/admin/kalender',
-    //    '/admin/timelister',
-    '/privat/kategoris',
-    '/privat/economies',
-    '/privat/wishlists',
-    '/landslag/exercises',
-    '/landslag/test-results',
-    '/landslag/tests',
-    '/landslag/weekplans',
-    '/admin/users',
-    '/admin/roles',
-    '/admin/permissions',
-    '/admin/emails',
-    // Add other URLs to test here
-];
+// Test admin routes
+test('admin routes load successfully', function (string $url) {
+    $response = $this->actingAs($this->user)->get($url);
 
-foreach ($urls as $url) {
-    test("loads successfully for URL: {$url}", function () use ($url) {
-        $response = $this->actingAs($this->user)->get($url);
+    // Assert that the response was successful
+    $response->assertSuccessful();
+})->with('adminRoutes');
 
-        // Assert that the response was successful
-        $response->assertSuccessful();
-    });
-}
+// Test privat routes
+test('privat routes load successfully', function (string $url) {
+    $response = $this->actingAs($this->user)->get($url);
+
+    // Assert that the response was successful
+    $response->assertSuccessful();
+})->with('privatRoutes');
+
+// Test landslag routes
+test('landslag routes load successfully', function (string $url) {
+    $response = $this->actingAs($this->user)->get($url);
+
+    // Assert that the response was successful
+    $response->assertSuccessful();
+})->with('landslagRoutes');
+
+// Test assistent routes
+test('assistent routes load successfully', function (string $url) {
+    $response = $this->actingAs($this->user)->get($url);
+
+    // Assert that the response was successful
+    $response->assertSuccessful();
+})->with('assistentRoutes');

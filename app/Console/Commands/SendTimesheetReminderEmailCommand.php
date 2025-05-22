@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class SendTimesheetReminderEmail extends Command
+class SendTimesheetReminderEmailCommand extends Command
 {
     /**
      * The name and signature of the console command.
