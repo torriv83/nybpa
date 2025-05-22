@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class DeleteOldTimesheets extends Command
+class DeleteOldTimesheetsCommand extends Command
 {
     /**
      * The name and signature of the console command.

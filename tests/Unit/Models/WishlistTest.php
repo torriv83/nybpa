@@ -118,10 +118,35 @@ class WishlistTest extends TestCase
         $wishlistId = $wishlist->id;
 
         // Delete the wishlist
-        $wishlist->delete();
+        $wishlist->forceDelete();
 
         // The wishlist should not exist in the database
         $this->assertDatabaseMissing('wishlists', ['id' => $wishlistId]);
         $this->assertNull(Wishlist::find($wishlistId));
+    }
+
+    #[Test]
+    public function it_can_softdelete_a_wishlist()
+    {
+        $wishlist = Wishlist::create([
+            'hva' => 'Test Wishlist',
+            'koster' => 1000.50,
+            'url' => 'https://example.com/product',
+            'antall' => 2,
+            'status' => 'ønsket',
+            'prioritet' => 1,
+        ]);
+
+        $wishlistId = $wishlist->id;
+
+        // Delete the wishlist
+        $wishlist->delete();
+
+        // The wishlist should still exist but be soft-deleted
+        $this->assertSoftDeleted('wishlists', ['id' => $wishlistId]);
+
+        // Ensure it cannot be loaded as an active model
+        $this->assertNull(Wishlist::find($wishlistId));
+        $this->assertNotNull(Wishlist::withTrashed()->find($wishlistId));
     }
 }

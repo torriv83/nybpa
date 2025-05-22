@@ -2,7 +2,7 @@
 
 namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
-use App\Filament\Privat\Resources\WishlistResource;
+use App\Models\Wishlist;
 use DB;
 use Exception;
 use Filament\Forms;
@@ -39,7 +39,7 @@ class WishlistItemsRelationManager extends RelationManager
                 Forms\Components\TextInput::make('antall')
                     ->required()->numeric(),
                 Forms\Components\Select::make('status')
-                    ->options(WishlistResource::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->required(),
             ]);
     }
@@ -64,7 +64,7 @@ class WishlistItemsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('antall'),
 
                 SelectColumn::make('status')
-                    ->options(WishlistResource::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->sortable()
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
@@ -91,27 +91,18 @@ class WishlistItemsRelationManager extends RelationManager
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->multiple()
-                    ->options(WishlistResource::STATUS_OPTIONS)
+                    ->options(Wishlist::STATUS_OPTIONS)
                     ->placeholder('Velg status'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
-                        // Runs after the form fields are saved to the database.
-                        $livewire->dispatch('itemedited', $record->wishlist_id);
-                    }),
+                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
-                        // Runs after the form fields are saved to the database.
-                        $livewire->dispatch('itemedited', $record->wishlist_id);
-                    }),
+                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
                 Tables\Actions\DeleteAction::make()
-                    ->after(function (RelationManager $livewire, Model $record) {
-                        // Runs after the form fields are saved to the database.
-                        $livewire->dispatch('itemedited', $record->wishlist_id);
-                    }),
+                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
@@ -124,7 +115,7 @@ class WishlistItemsRelationManager extends RelationManager
                         ->deselectRecordsAfterCompletion()
                         ->form([
                             Forms\Components\Select::make('status')
-                                ->options(WishlistResource::STATUS_OPTIONS)
+                                ->options(Wishlist::STATUS_OPTIONS)
                                 ->required(),
                         ])
                         ->action(function (array $data, Collection $records) {
@@ -134,5 +125,10 @@ class WishlistItemsRelationManager extends RelationManager
                         }),
                 ]),
             ]);
+    }
+
+    private function dispatchItemEdited(RelationManager $livewire, Model $record): void
+    {
+        $livewire->dispatch('itemedited', $record->wishlist_id);
     }
 }

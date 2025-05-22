@@ -3,20 +3,16 @@
 namespace App\Mail;
 
 use App\Models\User;
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 use Spatie\Permission\Models\Role;
 
 class TimesheetReminderEmail extends Mailable
 {
-    use Queueable, SerializesModels;
-
-    public $details;
+    public ?array $details;
 
     /**
      * Create a new message instance.

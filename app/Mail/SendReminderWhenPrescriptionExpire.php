@@ -3,20 +3,16 @@
 namespace App\Mail;
 
 use App\Models\User;
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role;
 
 class SendReminderWhenPrescriptionExpire extends Mailable
 {
-    use Queueable, SerializesModels;
-
     public Collection $expiringPrescriptions;
 
     public Collection $expiredPrescriptions;

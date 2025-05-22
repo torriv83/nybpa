@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Wishlist
@@ -27,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Wishlist extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'hva',
@@ -42,4 +43,11 @@ class Wishlist extends Model
     {
         return $this->hasMany(WishlistItem::class);
     }
+
+    public const STATUS_OPTIONS = [
+        'Begynt å spare' => 'Begynt å spare',
+        'Spart' => 'Spart',
+        'Kjøpt' => 'Kjøpt',
+        'Venter' => 'Venter',
+    ];
 }

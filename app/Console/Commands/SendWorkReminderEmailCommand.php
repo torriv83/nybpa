@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
-class SendWorkReminderEmail extends Command
+class SendWorkReminderEmailCommand extends Command
 {
     /**
      * The name and signature of the console command.

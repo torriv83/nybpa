@@ -2,19 +2,15 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
-class sendMessageMail extends Mailable
+class SendMessageMail extends Mailable
 {
-    use Queueable, SerializesModels;
-
     public mixed $body;
 
     public function __construct($body)

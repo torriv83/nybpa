@@ -19,6 +19,11 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="SFTP_HOST" value="dummy"/>
+        <env name="SFTP_USERNAME" value="dummy"/>
+        <env name="SFTP_PASSWORD" value="dummy"/>
+        <env name="SFTP_PORT" value="22"/>
+        <env name="SFTP_ROOT" value="/"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
     <source>
