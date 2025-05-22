@@ -21,16 +21,11 @@ class AppServiceProvider extends ServiceProvider
     {
         /* BACKUP */
         Gate::define('download-backup', function (User $user) {
-            return $user->role('Admin');
+            return $user->hasRole('Admin');
         });
 
         Gate::define('delete-backup', function (User $user) {
-            return $user->role('Admin');
-        });
-
-        /* PULSE */
-        Gate::define('viewPulse', function (User $user) {
-            return $user->role('Admin');
+            return $user->hasRole('Admin');
         });
 
         /* Filament Assets */
