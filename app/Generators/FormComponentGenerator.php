@@ -49,7 +49,7 @@ class FormComponentGenerator
                 $recordId = $get('id');
 
                 // Get the list of disabled dates for the user and record
-                return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId) ?? [];
+                return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId);
             })
             ->formatStateUsing(
                 fn ($state) => is_null($state)
@@ -114,7 +114,7 @@ class FormComponentGenerator
                 $recordId = $get('id');
 
                 // Get all disabled dates based on the user id and record id
-                return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId) ?? [];
+                return $dateTimeService->getAllDisabledDates($get('user_id'), $recordId);
             })
             ->suffixIcon('calendar')
             ->displayFormat('d.m.Y')

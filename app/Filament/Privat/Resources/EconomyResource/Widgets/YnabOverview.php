@@ -42,7 +42,7 @@ class YnabOverview extends BaseWidget
             ->columns([
                 Tables\Columns\TextColumn::make('month')
                     ->label('Måned')
-                    ->formatStateUsing(function ($column): ?string {
+                    ->formatStateUsing(function ($column): string {
                         Carbon::setlocale(config('app.locale'));
 
                         return ucfirst(Carbon::parse($column->getState())->translatedFormat('F, Y'));

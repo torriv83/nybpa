@@ -49,7 +49,9 @@ class TransformData
                 continue;
             }
 
-            if (($data = str_getcsv($line, ';')) && count($data) >= self::MINIMUM_DATA_COUNT) {
+            $data = str_getcsv($line, ';');
+            // Legg kun til rader med nok kolonner
+            if (count($data) >= self::MINIMUM_DATA_COUNT) {
                 $transactions[] = $data;
             }
         }

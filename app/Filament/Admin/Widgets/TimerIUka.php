@@ -29,7 +29,7 @@ class TimerIUka extends BaseWidget
             )
             ->columns([
                 TextColumn::make('Uke')
-                    ->formatStateUsing(fn (string $state): ?string => __(Carbon::parse($state)->week()))
+                    ->formatStateUsing(fn (string $state): string => __(Carbon::parse($state)->week()))
                     ->label('Uke')
                     ->sortable(),
                 TextColumn::make('Totalt')

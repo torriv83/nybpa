@@ -29,9 +29,11 @@ class TimesheetReminderEmail extends Mailable
     {
         /** @var User|null $admin */
         $admin = Role::findByName('admin')->users->first();
+        $email = $admin ? $admin->email : '';
+        $name = $admin ? $admin->name : '';
 
         return new Envelope(
-            from   : new Address($admin?->email ?? '', $admin?->name ?? ''),
+            from   : new Address($email, $name),
             subject: 'Oversikt over timer jobbet',
         );
     }
