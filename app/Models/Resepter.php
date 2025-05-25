@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $created_at Tidspunkt for opprettelse av resepten.
  * @property Carbon|null $updated_at Tidspunkt for siste oppdatering av resepten.
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Resepter extends Model
 {

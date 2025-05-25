@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class WishlistItem
@@ -17,10 +19,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $koster Kostnad for elementet.
  * @property int $antall Antall ønsket av elementet.
  * @property string $status Status for elementet (f.eks. "kjøpt", "ønsket").
- * @property \Illuminate\Support\Carbon|null $created_at Tidspunkt da elementet ble opprettet.
- * @property \Illuminate\Support\Carbon|null $updated_at Tidspunkt da elementet ble sist oppdatert.
+ * @property Carbon|null $created_at Tidspunkt da elementet ble opprettet.
+ * @property Carbon|null $updated_at Tidspunkt da elementet ble sist oppdatert.
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class WishlistItem extends Model
 {

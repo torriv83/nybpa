@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\SendReminderWhenPrescriptionExpire;
 use App\Models\Resepter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -44,6 +45,6 @@ class SendReminderWhenPrescriptionExpireCommand extends Command
         }
 
         // Send e-post ved å bruke Mailable-klassen
-        Mail::to(Role::findByName('admin')->users->first()->email)->send(new \App\Mail\SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
+        Mail::to(Role::findByName('admin')->users->first()->email)->send(new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
     }
 }

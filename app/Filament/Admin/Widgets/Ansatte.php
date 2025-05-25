@@ -12,6 +12,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\UsesFunction;
 
 class Ansatte extends BaseWidget
 {
@@ -21,9 +22,7 @@ class Ansatte extends BaseWidget
 
     protected static ?int $sort = 7;
 
-    /**
-     * @uses User::scopeAssistenter()
-     */
+    #[UsesFunction('scopeAssistenter')]
     public function table(Table $table): Table
     {
         return $table
@@ -48,9 +47,9 @@ class Ansatte extends BaseWidget
                     ->label('Telefon')
                     ->default('12345678'),
                 Tables\Columns\TextColumn::make('jobbetiaar')
-                    ->getStateUsing(function (\App\Models\User $record) {
+                    ->getStateUsing(function (User $record) {
                         $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record) {
-                            return \App\Models\Timesheet::query()
+                            return Timesheet::query()
                                 ->whereBelongsTo($record)
                                 ->yearToDate('fra_dato')
                                 ->where('unavailable', '!=', 1)

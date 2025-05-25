@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
 /**
  * Class WeekplanExercise
@@ -17,13 +19,13 @@ use Illuminate\Notifications\Notifiable;
  * @property string $end_time Sluttidspunkt for øvelsen.
  * @property string|int $intensity Intensiteten til øvelsen.
  * @property int|null $training_program_id ID til opplæringsprogrammet (valgfritt).
- * @property \Illuminate\Support\Carbon|null $created_at Tidspunkt for opprettelse av registrering.
- * @property \Illuminate\Support\Carbon|null $updated_at Tidspunkt for oppdatering av registrering.
- * @property-read \App\Models\Exercise $exercise
- * @property-read \App\Models\TrainingProgram|null $trainingProgram
- * @property-read \App\Models\Weekplan $weekplan
+ * @property Carbon|null $created_at Tidspunkt for opprettelse av registrering.
+ * @property Carbon|null $updated_at Tidspunkt for oppdatering av registrering.
+ * @property Exercise $exercise
+ * @property TrainingProgram|null $trainingProgram
+ * @property Weekplan $weekplan
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class WeekplanExercise extends Model
 {

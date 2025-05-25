@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Weekplan
@@ -16,11 +18,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id Primærnøkkel for ukeplanen.
  * @property string $name Navn på ukeplanen.
- * @property \Illuminate\Support\Carbon|null $deleted_at Angir om ukeplanen er mykt slettet.
- * @property \Illuminate\Support\Carbon|null $created_at Tidspunkt for opprettelse av registrering.
- * @property \Illuminate\Support\Carbon|null $updated_at Tidspunkt for oppdatering av registrering.
+ * @property Carbon|null $deleted_at Angir om ukeplanen er mykt slettet.
+ * @property Carbon|null $created_at Tidspunkt for opprettelse av registrering.
+ * @property Carbon|null $updated_at Tidspunkt for oppdatering av registrering.
  *
- * @method static \Illuminate\Database\Eloquent\Builder|Weekplan active() Henter kun aktive ukeplaner.
+ * @method static Builder|Weekplan active() Henter kun aktive ukeplaner.
  */
 class Weekplan extends Model
 {
