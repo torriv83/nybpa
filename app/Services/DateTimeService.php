@@ -50,7 +50,7 @@ class DateTimeService
         $minutes = $fromDate->diffInMinutes($toDate);
 
         // Format minutes to hh:mm
-        return sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
+        return sprintf('%02d:%02d', intdiv((int) $minutes, 60), (int) $minutes % 60);
     }
 
     /**

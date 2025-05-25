@@ -76,7 +76,7 @@ class TimesheetResource extends Resource
                     })
                     ->summarize(Sum::make()
                         ->formatStateUsing(fn (
-                            string $state
+                            int $state
                         ): string => (new UserStatsService)->minutesToTime($state))),
                 Tables\Columns\IconColumn::make('unavailable')
                     ->label('Satt som borte?')

@@ -29,7 +29,7 @@ class VektChart extends ChartWidget
 
             // Hent første test (eller null hvis ingen)
             $firstTest = $this->getTests()->first();
-
+            /** @var Tests|null $firstTest */
             if ($firstTest) {
                 $results = $this->getTestResults($firstTest);
 
@@ -61,6 +61,9 @@ class VektChart extends ChartWidget
         return Tests::where('navn', '=', 'Vekt')->get();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResults>
+     */
     protected function getTestResults(Tests $test): Collection
     {
         return TestResults::where('tests_id', '=', $test->id)

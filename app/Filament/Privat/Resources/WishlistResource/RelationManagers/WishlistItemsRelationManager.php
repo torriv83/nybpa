@@ -58,9 +58,9 @@ class WishlistItemsRelationManager extends RelationManager
                     ->url(fn ($record): string => $record->url, true),
 
                 Tables\Columns\TextColumn::make('koster')
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->sortable()
-                    ->summarize(Sum::make()->money('nok', true)),
+                    ->summarize(Sum::make()->money('nok', 1)),
                 Tables\Columns\TextColumn::make('antall'),
 
                 SelectColumn::make('status')
@@ -68,20 +68,20 @@ class WishlistItemsRelationManager extends RelationManager
                     ->sortable()
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
-                        ->money('nok', true)
+                        ->money('nok', 1)
                         ->label('Gjenstår')
                         ->using(function (Builder $query): string {
                             return $query->whereNotIn('status', ['Spart', 'Kjøpt'])
                                 ->sum('koster');
                         })),
                 Tables\Columns\TextColumn::make('totalt')
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->getStateUsing(function (Model $record) {
                         return $record->koster * $record->antall;
                     })
                     ->summarize(Summarizer::make()
                         ->label('Totalt')
-                        ->money('nok', true)
+                        ->money('nok', 1)
                         ->using(function (Builder $query): string {
                             // Calculate the sum of the product of 'koster' and 'antall' directly in the query
                             return $query->sum(DB::raw('koster * antall'));

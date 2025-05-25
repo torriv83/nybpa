@@ -69,7 +69,7 @@ class YnabOverview extends BaseWidget
                     )*/,
 
                 Tables\Columns\TextColumn::make('activity')
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->label('Utgifter')
                     ->sortable()
                     ->alignLeft()
@@ -87,7 +87,7 @@ class YnabOverview extends BaseWidget
                     )*/,
 
                 Tables\Columns\TextColumn::make('budgeted')
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->label('Budgetert')
                     ->sortable()
                     ->alignLeft()
@@ -108,7 +108,7 @@ class YnabOverview extends BaseWidget
                     ->getStateUsing(function (Ynab $record) {
                         return $record->income + $record->activity;
                     })
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->sortable()
                     ->color(function ($record) {
                         if (((int) $record->income + (int) $record->activity) < 0) {
@@ -134,7 +134,7 @@ class YnabOverview extends BaseWidget
                     ->getStateUsing(function (Ynab $record) {
                         return $record->income - $record->budgeted;
                     })
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->sortable()
                     ->color(function ($record) {
                         if (($record->income - $record->budgeted) < 0) {

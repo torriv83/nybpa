@@ -47,10 +47,10 @@ class EconomyResource extends Resource
 
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('before_tax')->label('Før skatt')->money('nok', true),
-                Tables\Columns\TextColumn::make('after_tax')->label('Etter skatt')->money('nok', true),
+                Tables\Columns\TextColumn::make('before_tax')->label('Før skatt')->money('nok', 1),
+                Tables\Columns\TextColumn::make('after_tax')->label('Etter skatt')->money('nok', 1),
                 Tables\Columns\TextColumn::make('tax_table')->label('Skattetabell'),
-                Tables\Columns\TextColumn::make('grunnstonad')->money('nok', true)
+                Tables\Columns\TextColumn::make('grunnstonad')->money('nok', 1)
                     ->label('Grunnstønad'),
                 Tables\Columns\TextColumn::make('updated_at')->label('Oppdatert')
                     ->dateTime('d.m.Y'),

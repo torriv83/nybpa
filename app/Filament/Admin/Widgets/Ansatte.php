@@ -12,7 +12,6 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
-use PHPUnit\Framework\Attributes\UsesFunction;
 
 class Ansatte extends BaseWidget
 {
@@ -22,7 +21,9 @@ class Ansatte extends BaseWidget
 
     protected static ?int $sort = 7;
 
-    #[UsesFunction('scopeAssistenter')]
+    /**
+     * @uses User::scopeAssistenter()
+     */
     public function table(Table $table): Table
     {
         return $table

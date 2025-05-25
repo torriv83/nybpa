@@ -53,7 +53,7 @@ class FormComponentGenerator
             })
             ->formatStateUsing(
                 fn ($state) => is_null($state)
-                    ? Carbon::now()->minute(floor(Carbon::now()->minute / 15) * 15)->second(0)->format('Y-m-d H:i')
+                    ? Carbon::now()->minute((int) floor(Carbon::now()->minute / 15) * 15)->second(0)->format('Y-m-d H:i')
                     : $state
             )
             ->minDate(fn ($operation) => ($operation == 'edit' || $config['isAdmin'])

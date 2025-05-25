@@ -29,8 +29,8 @@ class UpcomingWorkTabell extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i'),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i'),
                 TextColumn::make('totalt')
-                    ->formatStateUsing(fn (string $state): string => (new UserStatsService)->minutesToTime($state))
-                    ->summarize(Sum::make()->formatStateUsing(fn (string $state
+                    ->formatStateUsing(fn (int $state): string => (new UserStatsService)->minutesToTime($state))
+                    ->summarize(Sum::make()->formatStateUsing(fn (int $state
                     ): string => (new UserStatsService)->minutesToTime($state))),
 
             ])

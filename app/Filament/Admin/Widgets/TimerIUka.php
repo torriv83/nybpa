@@ -33,7 +33,7 @@ class TimerIUka extends BaseWidget
                     ->label('Uke')
                     ->sortable(),
                 TextColumn::make('Totalt')
-                    ->formatStateUsing(fn (string $state): string => __(date('H:i', mktime(0, $state))))
+                    ->formatStateUsing(fn (int $state): string => __(date('H:i', mktime(0, $state))))
                     ->label('Totalt')
                     ->sortable(),
                 TextColumn::make('Gjennomsnitt')

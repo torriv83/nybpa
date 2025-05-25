@@ -31,8 +31,8 @@ class TimeTabell extends BaseWidget
                 TextColumn::make('fra_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('til_dato')->dateTime('d.m.Y, H:i')->sortable(),
                 TextColumn::make('totalt')->sortable()
-                    ->formatStateUsing(fn (string $state): string => (new UserStatsService)->minutesToTime($state))
-                    ->summarize(Sum::make()->formatStateUsing(fn (string $state
+                    ->formatStateUsing(fn (int $state): string => (new UserStatsService)->minutesToTime($state))
+                    ->summarize(Sum::make()->formatStateUsing(fn (int $state
                     ): string => (new UserStatsService)->minutesToTime($state))),
 
             ])->filters([
