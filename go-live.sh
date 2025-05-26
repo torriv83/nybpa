@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # 👤 Konfigurer hvem som gjør merge
-git config user.name "CI Bot"
-git config user.email "ci@torriv.local"
+#git config user.name "CI Bot"
+#git config user.email "ci@torriv.local"
 
 # 👉 Sjekk at vi er på devtest
 CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
