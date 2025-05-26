@@ -3,6 +3,8 @@
 namespace App\Mail;
 
 use App\Models\User;
+use App\Models\Utstyr;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
@@ -12,21 +14,17 @@ use Spatie\Permission\Models\Role;
 
 class BestillUtstyr extends Mailable
 {
-    /**
-     * @var array<string, mixed>
-     */
-    public array $utstyr;
+    /** @var Collection<int, Utstyr> */
+    public Collection $utstyr;
 
-    /**
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     public array $data;
 
     /**
-     * @param  array<string, mixed>  $utstyr
+     * @param  Collection<int, Utstyr>  $utstyr
      * @param  array<string, mixed>  $data
      */
-    public function __construct(array $utstyr, array $data)
+    public function __construct(Collection $utstyr, array $data)
     {
         $this->utstyr = $utstyr;
         $this->data = $data;

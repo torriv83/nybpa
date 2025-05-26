@@ -125,6 +125,9 @@ class UtstyrResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<\App\Models\Utstyr>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
@@ -135,7 +138,8 @@ class UtstyrResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::tags(['medisinsk'])->remember('UtstyrNavigationBadge', now()->addMonth(), function () {
+        /** @return string|null */
+        return Cache::tags(['medisinsk'])->remember('UtstyrNavigationBadge', now()->addMonth(), function (): ?string {
             return static::getModel()::count();
         });
     }

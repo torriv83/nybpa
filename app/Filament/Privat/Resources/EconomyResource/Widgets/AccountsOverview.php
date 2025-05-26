@@ -26,10 +26,12 @@ class AccountsOverview extends BaseWidget
         $ynab = 'https://api.youneedabudget.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
         $token = config('app.ynab');
         $response = Http::withToken($token)->get($ynab.'accounts/');
+        /** @var array<int, array<string, mixed>> $accounts */
         $accounts = $response['data']['accounts'];
 
         // Inkluder kun bruks og spare kontoer
-        $filteredAccounts = collect($accounts)->filter(function ($account) {
+        /** @var \Illuminate\Support\Collection<int, array<string, mixed>> $filteredAccounts */
+        $filteredAccounts = collect($accounts)->filter(function (array $account) {
             return $account['type'] === 'checking' || $account['type'] === 'savings';
         });
 

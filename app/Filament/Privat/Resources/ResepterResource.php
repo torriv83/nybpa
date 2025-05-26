@@ -28,8 +28,8 @@ class ResepterResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-
-        return Cache::tags(['medisinsk'])->remember('ReseptNavigationBadge', now()->addMonth(), function () {
+        /** @return string|null */
+        return Cache::tags(['medisinsk'])->remember('ReseptNavigationBadge', now()->addMonth(), function (): ?string {
             return static::getModel()::count();
         });
     }

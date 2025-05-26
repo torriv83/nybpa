@@ -34,8 +34,8 @@ class KategoriResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        /** @var string|null $result */
-        return Cache::tags(['medisinsk'])->remember('CategoryNavigationBadge', now()->addMonth(), function () {
+        /** @return string|null */
+        return Cache::tags(['medisinsk'])->remember('CategoryNavigationBadge', now()->addMonth(), function (): ?string {
             return static::getModel()::count();
         });
     }
