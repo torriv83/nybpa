@@ -113,7 +113,7 @@ class Settings extends Page implements HasForms
         ];
     }
 
-    public function submit()
+    public function submit(): void
     {
         Setting::updateOrCreate(['user_id' => Auth::id()], $this->form->getState());
 
@@ -126,7 +126,7 @@ class Settings extends Page implements HasForms
 
     }
 
-    public function clearCache()
+    public function clearCache(): bool
     {
         return Cache::flush();
     }

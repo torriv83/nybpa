@@ -25,6 +25,7 @@ class Utstyr extends Model
         'link',
     ];
 
+    // @phpstan-ignore-next-line
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');

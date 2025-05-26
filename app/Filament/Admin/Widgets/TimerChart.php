@@ -7,6 +7,7 @@ use App\Models\Timesheet;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Pipeline;
 
 class TimerChart extends ChartWidget
@@ -31,9 +32,6 @@ class TimerChart extends ChartWidget
 
     /**
      * Retrieves data for the chart.
-     *
-     * @uses Timesheet::timeUsedThisYear
-     * @uses Timesheet::timeUsedLastYear
      */
     protected function getData(): array
     {
@@ -47,7 +45,7 @@ class TimerChart extends ChartWidget
                     return $this->usedTime($timeSheet->timeUsedLastYear());
                 },
             ])
-            ->then(fn ($timeSheet): string => $timeSheet);
+            ->then(fn ($timeSheet): array => $timeSheet);
 
         /* Dette året */
         $thisYearTimes = Pipeline::send($timeSheet)
@@ -56,7 +54,7 @@ class TimerChart extends ChartWidget
                     return $this->usedTime($timeUsedThisYear);
                 },
             ])
-            ->then(fn ($timeSheet): string => $timeSheet);
+            ->then(fn ($timeSheet): array => $timeSheet);
 
         /* Gjenstår */
         $thisYearLeft = $this->usedTime($timeUsedThisYear, true);
@@ -91,7 +89,18 @@ class TimerChart extends ChartWidget
         ];
     }
 
-    public function usedTime($times, bool $prosent = false): array
+    /**
+     * Processes and calculates time values for a given year, either as percentages or raw values.
+     *
+     * The method initializes all months of the current year with a default value, processes
+     * the input time data, and calculates the total time or percentage for each month. The
+     * calculation depends on whether the percentage flag is provided.
+     *
+     * @param  Collection<string, Collection<int, \App\Models\Timesheet>>  $times
+     * @param  bool  $prosent  Indicates whether to calculate values as percentages or raw totals.
+     * @return array<string, float> An associative array mapping month names to their respective calculated values.
+     */
+    public function usedTime(Collection $times, bool $prosent = false): array
     {
         // Opprett en periode som inkluderer alle måneder av inneværende år
         $period = CarbonPeriod::create('first day of January this year', '1 month', 'last day of December this year');
@@ -108,11 +117,10 @@ class TimerChart extends ChartWidget
         // Behandle dataene fra $times og akkumuler summen
         foreach ($times as $key => $value) {
             if (array_key_exists($key, $tider)) {
-                $number = count($value);
-
-                for ($i = 0; $i < $number; $i++) {
-                    $sum += $value[$i]->totalt; // Akkumulerer totalen
-                }
+                // Use Collection methods instead of count and array access
+                $value->each(function ($timesheet) use (&$sum) {
+                    $sum += $timesheet->totalt; // Akkumulerer totalen
+                });
 
                 // Beregn prosenten eller setter verdien.
                 if ($prosent) {

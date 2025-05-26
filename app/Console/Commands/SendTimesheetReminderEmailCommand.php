@@ -32,7 +32,7 @@ class SendTimesheetReminderEmailCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         // Get the current month
         $currentMonth = now()->format('m');

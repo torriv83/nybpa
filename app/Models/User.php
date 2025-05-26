@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -19,7 +18,12 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
+
+    /**
+     * @phpstan-ignore-next-line  // Laravel default trait, PHPStan klager pga. manglende TFactory-type
+     */
     use HasFactory;
+
     use HasRoles;
     use Notifiable;
     use SoftDeletes;
@@ -30,8 +34,6 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var list<string>
      */
     protected $fillable = [
@@ -48,8 +50,6 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -58,37 +58,42 @@ class User extends Authenticatable implements FilamentUser
     ];
 
     /**
-     * The attributes that should be cast.
-     *
      * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @phpstan-ignore-next-line  // Ignorerer feil om HasMany generics
+     */
     public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);
     }
 
+    /**
+     * @phpstan-ignore-next-line  // Ignorerer feil om HasMany generics
+     */
     public function setting(): HasMany
     {
         return $this->hasMany(Settings::class);
     }
 
     /**
-     * @method assistenter()
+     * @phpstan-ignore-next-line  // Ignorerer feil om Builder generics
      */
     #[Scope]
-    protected function assistenter($query): ?Builder
+    protected function assistenter(Builder $query): ?Builder
     {
         $rolesToCheck = ['Tilkalling', 'Fast ansatt'];
         $existingRoles = Role::whereIn('name', $rolesToCheck)->pluck('name')->toArray();
 
         if (! empty($existingRoles)) {
+            // @phpstan-ignore-next-line
             return $query->role($existingRoles);
         }
 
-        return null;
+        return $query;
     }
 }

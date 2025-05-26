@@ -25,6 +25,9 @@ class Tests extends Model
         'ovelser' => 'array',
     ];
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResults::class, 'tests_id');

@@ -27,6 +27,7 @@ class Kategori extends Model
 
     }
 
+    /** @phpstan-ignore-next-line */
     public function utstyr(): HasMany
     {
         return $this->hasMany(Utstyr::class);

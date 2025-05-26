@@ -14,7 +14,7 @@ class Ynab extends Model
         'month' => 'string',
     ];
 
-    public static function fetchData()
+    public static function fetchData(): void
     {
         $ynab = 'https://api.ynab.com/v1/budgets/d7e4da92-0564-4e8f-87f5-c491ca545435/';
         $token = config('app.ynab');
@@ -30,17 +30,17 @@ class Ynab extends Model
         }
     }
 
-    public function getIncomeAttribute($value): float|int
+    public function getIncomeAttribute(int|float $value): float|int
     {
         return $value / 1000;
     }
 
-    public function getActivityAttribute($value): float|int
+    public function getActivityAttribute(int|float $value): float|int
     {
         return $value / 1000;
     }
 
-    public function getBudgetedAttribute($value): float|int
+    public function getBudgetedAttribute(int|float $value): float|int
     {
         return $value / 1000;
     }

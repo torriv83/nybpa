@@ -18,8 +18,8 @@ class FormDataTransformer
     /**
      * Transforms the given form data for saving.
      *
-     * @param  array  $data  The form data to be transformed.
-     * @return array The transformed form data.
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public static function transformFormDataForSave(array $data): array
     {
@@ -43,8 +43,8 @@ class FormDataTransformer
     /**
      * Transforms the given data array for filling.
      *
-     * @param  array  $data  The data array to transform
-     * @return array The transformed data array
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
      */
     public static function transformFormDataForFill(array $data): array
     {

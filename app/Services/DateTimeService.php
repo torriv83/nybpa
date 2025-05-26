@@ -58,9 +58,7 @@ class DateTimeService
      *
      * @param  int|null  $userId  The ID of the user.
      * @param  int|null  $recordId  The ID of the record.
-     * @return array An array of disabled dates.
-     *
-     * @uses Timesheet::scopeDisabledDates
+     * @return array<int, string> An array of disabled dates (formatted as Y-m-d).
      */
     public static function getAllDisabledDates(?int $userId, ?int $recordId): array
     {

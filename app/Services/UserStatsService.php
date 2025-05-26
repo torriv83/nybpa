@@ -65,6 +65,8 @@ class UserStatsService
 
     /**
      * Get the yearly time chart.
+     *
+     * @return array<string, float>
      */
     public function getYearlyTimeChart(): array
     {
@@ -85,6 +87,8 @@ class UserStatsService
 
     /**
      * Get the yearly time filters.
+     *
+     * @return array<string, array<string, array<string, string>>>
      */
     public function getYearlyTimeFilters(): array
     {
@@ -183,6 +187,11 @@ class UserStatsService
         });
     }
 
+    /**
+     * Get the total hours used this week.
+     *
+     * @return string
+     */
     public function getHoursUsedThisWeek()
     {
         return Cache::tags(['timesheet'])->remember('getHoursUsedThisWeek', now()->addWeek(), function () {
@@ -196,7 +205,7 @@ class UserStatsService
                 $endOfWeek,
             ])->sum('timesheets.totalt');
 
-            return self::minutesToTime($minutes);
+            return $this::minutesToTime($minutes);
         });
     }
 }

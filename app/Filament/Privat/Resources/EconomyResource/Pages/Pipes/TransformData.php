@@ -31,17 +31,24 @@ class TransformData
         return $next($transactions);
     }
 
-    protected function readFile($pathToFile): false|string
+    protected function readFile(string $pathToFile): false|string
     {
         return file_get_contents($pathToFile);
     }
 
-    protected function parseFileContent($fileContents): array
+    /**
+     * @return array<int, string>
+     */
+    protected function parseFileContent(string $fileContents): array
     {
         return explode("\n", preg_replace('/^\xEF\xBB\xBF/', '', $fileContents));
     }
 
-    protected function processLines($lines): array
+    /**
+     * @param  array<int, string>  $lines
+     * @return array<int, array<int, string>>
+     */
+    protected function processLines(array $lines): array
     {
         $transactions = [];
         foreach ($lines as $i => $line) {

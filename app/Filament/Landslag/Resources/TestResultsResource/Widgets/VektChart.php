@@ -56,6 +56,9 @@ class VektChart extends ChartWidget
         return 'line';
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Tests>
+     */
     protected function getTests(): Collection
     {
         return Tests::where('navn', '=', 'Vekt')->get();
@@ -71,6 +74,9 @@ class VektChart extends ChartWidget
             ->get();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getChartOptions(): array
     {
         return [
@@ -83,6 +89,9 @@ class VektChart extends ChartWidget
         ];
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     private function getChartScales(): array
     {
         return [

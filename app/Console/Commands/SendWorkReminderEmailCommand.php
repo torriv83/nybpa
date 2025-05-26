@@ -33,7 +33,7 @@ class SendWorkReminderEmailCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $timesheets = Timesheet::where('fra_dato', '>=', now())->whereNull('deleted_at')->where('unavailable', 0)->with('user')->get();
 

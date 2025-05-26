@@ -25,6 +25,8 @@ use Illuminate\Support\Carbon;
  * @property TrainingProgram|null $trainingProgram
  * @property Weekplan $weekplan
  *
+ * under testing
+ *
  * @mixin Eloquent
  */
 class WeekplanExercise extends Model
@@ -47,18 +49,27 @@ class WeekplanExercise extends Model
         //
     ];
 
+    /**
+     * @phpstan-return BelongsTo<Weekplan, WeekplanExercise>
+     */
     public function weekplan(): BelongsTo
     {
-        return $this->belongsTo(Weekplan::class);
+        return $this->belongsTo(Weekplan::class, 'weekplan_id', 'id');
     }
 
+    /**
+     * @phpstan-return BelongsTo<Exercise, WeekplanExercise>
+     */
     public function exercise(): BelongsTo
     {
-        return $this->belongsTo(Exercise::class);
+        return $this->belongsTo(Exercise::class, 'exercise_id', 'id');
     }
 
+    /**
+     * @phpstan-return BelongsTo<TrainingProgram, WeekplanExercise>
+     */
     public function trainingProgram(): BelongsTo
     {
-        return $this->belongsTo(TrainingProgram::class);
+        return $this->belongsTo(TrainingProgram::class, 'training_program_id', 'id');
     }
 }

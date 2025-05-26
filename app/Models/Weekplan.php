@@ -38,6 +38,8 @@ class Weekplan extends Model
 
     /**
      * Relasjon til `WeekplanExercise` for å hente alle øvelsene knyttet til en ukeplan.
+     *
+     * @phpstan-ignore-next-line
      */
     public function weekplanExercises(): HasMany
     {

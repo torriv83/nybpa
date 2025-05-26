@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Support\Facades\Log;
@@ -11,8 +12,14 @@ use Spatie\Permission\Models\Role;
 
 class SendMessageMail extends Mailable
 {
+    /**
+     * @var array<string, mixed>
+     */
     public mixed $body;
 
+    /**
+     * @param  array<string, mixed>  $body
+     */
     public function __construct($body)
     {
         $this->body = $body;
@@ -48,6 +55,11 @@ class SendMessageMail extends Mailable
         );
     }
 
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, Attachment>
+     */
     public function attachments(): array
     {
         return [];

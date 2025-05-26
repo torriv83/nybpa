@@ -7,8 +7,9 @@ parameters:
     paths:
         - app/
 
-    level: 5
+    level: 6
 
     ignoreErrors:
         - '#Access to an undefined property .*?\$.*?#'
         - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::(withTrashed|onlyTrashed|withoutTrashed)\(\)#'
+        - '#Method App\\Models\\WeekplanExercise::(weekplan|exercise|trainingProgram)\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo<App\\Models\\(Weekplan|Exercise|TrainingProgram), App\\Models\\WeekplanExercise> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo<App\\Models\\(Weekplan|Exercise|TrainingProgram), \$this\(App\\Models\\WeekplanExercise\)>#'

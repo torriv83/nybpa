@@ -298,6 +298,9 @@ class TimesheetResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<Timesheet>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

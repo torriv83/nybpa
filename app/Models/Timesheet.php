@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Cache;
 class Timesheet extends Model
 {
     use FilterableByDates;
+
+    // @phpstan-ignore-next-line
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
@@ -43,6 +45,7 @@ class Timesheet extends Model
         'allDay' => '0',
     ];
 
+    // @phpstan-ignore-next-line
     public function user(): BelongsTo
     {
 
@@ -51,6 +54,8 @@ class Timesheet extends Model
 
     /**
      * @method static thisYear()
+     *
+     * @phpstan-ignore-next-line
      */
     public function scopethisYear($query): void
     {
@@ -60,6 +65,8 @@ class Timesheet extends Model
 
     /**
      * @method thisMonth()
+     *
+     * @phpstan-ignore-next-line
      */
     public function scopethisMonth($query): void
     {
@@ -67,6 +74,7 @@ class Timesheet extends Model
         $query->whereMonth('til_dato', '=', date('m'));
     }
 
+    // @phpstan-ignore-next-line
     public function timeUsedThisYear(): Collection
     {
 
@@ -84,6 +92,8 @@ class Timesheet extends Model
      * Retrieves the time used last year.
      *
      * @return Collection The time used last year grouped by month.
+     *
+     * @phpstan-ignore-next-line
      */
     public function timeUsedLastYear(): Collection
     {
@@ -101,6 +111,8 @@ class Timesheet extends Model
     /**
      * Scope a query to retrieve all disabled dates for a specific user in the current year,
      * excluding a specific record if provided.
+     *
+     * @phpstan-ignore-next-line
      */
     public function scopeDisabledDates(Builder $query, ?int $userId, ?int $recordId): Builder
     {

@@ -33,8 +33,8 @@ class FormComponentGenerator
      *
      * @param  string  $name  The name of the component.
      * @param  string  $label  The label for the component.
-     * @param  array  $config  Additional configuration options for the component. Default is an empty array.
-     * @return array The generated dynamic date time picker component.
+     * @param  array<string, mixed>  $config
+     * @return array<int, \Filament\Forms\Components\DateTimePicker>
      */
     public static function dynamicDateTimePicker(string $name, string $label, array $config = []): array
     {
@@ -100,8 +100,8 @@ class FormComponentGenerator
      *
      * @param  string  $name  The name of the date picker.
      * @param  string  $label  The label for the date picker.
-     * @param  array  $config  The configuration options for the date picker. Default is an empty array.
-     * @return array Returns an array containing the dynamic date picker component.
+     * @param  array<string, mixed>  $config
+     * @return array<int, \Filament\Forms\Components\DatePicker>
      */
     public static function dynamicDatePicker(string $name, string $label, array $config = []): array
     {
@@ -147,7 +147,7 @@ class FormComponentGenerator
      * Apply the given configuration options to a component.
      *
      * @param  object  $component  The component to apply the configuration to.
-     * @param  array  $config  The configuration options to apply.
+     * @param  array<string, mixed>  $config  The configuration options to apply.
      */
     private static function applyComponentConfig(object $component, array $config): void
     {
@@ -176,7 +176,7 @@ class FormComponentGenerator
      * Generates a dynamic rich editor.
      *
      * @param  string  $name  The name of the editor.
-     * @return array The generated rich editor configuration.
+     * @return array<int, \Filament\Forms\Components\RichEditor> The generated rich editor configuration.
      */
     public static function dynamicRichEditor(string $name, string $richEditorLabel): array
     {
@@ -210,7 +210,7 @@ class FormComponentGenerator
      *
      * @param  string  $name  The name of the input field.
      * @param  mixed  $default  The default value of the input field.
-     * @return array An array containing the generated hidden input field.
+     * @return array<int, \Filament\Forms\Components\Hidden> An array containing the generated hidden input field.
      */
     public static function dynamicHidden(string $name, mixed $default): array
     {

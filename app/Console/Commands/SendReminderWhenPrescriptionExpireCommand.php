@@ -32,7 +32,7 @@ class SendReminderWhenPrescriptionExpireCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $targetDate = now()->addMonth()->toDateString(); // Datoen 1 måned fra nå
 
