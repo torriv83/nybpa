@@ -59,7 +59,7 @@ class StyrkeChart extends ChartWidget
     }
 
     /**
-     * @param  Collection<int, TestResults>  $results
+     * @param  Collection<int, \Illuminate\Database\Eloquent\Model|\App\Models\TestResults>  $results
      * @return array{resultater: array<string, array<int, float|int>>, dato: array<int, string>}
      */
     protected function transformData(Collection $results): array

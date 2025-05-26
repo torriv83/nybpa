@@ -88,6 +88,9 @@ class TrainingProgramResource extends Resource
             ]);
     }
 
+    /**
+     * @return Builder<\App\Models\TrainingProgram>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

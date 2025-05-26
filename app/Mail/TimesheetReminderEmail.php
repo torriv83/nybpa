@@ -18,7 +18,7 @@ class TimesheetReminderEmail extends Mailable
     public ?array $details;
 
     /**
-     * @param  array{name: string, date: string}  $details
+     * @param  array{timesheets: \Illuminate\Database\Eloquent\Collection<int, \App\Models\Timesheet>}  $details
      */
     public function __construct(array $details)
     {

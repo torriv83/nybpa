@@ -46,7 +46,7 @@ class ViewTrainingProgram extends Page
         ];
     }
 
-    public function mount($record): void
+    public function mount(int|string $record): void
     {
         $this->record = TrainingProgram::find($record);
     }

@@ -20,7 +20,7 @@ class SessionsStats extends BaseWidget
     /**
      * Retrieves the statistics for the weekplans.
      *
-     * @return array The statistics for the weekplans.
+     * @return array<int, \Filament\Widgets\StatsOverviewWidget\Stat> The statistics for the weekplans.
      *
      * @throws Exception
      */
@@ -75,7 +75,7 @@ class SessionsStats extends BaseWidget
     /**
      * Retrieves the next session based on the current date and weekplan.
      *
-     * @return array The next session information containing the session name, time range, and day offset.
+     * @return array{session?: string, time?: string, day: int} The next session information containing the session name, time range, and day offset.
      */
     private function getNextSession(): array
     {

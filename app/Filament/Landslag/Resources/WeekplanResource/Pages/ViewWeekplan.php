@@ -15,6 +15,9 @@ class ViewWeekplan extends Page
 
     protected static string $view = 'filament.resources.weekplan-resource.pages.view-ukeplan';
 
+    /**
+     * @var array<int, mixed>
+     */
     public array $exercises;
 
     public ?Weekplan $weekplan;
@@ -46,7 +49,7 @@ class ViewWeekplan extends Page
         ];
     }
 
-    public function mount($record): void
+    public function mount(int|string $record): void
     {
         $this->weekplan = Weekplan::with('weekplanExercises')->find($record);
     }

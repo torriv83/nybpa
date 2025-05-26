@@ -75,6 +75,9 @@ class WorkoutExerciseResource extends Resource
             ]);
     }
 
+    /**
+     * @return Builder<\App\Models\WorkoutExercise>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

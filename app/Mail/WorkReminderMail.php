@@ -16,7 +16,7 @@ class WorkReminderMail extends Mailable
     public ?array $details;
 
     /**
-     * @param  array{name: string, date: string}  $details
+     * @param  array{date: non-falsy-string, time: non-falsy-string, assistent: mixed}  $details
      */
     public function __construct(array $details)
     {

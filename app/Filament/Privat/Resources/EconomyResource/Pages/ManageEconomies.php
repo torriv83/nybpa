@@ -48,6 +48,9 @@ class ManageEconomies extends ManageRecords
         ];
     }
 
+    /**
+     * @param  array{bankFile: string}  $data
+     */
     private function processBankFile(array $data): BinaryFileResponse
     {
         // Access the uploaded file
@@ -78,7 +81,7 @@ class ManageEconomies extends ManageRecords
         ];
     }
 
-    public function updated($name): void
+    public function updated(string $name): void
     {
         if (Str::of($name)->contains(['mountedTableAction', 'mountedTableBulkAction'])) {
             $this->dispatch('updateStatsOverview');

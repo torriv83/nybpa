@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Resepter;
 use App\Models\User;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
@@ -13,25 +14,20 @@ use Spatie\Permission\Models\Role;
 
 class SendReminderWhenPrescriptionExpire extends Mailable
 {
-    /** @var Collection<int, object> */
+    /** @var Collection<int, Resepter> */
     public Collection $expiringPrescriptions;
 
-    /** @var Collection<int, object> */
+    /** @var Collection<int, Resepter> */
     public Collection $expiredPrescriptions;
 
     /**
-     * @param  array<int, array<string, mixed>|object>  $expiringPrescriptions
-     * @param  array<int, array<string, mixed>|object>  $expiredPrescriptions
+     * @param  Collection<int, Resepter>  $expiringPrescriptions
+     * @param  Collection<int, Resepter>  $expiredPrescriptions
      */
-    public function __construct(array $expiringPrescriptions, array $expiredPrescriptions)
+    public function __construct(Collection $expiringPrescriptions, Collection $expiredPrescriptions)
     {
-        $this->expiringPrescriptions = collect($expiringPrescriptions)->map(
-            fn ($prescription): object => is_array($prescription) ? (object) $prescription : $prescription
-        );
-
-        $this->expiredPrescriptions = collect($expiredPrescriptions)->map(
-            fn ($prescription): object => is_array($prescription) ? (object) $prescription : $prescription
-        );
+        $this->expiringPrescriptions = $expiringPrescriptions;
+        $this->expiredPrescriptions = $expiredPrescriptions;
     }
 
     public function envelope(): Envelope

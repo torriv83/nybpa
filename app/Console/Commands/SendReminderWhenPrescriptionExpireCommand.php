@@ -34,17 +34,19 @@ class SendReminderWhenPrescriptionExpireCommand extends Command
      */
     public function handle(): void
     {
-        $targetDate = now()->addMonth()->toDateString(); // Datoen 1 måned fra nå
+        $targetDate = now()->addMonth()->toDateString();
 
+        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resepter> $expiringPrescriptions */
         $expiringPrescriptions = Resepter::whereDate('validTo', '=', $targetDate)->get();
+
+        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resepter> $expiredPrescriptions */
         $expiredPrescriptions = Resepter::whereDate('validTo', '<', now())->get();
 
         if ($expiringPrescriptions->isEmpty() && $expiredPrescriptions->isEmpty()) {
-            // Ingen resepter går ut snart, så avslutt tidlig
             return;
         }
 
-        // Send e-post ved å bruke Mailable-klassen
-        Mail::to(Role::findByName('admin')->users->first()->email)->send(new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
+        Mail::to(Role::findByName('admin')->users->first()->email)
+            ->send(new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
     }
 }
