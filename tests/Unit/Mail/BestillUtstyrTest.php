@@ -4,6 +4,8 @@ namespace Tests\Unit\Mail;
 
 use App\Mail\BestillUtstyr;
 use App\Models\User;
+use App\Models\Utstyr;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -32,7 +34,10 @@ class BestillUtstyrTest extends TestCase
     #[Test]
     public function it_has_correct_properties()
     {
-        $utstyr = ['item1', 'item2'];
+        $utstyr = new EloquentCollection([
+            new Utstyr(['navn' => 'item1']),
+            new Utstyr(['navn' => 'item2']),
+        ]);
         $data = ['key' => 'value'];
 
         $mail = new BestillUtstyr($utstyr, $data);
@@ -42,9 +47,19 @@ class BestillUtstyrTest extends TestCase
     }
 
     #[Test]
-    public function it_has_correct_envelope()
+    public function it_has_correct_envelope(): void
     {
-        $mail = new BestillUtstyr([], []);
+        $utstyr = new EloquentCollection([
+            new Utstyr(['navn' => 'item1']),
+            new Utstyr(['navn' => 'item2']),
+        ]);
+
+        $data = [
+            'navn' => 'John Doe',
+            'epost' => 'john@example.com',
+        ];
+
+        $mail = new BestillUtstyr($utstyr, $data);
         $envelope = $mail->envelope();
 
         $this->assertInstanceOf(Envelope::class, $envelope);
@@ -62,9 +77,10 @@ class BestillUtstyrTest extends TestCase
     }
 
     #[Test]
-    public function it_has_correct_content()
+    public function it_has_correct_content(): void
     {
-        $mail = new BestillUtstyr([], []);
+
+        $mail = new BestillUtstyr(new EloquentCollection, []);
         $content = $mail->content();
 
         $this->assertInstanceOf(Content::class, $content);
@@ -72,26 +88,29 @@ class BestillUtstyrTest extends TestCase
     }
 
     #[Test]
-    public function it_has_no_attachments()
+    public function it_has_no_attachments(): void
     {
-        $mail = new BestillUtstyr([], []);
+        $mail = new BestillUtstyr(new EloquentCollection, []);
         $attachments = $mail->attachments();
 
         $this->assertIsArray($attachments);
         $this->assertEmpty($attachments);
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     #[Test]
-    public function it_renders_with_utstyr_and_data()
+    public function it_renders_with_utstyr_and_data(): void
     {
-        $utstyr = [
-            (object) [
+        $utstyr = new EloquentCollection([
+            new Utstyr([
                 'id' => 1,
                 'navn' => 'Item 1',
                 'antall' => 2,
                 'artikkelnummer' => 'A12345',
-            ],
-        ];
+            ]),
+        ]);
 
         $data = [
             'name' => 'John Doe',
@@ -100,11 +119,11 @@ class BestillUtstyrTest extends TestCase
 
         $mail = new BestillUtstyr($utstyr, $data);
 
-        // This test will fail if the view doesn't exist or can't be rendered with the given data
-        $rendered = $mail->render();
-
-        // We can't easily test the exact content without mocking the view,
-        // but we can at least verify that it renders without errors
-        $this->assertIsString($rendered);
+        try {
+            $rendered = $mail->render();
+            $this->assertNotEmpty($rendered); // ✅ gir faktisk verdi
+        } catch (\Throwable $e) {
+            $this->fail('Rendering the mail threw an exception: '.$e->getMessage());
+        }
     }
 }

@@ -3,11 +3,9 @@
 namespace Tests\Unit\Mail;
 
 use App\Mail\SendReminderWhenPrescriptionExpire;
+use App\Models\Resepter;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Mail\Mailables\Address;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -20,7 +18,7 @@ class SendReminderWhenPrescriptionExpireTest extends TestCase
     {
         parent::setUp();
 
-        // Create an admin role and user
+        // Opprett admin-rolle og bruker
         $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
         $adminUser = User::factory()->create([
             'name' => 'Admin User',
@@ -30,10 +28,10 @@ class SendReminderWhenPrescriptionExpireTest extends TestCase
     }
 
     #[Test]
-    public function it_has_correct_properties()
+    public function it_has_correct_properties(): void
     {
-        $expiringPrescriptions = collect(['prescription1', 'prescription2']);
-        $expiredPrescriptions = collect(['prescription3', 'prescription4']);
+        $expiringPrescriptions = collect([new Resepter(['prescription1']), new Resepter(['prescription2'])]);
+        $expiredPrescriptions = collect([new Resepter(['prescription3']), new Resepter(['prescription4'])]);
 
         $mail = new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions);
 
@@ -42,34 +40,30 @@ class SendReminderWhenPrescriptionExpireTest extends TestCase
     }
 
     #[Test]
-    public function it_has_correct_envelope()
+    public function it_has_correct_envelope(): void
     {
-        $mail = new SendReminderWhenPrescriptionExpire([], []);
+        $mail = new SendReminderWhenPrescriptionExpire(collect(), collect());
         $envelope = $mail->envelope();
 
-        $this->assertInstanceOf(Envelope::class, $envelope);
         $this->assertEquals('Resept går snart ut.', $envelope->subject);
 
-        $from = $envelope->from;
-        $this->assertInstanceOf(Address::class, $from);
-        $this->assertEquals('admin@example.com', $from->address);
-        $this->assertEquals('Admin User', $from->name);
+        $this->assertEquals('admin@example.com', $envelope->from->address);
+        $this->assertEquals('Admin User', $envelope->from->name);
     }
 
     #[Test]
-    public function it_has_correct_content()
+    public function it_has_correct_content(): void
     {
-        $mail = new SendReminderWhenPrescriptionExpire([], []);
+        $mail = new SendReminderWhenPrescriptionExpire(collect(), collect());
         $content = $mail->content();
 
-        $this->assertInstanceOf(Content::class, $content);
         $this->assertEquals('emails.prescription_expiry', $content->markdown);
     }
 
     #[Test]
-    public function it_has_no_attachments()
+    public function it_has_no_attachments(): void
     {
-        $mail = new SendReminderWhenPrescriptionExpire([], []);
+        $mail = new SendReminderWhenPrescriptionExpire(collect(), collect());
         $attachments = $mail->attachments();
 
         $this->assertIsArray($attachments);
@@ -77,33 +71,23 @@ class SendReminderWhenPrescriptionExpireTest extends TestCase
     }
 
     #[Test]
-    public function it_renders_with_prescription_data()
+    public function it_renders_with_prescription_data(): void
     {
-        // $this->markTestSkipped('This test is skipped because the view is inconsistent - some parts use array syntax and others use object syntax.');
-
         $expiringPrescriptions = collect([
-            [
-                'id' => 1,
-                'name' => 'Prescription 1',
-                'validTo' => '2023-12-31',
-            ],
+            new Resepter(['name' => 'Prescription 1', 'validTo' => '2023-12-31']),
         ]);
 
         $expiredPrescriptions = collect([
-            [
-                'id' => 2,
-                'name' => 'Prescription 2',
-                'validTo' => '2023-11-30',
-            ],
+            new Resepter(['name' => 'Prescription 2', 'validTo' => '2023-11-30']),
         ]);
 
         $mail = new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions);
 
-        // This test will fail if the view doesn't exist or can't be rendered with the given data
-        $rendered = $mail->render();
-
-        // We can't easily test the exact content without mocking the view,
-        // but we can at least verify that it renders without errors
-        $this->assertIsString($rendered);
+        try {
+            $rendered = $mail->render();
+            $this->assertNotEmpty($rendered);
+        } catch (\Throwable $e) {
+            $this->fail('Render feilet: '.$e->getMessage());
+        }
     }
 }
