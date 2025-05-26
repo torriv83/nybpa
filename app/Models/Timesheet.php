@@ -17,7 +17,7 @@ class Timesheet extends Model
 {
     use FilterableByDates;
 
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
@@ -45,7 +45,7 @@ class Timesheet extends Model
         'allDay' => '0',
     ];
 
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     public function user(): BelongsTo
     {
 
@@ -74,7 +74,7 @@ class Timesheet extends Model
         $query->whereMonth('til_dato', '=', date('m'));
     }
 
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     public function timeUsedThisYear(): Collection
     {
 

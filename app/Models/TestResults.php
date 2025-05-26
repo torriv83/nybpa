@@ -23,7 +23,7 @@ class TestResults extends Model
         'dato' => 'datetime',
     ];
 
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     public function tests(): BelongsTo
     {
         return $this->belongsTo(Tests::class, 'tests_id');

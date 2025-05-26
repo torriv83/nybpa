@@ -25,8 +25,6 @@ use Illuminate\Support\Carbon;
  * @property TrainingProgram|null $trainingProgram
  * @property Weekplan $weekplan
  *
- * under testing
- *
  * @mixin Eloquent
  */
 class WeekplanExercise extends Model

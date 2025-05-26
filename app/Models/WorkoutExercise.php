@@ -21,7 +21,7 @@ class WorkoutExercise extends Model
         'exercise_name',
     ];
 
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     public function TrainingPrograms(): BelongsToMany
     {
         return $this->belongsToMany(TrainingProgram::class)->withPivot('repetitions', 'sets', 'order', 'rest', 'description');

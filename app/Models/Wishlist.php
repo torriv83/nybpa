@@ -31,7 +31,7 @@ use Illuminate\Support\Carbon;
  */
 class Wishlist extends Model
 {
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
@@ -43,7 +43,7 @@ class Wishlist extends Model
         'prioritet',
     ];
 
-    // @phpstan-ignore-next-line
+    /* @phpstan-ignore-next-line */
     public function wishlistItems(): HasMany
     {
         return $this->hasMany(WishlistItem::class);

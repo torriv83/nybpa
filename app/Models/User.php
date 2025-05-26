@@ -19,11 +19,8 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
 
-    /**
-     * @phpstan-ignore-next-line  // Laravel default trait, PHPStan klager pga. manglende TFactory-type
-     */
+    /* @phpstan-ignore-next-line */
     use HasFactory;
-
     use HasRoles;
     use Notifiable;
     use SoftDeletes;
@@ -64,25 +61,19 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * @phpstan-ignore-next-line  // Ignorerer feil om HasMany generics
-     */
+    /* @phpstan-ignore-next-line */
     public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);
     }
 
-    /**
-     * @phpstan-ignore-next-line  // Ignorerer feil om HasMany generics
-     */
+    /* @phpstan-ignore-next-line */
     public function setting(): HasMany
     {
         return $this->hasMany(Settings::class);
     }
 
-    /**
-     * @phpstan-ignore-next-line  // Ignorerer feil om Builder generics
-     */
+    /* @phpstan-ignore-next-line */
     #[Scope]
     protected function assistenter(Builder $query): ?Builder
     {
