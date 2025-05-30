@@ -19,9 +19,9 @@ class SessionsStats extends BaseWidget
     /**
      * Retrieves the statistics for the weekplans.
      *
-     * @throws Exception
-     *
      * @return array<int, Stat> The statistics for the weekplans.
+     *
+     * @throws Exception
      */
     protected function getStats(): array
     {
