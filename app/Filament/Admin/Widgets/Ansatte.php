@@ -43,7 +43,7 @@ class Ansatte extends BaseWidget
                 Tables\Columns\TextColumn::make('email')
                     ->label('E-post')
                     ->limit(10)
-                    ->tooltip(fn (Model $record): string => "$record->email"),
+                    ->tooltip(fn (User $record): string => "$record->email"),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon')
                     ->default('12345678'),

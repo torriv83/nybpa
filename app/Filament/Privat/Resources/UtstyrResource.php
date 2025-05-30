@@ -42,6 +42,12 @@ class UtstyrResource extends Resource
         return ['hva', 'navn', 'artikkelnummer', 'kategori.kategori'];
     }
 
+    /**
+     * Get the title to be displayed for a record in global search results.
+     *
+     * @param  Utstyr  $record  The record being retrieved.
+     * @return string The title for the global search result.
+     */
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         return $record->navn;

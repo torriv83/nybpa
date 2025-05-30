@@ -39,7 +39,7 @@ class Weekplan extends Model
     /**
      * Relasjon til `WeekplanExercise` for å hente alle øvelsene knyttet til en ukeplan.
      *
-     * @phpstan-ignore-next-line
+     *@phpstan-return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\WeekplanExercise, $this>
      */
     public function weekplanExercises(): HasMany
     {

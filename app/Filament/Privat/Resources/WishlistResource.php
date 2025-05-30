@@ -21,7 +21,6 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 
 class WishlistResource extends Resource
@@ -104,7 +103,7 @@ class WishlistResource extends Resource
                     ),
                 TextColumn::make('totalt')
                     ->money('nok', 1)
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Wishlist $record) {
                         return $record->koster * $record->antall;
                     }),
             ])

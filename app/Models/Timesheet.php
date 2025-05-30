@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Traits\FilterableByDates;
 use Carbon\Carbon;
+use Database\Factories\TimesheetFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,8 +19,9 @@ class Timesheet extends Model
 {
     use FilterableByDates;
 
-    /* @phpstan-ignore-next-line */
+    /** @use HasFactory<TimesheetFactory> */
     use HasFactory;
+
     use Notifiable;
     use SoftDeletes;
 
@@ -45,7 +48,11 @@ class Timesheet extends Model
         'allDay' => '0',
     ];
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * Get the user associated with this timesheet.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
 
@@ -53,28 +60,32 @@ class Timesheet extends Model
     }
 
     /**
-     * @method static thisYear()
+     * Scope a query to only include records from the current year.
      *
-     * @phpstan-ignore-next-line
+     * @param  Builder<\App\Models\Timesheet>  $query
+     * @return Builder<\App\Models\Timesheet>
      */
-    public function scopethisYear($query): void
+    public function scopethisYear(Builder $query): Builder
     {
-
-        $query->whereYear('til_dato', '=', date('Y'));
+        return $query->whereYear('til_dato', '=', date('Y'));
     }
 
     /**
      * @method thisMonth()
      *
-     * @phpstan-ignore-next-line
+     * @param  Builder<\App\Models\Timesheet>  $query
+     * @return Builder<\App\Models\Timesheet>
      */
-    public function scopethisMonth($query): void
+    public function scopethisMonth(Builder $query): Builder
     {
 
-        $query->whereMonth('til_dato', '=', date('m'));
+        return $query->whereMonth('til_dato', '=', date('m'));
     }
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return Collection<string, EloquentCollection<int, Timesheet>>
+     *   The time used this year grouped by month.
+     */
     public function timeUsedThisYear(): Collection
     {
 
@@ -112,7 +123,11 @@ class Timesheet extends Model
      * Scope a query to retrieve all disabled dates for a specific user in the current year,
      * excluding a specific record if provided.
      *
-     * @phpstan-ignore-next-line
+     * @phpstan-param \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet> $query
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet>  $query
+     *
+     * @phpstan-return \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet>
      */
     public function scopeDisabledDates(Builder $query, ?int $userId, ?int $recordId): Builder
     {

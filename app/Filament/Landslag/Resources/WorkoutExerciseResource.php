@@ -58,9 +58,9 @@ class WorkoutExerciseResource extends Resource
                     ->trueLabel('Med arkiverte øvelser')
                     ->falseLabel('Bare arkiverte øvelser')
                     ->queries(
-                        true : fn (Builder $query) => $query->withTrashed(),
-                        false: fn (Builder $query) => $query->onlyTrashed(),
-                        blank: fn (Builder $query) => $query->withoutTrashed(),
+                        true : fn (Builder $query) => $query->withTrashed(),// @phpstan-ignore-line
+                        false: fn (Builder $query) => $query->onlyTrashed(),// @phpstan-ignore-line
+                        blank: fn (Builder $query) => $query->withoutTrashed(),// @phpstan-ignore-line
                     ),
             ])
             ->actions([

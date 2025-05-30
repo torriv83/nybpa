@@ -6,7 +6,6 @@ use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class RheitChart extends ChartWidget
@@ -67,9 +66,9 @@ class RheitChart extends ChartWidget
     /**
      * Retrieves the data for the chart.
      *
-     * @return Model|null The fetched data for the chart.
+     * @return Tests|null The fetched data for the chart.
      */
-    protected function fetchData(): ?Model
+    protected function fetchData(): ?Tests
     {
         return Tests::with('testResults')->where('navn', '=', 'Rheit')->first();
     }

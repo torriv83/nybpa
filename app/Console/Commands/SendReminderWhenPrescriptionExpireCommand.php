@@ -46,7 +46,9 @@ class SendReminderWhenPrescriptionExpireCommand extends Command
             return;
         }
 
-        Mail::to(Role::findByName('admin')->users->first()->email)
+        /** @var \App\Models\User|null $adminUser */
+        $adminUser = Role::findByName('admin')->users()->first();
+        Mail::to($adminUser)
             ->send(new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
     }
 }

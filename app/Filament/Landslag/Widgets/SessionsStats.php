@@ -9,20 +9,19 @@ use Carbon\CarbonInterval;
 use Exception;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Database\Eloquent\Model;
 
 class SessionsStats extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    public ?Model $record = null;
+    public ?Weekplan $record = null;
 
     /**
      * Retrieves the statistics for the weekplans.
      *
-     * @return array<int, \Filament\Widgets\StatsOverviewWidget\Stat> The statistics for the weekplans.
-     *
      * @throws Exception
+     *
+     * @return array<int, Stat> The statistics for the weekplans.
      */
     protected function getStats(): array
     {
@@ -47,6 +46,7 @@ class SessionsStats extends BaseWidget
         ];
 
         foreach ($weekplans as $weekplan) {
+            /** @var WeekplanExercise $exercise */
             foreach ($weekplan->weekplanExercises as $exercise) {
                 $statistics['okter']++;
                 $statistics['timer'] += Carbon::parse($exercise->end_time)->diffInSeconds(Carbon::parse($exercise->start_time));

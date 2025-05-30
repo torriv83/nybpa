@@ -23,13 +23,17 @@ class TestResults extends Model
         'dato' => 'datetime',
     ];
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Tests, $this>
+     */
     public function tests(): BelongsTo
     {
         return $this->belongsTo(Tests::class, 'tests_id');
     }
 
-    // @phpstan-ignore-next-line
+    /**
+     * @phpstan-return array<int, string>
+     */
     public static function generateRandomColors(int $count): array
     {
         mt_srand(); // Seed the random number generator

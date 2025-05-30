@@ -35,7 +35,9 @@ class WishlistItem extends Model
         'status',
     ];
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Wishlist, $this>
+     */
     public function wishlist(): BelongsTo
     {
         return $this->belongsTo(Wishlist::class);

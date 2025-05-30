@@ -48,7 +48,7 @@ class WeekplanExercise extends Model
     ];
 
     /**
-     * @phpstan-return BelongsTo<Weekplan, WeekplanExercise>
+     * @phpstan-return BelongsTo<Weekplan, $this>
      */
     public function weekplan(): BelongsTo
     {
@@ -56,7 +56,7 @@ class WeekplanExercise extends Model
     }
 
     /**
-     * @phpstan-return BelongsTo<Exercise, WeekplanExercise>
+     * @phpstan-return BelongsTo<Exercise, $this>
      */
     public function exercise(): BelongsTo
     {
@@ -64,7 +64,7 @@ class WeekplanExercise extends Model
     }
 
     /**
-     * @phpstan-return BelongsTo<TrainingProgram, WeekplanExercise>
+     * @phpstan-return BelongsTo<TrainingProgram, $this>
      */
     public function trainingProgram(): BelongsTo
     {

@@ -6,6 +6,7 @@ use App\Models\Timesheet;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 class BrukteTimerChart extends ChartWidget
@@ -56,7 +57,7 @@ class BrukteTimerChart extends ChartWidget
     }
 
     /**
-     * @param  Collection<string, Collection<int, Timesheet>>  $times
+     * @param  Collection<string, EloquentCollection<int, \App\Models\Timesheet>>  $times
      * @return array<string, string>
      */
     public function yearTimes(Collection $times): array

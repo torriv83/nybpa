@@ -3,6 +3,7 @@
 namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
 use App\Models\Wishlist;
+use App\Models\WishlistItem;
 use DB;
 use Exception;
 use Filament\Forms;
@@ -76,7 +77,7 @@ class WishlistItemsRelationManager extends RelationManager
                         })),
                 Tables\Columns\TextColumn::make('totalt')
                     ->money('nok', 1)
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (WishlistItem $record) {
                         return $record->koster * $record->antall;
                     })
                     ->summarize(Summarizer::make()
@@ -96,18 +97,18 @@ class WishlistItemsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
+                    ->after(fn (RelationManager $livewire, WishlistItem $record) => $this->dispatchItemEdited($livewire, $record)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
+                    ->after(fn (RelationManager $livewire, WishlistItem $record) => $this->dispatchItemEdited($livewire, $record)),
                 Tables\Actions\DeleteAction::make()
-                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
+                    ->after(fn (RelationManager $livewire, WishlistItem $record) => $this->dispatchItemEdited($livewire, $record)),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->after(function (RelationManager $livewire, Model $record) {
+                        ->after(function (RelationManager $livewire, WishlistItem $record) {
                             $livewire->dispatch('itemedited', $record->wishlist_id);
                         }),
                     Tables\Actions\BulkAction::make('status')
@@ -127,7 +128,7 @@ class WishlistItemsRelationManager extends RelationManager
             ]);
     }
 
-    private function dispatchItemEdited(RelationManager $livewire, Model $record): void
+    private function dispatchItemEdited(RelationManager $livewire, WishlistItem $record): void
     {
         $livewire->dispatch('itemedited', $record->wishlist_id);
     }

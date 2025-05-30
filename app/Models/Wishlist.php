@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\WishlistFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,8 +32,10 @@ use Illuminate\Support\Carbon;
  */
 class Wishlist extends Model
 {
-    /* @phpstan-ignore-next-line */
-    use HasFactory, SoftDeletes;
+    /** @use HasFactory<WishlistFactory> */
+    use HasFactory;
+
+    use SoftDeletes;
 
     protected $fillable = [
         'hva',
@@ -43,7 +46,9 @@ class Wishlist extends Model
         'prioritet',
     ];
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\WishlistItem, $this>
+     */
     public function wishlistItems(): HasMany
     {
         return $this->hasMany(WishlistItem::class);

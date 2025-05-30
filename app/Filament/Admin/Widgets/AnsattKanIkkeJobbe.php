@@ -8,7 +8,6 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 use function strip_tags;
@@ -30,13 +29,13 @@ class AnsattKanIkkeJobbe extends BaseWidget
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Hvem')
-                    ->tooltip(fn (Model $record): string => strip_tags("$record->description")),
+                    ->tooltip(fn (Timesheet $record): string => strip_tags("$record->description")),
                 /* TODO trenger jeg denne? */
                 /* Tables\Columns\TextColumn::make('fra_dato')
                     ->date('d.m.Y')
                     ->label('Dato'),*/
                 Tables\Columns\TextColumn::make('fra_dato')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Timesheet $record) {
                         if ($record->allDay == 1) {
                             return Carbon::parse($record->fra_dato)->format('d.m.Y');
                         } else {
@@ -45,9 +44,9 @@ class AnsattKanIkkeJobbe extends BaseWidget
                     })
                     ->sortable()
                     ->label('Fra')
-                    ->tooltip(fn (Model $record): string => strip_tags("$record->description")),
+                    ->tooltip(fn (Timesheet $record): string => strip_tags("$record->description")),
                 Tables\Columns\TextColumn::make('til_dato')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Timesheet $record) {
                         if ($record->allDay == 1) {
                             return Carbon::parse($record->til_dato)->format('d.m.Y');
                         } else {
@@ -55,7 +54,7 @@ class AnsattKanIkkeJobbe extends BaseWidget
                         }
                     })
                     ->sortable()
-                    ->tooltip(fn (Model $record): string => strip_tags("$record->description"))
+                    ->tooltip(fn (Timesheet $record): string => strip_tags("$record->description"))
                     ->label('Til'),
                 IconColumn::make('allDay')
                     ->label('Hele dagen?')

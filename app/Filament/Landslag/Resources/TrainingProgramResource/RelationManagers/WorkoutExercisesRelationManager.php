@@ -103,7 +103,7 @@ class WorkoutExercisesRelationManager extends RelationManager
                         ->label('Flytt til et annet program')
                         ->icon('heroicon-o-arrow-right')
                         ->action(function (Collection $records, array $data) {
-                            $currentProgram = TrainingProgram::find($this->getOwnerRecord()->id);
+                            $currentProgram = TrainingProgram::find($this->getOwnerRecord()->getKey());
                             $newProgram = TrainingProgram::find($data['program']);
 
                             foreach ($records as $record) {
@@ -129,7 +129,7 @@ class WorkoutExercisesRelationManager extends RelationManager
                         })
                         ->form([
                             Forms\Components\Select::make('program')
-                                ->options(TrainingProgram::where('id', '!=', $this->getOwnerRecord()->id)
+                                ->options(TrainingProgram::where('id', '!=', $this->getOwnerRecord()->getKey())
                                     ->pluck('program_name', 'id'))
                                 ->label('Velg program'),
                         ])

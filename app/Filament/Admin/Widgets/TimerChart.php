@@ -7,6 +7,7 @@ use App\Models\Timesheet;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Pipeline;
 
@@ -96,7 +97,7 @@ class TimerChart extends ChartWidget
      * the input time data, and calculates the total time or percentage for each month. The
      * calculation depends on whether the percentage flag is provided.
      *
-     * @param  Collection<string, Collection<int, \App\Models\Timesheet>>  $times
+     * @param  Collection<string, EloquentCollection<int, \App\Models\Timesheet>>  $times
      * @param  bool  $prosent  Indicates whether to calculate values as percentages or raw totals.
      * @return array<string, float> An associative array mapping month names to their respective calculated values.
      */

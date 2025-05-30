@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -19,8 +20,9 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
 
-    /* @phpstan-ignore-next-line */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use HasRoles;
     use Notifiable;
     use SoftDeletes;
@@ -61,19 +63,27 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Timesheet, $this>
+     */
     public function timesheet(): HasMany
     {
         return $this->hasMany(Timesheet::class);
     }
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Settings, $this>
+     */
     public function setting(): HasMany
     {
         return $this->hasMany(Settings::class);
     }
 
-    /* @phpstan-ignore-next-line */
+    /**
+     * @phpstan-param \Illuminate\Database\Eloquent\Builder<\App\Models\User> $query
+     *
+     * @phpstan-return \Illuminate\Database\Eloquent\Builder<\App\Models\User>|null
+     */
     #[Scope]
     protected function assistenter(Builder $query): ?Builder
     {
@@ -81,7 +91,6 @@ class User extends Authenticatable implements FilamentUser
         $existingRoles = Role::whereIn('name', $rolesToCheck)->pluck('name')->toArray();
 
         if (! empty($existingRoles)) {
-            // @phpstan-ignore-next-line
             return $query->role($existingRoles);
         }
 

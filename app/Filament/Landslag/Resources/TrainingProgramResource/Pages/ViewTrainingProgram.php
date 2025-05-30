@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 
+/**
+ * @property TrainingProgram $record
+ */
 class ViewTrainingProgram extends Page
 {
     protected static string $resource = TrainingProgramResource::class;

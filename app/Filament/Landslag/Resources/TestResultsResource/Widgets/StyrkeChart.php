@@ -59,7 +59,7 @@ class StyrkeChart extends ChartWidget
     }
 
     /**
-     * @param  Collection<int, \Illuminate\Database\Eloquent\Model|\App\Models\TestResults>  $results
+     * @param  \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResults>  $results
      * @return array{resultater: array<string, array<int, float|int>>, dato: array<int, string>}
      */
     protected function transformData(Collection $results): array
@@ -67,6 +67,7 @@ class StyrkeChart extends ChartWidget
         $resultater = [];
         $dato = [];
 
+        /** @var TestResults $v */
         foreach ($results as $v) {
             $dato[] = $v->dato->format('d.m.y H:i');
 

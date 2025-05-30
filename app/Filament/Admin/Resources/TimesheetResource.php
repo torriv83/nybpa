@@ -24,7 +24,6 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TimesheetResource extends Resource
@@ -67,7 +66,7 @@ class TimesheetResource extends Resource
 
                 Tables\Columns\TextColumn::make('dato')
                     ->label('Dato')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Timesheet $record) {
                         if ($record->unavailable == 1) {
                             return Carbon::parse($record->fra_dato)->format('d.m.Y').' - '.Carbon::parse($record->til_dato)->format('d.m.Y');
                         } else {
@@ -94,7 +93,7 @@ class TimesheetResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('Beskrivelse')
                     ->limit(20)
-                    ->getStateUsing(fn (Model $record) => ! is_null($record->description) ? strip_tags($record->description) : '')
+                    ->getStateUsing(fn (Timesheet $record) => ! is_null($record->description) ? strip_tags($record->description) : '')
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
@@ -109,7 +108,7 @@ class TimesheetResource extends Resource
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('totalt')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Timesheet $record) {
                         if ($record->unavailable) {
                             return '-';
                         } else {
