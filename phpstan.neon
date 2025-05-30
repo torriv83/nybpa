@@ -8,8 +8,8 @@ parameters:
         - app
         - routes
         - database
-    scanDirectories:
-            - vendor/_laravel_idea
+    #scanDirectories:
+     #       - vendor/_laravel_idea
     excludePaths:
             - vendor/*
             - storage/*
