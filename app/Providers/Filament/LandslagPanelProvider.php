@@ -10,6 +10,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use Hugomyb\FilamentErrorMailer\FilamentErrorMailerPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -26,6 +27,9 @@ class LandslagPanelProvider extends PanelProvider
         return $panel
             ->id('landslag')
             ->path('landslag')
+            ->colors([
+                'primary' => Color::Blue,
+            ])
             ->login()
             ->viteTheme('resources/css/filament/landslag/theme.css')
             ->discoverResources(in: app_path('Filament/Landslag/Resources'), for: 'App\\Filament\\Landslag\\Resources')
@@ -56,21 +60,6 @@ class LandslagPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->maxContentWidth('full')
-            ->colors([
-                'primary' => [
-                    50 => 'rgb(239, 246, 255)',    // #eff6ff
-                    100 => 'rgb(219, 234, 254)',   // #dbeafe
-                    200 => 'rgb(191, 219, 254)',   // #bfdbfe
-                    300 => 'rgb(147, 197, 253)',   // #93c5fd
-                    400 => 'rgb(96, 165, 250)',    // #60a5fa
-                    500 => 'rgb(59, 130, 246)',    // #3b82f6
-                    600 => 'rgb(37, 99, 235)',     // #2563eb
-                    700 => 'rgb(29, 78, 216)',     // #1d4ed8
-                    800 => 'rgb(30, 64, 175)',     // #1e40af
-                    900 => 'rgb(30, 58, 138)',     // #1e3a8a
-                ],
-            ])
-
             ->topNavigation();
     }
 }
