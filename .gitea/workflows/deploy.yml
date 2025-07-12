@@ -127,7 +127,9 @@ jobs:
                $DISCORD_WEBHOOK
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-
+  #----------------------------------------
+  # SAVE CACHES (ETTER CI KJØRING)
+  #----------------------------------------
   save-cache:
     name: 📂 Save Cache
     needs: ci
@@ -135,9 +137,6 @@ jobs:
     container:
       image: torriv/ci-laravel:php8.4-node22-v2
     steps:
-      #----------------------------------------
-      # SAVE CACHES (ETTER CI KJØRING)
-      #----------------------------------------
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
