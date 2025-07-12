@@ -92,7 +92,7 @@ jobs:
         run: ./vendor/bin/pint --test
 
       - name: 🔍 Larastan (PHPStan)
-        run: ./vendor/bin/phpstan analyse --memory-limit -1
+        run: ./vendor/bin/phpstan analyse --memory-limit 500 # Memory limit set to 500MB
 
       #----------------------------------------
       # TESTING
