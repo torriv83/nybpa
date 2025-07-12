@@ -25,6 +25,9 @@ class CreateTestResults extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
+    /**
+     * @return array<int, Step>
+     */
     protected function getSteps(): array
     {
         return [

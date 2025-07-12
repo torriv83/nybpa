@@ -30,7 +30,7 @@ class PrivatPanelProvider extends PanelProvider
             ->path('privat')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Cyan,
             ])
             ->viteTheme('resources/css/filament/privat/theme.css')
             ->discoverResources(in: app_path('Filament/Privat/Resources'), for: 'App\\Filament\\Privat\\Resources')

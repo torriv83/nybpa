@@ -17,6 +17,9 @@ class StatsOverview extends BaseWidget
 
     protected int|string|array $columnSpan = '12';
 
+    /**
+     * @var array<string, string>
+     */
     protected $listeners = ['updateStatsOverview' => '$refresh'];
 
     protected function getStats(): array

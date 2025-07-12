@@ -43,6 +43,9 @@ class StyrkeChart extends ChartWidget
         return 'line';
     }
 
+    /**
+     * @return Tests|null
+     */
     protected function fetchData(int $numberOfResults = 6)
     {
         return Tests::with([
@@ -55,11 +58,16 @@ class StyrkeChart extends ChartWidget
             ->first();
     }
 
+    /**
+     * @param  \Illuminate\Database\Eloquent\Collection<int, \App\Models\TestResults>  $results
+     * @return array{resultater: array<string, array<int, float|int>>, dato: array<int, string>}
+     */
     protected function transformData(Collection $results): array
     {
         $resultater = [];
         $dato = [];
 
+        /** @var TestResults $v */
         foreach ($results as $v) {
             $dato[] = $v->dato->format('d.m.y H:i');
 
@@ -74,6 +82,11 @@ class StyrkeChart extends ChartWidget
         ];
     }
 
+    /**
+     * @param  array<string, array<int, float|int>>  $resultater
+     * @param  array<int, string>  $dato
+     * @return array<string, array<int, mixed>>
+     */
     protected function formatChartData(array $resultater, array $dato): array
     {
         $finalResults = [];
@@ -99,6 +112,9 @@ class StyrkeChart extends ChartWidget
         ];
     }
 
+    /**
+     * @return array<string, array<int, mixed>>
+     */
     protected function getDefaultChartData(): array
     {
         return [
@@ -112,6 +128,9 @@ class StyrkeChart extends ChartWidget
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getChartOptions(): array
     {
         return [

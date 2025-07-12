@@ -12,12 +12,15 @@ use Spatie\Permission\Models\Role;
 
 class TimesheetReminderEmail extends Mailable
 {
+    /**
+     * @var array<string, mixed>|null
+     */
     public ?array $details;
 
     /**
-     * Create a new message instance.
+     * @param  array{timesheets: \Illuminate\Database\Eloquent\Collection<int, \App\Models\Timesheet>}  $details
      */
-    public function __construct($details)
+    public function __construct(array $details)
     {
         $this->details = $details;
     }
@@ -29,9 +32,11 @@ class TimesheetReminderEmail extends Mailable
     {
         /** @var User|null $admin */
         $admin = Role::findByName('admin')->users->first();
+        $email = $admin ? $admin->email : '';
+        $name = $admin ? $admin->name : '';
 
         return new Envelope(
-            from   : new Address($admin?->email ?? '', $admin?->name ?? ''),
+            from   : new Address($email, $name),
             subject: 'Oversikt over timer jobbet',
         );
     }

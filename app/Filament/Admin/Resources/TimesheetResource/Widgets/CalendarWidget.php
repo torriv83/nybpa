@@ -28,6 +28,9 @@ class CalendarWidget extends FullCalendarWidget
 
     public Model|string|null $model = Timesheet::class;
 
+    /**
+     * @return array<int, \Filament\Forms\Components\Section>
+     */
     public function getFormSchema(): array
     {
         return [
@@ -72,6 +75,8 @@ class CalendarWidget extends FullCalendarWidget
     /**
      * FullCalendar will call this function whenever it needs new event data.
      * This is triggered when the user clicks prev/next or switches views on the calendar.
+     *
+     * @return array<int, array<string, mixed>>
      */
     public function fetchEvents(array $fetchInfo): array
     {
@@ -102,6 +107,13 @@ class CalendarWidget extends FullCalendarWidget
 
     /**
      * Triggered when dragging stops and the event has moved to a different day/time.
+     *
+     * @param  array<string, mixed>  $event
+     * @param  array<string, mixed>  $delta
+     * @param  array<string, mixed>  $newResource
+     * @param  array<string, mixed>  $oldEvent
+     * @param  array<string, mixed>  $oldResource
+     * @param  array<int, array<string, mixed>>  $relatedEvents
      */
     public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta, ?array $oldResource, ?array $newResource): bool
     {
@@ -110,6 +122,9 @@ class CalendarWidget extends FullCalendarWidget
         return false;
     }
 
+    /**
+     * @param  array<string, mixed>  $event
+     */
     public function eventUpdate($event): void
     {
         $slutter = $event['extendedProps']['heleDagen'] ? Carbon::parse($event['end'])->subDay() : $event['end'];
@@ -134,6 +149,12 @@ class CalendarWidget extends FullCalendarWidget
 
     /**
      * Triggered when event's resize stops.
+     *
+     * @param  array<string, mixed>  $event
+     * @param  array<string, mixed>  $oldEvent
+     * @param  array<int, array<string, mixed>>  $relatedEvents
+     * @param  array<string, mixed>  $startDelta
+     * @param  array<string, mixed>  $endDelta
      */
     public function onEventResize(array $event, array $oldEvent, array $relatedEvents, array $startDelta, array $endDelta): bool
     {
@@ -142,6 +163,9 @@ class CalendarWidget extends FullCalendarWidget
         return false;
     }
 
+    /**
+     * @return array<int, CreateAction>
+     */
     protected function headerActions(): array
     {
         return [
@@ -179,6 +203,9 @@ class CalendarWidget extends FullCalendarWidget
         ];
     }
 
+    /**
+     * @return array{EditAction, DeleteAction}
+     */
     protected function modalActions(): array
     {
         return [

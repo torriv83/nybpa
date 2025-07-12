@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\WishlistFactory;
+use Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Wishlist
@@ -19,16 +23,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $antall Antall av ønsket item.
  * @property string $status Status for ønsket item (f.eks. "ønsket", "kjøpt").
  * @property int $prioritet Prioritetsgrad for ønsket item.
- * @property \Illuminate\Support\Carbon|null $created_at Tidspunkt for opprettelse av ønskelisten.
- * @property \Illuminate\Support\Carbon|null $updated_at Tidspunkt for siste oppdatering.
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WishlistItem[] $wishlistItems
- * @property-read int|null $wishlist_items_count
+ * @property Carbon|null $created_at Tidspunkt for opprettelse av ønskelisten.
+ * @property Carbon|null $updated_at Tidspunkt for siste oppdatering.
+ * @property Collection|WishlistItem[] $wishlistItems
+ * @property int|null $wishlist_items_count
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Wishlist extends Model
 {
-    use HasFactory, SoftDeletes;
+    /** @use HasFactory<WishlistFactory> */
+    use HasFactory;
+
+    use SoftDeletes;
 
     protected $fillable = [
         'hva',
@@ -39,6 +46,9 @@ class Wishlist extends Model
         'prioritet',
     ];
 
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\WishlistItem, $this>
+     */
     public function wishlistItems(): HasMany
     {
         return $this->hasMany(WishlistItem::class);

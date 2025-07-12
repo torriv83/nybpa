@@ -18,10 +18,7 @@ class TotalWorked extends BaseWidget
     /**
      * Retrieves the statistics related to the user.
      *
-     * @return array The array containing the user statistics.
-     *
-     * @uses Timesheet::scopethisYear
-     * @uses Timesheet::scopethisMonth
+     * @return array<int, Stat> The array containing the user statistics.
      */
     protected function getStats(): array
     {

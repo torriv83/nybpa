@@ -10,12 +10,16 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * @property Form $form
+ */
 class Settings extends Page implements HasForms
 {
     use Forms\Concerns\InteractsWithForms;
@@ -113,7 +117,7 @@ class Settings extends Page implements HasForms
         ];
     }
 
-    public function submit()
+    public function submit(): void
     {
         Setting::updateOrCreate(['user_id' => Auth::id()], $this->form->getState());
 
@@ -126,7 +130,7 @@ class Settings extends Page implements HasForms
 
     }
 
-    public function clearCache()
+    public function clearCache(): bool
     {
         return Cache::flush();
     }

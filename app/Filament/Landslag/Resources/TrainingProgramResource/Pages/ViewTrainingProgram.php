@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\Page;
 
+/**
+ * @property TrainingProgram $record
+ */
 class ViewTrainingProgram extends Page
 {
     protected static string $resource = TrainingProgramResource::class;
@@ -46,7 +49,7 @@ class ViewTrainingProgram extends Page
         ];
     }
 
-    public function mount($record): void
+    public function mount(int|string $record): void
     {
         $this->record = TrainingProgram::find($record);
     }

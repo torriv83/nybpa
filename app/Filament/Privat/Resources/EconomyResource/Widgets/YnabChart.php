@@ -18,6 +18,11 @@ class YnabChart extends ChartWidget
 
     protected function getOptions(): RawJs
     {
+        // @formatter:off
+        /** @noinspection UnnecessaryLabelJS */
+        /** @noinspection JSUnresolvedReference */
+        /** @noinspection BadExpressionStatementJS */
+        /** @noinspection PhpArgumentWithoutNamedIdentifierInspection */
         return RawJs::make(<<<'JS'
     {
         scales: {

@@ -15,6 +15,9 @@ class Settings extends Model
         'weekplan_timespan' => 'boolean',
     ];
 
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id')->withDefault(['name' => 'Tidligere ansatt']);
@@ -28,7 +31,7 @@ class Settings extends Model
         return $setting['bpa_hours_per_week'] ?? 1;
     }
 
-    public static function getUserApotekEpost()
+    public static function getUserApotekEpost(): ?string
     {
         $userId = Auth::id();
         $setting = self::getUserSettings($userId);
@@ -36,7 +39,8 @@ class Settings extends Model
         return $setting['apotek_epost'];
     }
 
-    public static function getUserSettings($userId)
+    /** @phpstan-ignore-next-line */
+    public static function getUserSettings($userId): ?Settings
     {
         return Cache::tags(['settings'])->remember("user-settings-{$userId}", now()->addMonth(), function () use ($userId) {
             return self::where('user_id', '=', $userId)->first();

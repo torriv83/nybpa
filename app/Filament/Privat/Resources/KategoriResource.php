@@ -34,8 +34,8 @@ class KategoriResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-
-        return Cache::tags(['medisinsk'])->remember('CategoryNavigationBadge', now()->addMonth(), function () {
+        /** @return string|null */
+        return Cache::tags(['medisinsk'])->remember('CategoryNavigationBadge', now()->addMonth(), function (): ?string {
             return static::getModel()::count();
         });
     }
@@ -101,9 +101,11 @@ class KategoriResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<\App\Models\Kategori>
+     */
     public static function getEloquentQuery(): Builder
     {
-
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,

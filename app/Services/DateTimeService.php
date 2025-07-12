@@ -50,7 +50,7 @@ class DateTimeService
         $minutes = $fromDate->diffInMinutes($toDate);
 
         // Format minutes to hh:mm
-        return sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
+        return sprintf('%02d:%02d', intdiv((int) $minutes, 60), (int) $minutes % 60);
     }
 
     /**
@@ -58,9 +58,7 @@ class DateTimeService
      *
      * @param  int|null  $userId  The ID of the user.
      * @param  int|null  $recordId  The ID of the record.
-     * @return array An array of disabled dates.
-     *
-     * @uses Timesheet::scopeDisabledDates
+     * @return array<int, string> An array of disabled dates (formatted as Y-m-d).
      */
     public static function getAllDisabledDates(?int $userId, ?int $recordId): array
     {

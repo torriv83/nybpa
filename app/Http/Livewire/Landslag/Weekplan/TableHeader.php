@@ -8,7 +8,10 @@ use Livewire\Component;
 
 class TableHeader extends Component
 {
-    public $dager = [
+    /**
+     * @var array<int, string>
+     */
+    public array $dager = [
         1 => 'Mandag',
         2 => 'Tirsdag',
         3 => 'Onsdag',
@@ -18,7 +21,10 @@ class TableHeader extends Component
         7 => 'Søndag',
     ];
 
-    public function getDayStyles($day): array
+    /**
+     * @return array<string, bool|string>
+     */
+    public function getDayStyles(string $day): array
     {
         $data['border'] = $day != 'Søndag' ? 'border-right: 1px solid #52525B;' : '';
         $data['today'] = $day == ucfirst(Carbon::today()->isoFormat('dddd'));

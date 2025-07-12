@@ -6,7 +6,8 @@ use App\Models\Timesheet;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
 
 class BrukteTimerChart extends ChartWidget
 {
@@ -27,17 +28,11 @@ class BrukteTimerChart extends ChartWidget
         $timesheet = new Timesheet;
 
         /* Dette året */
-        $thisYear = $timesheet->TimeUsedThisYear();
+        $thisYear = $timesheet->timeUsedThisYear();
         $thisYearTimes = $this->yearTimes($thisYear);
 
         /* Forrige år */
-        $lastYear = Cache::tags(['timesheet'])->remember('lastYear', now()->addMonth(), function () {
-            return Timesheet::lastYear('fra_dato')
-                ->orderByRaw('fra_dato ASC')
-                ->where('unavailable', '=', 0)
-                ->get()
-                ->groupBy(fn ($val): string => Carbon::parse($val->fra_dato)->isoFormat('MMMM'));
-        });
+        $lastYear = $timesheet->timeUsedLastYear();
 
         $lastYearTimes = $this->yearTimes($lastYear);
 
@@ -61,7 +56,11 @@ class BrukteTimerChart extends ChartWidget
         ];
     }
 
-    public function yearTimes($times): array
+    /**
+     * @param  Collection<string, EloquentCollection<int, \App\Models\Timesheet>>  $times
+     * @return array<string, string>
+     */
+    public function yearTimes(Collection $times): array
     {
 
         // Create a period covering all months of the current year

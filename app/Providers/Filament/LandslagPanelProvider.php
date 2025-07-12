@@ -27,10 +27,10 @@ class LandslagPanelProvider extends PanelProvider
         return $panel
             ->id('landslag')
             ->path('landslag')
-            ->login()
             ->colors([
-                'primary' => Color::Green,
+                'primary' => Color::Blue,
             ])
+            ->login()
             ->viteTheme('resources/css/filament/landslag/theme.css')
             ->discoverResources(in: app_path('Filament/Landslag/Resources'), for: 'App\\Filament\\Landslag\\Resources')
             ->discoverPages(in: app_path('Filament/Landslag/Pages'), for: 'App\\Filament\\Landslag\\Pages')

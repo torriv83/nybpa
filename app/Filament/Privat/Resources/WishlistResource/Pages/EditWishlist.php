@@ -11,6 +11,9 @@ class EditWishlist extends EditRecord
 {
     protected static string $resource = WishlistResource::class;
 
+    /**
+     * @var array<string, string>
+     */
     protected $listeners = ['itemedited' => 'refreshSum'];
 
     protected function getRedirectUrl(): string
@@ -25,7 +28,7 @@ class EditWishlist extends EditRecord
         ];
     }
 
-    public function refreshSum($id): void
+    public function refreshSum(int $id): void
     {
 
         $record = Wishlist::find($id);

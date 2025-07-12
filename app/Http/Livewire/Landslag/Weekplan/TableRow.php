@@ -16,8 +16,10 @@ class TableRow extends Component
 
     public const MINUTES_IN_HOUR = 60;
 
+    /** @var array<int, array{time: string, exercises: array<int|string, array<string, mixed>>}> */
     public array $data;
 
+    /** @var array<int|string, mixed> */
     public array $exists = [];
 
     public int|string|null $weekplanId;
@@ -33,13 +35,10 @@ class TableRow extends Component
     }
 
     /**
-     * Retrieves the exercises based on the settings and time range.
-     *
-     * @return array The array of exercises.
+     * @return array<int, array{time: string, exercises: array<int|string, array<string, mixed>>}>
      */
     public function getExercises(): array
     {
-        // Retrieve settings and time range
         $setting = $this->getSettings();
         $timeRange = $this->calculateTimeRange($setting['weekplan_timespan']);
         $startTime = intval($timeRange['startTime']);
@@ -51,21 +50,13 @@ class TableRow extends Component
         return $this->generateTimeTableRows($startTime, $endTime, $interval, $groupedExercises);
     }
 
-    /**
-     * Retrieves the user settings.
-     *
-     * @return Settings The user settings.
-     */
     private function getSettings(): Settings
     {
         return Settings::where('user_id', Auth::id())->first();
     }
 
     /**
-     * Calculates the time range based on the given parameters.
-     *
-     * @param  int  $fixed  (optional) Whether to use the fixed time range. Defaults to 0.
-     * @return array An array containing the start time, end time, and interval.
+     * @return array{startTime: int|float, endTime: int|float, interval: int}
      */
     private function calculateTimeRange(int $fixed = 0): array
     {
@@ -73,16 +64,15 @@ class TableRow extends Component
         $setting = $this->getSettings();
 
         if ($fixed) {
-            $startTime = Carbon::createFromFormat('H:i:s', $setting->weekplan_from)->format('H:i'); // Start time in hours (24-hour format)
-            $endTime = Carbon::createFromFormat('H:i:s', $setting->weekplan_to)->format('H:i'); // End time in hours (24-hour format)
+            $startTime = (int) Carbon::createFromFormat('H:i:s', $setting->weekplan_from)->format('H');
+            $endTime = (int) Carbon::createFromFormat('H:i:s', $setting->weekplan_to)->format('H');
         } else {
             $earliestTime = PHP_INT_MAX;
             $latestTime = 0;
 
-            // Find the earliest and latest exercise times
             foreach ($exerciseData as $item) {
                 foreach ($item['exercises'] as $exercise) {
-                    [$fromTime, $toTime] = array_map(function ($time) {
+                    [$fromTime, $toTime] = array_map(function ($time): int {
                         return (int) date('H', strtotime($time)) * self::MINUTES_IN_HOUR + (int) date('i', strtotime($time));
                     }, [$exercise['from'], $exercise['to']]);
 
@@ -91,24 +81,20 @@ class TableRow extends Component
                 }
             }
 
-            $startTime = floor($earliestTime / self::MINUTES_IN_HOUR); // Start time in hours (24-hour format)
-            $endTime = ceil($latestTime / self::MINUTES_IN_HOUR); // End time in hours (24-hour format)
+            $startTime = floor($earliestTime / self::MINUTES_IN_HOUR);
+            $endTime = ceil($latestTime / self::MINUTES_IN_HOUR);
         }
 
-        $interval = self::MINUTES_IN_HOUR; // Interval in minutes
+        $interval = self::MINUTES_IN_HOUR;
 
         return compact('startTime', 'endTime', 'interval');
     }
 
     /**
-     * Retrieves the day data based on the given weekplan ID.
-     *
-     * @param  int|null  $weekplanId  The ID of the weekplan.
-     * @return array|null The day data organized by day.
+     * @phpstan-return array<int, array{day: string, exercises: list<array{exercise: string, from: string, to: string, intensity: string|int}>}>
      */
-    public function getDayData(?int $weekplanId): ?array
+    public function getDayData(?int $weekplanId): array
     {
-        // Fetch the related exercises from the WeekplanExercise model based on weekplan_id
         $weekplanExercises = WeekplanExercise::where('weekplan_id', $weekplanId)
             ->with(['exercise'])
             ->orderBy('day')
@@ -126,7 +112,6 @@ class TableRow extends Component
 
         $data = [];
 
-        // Organize the data by day
         foreach ($days as $dayIndex => $dayName) {
             $exercisesForDay = $weekplanExercises->where('day', $dayIndex);
             $exerciseData = [];
@@ -150,10 +135,7 @@ class TableRow extends Component
     }
 
     /**
-     * Groups the exercises of a weekplan by day.
-     *
-     * @param  int  $weekplanId  The ID of the weekplan.
-     * @return array The grouped exercises.
+     * @phpstan-return array<int, list<\App\Models\WeekplanExercise>>
      */
     private function groupExercisesByDay(?int $weekplanId): array
     {
@@ -162,15 +144,14 @@ class TableRow extends Component
         $weekplan = Weekplan::with('weekplanExercises')->find($weekplanId);
 
         if ($weekplan === null) {
-            // handle the situation. you might decide to return from here.
             return $groupedExercises;
         }
 
-        foreach ($weekplan->weekplanExercises as $weekplanExercise) {
+        /** @var list<\App\Models\WeekplanExercise> $exercises */
+        $exercises = $weekplan->weekplanExercises;
+
+        foreach ($exercises as $weekplanExercise) {
             $day = $weekplanExercise->day;
-            if (! isset($groupedExercises[$day])) {
-                $groupedExercises[$day] = [];
-            }
             $groupedExercises[$day][] = $weekplanExercise;
         }
 
@@ -178,13 +159,8 @@ class TableRow extends Component
     }
 
     /**
-     * Generates time table rows based on the given start time, end time, interval, and grouped exercises.
-     *
-     * @param  int  $startTime  The start time in hours.
-     * @param  int  $endTime  The end time in hours.
-     * @param  int  $interval  The interval in minutes.
-     * @param  array  $groupedExercises  An array of grouped exercises.
-     * @return array The generated time table rows.
+     * @param  array<int, array<\App\Models\WeekplanExercise>>  $groupedExercises
+     * @return array<int, array{time: string, exercises: array<int|string, array<string, mixed>>}>
      */
     private function generateTimeTableRows(int $startTime, int $endTime, int $interval, array $groupedExercises): array
     {
@@ -198,7 +174,7 @@ class TableRow extends Component
                 ];
 
                 foreach ($groupedExercises as $day => $exercisesForDay) {
-                    $filteredExercises = collect($exercisesForDay)->filter(function ($exercise) use ($time, $minute, $interval) {
+                    $filteredExercises = collect($exercisesForDay)->filter(function ($exercise) use ($time, $minute, $interval): bool {
                         $from = strtotime($exercise->start_time);
                         $to = strtotime($exercise->end_time);
                         $fromTime = ((int) date('H', $from) * self::MINUTES_IN_HOUR) + (int) date('i', $from);
@@ -214,27 +190,22 @@ class TableRow extends Component
                         $exercise = $filteredExercises->first();
                         $trainingProgram = $exercise->trainingProgram;
 
-                        // Calculate rowspan for the exercise based on its duration
-                        $fromTime = ((int) date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + (int) date('i',
-                            strtotime($exercise->start_time));
-                        $toTime = ((int) date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + (int) date('i',
-                            strtotime($exercise->end_time));
+                        $fromTime = ((int) date('H', strtotime($exercise->start_time)) * self::MINUTES_IN_HOUR) + (int) date('i', strtotime($exercise->start_time));
+                        $toTime = ((int) date('H', strtotime($exercise->end_time)) * self::MINUTES_IN_HOUR) + (int) date('i', strtotime($exercise->end_time));
                         $rowspan = ceil(($toTime - $fromTime) / $interval);
 
                         $exerciseDataForDay = [
                             'day' => $day,
-                            'time' => Carbon::parse($exercise->start_time)->format('H:i')
-                                .' - '.
-                                Carbon::parse($exercise->end_time)->format('H:i'),
+                            'time' => Carbon::parse($exercise->start_time)->format('H:i').' - '.Carbon::parse($exercise->end_time)->format('H:i'),
                             'intensity' => $exercise->intensity,
                             'exercise' => $exercise->exercise->name,
-                            'program' => $trainingProgram ? $trainingProgram->program_name : null,
-                            'program_id' => $trainingProgram ? $trainingProgram->id : null,
-                            'rowspan' => $rowspan, // Adding rowspan value to the exercise data
+                            'program' => $trainingProgram?->program_name,
+                            'program_id' => $trainingProgram?->id,
+                            'rowspan' => $rowspan,
                         ];
                     }
 
-                    $row['exercises'][$day] = $exerciseDataForDay;
+                    $row['exercises'][$day] = $exerciseDataForDay ?? [];
                 }
 
                 for ($day = 1; $day <= self::DAYS_IN_WEEK; $day++) {

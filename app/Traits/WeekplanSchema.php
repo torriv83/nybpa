@@ -22,7 +22,7 @@ trait WeekplanSchema
      * Generates a common fields array for a given day number.
      *
      * @param  int  $dayNumber  The day number.
-     * @return array The common fields array.
+     * @return array<int, \Filament\Forms\Components\Repeater> The common fields array.
      */
     public static function getCommonFields(int $dayNumber): array
     {

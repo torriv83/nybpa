@@ -5,11 +5,14 @@ namespace Database\Factories;
 use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Wishlist>
+ */
 class WishlistFactory extends Factory
 {
     protected $model = Wishlist::class;
 
-    public function definition()
+    public function definition(): array
     {
         return [
             'prioritet' => $this->faker->numberBetween(1, 10),  // Genererer et tilfeldig tall mellom 1 og 10

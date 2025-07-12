@@ -16,7 +16,7 @@ class TransformLines
     /**
      * Transforms an array of transactions into a standardized format.
      *
-     * @param  array  $transactions  The array of transactions to be transformed.
+     * @param  array<int, array<int, string|null>>  $transactions  The array of transactions to be transformed.
      * @param  Closure  $next  The next Closure in the middleware stack.
      * @return mixed The result of the next Closure in the middleware stack.
      */

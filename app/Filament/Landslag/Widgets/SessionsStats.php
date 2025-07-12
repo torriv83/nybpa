@@ -9,18 +9,17 @@ use Carbon\CarbonInterval;
 use Exception;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Database\Eloquent\Model;
 
 class SessionsStats extends BaseWidget
 {
     protected static ?string $pollingInterval = null;
 
-    public ?Model $record = null;
+    public ?Weekplan $record = null;
 
     /**
      * Retrieves the statistics for the weekplans.
      *
-     * @return array The statistics for the weekplans.
+     * @return array<int, Stat> The statistics for the weekplans.
      *
      * @throws Exception
      */
@@ -47,6 +46,7 @@ class SessionsStats extends BaseWidget
         ];
 
         foreach ($weekplans as $weekplan) {
+            /** @var WeekplanExercise $exercise */
             foreach ($weekplan->weekplanExercises as $exercise) {
                 $statistics['okter']++;
                 $statistics['timer'] += Carbon::parse($exercise->end_time)->diffInSeconds(Carbon::parse($exercise->start_time));
@@ -75,7 +75,7 @@ class SessionsStats extends BaseWidget
     /**
      * Retrieves the next session based on the current date and weekplan.
      *
-     * @return array The next session information containing the session name, time range, and day offset.
+     * @return array{session?: string, time?: string, day: int} The next session information containing the session name, time range, and day offset.
      */
     private function getNextSession(): array
     {

@@ -3,6 +3,7 @@
 namespace App\Filament\Privat\Resources\WishlistResource\RelationManagers;
 
 use App\Models\Wishlist;
+use App\Models\WishlistItem;
 use DB;
 use Exception;
 use Filament\Forms;
@@ -58,9 +59,9 @@ class WishlistItemsRelationManager extends RelationManager
                     ->url(fn ($record): string => $record->url, true),
 
                 Tables\Columns\TextColumn::make('koster')
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->sortable()
-                    ->summarize(Sum::make()->money('nok', true)),
+                    ->summarize(Sum::make()->money('nok', 1)),
                 Tables\Columns\TextColumn::make('antall'),
 
                 SelectColumn::make('status')
@@ -68,20 +69,20 @@ class WishlistItemsRelationManager extends RelationManager
                     ->sortable()
                     ->selectablePlaceholder(false)
                     ->summarize(Summarizer::make()
-                        ->money('nok', true)
+                        ->money('nok', 1)
                         ->label('Gjenstår')
                         ->using(function (Builder $query): string {
                             return $query->whereNotIn('status', ['Spart', 'Kjøpt'])
                                 ->sum('koster');
                         })),
                 Tables\Columns\TextColumn::make('totalt')
-                    ->money('nok', true)
-                    ->getStateUsing(function (Model $record) {
+                    ->money('nok', 1)
+                    ->getStateUsing(function (WishlistItem $record) {
                         return $record->koster * $record->antall;
                     })
                     ->summarize(Summarizer::make()
                         ->label('Totalt')
-                        ->money('nok', true)
+                        ->money('nok', 1)
                         ->using(function (Builder $query): string {
                             // Calculate the sum of the product of 'koster' and 'antall' directly in the query
                             return $query->sum(DB::raw('koster * antall'));
@@ -96,18 +97,18 @@ class WishlistItemsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
+                    ->after(fn (RelationManager $livewire, WishlistItem $record) => $this->dispatchItemEdited($livewire, $record)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
+                    ->after(fn (RelationManager $livewire, WishlistItem $record) => $this->dispatchItemEdited($livewire, $record)),
                 Tables\Actions\DeleteAction::make()
-                    ->after(fn (RelationManager $livewire, Model $record) => $this->dispatchItemEdited($livewire, $record)),
+                    ->after(fn (RelationManager $livewire, WishlistItem $record) => $this->dispatchItemEdited($livewire, $record)),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->after(function (RelationManager $livewire, Model $record) {
+                        ->after(function (RelationManager $livewire, WishlistItem $record) {
                             $livewire->dispatch('itemedited', $record->wishlist_id);
                         }),
                     Tables\Actions\BulkAction::make('status')
@@ -127,7 +128,7 @@ class WishlistItemsRelationManager extends RelationManager
             ]);
     }
 
-    private function dispatchItemEdited(RelationManager $livewire, Model $record): void
+    private function dispatchItemEdited(RelationManager $livewire, WishlistItem $record): void
     {
         $livewire->dispatch('itemedited', $record->wishlist_id);
     }

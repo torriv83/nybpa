@@ -42,6 +42,12 @@ class UtstyrResource extends Resource
         return ['hva', 'navn', 'artikkelnummer', 'kategori.kategori'];
     }
 
+    /**
+     * Get the title to be displayed for a record in global search results.
+     *
+     * @param  Utstyr  $record  The record being retrieved.
+     * @return string The title for the global search result.
+     */
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         return $record->navn;
@@ -125,6 +131,9 @@ class UtstyrResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<\App\Models\Utstyr>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
@@ -135,7 +144,8 @@ class UtstyrResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Cache::tags(['medisinsk'])->remember('UtstyrNavigationBadge', now()->addMonth(), function () {
+        /** @return string|null */
+        return Cache::tags(['medisinsk'])->remember('UtstyrNavigationBadge', now()->addMonth(), function (): ?string {
             return static::getModel()::count();
         });
     }

@@ -43,14 +43,14 @@ class Ansatte extends BaseWidget
                 Tables\Columns\TextColumn::make('email')
                     ->label('E-post')
                     ->limit(10)
-                    ->tooltip(fn (Model $record): string => "$record->email"),
+                    ->tooltip(fn (User $record): string => "$record->email"),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon')
                     ->default('12345678'),
                 Tables\Columns\TextColumn::make('jobbetiaar')
-                    ->getStateUsing(function (\App\Models\User $record) {
+                    ->getStateUsing(function (User $record) {
                         $minutes = Cache::tags(['timesheet'])->remember('WorkedThisYear'.$record->id, now()->addDay(), function () use ($record) {
-                            return \App\Models\Timesheet::query()
+                            return Timesheet::query()
                                 ->whereBelongsTo($record)
                                 ->yearToDate('fra_dato')
                                 ->where('unavailable', '!=', 1)

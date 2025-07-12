@@ -6,7 +6,6 @@ use App\Models\TestResults;
 use App\Models\Tests;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class RheitChart extends ChartWidget
@@ -25,7 +24,7 @@ class RheitChart extends ChartWidget
     /**
      * Retrieves the data for the chart.
      *
-     * @return array The formatted chart data.
+     * @return array<string, mixed> The formatted chart data.
      */
     protected function getData(): array
     {
@@ -45,9 +44,9 @@ class RheitChart extends ChartWidget
     /**
      * Prepares the chart data for rendering.
      *
-     * @param  array  $resultater  The result data.
-     * @param  array  $dato  The date data.
-     * @return array Returns an array of formatted chart data.
+     * @param  array<int, array<string, float>>  $resultater
+     * @param  array<int, string>  $dato
+     * @return array<string, mixed>
      */
     protected function prepareChartData(array $resultater, array $dato): array
     {
@@ -67,9 +66,9 @@ class RheitChart extends ChartWidget
     /**
      * Retrieves the data for the chart.
      *
-     * @return Model|null The fetched data for the chart.
+     * @return Tests|null The fetched data for the chart.
      */
-    protected function fetchData(): ?Model
+    protected function fetchData(): ?Tests
     {
         return Tests::with('testResults')->where('navn', '=', 'Rheit')->first();
     }
@@ -77,8 +76,8 @@ class RheitChart extends ChartWidget
     /**
      * Transforms the given data into a specific format.
      *
-     * @param  Collection  $results  The input data to transform.
-     * @return array Returns an array with the transformed data.
+     * @param  Collection<int, TestResults>  $results
+     * @return array{resultater: array<int, array<string, float>>, dato: array<int, string>}
      */
     protected function transformData(Collection $results): array
     {
@@ -101,8 +100,9 @@ class RheitChart extends ChartWidget
     /**
      * Transforms the given result into a specific format and appends it to the input array.
      *
-     * @param  array  &$resultater  The array to which the transformed result should be appended.
-     * @param  array  $resultat  The result to transform.
+     * @param  array<int, array<string, float>>  &$resultater
+     * @param  array<string, float>  $resultat
+     * @return array<int, array<string, float>>
      */
     protected function transformResultat(array &$resultater, array $resultat): array
     {
@@ -116,8 +116,7 @@ class RheitChart extends ChartWidget
     /**
      * Calculates the final drop of an array of results.
      *
-     * @param  array  $resultat  The array of results.
-     * @return float Returns the final drop as a float.
+     * @param  array<string, float>  $resultat
      */
     protected function calculateFinalDrop(array $resultat): float
     {
@@ -127,9 +126,9 @@ class RheitChart extends ChartWidget
     /**
      * Formats the chart data in a specific format.
      *
-     * @param  array  $resultater  The input data with results.
-     * @param  array  $dato  The input data with dates.
-     * @return array Returns an array with the formatted chart data.
+     * @param  array<int, array<string, float>>  $resultater
+     * @param  array<int, string>  $dato
+     * @return array<string, array<int, mixed>>
      */
     protected function formatChartData($resultater, $dato): array
     {
@@ -159,7 +158,7 @@ class RheitChart extends ChartWidget
     /**
      * Retrieves the default chart data.
      *
-     * @return array Returns an array with the default chart data.
+     * @return array<string, array<int, mixed>> Returns an array with the default chart data.
      */
     protected function getDefaultChartData(): array
     {
@@ -177,7 +176,7 @@ class RheitChart extends ChartWidget
     /**
      * Retrieves the options for the chart.
      *
-     * @return array Returns an array with the chart options.
+     * @return array<string, mixed> Returns an array with the chart options.
      */
     private function getChartOptions(): array
     {

@@ -96,6 +96,9 @@ class TestsResource extends Resource
         ];
     }
 
+    /**
+     * @return Builder<Tests>
+     */
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

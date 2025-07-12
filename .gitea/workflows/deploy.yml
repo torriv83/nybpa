@@ -7,122 +7,108 @@ on:
 
 jobs:
   ci:
+    name: ⚡ Rask Deploy CI
     container:
       image: torriv/ci-laravel:php8.4-node22-v2
     env:
       RUNNER_TOOL_CACHE: /toolcache
-
+    outputs:
+      composer-hit: ${{ steps.cache-composer.outputs.cache-hit }}
+      npm-hit: ${{ steps.cache-npm.outputs.cache-hit }}
+      bootstrap-hit: ${{ steps.cache-bootstrap.outputs.cache-hit }}
+      public-hit: ${{ steps.cache-public-build.outputs.cache-hit }}
+      phpunit-hit: ${{ steps.cache-phpunit.outputs.cache-hit }}
     steps:
+      #----------------------------------------
+      # CHECKOUT + CACHE
+      #----------------------------------------
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Cache Composer dependencies
+      - name: 🔄 Cache Composer dependencies
         id: cache-composer
         uses: actions/cache@v3
         with:
           path: vendor
           key: composer-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            composer-
+          restore-keys: composer-
 
-      - name: Cache NPM dependencies
+      - name: 🔄 Cache NPM dependencies
         id: cache-npm
         uses: actions/cache@v3
         with:
           path: node_modules
           key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            npm-
+          restore-keys: npm-
 
-      - name: Cache Laravel bootstrap/cache
+      - name: 🔄 Cache Laravel bootstrap/cache
         id: cache-bootstrap
         uses: actions/cache@v3
         with:
           path: bootstrap/cache
           key: bootstrap-${{ hashFiles('bootstrap/cache/*.php') }}
-          restore-keys: |
-            bootstrap-
+          restore-keys: bootstrap-
 
-      - name: Save Laravel bootstrap/cache
-        if: steps.cache-bootstrap.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
-        with:
-          path: bootstrap/cache
-          key: bootstrap-${{ hashFiles('bootstrap/cache/*.php') }}
-
-      - name: Cache public build assets
+      - name: 🔄 Cache public build assets
         id: cache-public-build
         uses: actions/cache@v3
         with:
           path: public/build
           key: public-build-${{ hashFiles('resources/**/*') }}
-          restore-keys: |
-            public-build-
+          restore-keys: public-build-
 
-      - name: Save public build assets
-        if: steps.cache-public-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
-        with:
-          path: public/build
-          key: public-build-${{ hashFiles('resources/**/*') }}
-
-      - name: Cache PHPUnit result cache
+      - name: 🔄 Cache PHPUnit result cache
         id: cache-phpunit
         uses: actions/cache@v3
         with:
           path: tests/.phpunit.result.cache
           key: phpunit-${{ hashFiles('phpunit.xml') }}
-          restore-keys: |
-            phpunit-
+          restore-keys: phpunit-
 
-      - name: Save PHPUnit result cache
-        if: steps.cache-phpunit.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v3
-        with:
-          path: tests/.phpunit.result.cache
-          key: phpunit-${{ hashFiles('phpunit.xml') }}
-
-      - name: Install Composer dependencies
-        continue-on-error: true
+      #----------------------------------------
+      # INSTALLASJON + BUILD
+      #----------------------------------------
+      - name: 📁 Install Composer
         run: composer install --no-interaction --optimize-autoloader
 
-      - name: Install NPM dependencies and build assets
+      - name: 📁 Install NPM + Build assets
         run: |
           npm ci
           npm run build
 
-      - name: Cache Laravel config, routes, views, filament
+      #----------------------------------------
+      # OPTIMALISERING
+      #----------------------------------------
+      - name: ⚖️ Laravel optimize + Filament optimize
         run: |
           php artisan optimize
           php artisan filament:optimize
 
-      - name: Run Pint (Laravel code style)
+      #----------------------------------------
+      # KODEKVALITET
+      #----------------------------------------
+      - name: 🌟 Pint (kodeformat)
         run: ./vendor/bin/pint --test
 
-      - name: Run Larastan (PHPStan)
-        run: ./vendor/bin/phpstan analyse
+      - name: 🔍 Larastan (PHPStan)
+        run: ./vendor/bin/phpstan analyse --memory-limit 500M # Memory limit set to 500MB
 
-      - name: Inject APP_KEY into .env.testing
-        run: |
-          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env.testing
+      #----------------------------------------
+      # TESTING
+      #----------------------------------------
+      - name: 🔐 Inject APP_KEY
+        run: echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env.testing
 
-      - name: Run tests
+      - name: 🧪 Run Laravel Tests
         run: |
           php artisan config:clear
           php artisan test --parallel
 
-      - name: Notify Discord – success
-        if: success()
-        run: |
-          curl -H "Content-Type: application/json" \
-               -X POST \
-               -d '{"content":"✅ CI-kjøring for *nybpa* fullført!"}' \
-               $DISCORD_WEBHOOK
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-
-      - name: Notify Discord – failure
+      #----------------------------------------
+      # DISCORD NOTIFIKASJONER
+      #----------------------------------------
+      - name: 📢 Notify failure
         if: failure()
         run: |
           curl -H "Content-Type: application/json" \
@@ -132,16 +118,61 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: Save Composer dependencies
-        if: steps.cache-composer.outputs.cache-hit != 'true'
+      - name: 📢 Notify success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content":"✅ CI-kjøring for *nybpa* fullført!"}' \
+               $DISCORD_WEBHOOK
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+  save-cache:
+    name: 📂 Save Cache
+    needs: ci
+    if: always()
+    container:
+      image: torriv/ci-laravel:php8.4-node22-v2
+    steps:
+      #----------------------------------------
+      # SAVE CACHES (ETTER CI KJØRING)
+      #----------------------------------------
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 📂 Save Composer dependencies
+        if: needs.ci.outputs.composer-hit != 'true'
         uses: actions/cache/save@v3
         with:
           path: vendor
           key: composer-${{ hashFiles('composer.lock') }}
 
-      - name: Save NPM dependencies
-        if: steps.cache-npm.outputs.cache-hit != 'true'
+      - name: 📂 Save NPM dependencies
+        if: needs.ci.outputs.npm-hit != 'true'
         uses: actions/cache/save@v3
         with:
           path: node_modules
           key: npm-${{ hashFiles('package-lock.json') }}
+
+      - name: 📂 Save Laravel bootstrap/cache
+        if: needs.ci.outputs.bootstrap-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: bootstrap/cache
+          key: bootstrap-${{ hashFiles('bootstrap/cache/*.php') }}
+
+      - name: 📂 Save public build assets
+        if: needs.ci.outputs.public-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: public/build
+          key: public-build-${{ hashFiles('resources/**/*') }}
+
+      - name: 📂 Save PHPUnit result cache
+        if: needs.ci.outputs.phpunit-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: tests/.phpunit.result.cache
+          key: phpunit-${{ hashFiles('phpunit.xml') }}

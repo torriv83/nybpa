@@ -8,13 +8,19 @@ use Livewire\Component;
 
 class ExerciseCell extends Component
 {
-    public static $exists = [];
+    /**
+     * @var array<int, string>
+     */
+    public static array $exists = [];
 
-    public $exercise;
+    /**
+     * @var array<string, mixed>|null
+     */
+    public ?array $exercise;
 
-    public $day;
+    public ?int $day;
 
-    public $rowspan = 1;
+    public int $rowspan = 1;
 
     public function render(): View
     {
@@ -39,7 +45,7 @@ class ExerciseCell extends Component
         return $isToday ? 'bg-slate-800' : '';
     }
 
-    public function getIntensityColor($intensity): string
+    public function getIntensityColor(string $intensity): string
     {
         return match ($intensity) {
             'crimson' => 'bg-red-600',

@@ -25,6 +25,9 @@ class Utstyr extends Model
         'link',
     ];
 
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Kategori, $this>
+     */
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');

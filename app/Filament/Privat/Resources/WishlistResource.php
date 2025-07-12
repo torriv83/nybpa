@@ -21,7 +21,6 @@ use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 
 class WishlistResource extends Resource
@@ -81,16 +80,16 @@ class WishlistResource extends Resource
                 TextColumn::make('url')->formatStateUsing(fn () => 'Se her')
                     ->url(fn ($record) => $record->url, true),
                 TextColumn::make('koster')
-                    ->money('nok', true)
+                    ->money('nok', 1)
                     ->sortable()
                     ->summarize(Sum::make()
-                        ->money('NOK', true)),
+                        ->money('NOK', 1)),
                 TextColumn::make('antall'),
                 SelectColumn::make('status')->options(Wishlist::STATUS_OPTIONS)
                     ->selectablePlaceholder(false)
                     ->summarize(
                         Summarizer::make()
-                            ->money('nok', true)
+                            ->money('nok', 1)
                             ->label('left')
                             ->label('Gjenstår')
                             ->using(function (Builder $query): float {
@@ -103,8 +102,8 @@ class WishlistResource extends Resource
                             })
                     ),
                 TextColumn::make('totalt')
-                    ->money('nok', true)
-                    ->getStateUsing(function (Model $record) {
+                    ->money('nok', 1)
+                    ->getStateUsing(function (Wishlist $record) {
                         return $record->koster * $record->antall;
                     }),
             ])
@@ -128,7 +127,7 @@ class WishlistResource extends Resource
             ->schema([
                 Infolists\Components\Section::make(fn ($record) => $record->hva)
                     ->schema([
-                        Infolists\Components\TextEntry::make('koster')->money('nok', true),
+                        Infolists\Components\TextEntry::make('koster')->money('nok', 1),
                         Infolists\Components\TextEntry::make('url')->formatStateUsing(fn () => 'Se her')->url(fn ($record): string => $record->url,
                             true),
                         Infolists\Components\TextEntry::make('antall'),
@@ -143,7 +142,7 @@ class WishlistResource extends Resource
                             ->url(fn ($record): string => $record->url, true)
                             ->columnSpanFull(),
                         Infolists\Components\TextEntry::make('antall'),
-                        Infolists\Components\TextEntry::make('koster')->money('nok', true),
+                        Infolists\Components\TextEntry::make('koster')->money('nok', 1),
                     ])->columnSpanFull()->columns()->grid(),
             ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Mail\SendReminderWhenPrescriptionExpire;
 use App\Models\Resepter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -31,19 +32,23 @@ class SendReminderWhenPrescriptionExpireCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        $targetDate = now()->addMonth()->toDateString(); // Datoen 1 måned fra nå
+        $targetDate = now()->addMonth()->toDateString();
 
+        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resepter> $expiringPrescriptions */
         $expiringPrescriptions = Resepter::whereDate('validTo', '=', $targetDate)->get();
+
+        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Resepter> $expiredPrescriptions */
         $expiredPrescriptions = Resepter::whereDate('validTo', '<', now())->get();
 
         if ($expiringPrescriptions->isEmpty() && $expiredPrescriptions->isEmpty()) {
-            // Ingen resepter går ut snart, så avslutt tidlig
             return;
         }
 
-        // Send e-post ved å bruke Mailable-klassen
-        Mail::to(Role::findByName('admin')->users->first()->email)->send(new \App\Mail\SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
+        /** @var \App\Models\User|null $adminUser */
+        $adminUser = Role::findByName('admin')->users()->first();
+        Mail::to($adminUser)
+            ->send(new SendReminderWhenPrescriptionExpire($expiringPrescriptions, $expiredPrescriptions));
     }
 }

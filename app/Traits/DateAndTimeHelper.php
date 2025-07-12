@@ -11,7 +11,7 @@ trait DateAndTimeHelper
      * Retrieves the common fields for a specific user role.
      *
      * @param  bool  $isAdmin  Indicates whether the user is an admin or not.
-     * @return array An array containing the common fields.
+     * @return array<int, \Filament\Forms\Components\Component> An array containing the common fields.
      */
     public static function getCommonFields(bool $isAdmin): array
     {

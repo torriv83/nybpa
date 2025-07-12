@@ -14,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TimesheetResource extends Resource
@@ -65,7 +64,7 @@ class TimesheetResource extends Resource
                     ->dateTime('d.m.Y, H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('totalt')
-                    ->getStateUsing(function (Model $record) {
+                    ->getStateUsing(function (Timesheet $record) {
                         if ($record->unavailable) {
                             return '-';
                         } else {
@@ -76,7 +75,7 @@ class TimesheetResource extends Resource
                     })
                     ->summarize(Sum::make()
                         ->formatStateUsing(fn (
-                            string $state
+                            int $state
                         ): string => (new UserStatsService)->minutesToTime($state))),
                 Tables\Columns\IconColumn::make('unavailable')
                     ->label('Satt som borte?')

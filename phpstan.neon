@@ -3,12 +3,14 @@ includes:
     - ./vendor/nesbot/carbon/extension.neon
 
 parameters:
-
+    level: 6
     paths:
-        - app/
-
-    level: 3
-
-    ignoreErrors:
-        - '#Access to an undefined property .*?\$.*?#'
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::(withTrashed|onlyTrashed|withoutTrashed)\(\)#'
+        - app
+        - routes
+        - database
+    #scanDirectories:
+     #       - vendor/_laravel_idea
+    excludePaths:
+            - vendor/*
+            - storage/*
+            - bootstrap/cache/*

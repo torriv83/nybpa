@@ -22,6 +22,9 @@ class TrainingProgram extends Model
         'description',
     ];
 
+    /**
+     * @phpstan-return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\WorkoutExercise, $this>
+     */
     public function WorkoutExercises(): BelongsToMany
     {
         return $this->belongsToMany(WorkoutExercise::class)->withPivot('repetitions', 'sets', 'order', 'rest', 'description');

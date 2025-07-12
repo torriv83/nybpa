@@ -9,13 +9,16 @@ use Livewire\Component;
 
 class ExerciseModal extends Component
 {
-    public $programId;
+    public ?int $programId;
 
-    public $programName;
+    public ?string $programName;
 
-    public $programDetails;
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\TrainingProgram>|null
+     */
+    public ?Collection $programDetails;
 
-    public function mount($programId = null, $programName = null): void
+    public function mount(?int $programId = null, ?string $programName = null): void
     {
         $this->programId = $programId;
         $this->programName = $programName;
@@ -27,7 +30,10 @@ class ExerciseModal extends Component
         return view('livewire.landslag.weekplan.exercise-modal');
     }
 
-    public function getProgram($programId): Collection
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\TrainingProgram>
+     */
+    public function getProgram(?int $programId): Collection
     {
         return TrainingProgram::where('id', $programId)->with('WorkoutExercises')->get();
     }

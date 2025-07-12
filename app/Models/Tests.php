@@ -25,6 +25,11 @@ class Tests extends Model
         'ovelser' => 'array',
     ];
 
+    /**
+     * Get all of the test results for this test.
+     *
+     * @return HasMany<TestResults, $this>
+     */
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResults::class, 'tests_id');

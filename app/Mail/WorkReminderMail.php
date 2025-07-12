@@ -10,12 +10,15 @@ use Illuminate\Mail\Mailables\Envelope;
 
 class WorkReminderMail extends Mailable
 {
+    /**
+     * @var array<string, mixed>|null
+     */
     public ?array $details;
 
     /**
-     * Create a new message instance.
+     * @param  array{date: non-falsy-string, time: non-falsy-string, assistent: mixed}  $details
      */
-    public function __construct($details)
+    public function __construct(array $details)
     {
         $this->details = $details;
     }
