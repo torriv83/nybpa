@@ -128,17 +128,6 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
-      - name: 📦 Upload artifacts for cache
-        uses: actions/upload-artifact@v3
-        with:
-          name: ci-artifacts
-          path: |
-            vendor
-            node_modules
-            bootstrap/cache
-            public/build
-            tests/.phpunit.result.cache
-
   save-cache:
     name: 📂 Save Cache
     needs: ci
@@ -146,11 +135,6 @@ jobs:
     container:
       image: torriv/ci-laravel:php8.4-node22-v2
     steps:
-      - name: 📁 Copy files from previous job
-        uses: actions/download-artifact@v3
-        with:
-          name: ci-artifacts
-
       #----------------------------------------
       # SAVE CACHES (ETTER CI KJØRING)
       #----------------------------------------
