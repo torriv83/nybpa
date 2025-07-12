@@ -123,9 +123,9 @@ class Timesheet extends Model
      * Scope a query to retrieve all disabled dates for a specific user in the current year,
      * excluding a specific record if provided.
      *
-     * @phpstan-param \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet> $query
-     *
      * @param  \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet>  $query
+     *
+     * @phpstan-param \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet> $query
      *
      * @phpstan-return \Illuminate\Database\Eloquent\Builder<\App\Models\Timesheet>
      */
