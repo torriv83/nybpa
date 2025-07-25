@@ -27,6 +27,8 @@ class Kernel extends ConsoleKernel
             Ynab::fetchData();
         })->everySixHours();
         $schedule->command('email:send-prescription-reminder')->daily();
+        $schedule->command('backup:run')->weekly();
+        $schedule->command('backup:clean')->weekly();
     }
 
     /**
