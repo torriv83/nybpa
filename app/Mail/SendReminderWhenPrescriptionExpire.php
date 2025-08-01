@@ -35,9 +35,19 @@ class SendReminderWhenPrescriptionExpire extends Mailable
         /** @var User|null $admin */
         $admin = Role::findByName('admin')->users->first();
 
+        $hasExpired = $this->expiredPrescriptions->isNotEmpty();
+        $hasExpiring = $this->expiringPrescriptions->isNotEmpty();
+
+        $subject = match (true) {
+            $hasExpired && $hasExpiring => 'Resepter har utløpt og går snart ut',
+            $hasExpired => 'Resepter har utløpt',
+            $hasExpiring => 'Resepter går snart ut',
+            default => 'Resept påminnelse'
+        };
+
         return new Envelope(
             from: new Address($admin->email, $admin->name),
-            subject: 'Resept går snart ut.',
+            subject: $subject,
         );
     }
 

@@ -71,8 +71,17 @@ class FilterableByDatesTest extends TestCase
     #[Test]
     public function it_scopes_to_month_to_date()
     {
-        TestModel::create(['name' => 'This month', 'created_at' => Carbon::now()->startOfMonth()->addDays(5)]);
-        TestModel::create(['name' => 'Last month', 'created_at' => Carbon::now()->subMonth()]);
+        $now = Carbon::now();
+
+        TestModel::create([
+            'name' => 'This month',
+            'created_at' => $now->copy()->subMinute(),
+        ]);
+
+        TestModel::create([
+            'name' => 'Last month',
+            'created_at' => $now->copy()->subMonth(),
+        ]);
 
         $result = TestModel::monthToDate()->get();
 

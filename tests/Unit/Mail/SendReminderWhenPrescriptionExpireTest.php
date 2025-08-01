@@ -42,11 +42,27 @@ class SendReminderWhenPrescriptionExpireTest extends TestCase
     #[Test]
     public function it_has_correct_envelope(): void
     {
+        // Test med tomme samlinger (default case)
         $mail = new SendReminderWhenPrescriptionExpire(collect(), collect());
         $envelope = $mail->envelope();
+        $this->assertEquals('Resept påminnelse', $envelope->subject);
 
-        $this->assertEquals('Resept går snart ut.', $envelope->subject);
+        // Test med bare utløpende resepter
+        $mail = new SendReminderWhenPrescriptionExpire(collect([new Resepter]), collect());
+        $envelope = $mail->envelope();
+        $this->assertEquals('Resepter går snart ut', $envelope->subject);
 
+        // Test med bare utløpte resepter
+        $mail = new SendReminderWhenPrescriptionExpire(collect(), collect([new Resepter]));
+        $envelope = $mail->envelope();
+        $this->assertEquals('Resepter har utløpt', $envelope->subject);
+
+        // Test med både utløpte og utløpende resepter
+        $mail = new SendReminderWhenPrescriptionExpire(collect([new Resepter]), collect([new Resepter]));
+        $envelope = $mail->envelope();
+        $this->assertEquals('Resepter har utløpt og går snart ut', $envelope->subject);
+
+        // Verifiser avsenderinformasjon
         $this->assertEquals('admin@example.com', $envelope->from->address);
         $this->assertEquals('Admin User', $envelope->from->name);
     }
