@@ -4,10 +4,9 @@
 # Her er en oversikt over timer du har jobbet denne måneden.
 
 <x-mail::panel>
-    @foreach($details['timesheets'] as $d)
-        1. {{ Carbon::parse($d['fra_dato'])->format('d.m.Y') }}, {{ Carbon::parse($d['fra_dato'])->format('H:i') }}
-        - {{ Carbon::parse($d['til_dato'])->format('H:i') }}
-    @endforeach
+@foreach($details['timesheets'] as $index => $d)
+{{ $loop->iteration }}. {{ Carbon::parse($d['fra_dato'])->format('d.m.Y') }}, {{ Carbon::parse($d['fra_dato'])->format('H:i') }} - {{ Carbon::parse($d['til_dato'])->format('H:i') }}
+@endforeach
 </x-mail::panel>
 
 Mvh.
