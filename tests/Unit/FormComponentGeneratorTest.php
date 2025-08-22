@@ -70,8 +70,12 @@ it('generates a dynamic date time picker component', function () {
     // Act
     $result = FormComponentGenerator::dynamicDateTimePicker($name, $label, $config);
 
-    // Assert
-    expect($result)->toEqual([$component]);
+    // Assert (avoid strict object equality due to closures inside components)
+    expect($result)->toBeArray()
+        ->and($result)->toHaveCount(1)
+        ->and($result[0])->toBeInstanceOf(DateTimePicker::class)
+        ->and($result[0]->getName())->toBe($name)
+        ->and($result[0]->getLabel())->toBe($label);
 });
 
 it('tests the dynamicDatePicker method', function () {
@@ -98,16 +102,15 @@ it('tests the dynamicDatePicker method', function () {
     // Act
     $result = FormComponentGenerator::dynamicDatePicker($name, $label, $config);
 
-    // Assert
-    expect($result)->toEqual([$component])
-        ->and($result)->toBeArray()
+    // Assert (avoid strict object equality due to closures inside components)
+    expect($result)->toBeArray()
         ->and($result)->toHaveCount(1)
-        ->and($component)->toBeInstanceOf(DatePicker::class)
-        ->and($component->getName())->toBe($name)
-        ->and($component->getLabel())->toBe($label)
-        ->and($component->getSuffixIcon())->toBe('calendar')
-        ->and($component->getDisplayFormat())->toBe('d.m.Y')
-        ->and($component->isLive())->toBeTrue()
-        ->and($component->isRequired())->toBeTrue();
+        ->and($result[0])->toBeInstanceOf(DatePicker::class)
+        ->and($result[0]->getName())->toBe($name)
+        ->and($result[0]->getLabel())->toBe($label)
+        ->and($result[0]->getSuffixIcon())->toBe('calendar')
+        ->and($result[0]->getDisplayFormat())->toBe('d.m.Y')
+        ->and($result[0]->isLive())->toBeTrue()
+        ->and($result[0]->isRequired())->toBeTrue();
 
 });
