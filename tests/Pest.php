@@ -12,6 +12,7 @@
 */
 
 uses(Tests\TestCase::class)->in('Feature', 'Unit', 'Architecture');
+uses(Tests\SmokeTestCase::class)->in('Smoke', 'Browser', 'Visual');
 
 /*
 |--------------------------------------------------------------------------
