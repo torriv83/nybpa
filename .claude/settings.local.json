@@ -49,7 +49,8 @@
       "mcp__playwright__browser_resize",
       "Bash(vendor\\bin\\pint:*)",
       "mcp__playwright__browser_navigate",
-      "Bash(./vendor/bin/phpstan analyse --error-format=table)"
+      "Bash(./vendor/bin/phpstan analyse --error-format=table)",
+      "WebFetch(domain:pestphp.com)"
     ],
     "deny": [
       "Read(/P:\\P\\Herd\\rcord/**)",

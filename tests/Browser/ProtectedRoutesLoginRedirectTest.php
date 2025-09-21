@@ -4,11 +4,6 @@
  * Browser coverage for protected routes using Pest Browser plugin.
  * We expect unauthenticated users to be presented with a login screen.
  */
-
-use Pest\Browser\Browser;
-
-use function Pest\Browser\browse;
-
 $adminRoutes = [
     '/admin',
     '/admin/kalender',
@@ -46,10 +41,8 @@ $assistentRoutes = [
 $allRoutes = array_merge($adminRoutes, $privatRoutes, $landslagRoutes, $assistentRoutes);
 
 it('renders a login screen for protected areas (no server error)', function () use ($allRoutes) {
-    browse(function (Browser $browser) use ($allRoutes) {
-        foreach ($allRoutes as $url) {
-            $browser->visit($url)
-                ->assertSeeIn('body', 'Login');
-        }
-    });
+    foreach ($allRoutes as $url) {
+        $page = visit($url);
+        $page->assertSee('Logg inn');
+    }
 })->group('browser');

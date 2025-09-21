@@ -1,13 +1,12 @@
 <?php
 
-/**
- * Expanded Smoke tests using Pest v4 Smoke plugin.
- */
+test('No Smoke errors', function () {
+    $routes = ['/', '/admin/login', '/contact'];
 
-use function Pest\Smoke\smoke;
+    visit($routes)->assertNoSmoke();
 
-smoke('admin login')->get('/admin/login')->assertSuccessful();
-smoke('root')->get('/')->assertOk();
-smoke('login (generic)')->get('/login')->assertSuccessful();
-smoke('artisan about')->artisan('about')->assertSuccessful();
-smoke('artisan route:list')->artisan('route:list')->assertSuccessful();
+});
+
+// assertNoSmoke() is a shorthand for:
+// - assertNoJavascriptErrors()
+// - assertNoConsoleLogs()

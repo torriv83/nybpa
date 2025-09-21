@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +18,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // Create roles if they don't exist
+        $roles = ['Admin', 'Assistent', 'Fast ansatt', 'Tilkalling'];
+        foreach ($roles as $roleName) {
+            Role::firstOrCreate(['name' => $roleName]);
+        }
 
         $data = [
             [
@@ -124,5 +131,35 @@ class DatabaseSeeder extends Seeder
         }
 
         DB::table('settings')->insert(['user_id' => '6', 'weekplan_timespan' => '0', 'bpa_hours_per_week' => 7]);
+
+        // Assign roles to users
+        $this->assignRolesToUsers();
+    }
+
+    private function assignRolesToUsers()
+    {
+        // Get roles
+        $adminRole = Role::where('name', 'Admin')->first();
+        $assistentRole = Role::where('name', 'Assistent')->first();
+        $fastAnsattRole = Role::where('name', 'Fast ansatt')->first();
+        $tilkallingRole = Role::where('name', 'Tilkalling')->first();
+
+        // Assign Admin role ONLY to tor@trivera.net
+        $torUser = User::where('email', 'tor@trivera.net')->first();
+        if ($torUser && $adminRole) {
+            $torUser->assignRole($adminRole);
+        }
+
+        // Assign different roles to other users
+        $otherRoles = [$assistentRole, $fastAnsattRole, $tilkallingRole];
+        $otherUsers = User::where('email', '!=', 'tor@trivera.net')->get();
+
+        foreach ($otherUsers as $index => $user) {
+            $roleIndex = $index % count($otherRoles);
+            $role = $otherRoles[$roleIndex];
+            if ($role) {
+                $user->assignRole($role);
+            }
+        }
     }
 }
