@@ -43,6 +43,6 @@ $allRoutes = array_merge($adminRoutes, $privatRoutes, $landslagRoutes, $assisten
 it('renders a login screen for protected areas (no server error)', function () use ($allRoutes) {
     foreach ($allRoutes as $url) {
         $page = visit($url);
-        $page->assertSee('Logg inn');
+        $page->assertSee('Logg inn på konto');
     }
 })->group('browser');

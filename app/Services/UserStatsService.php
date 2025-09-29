@@ -72,14 +72,23 @@ class UserStatsService
     {
         $thisYear = $this->timesheet->timeUsedThisYear();
         $thisYearTimes = [];
-        $sum = 0;
+        $totalMinutes = 0;
+
+        // Avoid division by zero and clarify rounding precision
+        $roundPrecision = 1;
+        $bpa = (float) ($this->bpa ?? 0.0);
 
         foreach ($thisYear as $key => $value) {
             $number = count($value);
             for ($i = 0; $i < $number; $i++) {
-                $sum += $value[$i]->totalt;
+                $totalMinutes += $value[$i]->totalt;
             }
-            $thisYearTimes[$key] = round($sum / $this->bpa * 100, 1);
+
+            $percentageOfBpaUsed = $bpa > 0.0
+                ? round(($totalMinutes / $bpa) * 100, $roundPrecision)
+                : 0.0;
+
+            $thisYearTimes[$key] = $percentageOfBpaUsed;
         }
 
         return $thisYearTimes;
@@ -157,7 +166,7 @@ class UserStatsService
      */
     public function minutesToTime(int $minutes): string
     {
-        $hours = $minutes / self::MINUTES_IN_HOUR;
+        $hours = intdiv($minutes, self::MINUTES_IN_HOUR);
         $minutes = ($minutes % self::MINUTES_IN_HOUR);
         $format = '%02d:%02d';
 
