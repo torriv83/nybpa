@@ -38,7 +38,7 @@ class TimerIUka extends BaseWidget
                     ->sortable(),
                 TextColumn::make('Gjennomsnitt')
                     ->formatStateUsing(function (string $state): string {
-                        $roundedMinutes = round(floatval($state));
+                        $roundedMinutes = (int) round(floatval($state));
                         $hours = intdiv($roundedMinutes, 60);
                         $minutes = $roundedMinutes % 60;
 
