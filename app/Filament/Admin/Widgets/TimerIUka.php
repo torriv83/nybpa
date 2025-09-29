@@ -33,11 +33,17 @@ class TimerIUka extends BaseWidget
                     ->label('Uke')
                     ->sortable(),
                 TextColumn::make('Totalt')
-                    ->formatStateUsing(fn (int $state): string => __(date('H:i', mktime(0, $state))))
+                    ->formatStateUsing(fn (int $state): string => sprintf('%02d:%02d', intval($state / 60), $state % 60))
                     ->label('Totalt')
                     ->sortable(),
                 TextColumn::make('Gjennomsnitt')
-                    ->formatStateUsing(fn (string $state): string => __(date('H:i', mktime(0, (int) floatval($state)))))
+                    ->formatStateUsing(function (string $state): string {
+                        $roundedMinutes = round(floatval($state));
+                        $hours = intdiv($roundedMinutes, 60);
+                        $minutes = $roundedMinutes % 60;
+
+                        return sprintf('%02d:%02d', $hours, $minutes);
+                    })
                     ->sortable(),
                 TextColumn::make('Antall')
                     ->sortable(),
