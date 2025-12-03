@@ -20,7 +20,8 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->after(fn () => Cache::tags(['bruker'])->flush()),
             Impersonate::make()->record($this->getRecord())->redirectTo(route('filament.assistent.pages.dashboard')),
         ];
     }

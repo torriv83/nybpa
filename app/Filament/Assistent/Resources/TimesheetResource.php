@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class TimesheetResource extends Resource
 {
@@ -104,7 +105,8 @@ class TimesheetResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->hidden(function ($record) {
                         return $record->unavailable != 1;
-                    }),
+                    })
+                    ->after(fn () => Cache::tags(['timesheet'])->flush()),
             ])
             ->bulkActions([
                 //                Tables\Actions\BulkActionGroup::make([

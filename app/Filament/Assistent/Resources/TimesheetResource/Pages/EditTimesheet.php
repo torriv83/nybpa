@@ -5,6 +5,7 @@ namespace App\Filament\Assistent\Resources\TimesheetResource\Pages;
 use App\Filament\Assistent\Resources\TimesheetResource;
 use App\Transformers\FormDataTransformer;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Cache;
 
 class EditTimesheet extends EditRecord
 {
@@ -32,5 +33,10 @@ class EditTimesheet extends EditRecord
         return [
             // Actions\DeleteAction::make(),
         ];
+    }
+
+    protected function afterSave(): void
+    {
+        Cache::tags(['timesheet'])->flush();
     }
 }

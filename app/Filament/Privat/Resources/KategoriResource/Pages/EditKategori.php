@@ -19,9 +19,12 @@ class EditKategori extends EditRecord
     {
         return [
             Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
-            Actions\ForceDeleteAction::make(),
-            Actions\RestoreAction::make(),
+            Actions\DeleteAction::make()
+                ->after(fn () => Cache::tags(['medisinsk'])->flush()),
+            Actions\ForceDeleteAction::make()
+                ->after(fn () => Cache::tags(['medisinsk'])->flush()),
+            Actions\RestoreAction::make()
+                ->after(fn () => Cache::tags(['medisinsk'])->flush()),
         ];
     }
 

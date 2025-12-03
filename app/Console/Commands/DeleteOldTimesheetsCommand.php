@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class DeleteOldTimesheetsCommand extends Command
@@ -34,10 +35,14 @@ class DeleteOldTimesheetsCommand extends Command
     {
         $date = Carbon::now()->subDays(30);
 
-        DB::table('timesheets')
+        $deleted = DB::table('timesheets')
             ->where('unavailable', 1)
             ->where('deleted_at', '<', $date)
             ->delete();
+
+        if ($deleted > 0) {
+            Cache::tags(['timesheet'])->flush();
+        }
 
         $this->info('Old deleted timesheets have been removed.');
     }

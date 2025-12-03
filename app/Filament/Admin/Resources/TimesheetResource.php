@@ -25,6 +25,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Cache;
 
 class TimesheetResource extends Resource
 {
@@ -206,15 +207,21 @@ class TimesheetResource extends Resource
                 Tables\Actions\ViewAction::make()->label('Se'),
                 Tables\Actions\EditAction::make()->label('Endre'),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\DeleteAction::make()->label('Slett'),
-                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
-                    Tables\Actions\RestoreAction::make()->label('Angre sletting'),
+                    Tables\Actions\DeleteAction::make()->label('Slett')
+                        ->after(fn () => Cache::tags(['timesheet'])->flush()),
+                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting')
+                        ->after(fn () => Cache::tags(['timesheet'])->flush()),
+                    Tables\Actions\RestoreAction::make()->label('Angre sletting')
+                        ->after(fn () => Cache::tags(['timesheet'])->flush()),
                 ]),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['timesheet'])->flush()),
+                Tables\Actions\ForceDeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['timesheet'])->flush()),
+                Tables\Actions\RestoreBulkAction::make()
+                    ->after(fn () => Cache::tags(['timesheet'])->flush()),
             ]);
     }
 

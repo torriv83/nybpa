@@ -197,24 +197,79 @@ class UserStatsService
     }
 
     /**
-     * Get the total hours used this week.
+     * Get the total hours used this week (only past entries, not planned).
      *
      * @return string
      */
     public function getHoursUsedThisWeek()
     {
         return Cache::tags(['timesheet'])->remember('getHoursUsedThisWeek', now()->addWeek(), function () {
-            // Get the start and end of the current week
             $startOfWeek = now()->startOfWeek();
-            $endOfWeek = now()->endOfWeek();
+            $now = now();
 
-            // Run the query
-            $minutes = Timesheet::query()->where('timesheets.unavailable', '!=', 1)->whereBetween('timesheets.'.self::FRA_DATO, [
-                $startOfWeek,
-                $endOfWeek,
-            ])->sum('timesheets.totalt');
+            // Only get entries from start of week until now (exclude future/planned)
+            $minutes = Timesheet::query()
+                ->where('timesheets.unavailable', '!=', 1)
+                ->where('timesheets.'.self::FRA_DATO, '>=', $startOfWeek)
+                ->where('timesheets.'.self::FRA_DATO, '<=', $now)
+                ->sum('timesheets.totalt');
 
             return $this::minutesToTime($minutes);
+        });
+    }
+
+    /**
+     * Get planned hours for the rest of the year.
+     */
+    public function getPlannedHoursRestOfYear(): string
+    {
+        return Cache::tags(['timesheet'])->remember('planned-hours-rest-of-year', now()->addWeek(), function () {
+            $plannedMinutes = Timesheet::query()
+                ->inFuture(self::FRA_DATO)
+                ->whereYear(self::FRA_DATO, Carbon::now()->year)
+                ->where('unavailable', '!=', 1)
+                ->sum('totalt');
+
+            return $this->minutesToTime($plannedMinutes);
+        });
+    }
+
+    /**
+     * Get remaining hours after subtracting both used and planned hours.
+     */
+    public function getRemainingHoursWithPlanned(): string
+    {
+        return Cache::tags(['timesheet'])->remember('planned-hours-remaining', now()->addWeek(), function () {
+            $totalMinutesForYear = ($this->bpa * self::WEEKS_IN_YEAR) * self::MINUTES_IN_HOUR;
+            $hoursUsedMinutes = $this->getHoursUsedInMinutes();
+
+            $plannedMinutes = Timesheet::query()
+                ->inFuture(self::FRA_DATO)
+                ->whereYear(self::FRA_DATO, Carbon::now()->year)
+                ->where('unavailable', '!=', 1)
+                ->sum('totalt');
+
+            $remainingAfterPlanned = $totalMinutesForYear - $hoursUsedMinutes - $plannedMinutes;
+
+            return $this->minutesToTime(max(0, (int) $remainingAfterPlanned));
+        });
+    }
+
+    /**
+     * Get planned hours for the rest of the current week.
+     */
+    public function getPlannedHoursThisWeek(): string
+    {
+        return Cache::tags(['timesheet'])->remember('planned-hours-this-week', now()->addWeek(), function () {
+            $endOfWeek = now()->endOfWeek();
+
+            $plannedMinutes = Timesheet::query()
+                ->inFuture(self::FRA_DATO)
+                ->where(self::FRA_DATO, '<=', $endOfWeek)
+                ->where('unavailable', '!=', 1)
+                ->sum('totalt');
+
+            return $this->minutesToTime($plannedMinutes);
         });
     }
 }

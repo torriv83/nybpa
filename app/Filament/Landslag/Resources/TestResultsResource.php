@@ -27,6 +27,7 @@ use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Cache;
 
 // use App\Filament\Resources\TestResultsResource\RelationManagers;
 
@@ -107,9 +108,12 @@ class TestResultsResource extends Resource
                 EditAction::make(),
             ])
             ->bulkActions([
-                DeleteBulkAction::make()->label('Arkiver'),
-                ForceDeleteBulkAction::make(),
-                RestoreBulkAction::make(),
+                DeleteBulkAction::make()->label('Arkiver')
+                    ->after(fn () => Cache::tags(['testresult'])->flush()),
+                ForceDeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['testresult'])->flush()),
+                RestoreBulkAction::make()
+                    ->after(fn () => Cache::tags(['testresult'])->flush()),
             ])->defaultSort('dato', 'desc');
     }
 
