@@ -14,7 +14,7 @@ fi
 
 # ✅ Kjør tester
 echo "✅ Kjører tester..."
-php artisan test || { echo "❌ Tester feilet. Avbryter."; exit 1; }
+./vendor/bin/pest --parallel || { echo "❌ Tester feilet. Avbryter."; exit 1; }
 
 # 🔀 Merge devtest → master med samme commit-melding
 echo "🔀 Merger devtest inn i master..."
