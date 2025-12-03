@@ -32,9 +32,12 @@ class EditTimesheet extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->label('Slett'),
-            Actions\ForceDeleteAction::make()->label('Tving sletting'),
-            Actions\RestoreAction::make()->label('Angre sletting'),
+            Actions\DeleteAction::make()->label('Slett')
+                ->after(fn () => Cache::tags(['timesheet'])->flush()),
+            Actions\ForceDeleteAction::make()->label('Tving sletting')
+                ->after(fn () => Cache::tags(['timesheet'])->flush()),
+            Actions\RestoreAction::make()->label('Angre sletting')
+                ->after(fn () => Cache::tags(['timesheet'])->flush()),
         ];
     }
 

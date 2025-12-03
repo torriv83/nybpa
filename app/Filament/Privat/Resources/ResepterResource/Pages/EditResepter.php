@@ -20,7 +20,8 @@ class EditResepter extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->after(fn () => Cache::tags(['medisinsk'])->flush()),
         ];
     }
 

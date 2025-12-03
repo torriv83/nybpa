@@ -33,13 +33,14 @@ class UserStats extends BaseWidget
                 ->color('success')
                 ->url(TimesheetResource::getUrl('index',
                     $this->userStatsService->getYearlyTimeFilters()))
-                ->description($this->userStatsService->getHoursUsedThisMonthDescription()),
+                ->description($this->userStatsService->getHoursUsedThisMonthDescription().' | '.$this->userStatsService->getPlannedHoursRestOfYear().' planlagt ut året'),
 
             Stat::make('Timer igjen', $this->userStatsService->getRemainingHours())
-                ->description($this->userStatsService->getAverageHoursPerWeekDescription().' i uka igjen')
+                ->description($this->userStatsService->getAverageHoursPerWeekDescription().' i uka igjen | '.$this->userStatsService->getRemainingHoursWithPlanned().' igjen med planlagt')
                 ->color('success'),
 
-            Stat::make('Timer brukt denne uka', $this->userStatsService->getHoursUsedThisWeek()),
+            Stat::make('Timer brukt denne uka', $this->userStatsService->getHoursUsedThisWeek())
+                ->description($this->userStatsService->getPlannedHoursThisWeek().' planlagt denne uka'),
 
         ];
     }

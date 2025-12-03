@@ -142,15 +142,21 @@ class UserResource extends Resource
                 Impersonate::make()->redirectTo(route('filament.assistent.pages.dashboard')),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
-                    Tables\Actions\RestoreAction::make()->label('Angre sletting'),
+                    Tables\Actions\DeleteAction::make()
+                        ->after(fn () => Cache::tags(['bruker'])->flush()),
+                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting')
+                        ->after(fn () => Cache::tags(['bruker'])->flush()),
+                    Tables\Actions\RestoreAction::make()->label('Angre sletting')
+                        ->after(fn () => Cache::tags(['bruker'])->flush()),
                 ]),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['bruker'])->flush()),
+                Tables\Actions\ForceDeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['bruker'])->flush()),
+                Tables\Actions\RestoreBulkAction::make()
+                    ->after(fn () => Cache::tags(['bruker'])->flush()),
             ]);
     }
 

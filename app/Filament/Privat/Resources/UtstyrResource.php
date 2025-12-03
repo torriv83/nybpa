@@ -77,15 +77,21 @@ class UtstyrResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make()->label('Se'),
                     Tables\Actions\EditAction::make()->label('Endre'),
-                    Tables\Actions\DeleteAction::make()->label('Slett'),
-                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting'),
-                    Tables\Actions\RestoreAction::make()->label('Angre sletting'),
+                    Tables\Actions\DeleteAction::make()->label('Slett')
+                        ->after(fn () => Cache::tags(['medisinsk'])->flush()),
+                    Tables\Actions\ForceDeleteAction::make()->label('Tving sletting')
+                        ->after(fn () => Cache::tags(['medisinsk'])->flush()),
+                    Tables\Actions\RestoreAction::make()->label('Angre sletting')
+                        ->after(fn () => Cache::tags(['medisinsk'])->flush()),
                 ]),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['medisinsk'])->flush()),
+                Tables\Actions\ForceDeleteBulkAction::make()
+                    ->after(fn () => Cache::tags(['medisinsk'])->flush()),
+                Tables\Actions\RestoreBulkAction::make()
+                    ->after(fn () => Cache::tags(['medisinsk'])->flush()),
                 Tables\Actions\BulkAction::make('bestillValgteProdukter')
                     ->action(function (Collection $records, array $data) {
                         Mail::to(Settings::getUserApotekEpost())->send(new Bestilling($records, $data));
